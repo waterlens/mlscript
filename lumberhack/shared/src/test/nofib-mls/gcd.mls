@@ -1,0 +1,337 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun test(test1) =
+  let ns = z_enumFromTo(const5000)(z_add(const5000)(test1))
+  let ms = z_enumFromTo(const10000)(z_add(const10000)(test1))
+  let tripls = map(f1)(
+    let f = fp =>
+      if fp is
+        Cons(h, t) then
+          let f_1 = fp_1 =>
+            if fp_1 is
+              Cons(h_1, t_1) then
+                Cons(Tuple2(h, h_1), f_1(t_1))
+              Nil then
+                f(t)
+          f_1(ms)
+        Nil then
+          Nil
+    f(ns)
+  )
+  let rs = map(f2)(tripls)
+  max'(rs)
+fun const10000 =
+  z_of_int(10000)
+fun f1(f11) =
+  if f11 is
+    Tuple2(f1_Tuple2_0, f1_Tuple2_1) then
+      Tuple3(f1_Tuple2_0, f1_Tuple2_1, gcdE(f1_Tuple2_0)(f1_Tuple2_1))
+fun quotRem(quotRem1)(quotRem2) =
+  Tuple2(z_div(quotRem1)(quotRem2), z_mod(quotRem1)(quotRem2))
+fun max'(max'1) =
+  if max'1 is
+    Cons(max'_Cons_0, max'_Cons_1) then
+      if max'_Cons_1 is
+        Nil then
+          max'_Cons_0
+        Cons(max'_Cons_0_1, max'_Cons_1_1) then
+          if z_lt(max'_Cons_0)(max'_Cons_0_1) then
+            max'(Cons(max'_Cons_0_1, max'_Cons_1_1))
+          else
+            (max'(Cons(max'_Cons_0, max'_Cons_1_1)))
+fun g(g1)(g2) =
+  if g1 is
+    Tuple3(g_Tuple3_0, g_Tuple3_1, g_Tuple3_2) then
+      if g2 is
+        Tuple3(g_Tuple3_0_1, g_Tuple3_1_1, g_Tuple3_2_1) then
+          if z_equal(g_Tuple3_2_1)(const0) then
+            Tuple3(g_Tuple3_2, g_Tuple3_0, g_Tuple3_1)
+          else
+            (let mi = quotRem(g_Tuple3_2)(g_Tuple3_2_1)
+            if mi is
+              Tuple2(g_Tuple2_0, g_Tuple2_1) then
+                g(Tuple3(g_Tuple3_0_1, g_Tuple3_1_1, g_Tuple3_2_1))(Tuple3(z_sub(g_Tuple3_0)(z_mul(g_Tuple2_0)(g_Tuple3_0_1)), z_sub(g_Tuple3_1)(z_mul(g_Tuple2_0)(g_Tuple3_1_1)), g_Tuple2_1)))
+fun abs(abs1) =
+  if z_lt(abs1)(const0) then
+    z_sub(const0)(abs1)
+  else
+    abs1
+fun f2(f21) =
+  if f21 is
+    Tuple3(f2_Tuple3_0, f2_Tuple3_1, f2_Tuple3_2) then
+      if f2_Tuple3_2 is
+        Tuple3(f2_Tuple3_0_1, f2_Tuple3_1_1, f2_Tuple3_2_1) then
+          abs(z_add(z_add(f2_Tuple3_0_1)(f2_Tuple3_1_1))(f2_Tuple3_2_1))
+fun const0 =
+  z_of_int(0)
+fun gcdE(gcdE1)(gcdE2) =
+  if z_equal(gcdE1)(const0) then
+    Tuple3(gcdE2, const0, const1)
+  else
+    (g(Tuple3(const1, const0, gcdE1))(Tuple3(const0, const1, gcdE2)))
+fun const1 =
+  z_of_int(1)
+fun const5000 =
+  z_of_int(5000)
+fun testGcd_nofib(testGcd_nofib1) =
+  test(testGcd_nofib1)
+fun z_enumFromTo(z_enumFromTo1)(z_enumFromTo2) =
+  if z_leq(z_enumFromTo1)(z_enumFromTo2) then
+    Cons(z_enumFromTo1, z_enumFromTo(z_add(z_enumFromTo1)(const1))(z_enumFromTo2))
+  else
+    Nil
+(testGcd_nofib(primId(z_of_int(400))))

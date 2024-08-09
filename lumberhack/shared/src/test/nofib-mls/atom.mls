@@ -1,0 +1,333 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun test =
+  runExperiment(testforce)(0.02)(Cons(1.0, Nil))(State(Cons(1.0, Nil), Cons(0.0, Nil)))
+fun propagate(propagate1)(propagate2)(propagate3) =
+  if propagate3 is
+    State(propagate_State_0, propagate_State_1) then
+      State(dotPlus(propagate_State_0)(scalarMut(propagate1)(propagate_State_1)), dotPlus(propagate_State_1)(scalarMut(propagate1)(propagate2)))
+fun show(show1) =
+  if show1 is
+    State(show_State_0, show_State_1) then
+      concat(
+        let f = fp =>
+          if fp is
+            Cons(h, t) then
+              Cons(mappend(string_of_float(h))(Cons(char"t", Nil)), f(t))
+            Nil then
+              Nil
+        f(show_State_0)
+      )
+fun dotMult(dotMult1)(dotMult2) =
+  if dotMult2 is
+    Nil then
+      Nil
+    _ then
+      if dotMult1 is
+        Nil then
+          Nil
+        _ then
+          if dotMult1 is
+            Cons(dotMult_Cons_0, dotMult_Cons_1) then
+              if dotMult2 is
+                Cons(dotMult_Cons_0_1, dotMult_Cons_1_1) then
+                  Cons(dotMult_Cons_0 *. dotMult_Cons_0_1, dotMult(dotMult_Cons_1)(dotMult_Cons_1_1))
+fun testforce(testforce1)(testforce2) =
+  lazy(
+    let mi = force(testforce2)
+    if mi is
+      Cons(testforce_Cons_0, testforce_Cons_1) then
+        if testforce_Cons_0 is
+          State(testforce_State_0, testforce_State_1) then
+            Cons(dotMult(scalarMut(0.0 -. 1.0)(testforce1))(testforce_State_0), testforce(testforce1)(testforce_Cons_1))
+  )
+fun dotPlus(dotPlus1)(dotPlus2) =
+  if dotPlus2 is
+    Nil then
+      dotPlus1
+    _ then
+      if dotPlus1 is
+        Nil then
+          dotPlus2
+        _ then
+          if dotPlus1 is
+            Cons(dotPlus_Cons_0, dotPlus_Cons_1) then
+              if dotPlus2 is
+                Cons(dotPlus_Cons_0_1, dotPlus_Cons_1_1) then
+                  Cons(dotPlus_Cons_0 +. dotPlus_Cons_0_1, dotPlus(dotPlus_Cons_1)(dotPlus_Cons_1_1))
+fun testAtom_nofib(testAtom_nofib1) =
+  concat(
+    let f_1 = fp_1 =>
+      if fp_1 is
+        Cons(h_1, t_1) then
+          Cons(mappend(show(h_1))(Cons(char"n", Nil)), f_1(t_1))
+        Nil then
+          Nil
+    f_1(take_lz(testAtom_nofib1)(runExperiment(testforce)(0.02)(Cons(1.0, Nil))(State(Cons(1.0, Nil), Cons(0.0, Nil)))))
+  )
+fun scalarMut(scalarMut1)(scalarMut2) =
+  if scalarMut2 is
+    Nil then
+      Nil
+    Cons(scalarMut_Cons_0, scalarMut_Cons_1) then
+      Cons(scalarMut1 *. scalarMut_Cons_0, scalarMut(scalarMut1)(scalarMut_Cons_1))
+fun runExperiment(runExperiment1)(runExperiment2)(runExperiment3)(runExperiment4) =
+  lazy(
+    let stream = runExperiment(runExperiment1)(runExperiment2)(runExperiment3)(runExperiment4)
+    Cons(runExperiment4, zipWith_lz_lz(propagate(runExperiment2))(runExperiment1(runExperiment3)(stream))(stream))
+  )
+(testAtom_nofib(primId(1000)))

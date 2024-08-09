@@ -1,0 +1,535 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun lookup(lookup1)(lookup2) =
+  if lookup2 is
+    Nil then
+      Nothing
+    Cons(lookup_Cons_0, lookup_Cons_1) then
+      if lookup_Cons_0 is
+        Tuple2(lookup_Tuple2_0, lookup_Tuple2_1) then
+          if polyEq(lookup1)(lookup_Tuple2_0) then
+            Just(lookup_Tuple2_1)
+          else
+            (lookup(lookup1)(lookup_Cons_1))
+fun nub(nub1) =
+  if nub1 is
+    Nil then
+      Nil
+    Cons(nub_Cons_0, nub_Cons_1) then
+      Cons(nub_Cons_0, nub(filter(
+        y =>
+          (not(polyEq(nub_Cons_0)(y)))
+      )(nub_Cons_1)))
+fun return(return1) =
+  StateT(s =>
+    (Cons(Tuple2(return1, s), Nil)))
+fun rest(rest1) =
+  if rest1 is
+    Nil then
+      Nil
+    Cons(rest_Cons_0, rest_Cons_1) then
+      rest_Cons_1
+fun unzip(unzip1) =
+  foldr(
+    ab =>
+      asbs =>
+        let mi = ab
+        if mi is
+          Tuple2(unzip_Tuple2_0, unzip_Tuple2_1) then
+            let mi_1 = asbs
+            if mi_1 is
+              Tuple2(unzip_Tuple2_0_1, unzip_Tuple2_1_1) then
+                Tuple2(Cons(unzip_Tuple2_0, unzip_Tuple2_0_1), Cons(unzip_Tuple2_1, unzip_Tuple2_1_1))
+  )(Tuple2(Nil, Nil))(unzip1)
+fun listDiff =
+  foldl(delete)
+fun mapM(mapM1)(mapM2) =
+  foldr(
+    a =>
+      r =>
+        bind(mapM1(a))(
+          x =>
+            bind(r)(
+              xs =>
+                (return(Cons(x, xs)))
+            )
+        )
+  )(return(Nil))(mapM2)
+fun puzzle(puzzle1)(puzzle2) =
+  let solution = solve(transpose(map(reverse)(puzzle1)))(reverse(puzzle2))(0)
+  let answer = let mi_2 = execStateT(solution)(Digits(enumFromTo(0)(9), Nil))
+  if mi_2 is
+    Cons(puzzle_Cons_0, puzzle_Cons_1) then
+      puzzle_Cons_0
+    Nil then
+      error
+  let env = digitEnv(answer)
+  let look = c =>
+    (fromJust(lookup(c)(env)))
+  let expand = ls =>
+    (foldl(
+      a =>
+        b =>
+          (a * 10 + (look(b)))
+    )(0)(ls))
+  let topVal = sum(
+    let f = fp =>
+      if fp is
+        Cons(h, t) then
+          Cons(expand(h), f(t))
+        Nil then
+          Nil
+    f(puzzle1)
+  )
+  let botVal = expand(puzzle2)
+  if (length(nub(mappend(concat(puzzle1))(puzzle2)))) > 10 then
+    error
+  else
+    if topVal /= botVal then
+      error
+    else
+      (unlines(
+        let f_1 = fp_1 =>
+          if fp_1 is
+            Cons(h_1, t_1) then
+              if h_1 is
+                Tuple2(puzzle_Tuple2_0, puzzle_Tuple2_1) then
+                  Cons(mappend(mappend(Cons(puzzle_Tuple2_0, Nil))(Cons(char" ", Cons(char"=", Cons(char">", Cons(char" ", Nil))))))(string_of_int(puzzle_Tuple2_1)), f_1(t_1))
+                _ then
+                  f_1(t_1)
+            Nil then
+              Nil
+        f_1(digitEnv(answer))
+      ))
+fun select(select1) =
+  bind(get)(
+    st =>
+      let mi_3 = lookup(select1)(digitEnv(st))
+      if mi_3 is
+        Just(select_Just_0) then
+          return(select_Just_0)
+        Nothing then
+          permute(select1)
+  )
+fun execStateT(execStateT1)(execStateT2) =
+  concat(map(
+    x =>
+      let mi_4 = x
+      if mi_4 is
+        Tuple2(execStateT_Tuple2_0, execStateT_Tuple2_1) then
+          Cons(execStateT_Tuple2_1, Nil)
+  )(runStateT(execStateT1)(execStateT2)))
+fun delete(delete1)(delete2) =
+  if delete1 is
+    Cons(delete_Cons_0, delete_Cons_1) then
+      if polyEq(delete_Cons_0)(delete2) then
+        delete(delete_Cons_1)(delete2)
+      else
+        (Cons(delete_Cons_0, delete(delete_Cons_1)(delete2)))
+    Nil then
+      Nil
+fun fromJust(fromJust1) =
+  if fromJust1 is
+    Just(fromJust_Just_0) then
+      fromJust_Just_0
+fun lift(lift1) =
+  StateT(s =>
+    (concat(map(
+      x =>
+        (Cons(Tuple2(x, s), Nil))
+    )(lift1))))
+fun digitEnv(digitEnv1) =
+  if digitEnv1 is
+    Digits(digitEnv_Digits_0, digitEnv_Digits_1) then
+      digitEnv_Digits_1
+fun permute(permute1) =
+  bind(get)(
+    st =>
+      bind(
+        let xs = digits(st)
+        lift(
+          let f_2 = fp_2 =>
+            if fp_2 is
+              Cons(h_2, t_2) then
+                Cons(Tuple2(h_2, listDiff(xs)(Cons(h_2, Nil))), f_2(t_2))
+              Nil then
+                Nil
+          f_2(xs)
+        )
+      )(
+        iis =>
+          let mi_5 = iis
+          if mi_5 is
+            Tuple2(permute_Tuple2_0, permute_Tuple2_1) then
+              bind(put(Digits(permute_Tuple2_1, Cons(Tuple2(permute1, permute_Tuple2_0), digitEnv(st)))))(
+                _p =>
+                  (return(permute_Tuple2_0))
+              )
+      )
+  )
+fun solve(solve1)(solve2)(solve3) =
+  if solve2 is
+    Cons(solve_Cons_0, solve_Cons_1) then
+      bind(
+        let mi_6 = solve1
+        if mi_6 is
+          Nil then
+            return(solve3)
+          Cons(solve_Cons_0_1, solve_Cons_1_1) then
+            bind(mapM(select)(solve_Cons_0_1))(
+              topNS =>
+                (return((sum(topNS)) + solve3))
+            )
+      )(
+        topN =>
+          bind(select(solve_Cons_0))(
+            botN =>
+              bind(guard(topN % 10 == botN))(
+                _s =>
+                  (solve(rest(solve1))(solve_Cons_1)(div(topN)(10)))
+              )
+          )
+      )
+    _ then
+      if solve1 is
+        Nil then
+          if solve2 is
+            Nil then
+              if solve3 is
+                0 then
+                  return(Unit)
+                _ then
+                  StateT(_p =>
+                    Nil)
+            _ then
+              StateT(_p =>
+                Nil)
+        _ then
+          StateT(_p =>
+            Nil)
+fun digits(digits1) =
+  if digits1 is
+    Digits(digits_Digits_0, digits_Digits_1) then
+      digits_Digits_0
+fun unlines(unlines1) =
+  concat(map(
+    l =>
+      (mappend(l)(Cons(char"n", Nil)))
+  )(unlines1))
+fun bind(bind1)(bind2) =
+  StateT(s =>
+    (concat(map(
+      as =>
+        let mi_7 = as
+        if mi_7 is
+          Tuple2(bind_Tuple2_0, bind_Tuple2_1) then
+            runStateT(bind2(bind_Tuple2_0))(bind_Tuple2_1)
+    )(runStateT(bind1)(s)))))
+fun testCryptarithm2_nofib(testCryptarithm2_nofib1) =
+  let args = Cons(Cons(char"T", Cons(char"H", Cons(char"I", Cons(char"R", Cons(char"T", Cons(char"Y", Nil)))))), Cons(Cons(char"T", Cons(char"W", Cons(char"E", Cons(char"L", Cons(char"V", Cons(char"E", Nil)))))), Cons(Cons(char"T", Cons(char"W", Cons(char"E", Cons(char"L", Cons(char"V", Cons(char"E", Nil)))))), Cons(Cons(char"T", Cons(char"W", Cons(char"E", Cons(char"L", Cons(char"V", Cons(char"E", Nil)))))), Cons(Cons(char"T", Cons(char"W", Cons(char"E", Cons(char"L", Cons(char"V", Cons(char"E", Nil)))))), Cons(mappend(Cons(char"T", Cons(char"W", Cons(char"E", Cons(char"L", Cons(char"V", Cons(char"E", Nil)))))))(
+    if testCryptarithm2_nofib1 > 999999 then
+      Cons(char"1", Nil)
+    else
+      Nil
+  ), Nil))))))
+  puzzle(args)(Cons(char"N", Cons(char"I", Cons(char"N", Cons(char"E", Cons(char"T", Cons(char"Y", Nil)))))))
+fun combine(combine1)(combine2)(combine3)(combine4) =
+  Cons(Cons(combine1, combine2), transpose(Cons(combine3, combine4)))
+fun put(put1) =
+  StateT(s =>
+    (Cons(Tuple2(Unit, put1), Nil)))
+fun get =
+  StateT(s =>
+    (Cons(Tuple2(s, s), Nil)))
+fun transpose(transpose1) =
+  if transpose1 is
+    Nil then
+      Nil
+    Cons(transpose_Cons_0, transpose_Cons_1) then
+      if transpose_Cons_0 is
+        Nil then
+          transpose(transpose_Cons_1)
+        Cons(transpose_Cons_0_1, transpose_Cons_1_1) then
+          let mi_8 = unzip(
+            let f_3 = fp_3 =>
+              if fp_3 is
+                Cons(h_3, t_3) then
+                  if h_3 is
+                    Cons(transpose_Cons_0_2, transpose_Cons_1_2) then
+                      Cons(Tuple2(transpose_Cons_0_2, transpose_Cons_1_2), f_3(t_3))
+                    _ then
+                      f_3(t_3)
+                Nil then
+                  Nil
+            f_3(transpose_Cons_1)
+          )
+          if mi_8 is
+            Tuple2(transpose_Tuple2_0, transpose_Tuple2_1) then
+              combine(transpose_Cons_0_1)(transpose_Tuple2_0)(transpose_Cons_1_1)(transpose_Tuple2_1)
+fun guard(guard1) =
+  if guard1 is
+    True then
+      StateT(s =>
+        (Cons(Tuple2(Unit, s), Nil)))
+    False then
+      StateT(s =>
+        Nil)
+fun runStateT(runStateT1) =
+  if runStateT1 is
+    StateT(runStateT_StateT_0) then
+      runStateT_StateT_0
+(testCryptarithm2_nofib(primId(1500)))

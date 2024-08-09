@@ -1,0 +1,744 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun addlemmalst(addlemmalst1)(addlemmalst2) =
+  if addlemmalst1 is
+    Nil then
+      addlemmalst2
+    Cons(addlemmalst_Cons_0, addlemmalst_Cons_1) then
+      addlemmalst(addlemmalst_Cons_1)(addlemma(addlemmalst_Cons_0)(addlemmalst2))
+fun testBoyer2_nofib(testBoyer2_nofib1) =
+  report(testresult(testBoyer2_nofib1))
+fun addlemma(addlemma1)(addlemma2) =
+  if addlemma1 is
+    Nil then
+      addlemma2
+    Atom(addlemma_Atom_0) then
+      error
+    Cons(addlemma_Cons_0) then
+      if addlemma_Cons_0 is
+        Tuple2(addlemma_Tuple2_0, addlemma_Tuple2_1) then
+          let z = car(addlemma_Tuple2_1)
+          if (polyEq(tv(addlemma_Tuple2_0))(Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Nil))))))) && (not(atom(z))) then
+            addtoLUT(Tuple3(tv(car(z)), Cons(Tuple2(addlemma_Tuple2_0, addlemma_Tuple2_1)), addlemma2))
+          else
+            error
+fun rewritewithlemmas(rewritewithlemmas1)(rewritewithlemmas2)(rewritewithlemmas3) =
+  if rewritewithlemmas2 is
+    Nil then
+      rewritewithlemmas1
+    Cons(rewritewithlemmas_Cons_0, rewritewithlemmas_Cons_1) then
+      let mi = onewayunify(rewritewithlemmas1)(cadr(rewritewithlemmas_Cons_0))
+      if mi is
+        Tuple2(rewritewithlemmas_Tuple2_0, rewritewithlemmas_Tuple2_1) then
+          if rewritewithlemmas_Tuple2_0 then
+            rewrite(applysubst(rewritewithlemmas_Tuple2_1)(caddr(rewritewithlemmas_Cons_0)))(rewritewithlemmas3)
+          else
+            (rewritewithlemmas(rewritewithlemmas1)(rewritewithlemmas_Cons_1)(rewritewithlemmas3))
+fun strToToken(strToToken1) =
+  if strToToken1 is
+    Nil then
+      Nil
+    _ then
+      let mi_1 = getToken(strToToken1)
+      if mi_1 is
+        Tuple2(strToToken_Tuple2_0, strToToken_Tuple2_1) then
+          Cons(strToToken_Tuple2_0, strToToken(strToToken_Tuple2_1))
+fun rewrite(rewrite1)(rewrite2) =
+  if rewrite1 is
+    Nil then
+      Nil
+    Atom(rewrite_Atom_0) then
+      Atom(rewrite_Atom_0)
+    Cons(rewrite_Cons_0) then
+      if rewrite_Cons_0 is
+        Tuple2(rewrite_Tuple2_0, rewrite_Tuple2_1) then
+          rewritewithlemmas(Cons(Tuple2(rewrite_Tuple2_0, rewriteargs(rewrite_Tuple2_1)(rewrite2))))(getLUT(Tuple2(tv(rewrite_Tuple2_0), rewrite2)))(rewrite2)
+fun atom(atom1) =
+  if atom1 is
+    Atom(atom_Atom_0) then
+      True
+    _ then
+      False
+fun caddr(caddr1) =
+  (x =>
+    ((x_1 =>
+      (car(cdr(x_1))))(cdr(x))))(caddr1)
+fun falsep(falsep1) =
+  if falsep1 is
+    Tuple2(falsep_Tuple2_0, falsep_Tuple2_1) then
+      if falsep_Tuple2_0 is
+        Nil then
+          False
+        Cons(falsep_Cons_0) then
+          if falsep_Cons_0 is
+            Tuple2(falsep_Tuple2_0_1, falsep_Tuple2_1_1) then
+              if falsep_Tuple2_0_1 is
+                Atom(falsep_Atom_0) then
+                  if falsep_Atom_0 is
+                    Cons(falsep_Cons_0, falsep_Cons_1) then
+                      if falsep_Cons_0 is
+                        char"f" then
+                          if falsep_Cons_1 is
+                            Nil then
+                              if falsep_Tuple2_1_1 is
+                                Nil then
+                                  True
+                                _ then
+                                  lispmember(Tuple2(falsep_Tuple2_0, falsep_Tuple2_1))
+                            _ then
+                              lispmember(Tuple2(falsep_Tuple2_0, falsep_Tuple2_1))
+                        _ then
+                          lispmember(Tuple2(falsep_Tuple2_0, falsep_Tuple2_1))
+                    _ then
+                      lispmember(Tuple2(falsep_Tuple2_0, falsep_Tuple2_1))
+                _ then
+                  lispmember(Tuple2(falsep_Tuple2_0, falsep_Tuple2_1))
+            _ then
+              lispmember(Tuple2(falsep_Tuple2_0, falsep_Tuple2_1))
+        _ then
+          lispmember(Tuple2(falsep_Tuple2_0, falsep_Tuple2_1))
+fun onewayunify1(onewayunify11)(onewayunify12)(onewayunify13) =
+  if atom(onewayunify12) then
+    let mi_2 = assoc(Tuple2(onewayunify12, onewayunify13))
+    if mi_2 is
+      Cons(onewayunify1_Cons_0) then
+        if onewayunify1_Cons_0 is
+          Tuple2(onewayunify1_Tuple2_0, onewayunify1_Tuple2_1) then
+            Tuple2(polyEq(onewayunify11)(onewayunify1_Tuple2_1), onewayunify13)
+          _ then
+            Tuple2(True, Cons(Tuple2(Cons(Tuple2(onewayunify12, onewayunify11)), onewayunify13)))
+      _ then
+        Tuple2(True, Cons(Tuple2(Cons(Tuple2(onewayunify12, onewayunify11)), onewayunify13)))
+  else
+    if atom(onewayunify11) then
+      Tuple2(False, onewayunify13)
+    else
+      if polyEq(car(onewayunify11))(car(onewayunify12)) then
+        onewayunify1lst(cdr(onewayunify11))(cdr(onewayunify12))(onewayunify13)
+      else
+        (Tuple2(False, onewayunify13))
+fun tautologyp(tautologyp1) =
+  if tautologyp1 is
+    Tuple3(tautologyp_Tuple3_0, tautologyp_Tuple3_1, tautologyp_Tuple3_2) then
+      if tautologyp_Tuple3_0 is
+        Nil then
+          False
+        Atom(tautologyp_Atom_0) then
+          truep(Tuple2(Atom(tautologyp_Atom_0), tautologyp_Tuple3_1))
+        Cons(tautologyp_Cons_0) then
+          if tautologyp_Cons_0 is
+            Tuple2(tautologyp_Tuple2_0, tautologyp_Tuple2_1) then
+              if truep(Tuple2(Cons(Tuple2(tautologyp_Tuple2_0, tautologyp_Tuple2_1)), tautologyp_Tuple3_1)) then
+                True
+              else
+                if falsep(Tuple2(Cons(Tuple2(tautologyp_Tuple2_0, tautologyp_Tuple2_1)), tautologyp_Tuple3_2)) then
+                  False
+                else
+                  (let mi_3 = tautologyp_Tuple2_0
+                  if mi_3 is
+                    Atom(tautologyp_Atom_0_1) then
+                      if tautologyp_Atom_0_1 is
+                        Cons(tautologyp_Cons_0, tautologyp_Cons_1) then
+                          if tautologyp_Cons_0 is
+                            char"i" then
+                              if tautologyp_Cons_1 is
+                                Cons(tautologyp_Cons_0_1, tautologyp_Cons_1_1) then
+                                  if tautologyp_Cons_0_1 is
+                                    char"f" then
+                                      if tautologyp_Cons_1_1 is
+                                        Nil then
+                                          if truep(Tuple2(car(tautologyp_Tuple2_1), tautologyp_Tuple3_1)) then
+                                            tautologyp(Tuple3(cadr(tautologyp_Tuple2_1), tautologyp_Tuple3_1, tautologyp_Tuple3_2))
+                                          else
+                                            if falsep(Tuple2(car(tautologyp_Tuple2_1), tautologyp_Tuple3_2)) then
+                                              tautologyp(Tuple3(caddr(tautologyp_Tuple2_1), tautologyp_Tuple3_1, tautologyp_Tuple3_2))
+                                            else
+                                              ((tautologyp(Tuple3(cadr(tautologyp_Tuple2_1), Cons(Tuple2(car(tautologyp_Tuple2_1), tautologyp_Tuple3_1)), tautologyp_Tuple3_2))) && (tautologyp(Tuple3(caddr(tautologyp_Tuple2_1), tautologyp_Tuple3_1, Cons(Tuple2(car(tautologyp_Tuple2_1), tautologyp_Tuple3_2))))))
+                                        _ then
+                                          False
+                                    _ then
+                                      False
+                                _ then
+                                  False
+                            _ then
+                              False
+                        _ then
+                          False
+                    _ then
+                      False)
+fun lispmember(lispmember1) =
+  if lispmember1 is
+    Tuple2(lispmember_Tuple2_0, lispmember_Tuple2_1) then
+      if lispmember_Tuple2_1 is
+        Cons(lispmember_Cons_0) then
+          if lispmember_Cons_0 is
+            Tuple2(lispmember_Tuple2_0_1, lispmember_Tuple2_1_1) then
+              if polyEq(lispmember_Tuple2_0)(lispmember_Tuple2_0_1) then
+                True
+              else
+                (lispmember(Tuple2(lispmember_Tuple2_0, lispmember_Tuple2_1_1)))
+            _ then
+              False
+        _ then
+          False
+fun tautp(tautp1) =
+  tautologyp(Tuple3(rewrite(tautp1)(lemmas), Nil, Nil))
+fun restOfToken(restOfToken1) =
+  if restOfToken1 is
+    Nil then
+      Tuple2(Nil, Nil)
+    Cons(restOfToken_Cons_0, restOfToken_Cons_1) then
+      if (polyEq(restOfToken_Cons_0)(char"(")) || (polyEq(restOfToken_Cons_0)(char")")) || (polyEq(restOfToken_Cons_0)(char" ")) then
+        Tuple2(Nil, Cons(restOfToken_Cons_0, restOfToken_Cons_1))
+      else
+        (let mi_4 = restOfToken(restOfToken_Cons_1)
+        if mi_4 is
+          Tuple2(restOfToken_Tuple2_0, restOfToken_Tuple2_1) then
+            Tuple2(Cons(restOfToken_Cons_0, restOfToken_Tuple2_0), restOfToken_Tuple2_1))
+fun subterm(subterm1) =
+  let c = mappend(Cons(char"c", Nil))(string_of_int(subterm1))
+  let str = mappend(mappend(mappend(mappend(Cons(char"(", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Nil)))))))))))))))))))))))))))))))))))(c))(Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))(c))(Cons(char" ", Cons(char"d", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char")", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"[", Cons(char"]", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"u", Cons(char" ", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char")", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"w", Cons(char" ", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"l", Cons(char"e", Cons(char"n", Cons(char"g", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  mkLisplist(strToToken(str))
+fun makelemmas(makelemmas1) =
+  if makelemmas1 is
+    Nil then
+      Nil
+    Cons(makelemmas_Cons_0, makelemmas_Cons_1) then
+      Cons(mkLisplist(strToToken(makelemmas_Cons_0)), makelemmas(makelemmas_Cons_1))
+fun applysubstlst(applysubstlst1)(applysubstlst2) =
+  if applysubstlst2 is
+    Nil then
+      Nil
+    Atom(applysubstlst_Atom_0) then
+      error
+    Cons(applysubstlst_Cons_0) then
+      if applysubstlst_Cons_0 is
+        Tuple2(applysubstlst_Tuple2_0, applysubstlst_Tuple2_1) then
+          Cons(Tuple2(applysubst(applysubstlst1)(applysubstlst_Tuple2_0), applysubstlst(applysubstlst1)(applysubstlst_Tuple2_1)))
+fun testresult(testresult1) =
+  tautp(teststatement(testresult1))
+fun car(car1) =
+  if car1 is
+    Cons(car_Cons_0) then
+      if car_Cons_0 is
+        Tuple2(car_Tuple2_0, car_Tuple2_1) then
+          car_Tuple2_0
+        _ then
+          Nil
+    _ then
+      Nil
+fun tv(tv1) =
+  if tv1 is
+    Atom(tv_Atom_0) then
+      tv_Atom_0
+fun statement =
+  mkLisplist(strToToken(Cons(char"(", Cons(char" ", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char" ", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"u", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"u", Cons(char" ", Cons(char"w", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char" ", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"w", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+fun getLUT(getLUT1) =
+  if getLUT1 is
+    Tuple2(getLUT_Tuple2_0, getLUT_Tuple2_1) then
+      if getLUT_Tuple2_1 is
+        Empty then
+          Nil
+        Node(getLUT_Node_0) then
+          if getLUT_Node_0 is
+            Tuple3(getLUT_Tuple3_0, getLUT_Tuple3_1, getLUT_Tuple3_2) then
+              if getLUT_Tuple3_1 is
+                Tuple2(getLUT_Tuple2_0_1, getLUT_Tuple2_1_1) then
+                  if polyEq(getLUT_Tuple2_0)(getLUT_Tuple2_0_1) then
+                    getLUT_Tuple2_1_1
+                  else
+                    if polyLt(getLUT_Tuple2_0)(getLUT_Tuple2_0_1) then
+                      getLUT(Tuple2(getLUT_Tuple2_0, getLUT_Tuple3_0))
+                    else
+                      (getLUT(Tuple2(getLUT_Tuple2_0, getLUT_Tuple3_2)))
+fun applysubst(applysubst1)(applysubst2) =
+  if applysubst2 is
+    Nil then
+      Nil
+    Atom(applysubst_Atom_0) then
+      let mi_5 = assoc(Tuple2(Atom(applysubst_Atom_0), applysubst1))
+      if mi_5 is
+        Cons(applysubst_Cons_0) then
+          if applysubst_Cons_0 is
+            Tuple2(applysubst_Tuple2_0, applysubst_Tuple2_1) then
+              applysubst_Tuple2_1
+            _ then
+              Atom(applysubst_Atom_0)
+        _ then
+          Atom(applysubst_Atom_0)
+    Cons(applysubst_Cons_0_1) then
+      if applysubst_Cons_0_1 is
+        Tuple2(applysubst_Tuple2_0_1, applysubst_Tuple2_1_1) then
+          Cons(Tuple2(applysubst_Tuple2_0_1, applysubstlst(applysubst1)(applysubst_Tuple2_1_1)))
+fun onewayunify1lst(onewayunify1lst1)(onewayunify1lst2)(onewayunify1lst3) =
+  if onewayunify1lst1 is
+    Nil then
+      Tuple2(True, onewayunify1lst3)
+    _ then
+      let mi_6 = onewayunify1(car(onewayunify1lst1))(car(onewayunify1lst2))(onewayunify1lst3)
+      if mi_6 is
+        Tuple2(onewayunify1lst_Tuple2_0, onewayunify1lst_Tuple2_1) then
+          if onewayunify1lst_Tuple2_0 then
+            onewayunify1lst(cdr(onewayunify1lst1))(cdr(onewayunify1lst2))(onewayunify1lst_Tuple2_1)
+          else
+            (Tuple2(False, onewayunify1lst_Tuple2_1))
+fun sublist(sublist1) =
+  if sublist1 is
+    Nil then
+      Tuple2(Nil, Nil)
+    Cons(sublist_Cons_0, sublist_Cons_1) then
+      if sublist_Cons_0 is
+        Cons(sublist_Cons_0_1, sublist_Cons_1_1) then
+          if sublist_Cons_0_1 is
+            char"(" then
+              if sublist_Cons_1_1 is
+                Nil then
+                  let mi_8 = sublist(sublist_Cons_1)
+                  if mi_8 is
+                    Tuple2(sublist_Tuple2_0_1, sublist_Tuple2_1_1) then
+                      let mi_9 = sublist(sublist_Tuple2_0_1)
+                      if mi_9 is
+                        Tuple2(sublist_Tuple2_0_2, sublist_Tuple2_1_2) then
+                          Tuple2(sublist_Tuple2_0_2, Cons(Tuple2(sublist_Tuple2_1_1, sublist_Tuple2_1_2)))
+                _ then
+                  let mi_7 = sublist(sublist_Cons_1)
+                  if mi_7 is
+                    Tuple2(sublist_Tuple2_0, sublist_Tuple2_1) then
+                      Tuple2(sublist_Tuple2_0, Cons(Tuple2(Atom(sublist_Cons_0), sublist_Tuple2_1)))
+            char")" then
+              if sublist_Cons_1_1 is
+                Nil then
+                  Tuple2(sublist_Cons_1, Nil)
+                _ then
+                  let mi_7 = sublist(sublist_Cons_1)
+                  if mi_7 is
+                    Tuple2(sublist_Tuple2_0, sublist_Tuple2_1) then
+                      Tuple2(sublist_Tuple2_0, Cons(Tuple2(Atom(sublist_Cons_0), sublist_Tuple2_1)))
+            _ then
+              let mi_7 = sublist(sublist_Cons_1)
+              if mi_7 is
+                Tuple2(sublist_Tuple2_0, sublist_Tuple2_1) then
+                  Tuple2(sublist_Tuple2_0, Cons(Tuple2(Atom(sublist_Cons_0), sublist_Tuple2_1)))
+        _ then
+          let mi_7 = sublist(sublist_Cons_1)
+          if mi_7 is
+            Tuple2(sublist_Tuple2_0, sublist_Tuple2_1) then
+              Tuple2(sublist_Tuple2_0, Cons(Tuple2(Atom(sublist_Cons_0), sublist_Tuple2_1)))
+fun lemmas =
+  addlemmalst(makelemmas(rules))(Empty)
+fun onewayunify(onewayunify1)(onewayunify2) =
+  onewayunify1(onewayunify1)(onewayunify2)(Nil)
+fun truep(truep1) =
+  if truep1 is
+    Tuple2(truep_Tuple2_0, truep_Tuple2_1) then
+      if truep_Tuple2_0 is
+        Nil then
+          False
+        Cons(truep_Cons_0) then
+          if truep_Cons_0 is
+            Tuple2(truep_Tuple2_0_1, truep_Tuple2_1_1) then
+              if truep_Tuple2_0_1 is
+                Atom(truep_Atom_0) then
+                  if truep_Atom_0 is
+                    Cons(truep_Cons_0, truep_Cons_1) then
+                      if truep_Cons_0 is
+                        char"t" then
+                          if truep_Cons_1 is
+                            Nil then
+                              if truep_Tuple2_1_1 is
+                                Nil then
+                                  True
+                                _ then
+                                  lispmember(Tuple2(truep_Tuple2_0, truep_Tuple2_1))
+                            _ then
+                              lispmember(Tuple2(truep_Tuple2_0, truep_Tuple2_1))
+                        _ then
+                          lispmember(Tuple2(truep_Tuple2_0, truep_Tuple2_1))
+                    _ then
+                      lispmember(Tuple2(truep_Tuple2_0, truep_Tuple2_1))
+                _ then
+                  lispmember(Tuple2(truep_Tuple2_0, truep_Tuple2_1))
+            _ then
+              lispmember(Tuple2(truep_Tuple2_0, truep_Tuple2_1))
+        _ then
+          lispmember(Tuple2(truep_Tuple2_0, truep_Tuple2_1))
+fun mkLisplist(mkLisplist1) =
+  if mkLisplist1 is
+    Cons(mkLisplist_Cons_0, mkLisplist_Cons_1) then
+      if mkLisplist_Cons_0 is
+        Cons(mkLisplist_Cons_0_1, mkLisplist_Cons_1_1) then
+          if mkLisplist_Cons_0_1 is
+            char"(" then
+              if mkLisplist_Cons_1_1 is
+                Nil then
+                  let mi_10 = sublist(mkLisplist_Cons_1)
+                  if mi_10 is
+                    Tuple2(mkLisplist_Tuple2_0, mkLisplist_Tuple2_1) then
+                      let mi_11 = mkLisplist_Tuple2_0
+                      if mi_11 is
+                        Nil then
+                          mkLisplist_Tuple2_1
+                        _ then
+                          Nil
+                _ then
+                  Nil
+            _ then
+              Nil
+        _ then
+          Nil
+    _ then
+      Nil
+fun cadddr(cadddr1) =
+  (x_2 =>
+    ((x_3 =>
+      ((x_4 =>
+        (car(cdr(x_4))))(cdr(x_3))))(cdr(x_2))))(cadddr1)
+fun teststatement(teststatement1) =
+  applysubst(subterm(teststatement1))(statement)
+fun getToken(getToken1) =
+  if getToken1 is
+    Nil then
+      Tuple2(Nil, Nil)
+    Cons(getToken_Cons_0, getToken_Cons_1) then
+      if polyEq(getToken_Cons_0)(char" ") then
+        getToken(getToken_Cons_1)
+      else
+        if (polyEq(getToken_Cons_0)(char"(")) || (polyEq(getToken_Cons_0)(char")")) then
+          Tuple2(Cons(getToken_Cons_0, Nil), getToken_Cons_1)
+        else
+          (let mi_12 = restOfToken(getToken_Cons_1)
+          if mi_12 is
+            Tuple2(getToken_Tuple2_0, getToken_Tuple2_1) then
+              Tuple2(Cons(getToken_Cons_0, getToken_Tuple2_0), getToken_Tuple2_1))
+fun cadr(cadr1) =
+  (x_5 =>
+    (car(cdr(x_5))))(cadr1)
+fun cdr(cdr1) =
+  if cdr1 is
+    Cons(cdr_Cons_0) then
+      if cdr_Cons_0 is
+        Tuple2(cdr_Tuple2_0, cdr_Tuple2_1) then
+          cdr_Tuple2_1
+        _ then
+          Nil
+    _ then
+      Nil
+fun report(report1) =
+  if report1 is
+    True then
+      Cons(char"T", Cons(char"h", Cons(char"e", Cons(char" ", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char"m", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"t", Cons(char"a", Cons(char"u", Cons(char"t", Cons(char"o", Cons(char"l", Cons(char"o", Cons(char"g", Cons(char"y", Nil)))))))))))))))))))))))
+    False then
+      Cons(char"T", Cons(char"h", Cons(char"e", Cons(char" ", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char"m", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"t", Cons(char"a", Cons(char"u", Cons(char"t", Cons(char"o", Cons(char"l", Cons(char"o", Cons(char"g", Cons(char"y", Nil)))))))))))))))))))))))))))
+fun assoc(assoc1) =
+  if assoc1 is
+    Tuple2(assoc_Tuple2_0, assoc_Tuple2_1) then
+      if assoc_Tuple2_1 is
+        Cons(assoc_Cons_0) then
+          if assoc_Cons_0 is
+            Tuple2(assoc_Tuple2_0_1, assoc_Tuple2_1_1) then
+              let mi_13 = assoc_Tuple2_0_1
+              if mi_13 is
+                Cons(assoc_Cons_0_1) then
+                  if assoc_Cons_0_1 is
+                    Tuple2(assoc_Tuple2_0_2, assoc_Tuple2_1_2) then
+                      if assoc_Tuple2_0_2 is
+                        Atom(assoc_Atom_0) then
+                          if polyEq(assoc_Tuple2_0)(Atom(assoc_Atom_0)) then
+                            assoc_Tuple2_0_1
+                          else
+                            (assoc(Tuple2(assoc_Tuple2_0, assoc_Tuple2_1_1)))
+                        _ then
+                          Nil
+                    _ then
+                      Nil
+                _ then
+                  Nil
+            _ then
+              Nil
+        _ then
+          Nil
+fun rules =
+  Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"m", Cons(char"p", Cons(char"i", Cons(char"l", Cons(char"e", Cons(char" ", Cons(char"f", Cons(char"o", Cons(char"r", Cons(char"m", Cons(char")", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"d", Cons(char"e", Cons(char"g", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"(", Cons(char"o", Cons(char"p", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"i", Cons(char"z", Cons(char"e", Cons(char" ", Cons(char"f", Cons(char"o", Cons(char"r", Cons(char"m", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"r", Cons(char"e", Cons(char"a", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"e", Cons(char"q", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"r", Cons(char"e", Cons(char"a", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"q", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"b", Cons(char"o", Cons(char"o", Cons(char"l", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"n", Cons(char"1", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"t", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"d", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"1", Cons(char"-", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"u", Cons(char"n", Cons(char"t", Cons(char"p", Cons(char"s", Cons(char"-", Cons(char" ", Cons(char"l", Cons(char" ", Cons(char"p", Cons(char"r", Cons(char"e", Cons(char"d", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"u", Cons(char"n", Cons(char"t", Cons(char"p", Cons(char"s", Cons(char"-", Cons(char"l", Cons(char"o", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"l", Cons(char" ", Cons(char"p", Cons(char"r", Cons(char"e", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"a", Cons(char"c", Cons(char"t", Cons(char"-", Cons(char" ", Cons(char"i", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"a", Cons(char"c", Cons(char"t", Cons(char"-", Cons(char"l", Cons(char"o", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"1", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char"-", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char"-", Cons(char"l", Cons(char"o", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"v", Cons(char"i", Cons(char"d", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"s", Cons(char"s", Cons(char"u", Cons(char"m", Cons(char"e", Cons(char"-", Cons(char"t", Cons(char"r", Cons(char"u", Cons(char"e", Cons(char" ", Cons(char"v", Cons(char"a", Cons(char"r", Cons(char" ", Cons(char"a", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"v", Cons(char"a", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char")", Cons(char" ", Cons(char")", Cons(char"a", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"s", Cons(char"s", Cons(char"u", Cons(char"m", Cons(char"e", Cons(char"-", Cons(char"f", Cons(char"a", Cons(char"l", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"v", Cons(char"a", Cons(char"r", Cons(char" ", Cons(char"a", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"v", Cons(char"a", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char")", Cons(char" ", Cons(char")", Cons(char"a", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"a", Cons(char"u", Cons(char"t", Cons(char"o", Cons(char"l", Cons(char"o", Cons(char"g", Cons(char"y", Cons(char"-", Cons(char"c", Cons(char"h", Cons(char"e", Cons(char"c", Cons(char"k", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"a", Cons(char"u", Cons(char"t", Cons(char"o", Cons(char"l", Cons(char"o", Cons(char"g", Cons(char"y", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"r", Cons(char"m", Cons(char"a", Cons(char"l", Cons(char"i", Cons(char"z", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"a", Cons(char"l", Cons(char"s", Cons(char"i", Cons(char"f", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"a", Cons(char"l", Cons(char"s", Cons(char"i", Cons(char"f", Cons(char"y", Cons(char"1", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"r", Cons(char"m", Cons(char"a", Cons(char"l", Cons(char"i", Cons(char"z", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"r", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"r", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"1", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"1", Cons(char"-", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"p", Cons(char" ", Cons(char"q", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"q", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"p", Cons(char" ", Cons(char"q", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"q", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"p", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"i", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"p", Cons(char" ", Cons(char"q", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"q", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char"d", Cons(char" ", Cons(char"e", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char"d", Cons(char" ", Cons(char"e", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"c", Cons(char" ", Cons(char"d", Cons(char" ", Cons(char"e", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"-", Cons(char"t", Cons(char"r", Cons(char"e", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"-", Cons(char"t", Cons(char"r", Cons(char"e", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"-", Cons(char"t", Cons(char"r", Cons(char"e", Cons(char"e", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"-", Cons(char"t", Cons(char"r", Cons(char"e", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"-", Cons(char"f", Cons(char"r", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"e", Cons(char"c", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"p", Cons(char"d", Cons(char"s", Cons(char" ", Cons(char"e", Cons(char"n", Cons(char"v", Cons(char"r", Cons(char"n", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"e", Cons(char"c", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"e", Cons(char"c", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"p", Cons(char"d", Cons(char"s", Cons(char" ", Cons(char"e", Cons(char"n", Cons(char"v", Cons(char"r", Cons(char"n", Cons(char")", Cons(char"e", Cons(char"n", Cons(char"v", Cons(char"r", Cons(char"n", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"c", Cons(char"-", Cons(char"f", Cons(char"l", Cons(char"a", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"l", Cons(char"a", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"n", Cons(char"g", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"n", Cons(char"g", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"(", Cons(char"i", Cons(char"n", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char"c", Cons(char"t", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char"i", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"j", Cons(char" ", Cons(char"k", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"j", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"k", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"j", Cons(char" ", Cons(char"k", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"x", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"j", Cons(char")", Cons(char"k", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char"-", Cons(char"l", Cons(char"o", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char"-", Cons(char"l", Cons(char"o", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"v", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"u", Cons(char"n", Cons(char"t", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"(", Cons(char"s", Cons(char"o", Cons(char"r", Cons(char"t", Cons(char"-", Cons(char"l", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"u", Cons(char"n", Cons(char"t", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"u", Cons(char"n", Cons(char"t", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"(", Cons(char"q", Cons(char"u", Cons(char"o", Cons(char"t", Cons(char"i", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"e", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"b", Cons(char"i", Cons(char"g", Cons(char"-", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"1", Cons(char" ", Cons(char"l", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"e", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"l", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"i", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"e", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"b", Cons(char"i", Cons(char"g", Cons(char"-", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"e", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"e", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"1", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"q", Cons(char"u", Cons(char"o", Cons(char"t", Cons(char"i", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"j", Cons(char")", Cons(char"i", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"j", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"j", Cons(char" ", Cons(char"1", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"e", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"r", Cons(char"e", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"i", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"e", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"b", Cons(char"i", Cons(char"g", Cons(char"-", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"r", Cons(char"e", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"o", Cons(char"w", Cons(char"e", Cons(char"r", Cons(char"-", Cons(char"r", Cons(char"e", Cons(char"p", Cons(char" ", Cons(char"j", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"j", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"c", Cons(char"d", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"g", Cons(char"c", Cons(char"d", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char"i", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"i", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"n", Cons(char"g", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"c", Cons(char" ", Cons(char"w", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"c", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"w", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"z", Cons(char")", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char")", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char"c", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"c", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"c", Cons(char"d", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char"u", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"r", Cons(char"m", Cons(char"a", Cons(char"l", Cons(char"i", Cons(char"z", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char"u", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"l", Cons(char"a", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"o", Cons(char"p", Cons(char"h", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"s", Cons(char"a", Cons(char"m", Cons(char"e", Cons(char"f", Cons(char"r", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"l", Cons(char"a", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"l", Cons(char"a", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"r", Cons(char"e", Cons(char"a", Cons(char"t", Cons(char"e", Cons(char"s", Cons(char"t", Cons(char"-", Cons(char"f", Cons(char"a", Cons(char"c", Cons(char"t", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"1", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"r", Cons(char"e", Cons(char"a", Cons(char"t", Cons(char"e", Cons(char"s", Cons(char"t", Cons(char"-", Cons(char"f", Cons(char"a", Cons(char"c", Cons(char"t", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"1", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"1", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"r", Cons(char"e", Cons(char"a", Cons(char"t", Cons(char"e", Cons(char"s", Cons(char"t", Cons(char"-", Cons(char"f", Cons(char"a", Cons(char"c", Cons(char"t", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"1", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"r", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"r", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"r", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"-", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"w", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"w", Cons(char" ", Cons(char"1", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"r", Cons(char"e", Cons(char"a", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"q", Cons(char"p", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"1", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"r", Cons(char"e", Cons(char"m", Cons(char"a", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char"1", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"b", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"b", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"1", Cons(char"-", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"1", Cons(char"-", Cons(char" ", Cons(char"b", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"n", Cons(char"g", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"e", Cons(char"l", Cons(char"e", Cons(char"t", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"n", Cons(char"g", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"s", Cons(char"o", Cons(char"r", Cons(char"t", Cons(char"2", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"e", Cons(char"l", Cons(char"e", Cons(char"t", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"d", Cons(char"e", Cons(char"l", Cons(char"e", Cons(char"t", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"s", Cons(char"o", Cons(char"r", Cons(char"t", Cons(char"2", Cons(char" ", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"s", Cons(char"o", Cons(char"r", Cons(char"t", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"s", Cons(char"o", Cons(char"r", Cons(char"t", Cons(char"2", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"n", Cons(char"g", Cons(char"t", Cons(char"h", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char"1", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char"2", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char"3", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char"4", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char"5", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char"6", Cons(char" ", Cons(char"x", Cons(char"7", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"6", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"n", Cons(char"g", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"x", Cons(char"7", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char"2", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"q", Cons(char"u", Cons(char"o", Cons(char"t", Cons(char"i", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"2", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"q", Cons(char"u", Cons(char"o", Cons(char"t", Cons(char"i", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"2", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"s", Cons(char"i", Cons(char"g", Cons(char"m", Cons(char"a", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char"i", Cons(char")", Cons(char"(", Cons(char"q", Cons(char"u", Cons(char"o", Cons(char"t", Cons(char"i", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"i", Cons(char")", Cons(char" ", Cons(char")", Cons(char"2", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"z", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"-", Cons(char"t", Cons(char"r", Cons(char"e", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"d", Cons(char"e", Cons(char"l", Cons(char"e", Cons(char"t", Cons(char"e", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"d", Cons(char"i", Cons(char"f", Cons(char"f", Cons(char"e", Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"c", Cons(char"e", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"-", Cons(char"t", Cons(char"r", Cons(char"e", Cons(char"e", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"m", Cons(char"e", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"-", Cons(char"t", Cons(char"r", Cons(char"e", Cons(char"e", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"a", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"d", Cons(char"d", Cons(char"1", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"u", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"p", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"t", Cons(char"h", Cons(char" ", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char"i", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"i", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"a", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char"p", Cons(char" ", Cons(char"b", Cons(char")", Cons(char"(", Cons(char"l", Cons(char"a", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"b", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char"p", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"a", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"a", Cons(char"s", Cons(char"t", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char")", Cons(char"b", Cons(char")", Cons(char"b", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"t", Cons(char" ", Cons(char"z", Cons(char")", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"f", Cons(char" ", Cons(char"z", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"s", Cons(char"s", Cons(char"i", Cons(char"g", Cons(char"n", Cons(char"m", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"e", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char"s", Cons(char"s", Cons(char"i", Cons(char"g", Cons(char"n", Cons(char"e", Cons(char"d", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"s", Cons(char"s", Cons(char"i", Cons(char"g", Cons(char"n", Cons(char"m", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"a", Cons(char")", Cons(char"(", Cons(char"a", Cons(char"s", Cons(char"s", Cons(char"i", Cons(char"g", Cons(char"n", Cons(char"m", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"x", Cons(char" ", Cons(char"b", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"a", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"o", Cons(char"p", Cons(char"h", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"a", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"l", Cons(char"a", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"l", Cons(char"a", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"(", Cons(char"c", Cons(char"d", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"o", Cons(char"p", Cons(char"h", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"l", Cons(char"i", Cons(char"s", Cons(char"t", Cons(char"p", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"d", Cons(char"r", Cons(char" ", Cons(char"(", Cons(char"f", Cons(char"l", Cons(char"a", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"n", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char"(", Cons(char"n", Cons(char"i", Cons(char"l", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"q", Cons(char"u", Cons(char"o", Cons(char"t", Cons(char"i", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char" ", Cons(char"(", Cons(char"t", Cons(char"i", Cons(char"m", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"y", Cons(char" ", Cons(char"x", Cons(char")", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char"p", Cons(char" ", Cons(char"y", Cons(char")", Cons(char"(", Cons(char"z", Cons(char"e", Cons(char"r", Cons(char"o", Cons(char")", Cons(char"(", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char" ", Cons(char"x", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Cons(Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"u", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"(", Cons(char"g", Cons(char"e", Cons(char"t", Cons(char" ", Cons(char"j", Cons(char" ", Cons(char"(", Cons(char"s", Cons(char"e", Cons(char"t", Cons(char" ", Cons(char"i", Cons(char" ", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char")", Cons(char" ", Cons(char")", Cons(char"(", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"(", Cons(char"e", Cons(char"q", Cons(char"p", Cons(char" ", Cons(char"j", Cons(char" ", Cons(char"i", Cons(char")", Cons(char"v", Cons(char"a", Cons(char"l", Cons(char"(", Cons(char"g", Cons(char"e", Cons(char"t", Cons(char" ", Cons(char"j", Cons(char" ", Cons(char"m", Cons(char"e", Cons(char"m", Cons(char")", Cons(char" ", Cons(char")", Cons(char" ", Cons(char")", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+fun rewriteargs(rewriteargs1)(rewriteargs2) =
+  if rewriteargs1 is
+    Nil then
+      Nil
+    Atom(rewriteargs_Atom_0) then
+      error
+    Cons(rewriteargs_Cons_0) then
+      if rewriteargs_Cons_0 is
+        Tuple2(rewriteargs_Tuple2_0, rewriteargs_Tuple2_1) then
+          Cons(Tuple2(rewrite(rewriteargs_Tuple2_0)(rewriteargs2), rewriteargs(rewriteargs_Tuple2_1)(rewriteargs2)))
+fun addtoLUT(addtoLUT1) =
+  if addtoLUT1 is
+    Tuple3(addtoLUT_Tuple3_0, addtoLUT_Tuple3_1, addtoLUT_Tuple3_2) then
+      if addtoLUT_Tuple3_2 is
+        Empty then
+          Node(Tuple3(Empty, Tuple2(addtoLUT_Tuple3_0, Cons(addtoLUT_Tuple3_1, Nil)), Empty))
+        Node(addtoLUT_Node_0) then
+          if addtoLUT_Node_0 is
+            Tuple3(addtoLUT_Tuple3_0_1, addtoLUT_Tuple3_1_1, addtoLUT_Tuple3_2_1) then
+              if addtoLUT_Tuple3_1_1 is
+                Tuple2(addtoLUT_Tuple2_0, addtoLUT_Tuple2_1) then
+                  if polyEq(addtoLUT_Tuple3_0)(addtoLUT_Tuple2_0) then
+                    Node(Tuple3(addtoLUT_Tuple3_0_1, Tuple2(addtoLUT_Tuple2_0, Cons(addtoLUT_Tuple3_1, addtoLUT_Tuple2_1)), addtoLUT_Tuple3_2_1))
+                  else
+                    if polyLt(addtoLUT_Tuple3_0)(addtoLUT_Tuple2_0) then
+                      Node(Tuple3(addtoLUT(Tuple3(addtoLUT_Tuple3_0, addtoLUT_Tuple3_1, addtoLUT_Tuple3_0_1)), Tuple2(addtoLUT_Tuple2_0, addtoLUT_Tuple2_1), addtoLUT_Tuple3_2_1))
+                    else
+                      (Node(Tuple3(addtoLUT_Tuple3_0_1, Tuple2(addtoLUT_Tuple2_0, addtoLUT_Tuple2_1), addtoLUT(Tuple3(addtoLUT_Tuple3_0, addtoLUT_Tuple3_1, addtoLUT_Tuple3_2_1)))))
+(testBoyer2_nofib(primId(3)))

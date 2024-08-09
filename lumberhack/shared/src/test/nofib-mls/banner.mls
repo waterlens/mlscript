@@ -1,0 +1,386 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun isLower(isLower1) =
+  let n = int_of_char(isLower1)
+  n >= 97 && n <= 122
+fun unzip(unzip1) =
+  foldr(
+    ab =>
+      asbs =>
+        let mi = ab
+        if mi is
+          Tuple2(unzip_Tuple2_0, unzip_Tuple2_1) then
+            let mi_1 = asbs
+            if mi_1 is
+              Tuple2(unzip_Tuple2_0_1, unzip_Tuple2_1_1) then
+                Tuple2(Cons(unzip_Tuple2_0, unzip_Tuple2_0_1), Cons(unzip_Tuple2_1, unzip_Tuple2_1_1))
+  )(Tuple2(Nil, Nil))(unzip1)
+fun replicate(replicate1)(replicate2) =
+  if replicate1 == 0 then
+    Nil
+  else
+    (Cons(replicate2, replicate(replicate1 - 1)(replicate2)))
+fun blank =
+  Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Nil)))))
+fun alphas =
+  Cons(Cons(Cons(char" ", Cons(char" ", Cons(char"A", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"A", Cons(char" ", Cons(char"A", Cons(char" ", Nil))))), Cons(Cons(char"A", Cons(char"A", Cons(char"A", Cons(char"A", Cons(char"A", Nil))))), Cons(Cons(char"A", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"A", Nil))))), Cons(Cons(char"A", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"A", Nil))))), Nil))))), Cons(Cons(Cons(char"B", Cons(char"B", Cons(char"B", Cons(char"B", Cons(char" ", Nil))))), Cons(Cons(char"B", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"B", Nil))))), Cons(Cons(char"B", Cons(char"B", Cons(char"B", Cons(char"B", Cons(char" ", Nil))))), Cons(Cons(char"B", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"B", Nil))))), Cons(Cons(char"B", Cons(char"B", Cons(char"B", Cons(char"B", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char"C", Cons(char"C", Cons(char"C", Cons(char"C", Nil))))), Cons(Cons(char"C", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"C", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"C", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"C", Cons(char"C", Cons(char"C", Cons(char"C", Nil))))), Nil))))), Cons(Cons(Cons(char"D", Cons(char"D", Cons(char"D", Cons(char"D", Cons(char" ", Nil))))), Cons(Cons(char"D", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"D", Nil))))), Cons(Cons(char"D", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"D", Nil))))), Cons(Cons(char"D", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"D", Nil))))), Cons(Cons(char"D", Cons(char"D", Cons(char"D", Cons(char"D", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"E", Cons(char"E", Cons(char"E", Cons(char"E", Cons(char"E", Nil))))), Cons(Cons(char"E", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"E", Cons(char"E", Cons(char"E", Cons(char"E", Cons(char"E", Nil))))), Cons(Cons(char"E", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"E", Cons(char"E", Cons(char"E", Cons(char"E", Cons(char"E", Nil))))), Nil))))), Cons(Cons(Cons(char"F", Cons(char"F", Cons(char"F", Cons(char"F", Cons(char"F", Nil))))), Cons(Cons(char"F", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"F", Cons(char"F", Cons(char"F", Cons(char"F", Cons(char" ", Nil))))), Cons(Cons(char"F", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"F", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char"G", Cons(char"G", Cons(char"G", Cons(char"G", Nil))))), Cons(Cons(char"G", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"G", Cons(char" ", Cons(char" ", Cons(char"G", Cons(char"G", Nil))))), Cons(Cons(char"G", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"G", Nil))))), Cons(Cons(char" ", Cons(char"G", Cons(char"G", Cons(char"G", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"H", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"H", Nil))))), Cons(Cons(char"H", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"H", Nil))))), Cons(Cons(char"H", Cons(char"H", Cons(char"H", Cons(char"H", Cons(char"H", Nil))))), Cons(Cons(char"H", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"H", Nil))))), Cons(Cons(char"H", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"H", Nil))))), Nil))))), Cons(Cons(Cons(char"I", Cons(char"I", Cons(char"I", Cons(char"I", Cons(char"I", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"I", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"I", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"I", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"I", Cons(char"I", Cons(char"I", Cons(char"I", Cons(char"I", Nil))))), Nil))))), Cons(Cons(Cons(char"J", Cons(char"J", Cons(char"J", Cons(char"J", Cons(char"J", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"J", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"J", Cons(char" ", Nil))))), Cons(Cons(char"J", Cons(char" ", Cons(char" ", Cons(char"J", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"J", Cons(char"J", Cons(char" ", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"K", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"K", Nil))))), Cons(Cons(char"K", Cons(char" ", Cons(char" ", Cons(char"K", Cons(char" ", Nil))))), Cons(Cons(char"K", Cons(char"K", Cons(char"K", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"K", Cons(char" ", Cons(char" ", Cons(char"K", Cons(char" ", Nil))))), Cons(Cons(char"K", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"K", Nil))))), Nil))))), Cons(Cons(Cons(char"L", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"L", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"L", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"L", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"L", Cons(char"L", Cons(char"L", Cons(char"L", Cons(char"L", Nil))))), Nil))))), Cons(Cons(Cons(char"M", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"M", Nil))))), Cons(Cons(char"M", Cons(char"M", Cons(char" ", Cons(char"M", Cons(char"M", Nil))))), Cons(Cons(char"M", Cons(char" ", Cons(char"M", Cons(char" ", Cons(char"M", Nil))))), Cons(Cons(char"M", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"M", Nil))))), Cons(Cons(char"M", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"M", Nil))))), Nil))))), Cons(Cons(Cons(char"N", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"N", Nil))))), Cons(Cons(char"N", Cons(char"N", Cons(char" ", Cons(char" ", Cons(char"N", Nil))))), Cons(Cons(char"N", Cons(char" ", Cons(char"N", Cons(char" ", Cons(char"N", Nil))))), Cons(Cons(char"N", Cons(char" ", Cons(char" ", Cons(char"N", Cons(char"N", Nil))))), Cons(Cons(char"N", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"N", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char"O", Cons(char"O", Cons(char"O", Cons(char" ", Nil))))), Cons(Cons(char"O", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"O", Nil))))), Cons(Cons(char"O", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"O", Nil))))), Cons(Cons(char"O", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"O", Nil))))), Cons(Cons(char" ", Cons(char"O", Cons(char"O", Cons(char"O", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"P", Cons(char"P", Cons(char"P", Cons(char"P", Cons(char" ", Nil))))), Cons(Cons(char"P", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"P", Nil))))), Cons(Cons(char"P", Cons(char"P", Cons(char"P", Cons(char"P", Cons(char" ", Nil))))), Cons(Cons(char"P", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"P", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char"Q", Cons(char"Q", Cons(char"Q", Cons(char" ", Nil))))), Cons(Cons(char"Q", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"Q", Nil))))), Cons(Cons(char"Q", Cons(char" ", Cons(char"Q", Cons(char" ", Cons(char"Q", Nil))))), Cons(Cons(char"Q", Cons(char" ", Cons(char" ", Cons(char"Q", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"Q", Cons(char"Q", Cons(char" ", Cons(char"Q", Nil))))), Nil))))), Cons(Cons(Cons(char"R", Cons(char"R", Cons(char"R", Cons(char"R", Cons(char" ", Nil))))), Cons(Cons(char"R", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"R", Nil))))), Cons(Cons(char"R", Cons(char"R", Cons(char"R", Cons(char"R", Cons(char" ", Nil))))), Cons(Cons(char"R", Cons(char" ", Cons(char" ", Cons(char"R", Cons(char" ", Nil))))), Cons(Cons(char"R", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"R", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char"S", Cons(char"S", Cons(char"S", Cons(char"S", Nil))))), Cons(Cons(char"S", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"S", Cons(char"S", Cons(char"S", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"S", Nil))))), Cons(Cons(char"S", Cons(char"S", Cons(char"S", Cons(char"S", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"T", Cons(char"T", Cons(char"T", Cons(char"T", Cons(char"T", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"T", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"T", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"T", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"T", Cons(char" ", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"U", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"U", Nil))))), Cons(Cons(char"U", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"U", Nil))))), Cons(Cons(char"U", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"U", Nil))))), Cons(Cons(char"U", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"U", Nil))))), Cons(Cons(char" ", Cons(char"U", Cons(char"U", Cons(char"U", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"V", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"V", Nil))))), Cons(Cons(char"V", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"V", Nil))))), Cons(Cons(char"V", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"V", Nil))))), Cons(Cons(char" ", Cons(char"V", Cons(char" ", Cons(char"V", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"V", Cons(char" ", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"W", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"W", Nil))))), Cons(Cons(char"W", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"W", Nil))))), Cons(Cons(char"W", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"W", Nil))))), Cons(Cons(char"W", Cons(char" ", Cons(char"W", Cons(char" ", Cons(char"W", Nil))))), Cons(Cons(char" ", Cons(char"W", Cons(char" ", Cons(char"W", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"X", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"X", Nil))))), Cons(Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"X", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"X", Cons(char" ", Nil))))), Cons(Cons(char"X", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"X", Nil))))), Nil))))), Cons(Cons(Cons(char"Y", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"Y", Nil))))), Cons(Cons(char" ", Cons(char"Y", Cons(char" ", Cons(char"Y", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"Y", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"Y", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"Y", Cons(char" ", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"Z", Cons(char"Z", Cons(char"Z", Cons(char"Z", Cons(char"Z", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"Z", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"Z", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"Z", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"Z", Cons(char"Z", Cons(char"Z", Cons(char"Z", Cons(char"Z", Nil))))), Nil))))), Nil))))))))))))))))))))))))))
+fun testBanner_nofib(testBanner_nofib1) =
+  say(concat(replicate(testBanner_nofib1)(Cons(char"I", Cons(char"s", Cons(char" ", Cons(char"t", Cons(char"h", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"g", Cons(char"r", Cons(char"e", Cons(char"a", Cons(char"t", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"n", Cons(char"n", Cons(char"e", Cons(char"r", Cons(char"?", Nil))))))))))))))))))))))))))))))
+fun foldr1(foldr11)(foldr12) =
+  if foldr12 is
+    Cons(foldr1_Cons_0, foldr1_Cons_1) then
+      if foldr1_Cons_1 is
+        Nil then
+          foldr1_Cons_0
+        _ then
+          foldr11(foldr1_Cons_0)(foldr1(foldr11)(foldr1_Cons_1))
+fun picChar(picChar1) =
+  if isUpper(picChar1) then
+    atIndex((int_of_char(picChar1)) - (int_of_char(char"A")))(alphas)
+  else
+    if isLower(picChar1) then
+      atIndex((int_of_char(picChar1)) - (int_of_char(char"a")))(alphas)
+    else
+      if isSpace(picChar1) then
+        blank
+      else
+        if isDigit(picChar1) then
+          atIndex((int_of_char(picChar1)) - (int_of_char(char"0")))(digits)
+        else
+          if polyEq(picChar1)(char"/") then
+            slant
+          else
+            if polyEq(picChar1)(char"=") then
+              reverse(slant)
+            else
+              (head(mappend(
+                let f = fp =>
+                  if fp is
+                    Cons(h, t) then
+                      if h is
+                        Tuple2(picChar_Tuple2_0, picChar_Tuple2_1) then
+                          if polyEq(picChar_Tuple2_0)(picChar1) then
+                            Cons(picChar_Tuple2_1, f(t))
+                          else
+                            (f(t))
+                        _ then
+                          f(t)
+                    Nil then
+                      Nil
+                f(punct)
+              )(Cons(Cons(Nil, Nil), Nil))))
+fun join(join1) =
+  foldr1(
+    xs =>
+      ys =>
+        (mappend(mappend(xs)(Cons(char" ", Cons(char" ", Nil))))(ys))
+  )(join1)
+fun isUpper(isUpper1) =
+  let n = int_of_char(isUpper1)
+  n >= 65 && n <= 90
+fun digits =
+  Cons(Cons(Cons(char" ", Cons(char"O", Cons(char"O", Cons(char"O", Cons(char" ", Nil))))), Cons(Cons(char"0", Cons(char" ", Cons(char" ", Cons(char"0", Cons(char"0", Nil))))), Cons(Cons(char"0", Cons(char" ", Cons(char"0", Cons(char" ", Cons(char"0", Nil))))), Cons(Cons(char"0", Cons(char"0", Cons(char" ", Cons(char" ", Cons(char"0", Nil))))), Cons(Cons(char" ", Cons(char"0", Cons(char"0", Cons(char"0", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char" ", Cons(char"1", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"1", Cons(char"1", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"1", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"1", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"1", Cons(char"1", Cons(char"1", Cons(char"1", Cons(char"1", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char"2", Cons(char"2", Cons(char"2", Cons(char" ", Nil))))), Cons(Cons(char"2", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"2", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"2", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"2", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"2", Cons(char"2", Cons(char"2", Cons(char"2", Cons(char"2", Nil))))), Nil))))), Cons(Cons(Cons(char"3", Cons(char"3", Cons(char"3", Cons(char"3", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"3", Nil))))), Cons(Cons(char" ", Cons(char"3", Cons(char"3", Cons(char"3", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"3", Nil))))), Cons(Cons(char"3", Cons(char"3", Cons(char"3", Cons(char"3", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"4", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"4", Cons(char"4", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"4", Cons(char" ", Cons(char"4", Cons(char" ", Nil))))), Cons(Cons(char"4", Cons(char"4", Cons(char"4", Cons(char"4", Cons(char"4", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"4", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"5", Cons(char"5", Cons(char"5", Cons(char"5", Cons(char"5", Nil))))), Cons(Cons(char"5", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"5", Cons(char"5", Cons(char"5", Cons(char"5", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"5", Nil))))), Cons(Cons(char"5", Cons(char"5", Cons(char"5", Cons(char"5", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"6", Cons(char"6", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"6", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char"6", Cons(char"6", Cons(char"6", Cons(char" ", Nil))))), Cons(Cons(char"6", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"6", Nil))))), Cons(Cons(char" ", Cons(char"6", Cons(char"6", Cons(char"6", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char"7", Cons(char"7", Cons(char"7", Cons(char"7", Cons(char"7", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"7", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"7", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"7", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"7", Cons(char" ", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char"8", Cons(char"8", Cons(char"8", Cons(char" ", Nil))))), Cons(Cons(char"8", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"8", Nil))))), Cons(Cons(char" ", Cons(char"8", Cons(char"8", Cons(char"8", Cons(char" ", Nil))))), Cons(Cons(char"8", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"8", Nil))))), Cons(Cons(char" ", Cons(char"8", Cons(char"8", Cons(char"8", Cons(char" ", Nil))))), Nil))))), Cons(Cons(Cons(char" ", Cons(char"9", Cons(char"9", Cons(char"9", Cons(char" ", Nil))))), Cons(Cons(char"9", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"9", Nil))))), Cons(Cons(char" ", Cons(char"9", Cons(char"9", Cons(char"9", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"9", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"9", Cons(char"9", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Nil))))), Nil))))))))))
+fun isDigit(isDigit1) =
+  let n = int_of_char(isDigit1)
+  n >= 48 && n <= 57
+fun unlines(unlines1) =
+  concat(map(
+    l =>
+      (mappend(l)(Cons(char"n", Nil)))
+  )(unlines1))
+fun combine(combine1)(combine2)(combine3)(combine4) =
+  Cons(Cons(combine1, combine2), transpose(Cons(combine3, combine4)))
+fun punct =
+  Cons(Tuple2(char".", Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char".", Cons(char".", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char".", Cons(char".", Cons(char" ", Nil))))), Nil)))))), Cons(Tuple2(char"?", Cons(Cons(char" ", Cons(char"?", Cons(char"?", Cons(char"?", Cons(char" ", Nil))))), Cons(Cons(char"?", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"?", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char"?", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"?", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char".", Cons(char" ", Cons(char" ", Nil))))), Nil)))))), Cons(Tuple2(char"!", Cons(Cons(char" ", Cons(char" ", Cons(char"!", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"!", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"!", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"!", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char".", Cons(char" ", Cons(char" ", Nil))))), Nil)))))), Cons(Tuple2(char"-", Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"-", Cons(char"-", Cons(char"-", Cons(char"-", Cons(char"-", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Nil)))))), Cons(Tuple2(char"+", Cons(Cons(char" ", Cons(char" ", Cons(char"+", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"+", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char"+", Cons(char"+", Cons(char"+", Cons(char"+", Cons(char"+", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"+", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char"+", Cons(char" ", Cons(char" ", Nil))))), Nil)))))), Cons(Tuple2(char":", Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char":", Cons(char":", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char":", Cons(char":", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Nil)))))), Cons(Tuple2(char";", Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char";", Cons(char";", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char" ", Cons(char";", Cons(char";", Cons(char" ", Nil))))), Cons(Cons(char" ", Cons(char";", Cons(char";", Cons(char" ", Cons(char" ", Nil))))), Nil)))))), Nil)))))))
+fun say(say1) =
+  (x =>
+    ((x_1 =>
+      ((x_2 =>
+        ((x_3 =>
+          ((x =>
+            (Cons(char"n", x)))(unlines(x_3))))(map(join)(x_2))))(transpose(x_1))))(map(picChar)(x))))(say1)
+fun isSpace(isSpace1) =
+  let n = int_of_char(isSpace1)
+  n == 32
+fun slant =
+  Cons(Cons(char" ", Cons(char" ", Cons(char" ", Cons(char" ", Nil)))), Cons(Cons(char" ", Cons(char" ", Cons(char" ", Nil))), Cons(Cons(char" ", Cons(char" ", Nil)), Cons(Cons(char" ", Nil), Cons(Nil, Nil)))))
+fun transpose(transpose1) =
+  if transpose1 is
+    Nil then
+      Nil
+    Cons(transpose_Cons_0, transpose_Cons_1) then
+      if transpose_Cons_0 is
+        Nil then
+          transpose(transpose_Cons_1)
+        Cons(transpose_Cons_0_1, transpose_Cons_1_1) then
+          let mi_2 = unzip(
+            let f_1 = fp_1 =>
+              if fp_1 is
+                Cons(h_1, t_1) then
+                  if h_1 is
+                    Cons(transpose_Cons_0_2, transpose_Cons_1_2) then
+                      Cons(Tuple2(transpose_Cons_0_2, transpose_Cons_1_2), f_1(t_1))
+                    _ then
+                      f_1(t_1)
+                Nil then
+                  Nil
+            f_1(transpose_Cons_1)
+          )
+          if mi_2 is
+            Tuple2(transpose_Tuple2_0, transpose_Tuple2_1) then
+              combine(transpose_Cons_0_1)(transpose_Tuple2_0)(transpose_Cons_1_1)(transpose_Tuple2_1)
+(testBanner_nofib(primId(100)))

@@ -1,0 +1,2265 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun failure(failure1) =
+  Reason(failure1)
+fun success(success1) =
+  Answer(success1)
+fun takeWhile(takeWhile1)(takeWhile2) =
+  if takeWhile2 is
+    Nil then
+      Nil
+    Cons(takeWhile_Cons_0, takeWhile_Cons_1) then
+      if takeWhile1(takeWhile_Cons_0) then
+        Cons(takeWhile_Cons_0, takeWhile(takeWhile1)(takeWhile_Cons_1))
+      else
+        Nil
+fun fails(fails1) =
+  (x =>
+    (not(succeeds(x))))(fails1)
+fun noun(noun1) =
+  if noun1 is
+    Cons(noun_Cons_0, noun_Cons_1) then
+      if noun_Cons_1 is
+        Cons(noun_Cons_0_1, noun_Cons_1_1) then
+          if noun_Cons_1_1 is
+            Nil then
+              if inList(noun_Cons_0)(Cons(Cons(char"a", Nil), Cons(Cons(char"a", Cons(char"n", Nil)), Cons(Cons(char"t", Cons(char"h", Cons(char"e", Nil))), Nil)))) then
+                noun(Cons(mappend(mappend(noun_Cons_0)(Cons(char" ", Nil)))(noun_Cons_0_1), Nil))
+              else
+                (error(Cons(char"n", Cons(char"o", Cons(char"u", Cons(char"n", Cons(char" ", Cons(char"e", Cons(char"r", Cons(char"r", Cons(char"o", Cons(char"r", Nil))))))))))))
+        Nil then
+          if (polyLeq(char"A")(head(noun_Cons_0))) && (polyLeq(head(noun_Cons_0))(char"Z")) then
+            Var(noun_Cons_0)
+          else
+            (Term(noun_Cons_0, Nil))
+fun entries(entries1) =
+  if entries1 is
+    Empty then
+      Nil
+    Fork(entries_Fork_0, entries_Fork_1, entries_Fork_2) then
+      mappend(mappend(entries(entries_Fork_0))(Cons(entries_Fork_1, Nil)))(entries(entries_Fork_2))
+fun occurs(occurs1)(occurs2) =
+  if occurs2 is
+    Term(occurs_Term_0, occurs_Term_1) then
+      or(
+        let f = fp =>
+          if fp is
+            Cons(h, t) then
+              Cons(occurs(occurs1)(h), f(t))
+            Nil then
+              Nil
+        f(occurs_Term_1)
+      )
+    _ then
+      if occurs1 is
+        Var(occurs_Var_0_1) then
+          if occurs2 is
+            Var(occurs_Var_0_2) then
+              polyEq(occurs_Var_0_1)(occurs_Var_0_2)
+            _ then
+              if occurs2 is
+                Var(occurs_Var_0) then
+                  False
+        _ then
+          if occurs2 is
+            Var(occurs_Var_0) then
+              False
+fun split(split1)(split2)(split3)(split4) =
+  Term(split3, Cons(split2(takeWhile(
+    x =>
+      (not(strEq(x)(split3)))
+  )(split1)), Cons(split4(tail(dropWhile(
+    x =>
+      (not(strEq(x)(split3)))
+  )(split1))), Nil)))
+fun delete(delete1)(delete2) =
+  if delete1 is
+    Empty then
+      Empty
+    Fork(delete_Fork_0, delete_Fork_1, delete_Fork_2) then
+      if delete_Fork_1 is
+        Tuple2(delete_Tuple2_0, delete_Tuple2_1) then
+          let
+            fun leftmost(leftmost1) =
+              if leftmost1 is
+                Fork(leftmost_Fork_0, leftmost_Fork_1, leftmost_Fork_2) then
+                  if leftmost_Fork_0 is
+                    Empty then
+                      Tuple2(leftmost_Fork_1, leftmost_Fork_2)
+                    _ then
+                      let mi_1 = leftmost(leftmost_Fork_0)
+                      if mi_1 is
+                        Tuple2(leftmost_Tuple2_0, leftmost_Tuple2_1) then
+                          Tuple2(leftmost_Tuple2_0, Fork(leftmost_Tuple2_1, leftmost_Fork_1, leftmost_Fork_2))
+            fun graft(graft1)(graft2) =
+              if graft2 is
+                Empty then
+                  graft1
+                _ then
+                  let mi = leftmost(graft2)
+                  if mi is
+                    Tuple2(graft_Tuple2_0, graft_Tuple2_1) then
+                      Fork(graft1, graft_Tuple2_0, graft_Tuple2_1)
+          if polyLt(delete2)(delete_Tuple2_0) then
+            Fork(delete(delete_Fork_0)(delete2), Tuple2(delete_Tuple2_0, delete_Tuple2_1), delete_Fork_2)
+          else
+            if polyEq(delete2)(delete_Tuple2_0) then
+              graft(delete_Fork_0)(delete_Fork_2)
+            else
+              if polyGt(delete2)(delete_Tuple2_0) then
+                Fork(delete_Fork_0, Tuple2(delete_Tuple2_0, delete_Tuple2_1), delete(delete_Fork_2)(delete2))
+              else
+                (error(Cons(char"d", Cons(char"e", Cons(char"l", Cons(char"e", Cons(char"t", Cons(char"e", Cons(char" ", Cons(char"c", Cons(char"o", Cons(char"m", Cons(char"p", Cons(char"a", Cons(char"r", Cons(char"i", Cons(char"s", Cons(char"o", Cons(char"n", Cons(char" ", Cons(char"e", Cons(char"r", Cons(char"r", Cons(char"o", Cons(char"r", Nil)))))))))))))))))))))))))
+fun relevant(relevant1)(relevant2) =
+  if relevant2 is
+    Term(relevant_Term_0, relevant_Term_1) then
+      let lookup = find(relevant1)(relevant_Term_0)
+      if fails(lookup) then
+        Nil
+      else
+        (answer(lookup))
+fun lines(lines1) =
+  let mi_2 = break(
+    x =>
+      (polyEq(x)(char"|"))
+  )(lines1)
+  if mi_2 is
+    Tuple2(lines_Tuple2_0, lines_Tuple2_1) then
+      Cons(lines_Tuple2_0, let mi_3 = lines_Tuple2_1
+      if mi_3 is
+        Nil then
+          Nil
+        Cons(lines_Cons_0, lines_Cons_1) then
+          lines(lines_Cons_1))
+fun updateList(updateList1)(updateList2) =
+  let
+    fun unique(unique1) =
+      if unique1 is
+        Nil then
+          Nil
+        Cons(unique_Cons_0, unique_Cons_1) then
+          if unique_Cons_1 is
+            Nil then
+              Cons(unique_Cons_0, Nil)
+            _ then
+              if unique_Cons_0 is
+                Tuple2(unique_Tuple2_0, unique_Tuple2_1) then
+                  if unique_Cons_1 is
+                    Cons(unique_Cons_0_1, unique_Cons_1_1) then
+                      if unique_Cons_0_1 is
+                        Tuple2(unique_Tuple2_0_1, unique_Tuple2_1_1) then
+                          if polyEq(unique_Tuple2_0)(unique_Tuple2_0_1) then
+                            unique(Cons(Tuple2(unique_Tuple2_0_1, unique_Tuple2_1_1), unique_Cons_1_1))
+                          else
+                            (Cons(Tuple2(unique_Tuple2_0, unique_Tuple2_1), unique(Cons(Tuple2(unique_Tuple2_0_1, unique_Tuple2_1_1), unique_Cons_1_1))))
+    fun balance(balance1) =
+      if balance1 is
+        Nil then
+          Empty
+        _ then
+          let m = div(length(balance1))(2)
+          let left = balance(take(m)(balance1))
+          let right = balance(drop(m + 1)(balance1))
+          Fork(left, atIndex(m)(balance1), right)
+  (balance(mergeKey(entries(updateList1))(unique(sortKey(updateList2)))))
+fun display(display1)(display2)(display3) =
+  if display1 is
+    Nil then
+      Cons(char"N", Cons(char"o", Cons(char" ", Cons(char"(", Cons(char"m", Cons(char"o", Cons(char"r", Cons(char"e", Cons(char")", Cons(char" ", Cons(char"s", Cons(char"o", Cons(char"l", Cons(char"u", Cons(char"t", Cons(char"i", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char"|", Nil))))))))))))))))))))
+    Cons(display_Cons_0, display_Cons_1) then
+      if display_Cons_0 is
+        Question(display_Question_0) then
+          mappend(mappend(mappend(Cons(char"I", Cons(char"s", Cons(char" ", Cons(char"i", Cons(char"t", Cons(char" ", Cons(char"t", Cons(char"r", Cons(char"u", Cons(char"e", Cons(char" ", Cons(char"t", Cons(char"h", Cons(char"a", Cons(char"t", Cons(char" ", Nil)))))))))))))))))(display_Question_0))(Cons(char"?", Cons(char"|", Nil))))(display(display_Cons_1)(display2)(tail(display3)))
+        Soln(display_Soln_0, display_Soln_1) then
+          let sol = showVars(display_Soln_0)(display2)
+          let etc = if (polyEq(display3)(Nil)) || (polyEq(head(display3))(False)) then
+            Nil
+          else
+            (display(display_Cons_1)(display2)(tail(display3)))
+          mappend(mappend(mappend(Cons(char"S", Cons(char"o", Cons(char"l", Cons(char"u", Cons(char"t", Cons(char"i", Cons(char"o", Cons(char"n", Cons(char":", Cons(char" ", Nil)))))))))))(sol))(Cons(char".", Cons(char" ", Cons(char"M", Cons(char"o", Cons(char"r", Cons(char"e", Cons(char"?", Cons(char"|", Nil))))))))))(etc)
+fun find(find1)(find2) =
+  let mi_4 = find1
+  if mi_4 is
+    Empty then
+      failure(Cons(char"n", Cons(char"o", Cons(char"t", Cons(char" ", Cons(char"f", Cons(char"o", Cons(char"u", Cons(char"n", Cons(char"d", Nil))))))))))
+    Fork(find_Fork_0, find_Fork_1, find_Fork_2) then
+      if find_Fork_1 is
+        Tuple2(find_Tuple2_0, find_Tuple2_1) then
+          if polyLt(find2)(find_Tuple2_0) then
+            find(find_Fork_0)(find2)
+          else
+            if polyEq(find2)(find_Tuple2_0) then
+              success(find_Tuple2_1)
+            else
+              if polyGt(find2)(find_Tuple2_0) then
+                find(find_Fork_2)(find2)
+              else
+                (error(Cons(char"f", Cons(char"i", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"c", Cons(char"o", Cons(char"m", Cons(char"p", Cons(char"a", Cons(char"r", Cons(char"i", Cons(char"s", Cons(char"o", Cons(char"n", Cons(char" ", Cons(char"e", Cons(char"r", Cons(char"r", Cons(char"o", Cons(char"r", Nil)))))))))))))))))))))))
+fun strEq(strEq1)(strEq2) =
+  if strEq1 is
+    Cons(strEq_Cons_0, strEq_Cons_1) then
+      let mi_5 = strEq2
+      if mi_5 is
+        Cons(strEq_Cons_0_1, strEq_Cons_1_1) then
+          if polyEq(strEq_Cons_0)(strEq_Cons_0_1) then
+            strEq(strEq_Cons_1)(strEq_Cons_1_1)
+          else
+            False
+        Nil then
+          False
+    Nil then
+      let mi_6 = strEq2
+      if mi_6 is
+        Cons(strEq_Cons_0_2, strEq_Cons_1_2) then
+          False
+        Nil then
+          True
+fun nub(nub1) =
+  if nub1 is
+    Nil then
+      Nil
+    Cons(nub_Cons_0, nub_Cons_1) then
+      Cons(nub_Cons_0, nub(filter(
+        y =>
+          (not(polyEq(nub_Cons_0)(y)))
+      )(nub_Cons_1)))
+fun try(try1)(try2)(try3)(try4) =
+  if try2 is
+    Soln(try_Soln_0, try_Soln_1) then
+      if try4 is
+        Term(try_Term_0, try_Term_1) then
+          if try_Term_0 is
+            Cons(try_Cons_0, try_Cons_1) then
+              if try_Cons_0 is
+                char"i" then
+                  if try_Cons_1 is
+                    Cons(try_Cons_0_1, try_Cons_1_1) then
+                      if try_Cons_0_1 is
+                        char"f" then
+                          if try_Cons_1_1 is
+                            Nil then
+                              if try_Term_1 is
+                                Cons(try_Cons_0_2, try_Cons_1_2) then
+                                  if try_Cons_1_2 is
+                                    Cons(try_Cons_0_3, try_Cons_1_3) then
+                                      if try_Cons_1_3 is
+                                        Nil then
+                                          let m = match(try_Soln_0)(try3)(try_Cons_0_2)
+                                          if fails(m) then
+                                            Nil
+                                          else
+                                            (solve(try1)(Soln(answer(m), try_Soln_1))(try_Cons_0_3))
+fun break(break1)(break2) =
+  if break2 is
+    Nil then
+      Tuple2(Nil, Nil)
+    Cons(break_Cons_0, break_Cons_1) then
+      if break1(break_Cons_0) then
+        Tuple2(Nil, Cons(break_Cons_0, break_Cons_1))
+      else
+        (let mi_7 = break(break1)(break_Cons_1)
+        if mi_7 is
+          Tuple2(break_Tuple2_0, break_Tuple2_1) then
+            Tuple2(Cons(break_Cons_0, break_Tuple2_0), break_Tuple2_1))
+fun relation(relation1) =
+  let verbs = Cons(Cons(char"i", Cons(char"s", Nil)), Cons(Cons(char"d", Cons(char"e", Cons(char"s", Cons(char"c", Cons(char"r", Cons(char"i", Cons(char"b", Cons(char"e", Cons(char"s", Nil))))))))), Cons(Cons(char"h", Cons(char"a", Cons(char"s", Nil))), Cons(Cons(char"c", Cons(char"a", Cons(char"n", Nil))), Cons(Cons(char"e", Cons(char"a", Cons(char"t", Cons(char"s", Nil)))), Nil)))))
+  let verb = head(
+    let f_1 = fp_1 =>
+      if fp_1 is
+        Cons(h_1, t_1) then
+          if inList(h_1)(verbs) then
+            Cons(h_1, f_1(t_1))
+          else
+            (f_1(t_1))
+        Nil then
+          Nil
+    f_1(relation1)
+  )
+  split(relation1)(noun)(verb)(noun)
+fun sortKey(sortKey1) =
+  let insertKey = insertKey1 =>
+    insertKey2 =>
+      if insertKey2 is
+        Nil then
+          Cons(insertKey1, Nil)
+        _ then
+          if insertKey1 is
+            Tuple2(insertKey_Tuple2_0, insertKey_Tuple2_1) then
+              if insertKey2 is
+                Cons(insertKey_Cons_0, insertKey_Cons_1) then
+                  if insertKey_Cons_0 is
+                    Tuple2(insertKey_Tuple2_0_1, insertKey_Tuple2_1_1) then
+                      if polyLeq(insertKey_Tuple2_0)(insertKey_Tuple2_0_1) then
+                        Cons(Cons(Tuple2(insertKey_Tuple2_0, insertKey_Tuple2_1), Tuple2(insertKey_Tuple2_0_1, insertKey_Tuple2_1_1)), insertKey_Cons_1)
+                      else
+                        (Cons(Tuple2(insertKey_Tuple2_0_1, insertKey_Tuple2_1_1), insertKey(Tuple2(insertKey_Tuple2_0, insertKey_Tuple2_1))(insertKey_Cons_1)))
+  foldr(insertKey)(Nil)(sortKey1)
+fun solve(solve1)(solve2)(solve3) =
+  if solve2 is
+    Question(solve_Question_0) then
+      Cons(Question(solve_Question_0), Nil)
+    _ then
+      if solve3 is
+        Term(solve_Term_0_1, solve_Term_1_1) then
+          if solve_Term_0_1 is
+            Cons(solve_Cons_0_5, solve_Cons_1_5) then
+              if solve_Cons_0_5 is
+                char"o" then
+                  if solve_Cons_1_5 is
+                    Cons(solve_Cons_0_6, solve_Cons_1_6) then
+                      if solve_Cons_0_6 is
+                        char"r" then
+                          if solve_Cons_1_6 is
+                            Nil then
+                              if solve_Term_1_1 is
+                                Cons(solve_Cons_0_7, solve_Cons_1_7) then
+                                  if solve_Cons_1_7 is
+                                    Cons(solve_Cons_0_8, solve_Cons_1_8) then
+                                      if solve_Cons_1_8 is
+                                        Nil then
+                                          mappend(solve(solve1)(solve2)(solve_Cons_0_7))(solve(solve1)(solve2)(solve_Cons_0_8))
+                                        _ then
+                                          if solve3 is
+                                            Term(solve_Term_0, solve_Term_1) then
+                                              if solve_Term_0 is
+                                                Cons(solve_Cons_0, solve_Cons_1) then
+                                                  if solve_Cons_0 is
+                                                    char"a" then
+                                                      if solve_Cons_1 is
+                                                        Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                                                          if solve_Cons_0_1 is
+                                                            char"n" then
+                                                              if solve_Cons_1_1 is
+                                                                Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                                                  if solve_Cons_0_2 is
+                                                                    char"d" then
+                                                                      if solve_Cons_1_2 is
+                                                                        Nil then
+                                                                          if solve_Term_1 is
+                                                                            Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                                                              if solve_Cons_1_3 is
+                                                                                Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                                                  if solve_Cons_1_4 is
+                                                                                    Nil then
+                                                                                      concat(
+                                                                                        let f_2 = fp_2 =>
+                                                                                          if fp_2 is
+                                                                                            Cons(h_2, t_2) then
+                                                                                              Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                                                            Nil then
+                                                                                              Nil
+                                                                                        f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                                                      )
+                                                                                    _ then
+                                                                                      let mi_8 = solve1
+                                                                                      if mi_8 is
+                                                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                                          if not(null(rs)) then
+                                                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                                                          else
+                                                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                                _ then
+                                                                                  let mi_8 = solve1
+                                                                                  if mi_8 is
+                                                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                                      if not(null(rs)) then
+                                                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                                                      else
+                                                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                            _ then
+                                                                              let mi_8 = solve1
+                                                                              if mi_8 is
+                                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                                  if not(null(rs)) then
+                                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                                  else
+                                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                        _ then
+                                                                          let mi_8 = solve1
+                                                                          if mi_8 is
+                                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                              if not(null(rs)) then
+                                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                                              else
+                                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                    _ then
+                                                                      let mi_8 = solve1
+                                                                      if mi_8 is
+                                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                          if not(null(rs)) then
+                                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                                          else
+                                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                _ then
+                                                                  let mi_8 = solve1
+                                                                  if mi_8 is
+                                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                      if not(null(rs)) then
+                                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                                      else
+                                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                            _ then
+                                                              let mi_8 = solve1
+                                                              if mi_8 is
+                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                  if not(null(rs)) then
+                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                  else
+                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                        _ then
+                                                          let mi_8 = solve1
+                                                          if mi_8 is
+                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                              if not(null(rs)) then
+                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                              else
+                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                    _ then
+                                      if solve3 is
+                                        Term(solve_Term_0, solve_Term_1) then
+                                          if solve_Term_0 is
+                                            Cons(solve_Cons_0, solve_Cons_1) then
+                                              if solve_Cons_0 is
+                                                char"a" then
+                                                  if solve_Cons_1 is
+                                                    Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                                                      if solve_Cons_0_1 is
+                                                        char"n" then
+                                                          if solve_Cons_1_1 is
+                                                            Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                                              if solve_Cons_0_2 is
+                                                                char"d" then
+                                                                  if solve_Cons_1_2 is
+                                                                    Nil then
+                                                                      if solve_Term_1 is
+                                                                        Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                                                          if solve_Cons_1_3 is
+                                                                            Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                                              if solve_Cons_1_4 is
+                                                                                Nil then
+                                                                                  concat(
+                                                                                    let f_2 = fp_2 =>
+                                                                                      if fp_2 is
+                                                                                        Cons(h_2, t_2) then
+                                                                                          Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                                                        Nil then
+                                                                                          Nil
+                                                                                    f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                                                  )
+                                                                                _ then
+                                                                                  let mi_8 = solve1
+                                                                                  if mi_8 is
+                                                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                                      if not(null(rs)) then
+                                                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                                                      else
+                                                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                            _ then
+                                                                              let mi_8 = solve1
+                                                                              if mi_8 is
+                                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                                  if not(null(rs)) then
+                                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                                  else
+                                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                        _ then
+                                                                          let mi_8 = solve1
+                                                                          if mi_8 is
+                                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                              if not(null(rs)) then
+                                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                                              else
+                                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                    _ then
+                                                                      let mi_8 = solve1
+                                                                      if mi_8 is
+                                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                          if not(null(rs)) then
+                                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                                          else
+                                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                _ then
+                                                                  let mi_8 = solve1
+                                                                  if mi_8 is
+                                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                      if not(null(rs)) then
+                                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                                      else
+                                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                            _ then
+                                                              let mi_8 = solve1
+                                                              if mi_8 is
+                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                  if not(null(rs)) then
+                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                  else
+                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                        _ then
+                                                          let mi_8 = solve1
+                                                          if mi_8 is
+                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                              if not(null(rs)) then
+                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                              else
+                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                        _ then
+                                          let mi_8 = solve1
+                                          if mi_8 is
+                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                              if not(null(rs)) then
+                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                              else
+                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                _ then
+                                  if solve3 is
+                                    Term(solve_Term_0, solve_Term_1) then
+                                      if solve_Term_0 is
+                                        Cons(solve_Cons_0, solve_Cons_1) then
+                                          if solve_Cons_0 is
+                                            char"a" then
+                                              if solve_Cons_1 is
+                                                Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                                                  if solve_Cons_0_1 is
+                                                    char"n" then
+                                                      if solve_Cons_1_1 is
+                                                        Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                                          if solve_Cons_0_2 is
+                                                            char"d" then
+                                                              if solve_Cons_1_2 is
+                                                                Nil then
+                                                                  if solve_Term_1 is
+                                                                    Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                                                      if solve_Cons_1_3 is
+                                                                        Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                                          if solve_Cons_1_4 is
+                                                                            Nil then
+                                                                              concat(
+                                                                                let f_2 = fp_2 =>
+                                                                                  if fp_2 is
+                                                                                    Cons(h_2, t_2) then
+                                                                                      Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                                                    Nil then
+                                                                                      Nil
+                                                                                f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                                              )
+                                                                            _ then
+                                                                              let mi_8 = solve1
+                                                                              if mi_8 is
+                                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                                  if not(null(rs)) then
+                                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                                  else
+                                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                        _ then
+                                                                          let mi_8 = solve1
+                                                                          if mi_8 is
+                                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                              if not(null(rs)) then
+                                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                                              else
+                                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                    _ then
+                                                                      let mi_8 = solve1
+                                                                      if mi_8 is
+                                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                          if not(null(rs)) then
+                                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                                          else
+                                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                _ then
+                                                                  let mi_8 = solve1
+                                                                  if mi_8 is
+                                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                      if not(null(rs)) then
+                                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                                      else
+                                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                            _ then
+                                                              let mi_8 = solve1
+                                                              if mi_8 is
+                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                  if not(null(rs)) then
+                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                  else
+                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                        _ then
+                                                          let mi_8 = solve1
+                                                          if mi_8 is
+                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                              if not(null(rs)) then
+                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                              else
+                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                        _ then
+                                          let mi_8 = solve1
+                                          if mi_8 is
+                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                              if not(null(rs)) then
+                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                              else
+                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                    _ then
+                                      let mi_8 = solve1
+                                      if mi_8 is
+                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                          if not(null(rs)) then
+                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                          else
+                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                            _ then
+                              if solve3 is
+                                Term(solve_Term_0, solve_Term_1) then
+                                  if solve_Term_0 is
+                                    Cons(solve_Cons_0, solve_Cons_1) then
+                                      if solve_Cons_0 is
+                                        char"a" then
+                                          if solve_Cons_1 is
+                                            Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                                              if solve_Cons_0_1 is
+                                                char"n" then
+                                                  if solve_Cons_1_1 is
+                                                    Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                                      if solve_Cons_0_2 is
+                                                        char"d" then
+                                                          if solve_Cons_1_2 is
+                                                            Nil then
+                                                              if solve_Term_1 is
+                                                                Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                                                  if solve_Cons_1_3 is
+                                                                    Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                                      if solve_Cons_1_4 is
+                                                                        Nil then
+                                                                          concat(
+                                                                            let f_2 = fp_2 =>
+                                                                              if fp_2 is
+                                                                                Cons(h_2, t_2) then
+                                                                                  Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                                                Nil then
+                                                                                  Nil
+                                                                            f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                                          )
+                                                                        _ then
+                                                                          let mi_8 = solve1
+                                                                          if mi_8 is
+                                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                              if not(null(rs)) then
+                                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                                              else
+                                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                    _ then
+                                                                      let mi_8 = solve1
+                                                                      if mi_8 is
+                                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                          if not(null(rs)) then
+                                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                                          else
+                                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                _ then
+                                                                  let mi_8 = solve1
+                                                                  if mi_8 is
+                                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                      if not(null(rs)) then
+                                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                                      else
+                                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                            _ then
+                                                              let mi_8 = solve1
+                                                              if mi_8 is
+                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                  if not(null(rs)) then
+                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                  else
+                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                        _ then
+                                                          let mi_8 = solve1
+                                                          if mi_8 is
+                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                              if not(null(rs)) then
+                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                              else
+                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                        _ then
+                                          let mi_8 = solve1
+                                          if mi_8 is
+                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                              if not(null(rs)) then
+                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                              else
+                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                    _ then
+                                      let mi_8 = solve1
+                                      if mi_8 is
+                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                          if not(null(rs)) then
+                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                          else
+                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                _ then
+                                  let mi_8 = solve1
+                                  if mi_8 is
+                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                      if not(null(rs)) then
+                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                      else
+                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                        _ then
+                          if solve3 is
+                            Term(solve_Term_0, solve_Term_1) then
+                              if solve_Term_0 is
+                                Cons(solve_Cons_0, solve_Cons_1) then
+                                  if solve_Cons_0 is
+                                    char"a" then
+                                      if solve_Cons_1 is
+                                        Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                                          if solve_Cons_0_1 is
+                                            char"n" then
+                                              if solve_Cons_1_1 is
+                                                Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                                  if solve_Cons_0_2 is
+                                                    char"d" then
+                                                      if solve_Cons_1_2 is
+                                                        Nil then
+                                                          if solve_Term_1 is
+                                                            Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                                              if solve_Cons_1_3 is
+                                                                Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                                  if solve_Cons_1_4 is
+                                                                    Nil then
+                                                                      concat(
+                                                                        let f_2 = fp_2 =>
+                                                                          if fp_2 is
+                                                                            Cons(h_2, t_2) then
+                                                                              Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                                            Nil then
+                                                                              Nil
+                                                                        f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                                      )
+                                                                    _ then
+                                                                      let mi_8 = solve1
+                                                                      if mi_8 is
+                                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                          if not(null(rs)) then
+                                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                                          else
+                                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                                _ then
+                                                                  let mi_8 = solve1
+                                                                  if mi_8 is
+                                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                      if not(null(rs)) then
+                                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                                      else
+                                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                            _ then
+                                                              let mi_8 = solve1
+                                                              if mi_8 is
+                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                  if not(null(rs)) then
+                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                  else
+                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                        _ then
+                                                          let mi_8 = solve1
+                                                          if mi_8 is
+                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                              if not(null(rs)) then
+                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                              else
+                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                        _ then
+                                          let mi_8 = solve1
+                                          if mi_8 is
+                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                              if not(null(rs)) then
+                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                              else
+                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                    _ then
+                                      let mi_8 = solve1
+                                      if mi_8 is
+                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                          if not(null(rs)) then
+                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                          else
+                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                _ then
+                                  let mi_8 = solve1
+                                  if mi_8 is
+                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                      if not(null(rs)) then
+                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                      else
+                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                            _ then
+                              let mi_8 = solve1
+                              if mi_8 is
+                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                  if not(null(rs)) then
+                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                  else
+                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                    _ then
+                      if solve3 is
+                        Term(solve_Term_0, solve_Term_1) then
+                          if solve_Term_0 is
+                            Cons(solve_Cons_0, solve_Cons_1) then
+                              if solve_Cons_0 is
+                                char"a" then
+                                  if solve_Cons_1 is
+                                    Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                                      if solve_Cons_0_1 is
+                                        char"n" then
+                                          if solve_Cons_1_1 is
+                                            Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                              if solve_Cons_0_2 is
+                                                char"d" then
+                                                  if solve_Cons_1_2 is
+                                                    Nil then
+                                                      if solve_Term_1 is
+                                                        Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                                          if solve_Cons_1_3 is
+                                                            Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                              if solve_Cons_1_4 is
+                                                                Nil then
+                                                                  concat(
+                                                                    let f_2 = fp_2 =>
+                                                                      if fp_2 is
+                                                                        Cons(h_2, t_2) then
+                                                                          Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                                        Nil then
+                                                                          Nil
+                                                                    f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                                  )
+                                                                _ then
+                                                                  let mi_8 = solve1
+                                                                  if mi_8 is
+                                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                      if not(null(rs)) then
+                                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                                      else
+                                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                            _ then
+                                                              let mi_8 = solve1
+                                                              if mi_8 is
+                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                  if not(null(rs)) then
+                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                  else
+                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                        _ then
+                                                          let mi_8 = solve1
+                                                          if mi_8 is
+                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                              if not(null(rs)) then
+                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                              else
+                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                        _ then
+                                          let mi_8 = solve1
+                                          if mi_8 is
+                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                              if not(null(rs)) then
+                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                              else
+                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                    _ then
+                                      let mi_8 = solve1
+                                      if mi_8 is
+                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                          if not(null(rs)) then
+                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                          else
+                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                _ then
+                                  let mi_8 = solve1
+                                  if mi_8 is
+                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                      if not(null(rs)) then
+                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                      else
+                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                            _ then
+                              let mi_8 = solve1
+                              if mi_8 is
+                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                  if not(null(rs)) then
+                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                  else
+                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                        _ then
+                          let mi_8 = solve1
+                          if mi_8 is
+                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                              let rs = relevant(solve_Tuple2_0)(solve3)
+                              if not(null(rs)) then
+                                lookUp(solve1)(solve2)(solve3)(rs)
+                              else
+                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                _ then
+                  if solve3 is
+                    Term(solve_Term_0, solve_Term_1) then
+                      if solve_Term_0 is
+                        Cons(solve_Cons_0, solve_Cons_1) then
+                          if solve_Cons_0 is
+                            char"a" then
+                              if solve_Cons_1 is
+                                Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                                  if solve_Cons_0_1 is
+                                    char"n" then
+                                      if solve_Cons_1_1 is
+                                        Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                          if solve_Cons_0_2 is
+                                            char"d" then
+                                              if solve_Cons_1_2 is
+                                                Nil then
+                                                  if solve_Term_1 is
+                                                    Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                                      if solve_Cons_1_3 is
+                                                        Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                          if solve_Cons_1_4 is
+                                                            Nil then
+                                                              concat(
+                                                                let f_2 = fp_2 =>
+                                                                  if fp_2 is
+                                                                    Cons(h_2, t_2) then
+                                                                      Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                                    Nil then
+                                                                      Nil
+                                                                f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                              )
+                                                            _ then
+                                                              let mi_8 = solve1
+                                                              if mi_8 is
+                                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                                  if not(null(rs)) then
+                                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                                  else
+                                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                        _ then
+                                                          let mi_8 = solve1
+                                                          if mi_8 is
+                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                              if not(null(rs)) then
+                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                              else
+                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                        _ then
+                                          let mi_8 = solve1
+                                          if mi_8 is
+                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                              if not(null(rs)) then
+                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                              else
+                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                    _ then
+                                      let mi_8 = solve1
+                                      if mi_8 is
+                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                          if not(null(rs)) then
+                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                          else
+                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                _ then
+                                  let mi_8 = solve1
+                                  if mi_8 is
+                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                      if not(null(rs)) then
+                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                      else
+                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                            _ then
+                              let mi_8 = solve1
+                              if mi_8 is
+                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                  if not(null(rs)) then
+                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                  else
+                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                        _ then
+                          let mi_8 = solve1
+                          if mi_8 is
+                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                              let rs = relevant(solve_Tuple2_0)(solve3)
+                              if not(null(rs)) then
+                                lookUp(solve1)(solve2)(solve3)(rs)
+                              else
+                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                    _ then
+                      let mi_8 = solve1
+                      if mi_8 is
+                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                          let rs = relevant(solve_Tuple2_0)(solve3)
+                          if not(null(rs)) then
+                            lookUp(solve1)(solve2)(solve3)(rs)
+                          else
+                            (ask(solve_Tuple2_1)(solve2)(solve3))
+            _ then
+              if solve3 is
+                Term(solve_Term_0, solve_Term_1) then
+                  if solve_Term_0 is
+                    Cons(solve_Cons_0, solve_Cons_1) then
+                      if solve_Cons_0 is
+                        char"a" then
+                          if solve_Cons_1 is
+                            Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                              if solve_Cons_0_1 is
+                                char"n" then
+                                  if solve_Cons_1_1 is
+                                    Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                      if solve_Cons_0_2 is
+                                        char"d" then
+                                          if solve_Cons_1_2 is
+                                            Nil then
+                                              if solve_Term_1 is
+                                                Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                                  if solve_Cons_1_3 is
+                                                    Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                      if solve_Cons_1_4 is
+                                                        Nil then
+                                                          concat(
+                                                            let f_2 = fp_2 =>
+                                                              if fp_2 is
+                                                                Cons(h_2, t_2) then
+                                                                  Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                                Nil then
+                                                                  Nil
+                                                            f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                          )
+                                                        _ then
+                                                          let mi_8 = solve1
+                                                          if mi_8 is
+                                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                                              if not(null(rs)) then
+                                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                                              else
+                                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                        _ then
+                                          let mi_8 = solve1
+                                          if mi_8 is
+                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                              if not(null(rs)) then
+                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                              else
+                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                    _ then
+                                      let mi_8 = solve1
+                                      if mi_8 is
+                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                          if not(null(rs)) then
+                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                          else
+                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                _ then
+                                  let mi_8 = solve1
+                                  if mi_8 is
+                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                      if not(null(rs)) then
+                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                      else
+                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                            _ then
+                              let mi_8 = solve1
+                              if mi_8 is
+                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                  if not(null(rs)) then
+                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                  else
+                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                        _ then
+                          let mi_8 = solve1
+                          if mi_8 is
+                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                              let rs = relevant(solve_Tuple2_0)(solve3)
+                              if not(null(rs)) then
+                                lookUp(solve1)(solve2)(solve3)(rs)
+                              else
+                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                    _ then
+                      let mi_8 = solve1
+                      if mi_8 is
+                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                          let rs = relevant(solve_Tuple2_0)(solve3)
+                          if not(null(rs)) then
+                            lookUp(solve1)(solve2)(solve3)(rs)
+                          else
+                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                _ then
+                  let mi_8 = solve1
+                  if mi_8 is
+                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                      let rs = relevant(solve_Tuple2_0)(solve3)
+                      if not(null(rs)) then
+                        lookUp(solve1)(solve2)(solve3)(rs)
+                      else
+                        (ask(solve_Tuple2_1)(solve2)(solve3))
+        _ then
+          if solve3 is
+            Term(solve_Term_0, solve_Term_1) then
+              if solve_Term_0 is
+                Cons(solve_Cons_0, solve_Cons_1) then
+                  if solve_Cons_0 is
+                    char"a" then
+                      if solve_Cons_1 is
+                        Cons(solve_Cons_0_1, solve_Cons_1_1) then
+                          if solve_Cons_0_1 is
+                            char"n" then
+                              if solve_Cons_1_1 is
+                                Cons(solve_Cons_0_2, solve_Cons_1_2) then
+                                  if solve_Cons_0_2 is
+                                    char"d" then
+                                      if solve_Cons_1_2 is
+                                        Nil then
+                                          if solve_Term_1 is
+                                            Cons(solve_Cons_0_3, solve_Cons_1_3) then
+                                              if solve_Cons_1_3 is
+                                                Cons(solve_Cons_0_4, solve_Cons_1_4) then
+                                                  if solve_Cons_1_4 is
+                                                    Nil then
+                                                      concat(
+                                                        let f_2 = fp_2 =>
+                                                          if fp_2 is
+                                                            Cons(h_2, t_2) then
+                                                              Cons(solve(solve1)(h_2)(solve_Cons_0_4), f_2(t_2))
+                                                            Nil then
+                                                              Nil
+                                                        f_2(solve(solve1)(solve2)(solve_Cons_0_3))
+                                                      )
+                                                    _ then
+                                                      let mi_8 = solve1
+                                                      if mi_8 is
+                                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                                          if not(null(rs)) then
+                                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                                          else
+                                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                                _ then
+                                                  let mi_8 = solve1
+                                                  if mi_8 is
+                                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                                      if not(null(rs)) then
+                                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                                      else
+                                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                                            _ then
+                                              let mi_8 = solve1
+                                              if mi_8 is
+                                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                                  if not(null(rs)) then
+                                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                                  else
+                                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                                        _ then
+                                          let mi_8 = solve1
+                                          if mi_8 is
+                                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                              let rs = relevant(solve_Tuple2_0)(solve3)
+                                              if not(null(rs)) then
+                                                lookUp(solve1)(solve2)(solve3)(rs)
+                                              else
+                                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                                    _ then
+                                      let mi_8 = solve1
+                                      if mi_8 is
+                                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                          let rs = relevant(solve_Tuple2_0)(solve3)
+                                          if not(null(rs)) then
+                                            lookUp(solve1)(solve2)(solve3)(rs)
+                                          else
+                                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                                _ then
+                                  let mi_8 = solve1
+                                  if mi_8 is
+                                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                      let rs = relevant(solve_Tuple2_0)(solve3)
+                                      if not(null(rs)) then
+                                        lookUp(solve1)(solve2)(solve3)(rs)
+                                      else
+                                        (ask(solve_Tuple2_1)(solve2)(solve3))
+                            _ then
+                              let mi_8 = solve1
+                              if mi_8 is
+                                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                                  let rs = relevant(solve_Tuple2_0)(solve3)
+                                  if not(null(rs)) then
+                                    lookUp(solve1)(solve2)(solve3)(rs)
+                                  else
+                                    (ask(solve_Tuple2_1)(solve2)(solve3))
+                        _ then
+                          let mi_8 = solve1
+                          if mi_8 is
+                            Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                              let rs = relevant(solve_Tuple2_0)(solve3)
+                              if not(null(rs)) then
+                                lookUp(solve1)(solve2)(solve3)(rs)
+                              else
+                                (ask(solve_Tuple2_1)(solve2)(solve3))
+                    _ then
+                      let mi_8 = solve1
+                      if mi_8 is
+                        Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                          let rs = relevant(solve_Tuple2_0)(solve3)
+                          if not(null(rs)) then
+                            lookUp(solve1)(solve2)(solve3)(rs)
+                          else
+                            (ask(solve_Tuple2_1)(solve2)(solve3))
+                _ then
+                  let mi_8 = solve1
+                  if mi_8 is
+                    Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                      let rs = relevant(solve_Tuple2_0)(solve3)
+                      if not(null(rs)) then
+                        lookUp(solve1)(solve2)(solve3)(rs)
+                      else
+                        (ask(solve_Tuple2_1)(solve2)(solve3))
+            _ then
+              let mi_8 = solve1
+              if mi_8 is
+                Tuple2(solve_Tuple2_0, solve_Tuple2_1) then
+                  let rs = relevant(solve_Tuple2_0)(solve3)
+                  if not(null(rs)) then
+                    lookUp(solve1)(solve2)(solve3)(rs)
+                  else
+                    (ask(solve_Tuple2_1)(solve2)(solve3))
+fun dropWhile(dropWhile1)(dropWhile2) =
+  if dropWhile2 is
+    Nil then
+      Nil
+    Cons(dropWhile_Cons_0, dropWhile_Cons_1) then
+      if dropWhile1(dropWhile_Cons_0) then
+        dropWhile(dropWhile1)(dropWhile_Cons_1)
+      else
+        (Cons(dropWhile_Cons_0, dropWhile_Cons_1))
+fun process(process1)(process2) =
+  let
+    fun info(info1)(info2) =
+      enterList(newTable)(
+        let f_3 = fp_3 =>
+          if fp_3 is
+            Cons(h_3, t_3) then
+              if h_3 is
+                Tuple2(info_Tuple2_0, info_Tuple2_1) then
+                  if info_Tuple2_0 is
+                    Question(info_Question_0) then
+                      Cons(Tuple2(info_Question_0, info_Tuple2_1), f_3(t_3))
+                    _ then
+                      f_3(t_3)
+                _ then
+                  f_3(t_3)
+            Nil then
+              Nil
+        f_3(zip(results(info1)(info2))(replies(info2)))
+      )
+    fun problem(problem1) =
+      goal(words(head(lines(problem1))))
+    fun defs(defs1) =
+      definitions(tail(lines(defs1)))
+    let newsoln =
+      Soln(newTable, let f_4 = fp_4 =>
+        if fp_4 is
+          Cons(h_4, t_4) then
+            Cons(Cons(char"X", string_of_int(h_4)), f_4(t_4))
+          Nil then
+            Nil
+      f_4(enumFromTo(0)(1)))
+    fun replies(replies1) =
+      let f_5 = fp_5 =>
+        if fp_5 is
+          Cons(h_5, t_5) then
+            Cons(polyNeq(words(h_5))(Cons(Cons(char"n", Cons(char"o", Nil)), Nil)), f_5(t_5))
+          Nil then
+            Nil
+      f_5(lines(replies1))
+    fun db(db1)(db2) =
+      Tuple2(defs(db1), info(db1)(db2))
+    fun results(results1)(results2) =
+      strip(Nil)(solve(db(results1)(results2))(newsoln)(problem(results1)))
+  (mappend(mappend(mappend(Cons(char"S", Cons(char"o", Cons(char"l", Cons(char"v", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char":", Cons(char" ", Nil))))))))))(showPhrase(problem(process1))))(Cons(char"|", Nil)))(display(results(process1)(process2))(vars(problem(process1)))(replies(process2))))
+fun vars(vars1) =
+  let names = names1 =>
+    if names1 is
+      Var(names_Var_0) then
+        Cons(names_Var_0, Nil)
+      Term(names_Term_0, names_Term_1) then
+        concat(
+          let f_6 = fp_6 =>
+            if fp_6 is
+              Cons(h_6, t_6) then
+                Cons(names(h_6), f_6(t_6))
+              Nil then
+                Nil
+          f_6(names_Term_1)
+        )
+  nub(names(vars1))
+fun testExpert_nofib(testExpert_nofib1) =
+  let animals = primId(Cons(char"t", Cons(char"h", Cons(char"e", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"i", Cons(char"m", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"X", Cons(char"|", Cons(char"X", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"z", Cons(char"e", Cons(char"b", Cons(char"r", Cons(char"a", Cons(char" ", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"s", Cons(char"t", Cons(char"r", Cons(char"i", Cons(char"p", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"h", Cons(char"o", Cons(char"o", Cons(char"v", Cons(char"e", Cons(char"s", Cons(char"|", Cons(char"X", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"t", Cons(char"i", Cons(char"g", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"s", Cons(char"t", Cons(char"r", Cons(char"i", Cons(char"p", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"c", Cons(char"l", Cons(char"a", Cons(char"w", Cons(char"s", Cons(char"|", Cons(char"X", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"d", Cons(char"o", Cons(char"g", Cons(char" ", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"m", Cons(char"a", Cons(char"m", Cons(char"m", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"d", Cons(char"e", Cons(char"s", Cons(char"c", Cons(char"r", Cons(char"i", Cons(char"b", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"c", Cons(char"a", Cons(char"n", Cons(char" ", Cons(char"b", Cons(char"a", Cons(char"r", Cons(char"k", Cons(char"|", Cons(char"X", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"c", Cons(char"a", Cons(char"t", Cons(char" ", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"m", Cons(char"a", Cons(char"m", Cons(char"m", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"d", Cons(char"e", Cons(char"s", Cons(char"c", Cons(char"r", Cons(char"i", Cons(char"b", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"c", Cons(char"a", Cons(char"n", Cons(char" ", Cons(char"m", Cons(char"i", Cons(char"e", Cons(char"o", Cons(char"w", Cons(char"|", Cons(char"m", Cons(char"a", Cons(char"m", Cons(char"m", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"d", Cons(char"e", Cons(char"s", Cons(char"c", Cons(char"r", Cons(char"i", Cons(char"b", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"i", Cons(char"r", Cons(char" ", Cons(char"o", Cons(char"r", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"m", Cons(char"i", Cons(char"l", Cons(char"k", Cons(char"|", Cons(char"X", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char"i", Cons(char"r", Cons(char"d", Cons(char" ", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"f", Cons(char"e", Cons(char"a", Cons(char"t", Cons(char"h", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"|", Cons(char"X", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"b", Cons(char"i", Cons(char"r", Cons(char"d", Cons(char" ", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"c", Cons(char"a", Cons(char"n", Cons(char" ", Cons(char"f", Cons(char"l", Cons(char"y", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"e", Cons(char"g", Cons(char"g", Cons(char"s", Cons(char"|", Cons(char"X", Cons(char" ", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"f", Cons(char"i", Cons(char"s", Cons(char"h", Cons(char" ", Cons(char"i", Cons(char"f", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"c", Cons(char"a", Cons(char"n", Cons(char" ", Cons(char"s", Cons(char"w", Cons(char"i", Cons(char"m", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"d", Cons(char" ", Cons(char"X", Cons(char" ", Cons(char"h", Cons(char"a", Cons(char"s", Cons(char" ", Cons(char"f", Cons(char"i", Cons(char"n", Cons(char"s", Nil))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  let contents = primId(Cons(char"N", Cons(char"o", Cons(char"|", Cons(char"N", Cons(char"o", Cons(char"|", Cons(char"Y", Cons(char"o", Cons(char"u", Cons(char" ", Cons(char"b", Cons(char"e", Cons(char"t", Cons(char"|", Cons(char"M", Cons(char"a", Cons(char"y", Cons(char"b", Cons(char"e", Cons(char"|", Cons(char"A", Cons(char" ", Cons(char"t", Cons(char"i", Cons(char"g", Cons(char"e", Cons(char"r", Cons(char"?", Cons(char"|", Cons(char"U", Cons(char"n", Cons(char"h", Cons(char"u", Cons(char"h", Cons(char"|", Cons(char"Y", Cons(char"e", Cons(char"p", Cons(char"|", Cons(char"y", Cons(char"|", Cons(char"n", Cons(char"|", Cons(char"y", Cons(char"|", Cons(char"y", Cons(char"|", Cons(char"y", Cons(char"|", Cons(char"y", Cons(char"|", Cons(char"n", Nil)))))))))))))))))))))))))))))))))))))))))))))))))))))
+  (x_1 =>
+    ((x_2 =>
+      (length(process(animals)(x_2))))(take(testExpert_nofib1 + 9999)(x_1))))(contents)
+fun enter(enter1)(enter2)(enter3) =
+  if enter1 is
+    Empty then
+      Fork(Empty, Tuple2(enter2, enter3), Empty)
+    Fork(enter_Fork_0, enter_Fork_1, enter_Fork_2) then
+      if enter_Fork_1 is
+        Tuple2(enter_Tuple2_0, enter_Tuple2_1) then
+          if polyLt(enter2)(enter_Tuple2_0) then
+            Fork(enter(enter_Fork_0)(enter2)(enter3), Tuple2(enter_Tuple2_0, enter_Tuple2_1), enter_Fork_2)
+          else
+            if polyEq(enter2)(enter_Tuple2_0) then
+              Fork(enter_Fork_0, Tuple2(enter_Tuple2_0, enter_Tuple2_1), enter_Fork_2)
+            else
+              if polyGt(enter2)(enter_Tuple2_0) then
+                Fork(enter_Fork_0, Tuple2(enter_Tuple2_0, enter_Tuple2_1), enter(enter_Fork_2)(enter2)(enter3))
+              else
+                (error(Cons(char"e", Cons(char"n", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"c", Cons(char"o", Cons(char"m", Cons(char"p", Cons(char"a", Cons(char"r", Cons(char"i", Cons(char"s", Cons(char"o", Cons(char"n", Cons(char" ", Cons(char"e", Cons(char"r", Cons(char"r", Cons(char"o", Cons(char"r", Nil))))))))))))))))))))))))
+fun showVars(showVars1)(showVars2) =
+  let join = x =>
+    y =>
+      (mappend(mappend(x)(Cons(char";", Cons(char" ", Nil))))(y))
+  let showVar = v =>
+    (mappend(mappend(v)(Cons(char" ", Cons(char"=", Cons(char" ", Nil)))))(showPhrase(subst(showVars1)(Var(v)))))
+  foldr1(join)(map(showVar)(showVars2))
+fun newTable =
+  Empty
+fun rule(rule1) =
+  split(rule1)(relation)(Cons(char"i", Cons(char"f", Nil)))(goal)
+fun goal(goal1) =
+  if inList(Cons(char"o", Cons(char"r", Nil)))(goal1) then
+    split(goal1)(goal)(Cons(char"o", Cons(char"r", Nil)))(goal)
+  else
+    if inList(Cons(char"a", Cons(char"n", Cons(char"d", Nil))))(goal1) then
+      split(goal1)(goal)(Cons(char"a", Cons(char"n", Cons(char"d", Nil))))(goal)
+    else
+      (relation(goal1))
+fun strip(strip1)(strip2) =
+  if strip2 is
+    Nil then
+      Nil
+    Cons(strip_Cons_0, strip_Cons_1) then
+      if strip_Cons_0 is
+        Question(strip_Question_0) then
+          if inList(strip_Question_0)(strip1) then
+            strip(strip1)(strip_Cons_1)
+          else
+            (Cons(Question(strip_Question_0), strip(Cons(strip_Question_0, strip1))(strip_Cons_1)))
+        _ then
+          Cons(strip_Cons_0, strip(strip1)(strip_Cons_1))
+fun or(or1) =
+  if or1 is
+    Nil then
+      False
+    Cons(or_Cons_0, or_Cons_1) then
+      if or_Cons_0 then
+        True
+      else
+        (or(or_Cons_1))
+fun subst(subst1)(subst2) =
+  if subst2 is
+    Term(subst_Term_0, subst_Term_1) then
+      Term(subst_Term_0, let f_7 = fp_7 =>
+        if fp_7 is
+          Cons(h_7, t_7) then
+            Cons(subst(subst1)(h_7), f_7(t_7))
+          Nil then
+            Nil
+      f_7(subst_Term_1))
+    Var(subst_Var_0) then
+      let lookup = find(subst1)(subst_Var_0)
+      if fails(lookup) then
+        Var(subst_Var_0)
+      else
+        (subst(subst1)(answer(lookup)))
+fun null(null1) =
+  if null1 is
+    Nil then
+      True
+    Cons(null_Cons_0, null_Cons_1) then
+      False
+fun answers(answers1) =
+  if answers1 is
+    Answer(answers_Answer_0) then
+      Cons(answers_Answer_0, Nil)
+    _ then
+      Nil
+fun reason(reason1) =
+  if reason1 is
+    Reason(reason_Reason_0) then
+      reason_Reason_0
+fun match(match1)(match2)(match3) =
+  compear(match1)(subst(match1)(match2))(subst(match1)(match3))
+fun showPhrase(showPhrase1) =
+  if showPhrase1 is
+    Var(showPhrase_Var_0) then
+      showPhrase_Var_0
+    Term(showPhrase_Term_0, showPhrase_Term_1) then
+      if showPhrase_Term_1 is
+        Nil then
+          showPhrase_Term_0
+        Cons(showPhrase_Cons_0, showPhrase_Cons_1) then
+          if showPhrase_Cons_1 is
+            Cons(showPhrase_Cons_0_1, showPhrase_Cons_1_1) then
+              if showPhrase_Cons_1_1 is
+                Nil then
+                  mappend(mappend(mappend(mappend(showPhrase(showPhrase_Cons_0))(Cons(char" ", Nil)))(showPhrase_Term_0))(Cons(char" ", Nil)))(showPhrase(showPhrase_Cons_0_1))
+fun drop(drop1)(drop2) =
+  if drop2 is
+    Nil then
+      Nil
+    Cons(drop_Cons_0, drop_Cons_1) then
+      if drop1 > 0 then
+        drop(drop1 - 1)(drop_Cons_1)
+      else
+        (Cons(drop_Cons_0, drop_Cons_1))
+fun freshCopy(freshCopy1)(freshCopy2) =
+  if freshCopy1 is
+    Soln(freshCopy_Soln_0, freshCopy_Soln_1) then
+      let xs = vars(freshCopy2)
+      let n = length(xs)
+      let tab = updateList(newTable)(zip(xs)(
+        let f_8 = fp_8 =>
+          if fp_8 is
+            Cons(h_8, t_8) then
+              Cons(Var(h_8), f_8(t_8))
+            Nil then
+              Nil
+        f_8(take(n)(freshCopy_Soln_1))
+      ))
+      Tuple2(Soln(freshCopy_Soln_0, drop(n)(freshCopy_Soln_1)), subst(tab)(freshCopy2))
+fun succeeds(succeeds1) =
+  if succeeds1 is
+    Answer(succeeds_Answer_0) then
+      True
+    _ then
+      False
+fun lookUp(lookUp1)(lookUp2)(lookUp3)(lookUp4) =
+  let copies = let f_9 = fp_9 =>
+    if fp_9 is
+      Cons(h_9, t_9) then
+        Cons(freshCopy(lookUp2)(h_9), f_9(t_9))
+      Nil then
+        Nil
+  f_9(lookUp4)
+  concat(
+    let f_10 = fp_10 =>
+      if fp_10 is
+        Cons(h_10, t_10) then
+          if h_10 is
+            Tuple2(lookUp_Tuple2_0, lookUp_Tuple2_1) then
+              Cons(try(lookUp1)(lookUp_Tuple2_0)(lookUp3)(lookUp_Tuple2_1), f_10(t_10))
+            _ then
+              f_10(t_10)
+        Nil then
+          Nil
+    f_10(copies)
+  )
+fun inList(inList1)(inList2) =
+  if inList2 is
+    Cons(inList_Cons_0, inList_Cons_1) then
+      if polyEq(inList1)(inList_Cons_0) then
+        True
+      else
+        (inList(inList1)(inList_Cons_1))
+    Nil then
+      False
+fun answer(answer1) =
+  if answer1 is
+    Answer(answer_Answer_0) then
+      answer_Answer_0
+fun words(words1) =
+  let mi_9 = dropWhile(isSpace)(words1)
+  if mi_9 is
+    Nil then
+      Nil
+    Cons(words_Cons_0, words_Cons_1) then
+      let mi_10 = break(isSpace)(Cons(words_Cons_0, words_Cons_1))
+      if mi_10 is
+        Tuple2(words_Tuple2_0, words_Tuple2_1) then
+          Cons(words_Tuple2_0, words(words_Tuple2_1))
+fun definitions(definitions1) =
+  let verb = x =>
+    let mi_11 = x
+    if mi_11 is
+      Term(definitions_Term_0, definitions_Term_1) then
+        if definitions_Term_0 is
+          Cons(definitions_Cons_0, definitions_Cons_1) then
+            if definitions_Cons_0 is
+              char"i" then
+                if definitions_Cons_1 is
+                  Cons(definitions_Cons_0_1, definitions_Cons_1_1) then
+                    if definitions_Cons_0_1 is
+                      char"f" then
+                        if definitions_Cons_1_1 is
+                          Nil then
+                            if definitions_Term_1 is
+                              Cons(definitions_Cons_0_2, definitions_Cons_1_2) then
+                                if definitions_Cons_0_2 is
+                                  Term(definitions_Term_0_1, definitions_Term_1_1) then
+                                    if definitions_Cons_1_2 is
+                                      Cons(definitions_Cons_0_3, definitions_Cons_1_3) then
+                                        if definitions_Cons_1_3 is
+                                          Nil then
+                                            definitions_Term_0_1
+  let rs = let f_11 = fp_11 =>
+    if fp_11 is
+      Cons(h_11, t_11) then
+        Cons(rule(words(h_11)), f_11(t_11))
+      Nil then
+        Nil
+  f_11(definitions1)
+  let verbs = nub(
+    let f_12 = fp_12 =>
+      if fp_12 is
+        Cons(h_12, t_12) then
+          Cons(verb(h_12), f_12(t_12))
+        Nil then
+          Nil
+    f_12(rs)
+  )
+  let def = v =>
+    let f_13 = fp_13 =>
+      if fp_13 is
+        Cons(h_13, t_13) then
+          if polyEq(verb(h_13))(v) then
+            Cons(h_13, f_13(t_13))
+          else
+            (f_13(t_13))
+        Nil then
+          Nil
+    f_13(rs)
+  updateList(newTable)(
+    let f_14 = fp_14 =>
+      if fp_14 is
+        Cons(h_14, t_14) then
+          Cons(Tuple2(h_14, def(h_14)), f_14(t_14))
+        Nil then
+          Nil
+    f_14(verbs)
+  )
+fun compear(compear1)(compear2)(compear3) =
+  if compear2 is
+    Term(compear_Term_0, compear_Term_1) then
+      if compear3 is
+        Term(compear_Term_0_1, compear_Term_1_1) then
+          if polyEq(compear_Term_0)(compear_Term_0_1) then
+            matchList(compear1)(zip(compear_Term_1)(compear_Term_1_1))
+          else
+            (failure(Cons(char"n", Cons(char"o", Cons(char" ", Cons(char"m", Cons(char"a", Cons(char"t", Cons(char"c", Cons(char"h", Nil))))))))))
+        _ then
+          if compear3 is
+            Var(compear_Var_0) then
+              compear(compear1)(Var(compear_Var_0))(compear2)
+    Var(compear_Var_0_1) then
+      if compear3 is
+        Var(compear_Var_0_2) then
+          if polyNeq(compear_Var_0_1)(compear_Var_0_2) then
+            success(update(compear1)(compear_Var_0_1)(Var(compear_Var_0_2)))
+          else
+            (success(compear1))
+        _ then
+          if not(occurs(Var(compear_Var_0_1))(compear3)) then
+            success(update(compear1)(compear_Var_0_1)(compear3))
+          else
+            (failure(Cons(char"o", Cons(char"c", Cons(char"c", Cons(char"u", Cons(char"r", Cons(char"s", Cons(char" ", Cons(char"c", Cons(char"h", Cons(char"e", Cons(char"c", Cons(char"k", Cons(char" ", Cons(char"f", Cons(char"a", Cons(char"i", Cons(char"l", Cons(char"e", Cons(char"d", Nil)))))))))))))))))))))
+    _ then
+      if compear3 is
+        Var(compear_Var_0) then
+          compear(compear1)(Var(compear_Var_0))(compear2)
+fun isSpace(isSpace1) =
+  polyEq(isSpace1)(char" ")
+fun enterList(enterList1)(enterList2) =
+  if enterList2 is
+    Nil then
+      enterList1
+    _ then
+      if enterList1 is
+        Empty then
+          if enterList2 is
+            Cons(enterList_Cons_0, enterList_Cons_1) then
+              let k = fst(enterList_Cons_0)
+              let left = enterList(Empty)(
+                let f_17 = fp_17 =>
+                  if fp_17 is
+                    Cons(h_17, t_17) then
+                      if polyLt(fst(h_17))(k) then
+                        Cons(h_17, f_17(t_17))
+                      else
+                        (f_17(t_17))
+                    Nil then
+                      Nil
+                f_17(enterList_Cons_1)
+              )
+              let right = enterList(Empty)(
+                let f_18 = fp_18 =>
+                  if fp_18 is
+                    Cons(h_18, t_18) then
+                      if polyGt(fst(h_18))(k) then
+                        Cons(h_18, f_18(t_18))
+                      else
+                        (f_18(t_18))
+                    Nil then
+                      Nil
+                f_18(enterList_Cons_1)
+              )
+              Fork(left, enterList_Cons_0, right)
+            _ then
+              if enterList1 is
+                Fork(enterList_Fork_0, enterList_Fork_1, enterList_Fork_2) then
+                  let k = fst(enterList_Fork_1)
+                  let left' = enterList(enterList_Fork_0)(
+                    let f_15 = fp_15 =>
+                      if fp_15 is
+                        Cons(h_15, t_15) then
+                          if polyLt(fst(h_15))(k) then
+                            Cons(h_15, f_15(t_15))
+                          else
+                            (f_15(t_15))
+                        Nil then
+                          Nil
+                    f_15(enterList2)
+                  )
+                  let right' = enterList(enterList_Fork_2)(
+                    let f_16 = fp_16 =>
+                      if fp_16 is
+                        Cons(h_16, t_16) then
+                          if polyGt(fst(h_16))(k) then
+                            Cons(h_16, f_16(t_16))
+                          else
+                            (f_16(t_16))
+                        Nil then
+                          Nil
+                    f_16(enterList2)
+                  )
+                  Fork(left', enterList_Fork_1, right')
+        _ then
+          if enterList1 is
+            Fork(enterList_Fork_0, enterList_Fork_1, enterList_Fork_2) then
+              let k = fst(enterList_Fork_1)
+              let left' = enterList(enterList_Fork_0)(
+                let f_15 = fp_15 =>
+                  if fp_15 is
+                    Cons(h_15, t_15) then
+                      if polyLt(fst(h_15))(k) then
+                        Cons(h_15, f_15(t_15))
+                      else
+                        (f_15(t_15))
+                    Nil then
+                      Nil
+                f_15(enterList2)
+              )
+              let right' = enterList(enterList_Fork_2)(
+                let f_16 = fp_16 =>
+                  if fp_16 is
+                    Cons(h_16, t_16) then
+                      if polyGt(fst(h_16))(k) then
+                        Cons(h_16, f_16(t_16))
+                      else
+                        (f_16(t_16))
+                    Nil then
+                      Nil
+                f_16(enterList2)
+              )
+              Fork(left', enterList_Fork_1, right')
+fun ask(ask1)(ask2)(ask3) =
+  if ask2 is
+    Soln(ask_Soln_0, ask_Soln_1) then
+      let sp = showPhrase(subst(ask_Soln_0)(ask3))
+      let ans = answer(find(ask1)(sp))
+      Cons(Question(sp), if ans then
+        Cons(Soln(ask_Soln_0, ask_Soln_1), Nil)
+      else
+        Nil)
+fun update(update1)(update2)(update3) =
+  if update1 is
+    Empty then
+      Fork(Empty, Tuple2(update2, update3), Empty)
+    Fork(update_Fork_0, update_Fork_1, update_Fork_2) then
+      if update_Fork_1 is
+        Tuple2(update_Tuple2_0, update_Tuple2_1) then
+          if polyLt(update2)(update_Tuple2_0) then
+            Fork(update(update_Fork_0)(update2)(update3), Tuple2(update_Tuple2_0, update_Tuple2_1), update_Fork_2)
+          else
+            if polyEq(update2)(update_Tuple2_0) then
+              Fork(update_Fork_0, Tuple2(update2, update3), update_Fork_2)
+            else
+              if polyGt(update2)(update_Tuple2_0) then
+                Fork(update_Fork_0, Tuple2(update_Tuple2_0, update_Tuple2_1), update(update_Fork_2)(update2)(update3))
+              else
+                (error(Cons(char"u", Cons(char"p", Cons(char"d", Cons(char"a", Cons(char"t", Cons(char"e", Cons(char" ", Cons(char"c", Cons(char"o", Cons(char"m", Cons(char"p", Cons(char"a", Cons(char"r", Cons(char"i", Cons(char"s", Cons(char"o", Cons(char"n", Cons(char" ", Cons(char"e", Cons(char"r", Cons(char"r", Cons(char"o", Cons(char"r", Nil)))))))))))))))))))))))))
+fun foldr1(foldr11)(foldr12) =
+  if foldr12 is
+    Cons(foldr1_Cons_0, foldr1_Cons_1) then
+      if foldr1_Cons_1 is
+        Nil then
+          foldr1_Cons_0
+        _ then
+          foldr11(foldr1_Cons_0)(foldr1(foldr11)(foldr1_Cons_1))
+fun fst(fst1) =
+  if fst1 is
+    Tuple2(fst_Tuple2_0, fst_Tuple2_1) then
+      fst_Tuple2_0
+fun mergeKey(mergeKey1)(mergeKey2) =
+  if mergeKey1 is
+    Nil then
+      mergeKey2
+    _ then
+      if mergeKey2 is
+        Nil then
+          mergeKey1
+        _ then
+          if mergeKey1 is
+            Cons(mergeKey_Cons_0, mergeKey_Cons_1) then
+              if mergeKey_Cons_0 is
+                Tuple2(mergeKey_Tuple2_0, mergeKey_Tuple2_1) then
+                  if mergeKey2 is
+                    Cons(mergeKey_Cons_0_1, mergeKey_Cons_1_1) then
+                      if mergeKey_Cons_0_1 is
+                        Tuple2(mergeKey_Tuple2_0_1, mergeKey_Tuple2_1_1) then
+                          if polyLeq(mergeKey_Tuple2_0)(mergeKey_Tuple2_0_1) then
+                            Cons(Tuple2(mergeKey_Tuple2_0, mergeKey_Tuple2_1), mergeKey(mergeKey_Cons_1)(Cons(Tuple2(mergeKey_Tuple2_0_1, mergeKey_Tuple2_1_1), mergeKey_Cons_1_1)))
+                          else
+                            (Cons(Tuple2(mergeKey_Tuple2_0_1, mergeKey_Tuple2_1_1), mergeKey(Cons(Tuple2(mergeKey_Tuple2_0, mergeKey_Tuple2_1), mergeKey_Cons_1))(mergeKey_Cons_1_1)))
+fun matchList(matchList1)(matchList2) =
+  if matchList2 is
+    Nil then
+      success(matchList1)
+    Cons(matchList_Cons_0, matchList_Cons_1) then
+      if matchList_Cons_0 is
+        Tuple2(matchList_Tuple2_0, matchList_Tuple2_1) then
+          let res = match(matchList1)(matchList_Tuple2_0)(matchList_Tuple2_1)
+          if fails(res) then
+            res
+          else
+            (matchList(answer(res))(matchList_Cons_1))
+(testExpert_nofib(primId(3)))

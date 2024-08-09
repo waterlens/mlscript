@@ -1,0 +1,359 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun goto(goto1)(goto2) =
+  Cons(char"E", Cons(char"[", mappend(string_of_int(goto2))(Cons(char";", mappend(string_of_int(goto1))(Cons(char"H", Nil))))))
+fun delete(delete1)(delete2)(delete3)(delete4) =
+  if delete1 > 0 then
+    writeString(Cons(char"B", Cons(char"S", Cons(char"_", Cons(char"B", Cons(char"S", Nil))))))(loop(delete1 - 1)(tail(delete2))(delete3)(delete4))
+  else
+    (ringBell(loop(0)(Nil)(delete3)(delete4)))
+fun cls =
+  Cons(char"L", Nil)
+fun end(end1) =
+  Nil
+fun writes(writes1) =
+  writeString(concat(writes1))
+fun readChar(readChar1)(readChar2)(readChar3) =
+  if readChar3 is
+    Nil then
+      readChar1(Nil)
+    Cons(readChar_Cons_0, readChar_Cons_1) then
+      readChar2(readChar_Cons_0)(readChar_Cons_1)
+fun peekChar(peekChar1)(peekChar2)(peekChar3) =
+  if peekChar3 is
+    Nil then
+      peekChar1(Nil)
+    Cons(peekChar_Cons_0, peekChar_Cons_1) then
+      peekChar2(peekChar_Cons_0)(Cons(peekChar_Cons_0, peekChar_Cons_1))
+fun program(program1) =
+  writes(Cons(cls, Cons(at(Tuple2(17, 5))(highlight(Cons(char"D", Cons(char"e", Cons(char"m", Cons(char"o", Cons(char"n", Cons(char"s", Cons(char"t", Cons(char"r", Cons(char"a", Cons(char"t", Cons(char"i", Cons(char"o", Cons(char"n", Cons(char" ", Cons(char"p", Cons(char"r", Cons(char"o", Cons(char"g", Cons(char"r", Cons(char"a", Cons(char"m", Nil))))))))))))))))))))))), Cons(at(Tuple2(48, 5))(Cons(char"V", Cons(char"e", Cons(char"r", Cons(char"s", Cons(char"i", Cons(char"o", Cons(char"n", Cons(char" ", Cons(char"1", Cons(char".", Cons(char"0", Nil)))))))))))), Cons(at(Tuple2(17, 7))(Cons(char"T", Cons(char"h", Cons(char"i", Cons(char"s", Cons(char" ", Cons(char"p", Cons(char"r", Cons(char"o", Cons(char"g", Cons(char"r", Cons(char"a", Cons(char"m", Cons(char" ", Cons(char"i", Cons(char"l", Cons(char"l", Cons(char"u", Cons(char"s", Cons(char"t", Cons(char"r", Cons(char"a", Cons(char"t", Cons(char"e", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"s", Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"l", Cons(char"e", Cons(char" ", Cons(char"a", Cons(char"p", Cons(char"p", Cons(char"r", Cons(char"o", Cons(char"a", Cons(char"c", Cons(char"h", Nil))))))))))))))))))))))))))))))))))))))))))), Cons(at(Tuple2(17, 8))(Cons(char"t", Cons(char"o", Cons(char" ", Cons(char"s", Cons(char"c", Cons(char"r", Cons(char"e", Cons(char"e", Cons(char"n", Cons(char"-", Cons(char"b", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char"d", Cons(char" ", Cons(char"i", Cons(char"n", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char"a", Cons(char"c", Cons(char"t", Cons(char"i", Cons(char"v", Cons(char"e", Cons(char" ", Cons(char"p", Cons(char"r", Cons(char"o", Cons(char"g", Cons(char"r", Cons(char"a", Cons(char"m", Cons(char"s", Cons(char" ", Cons(char"u", Cons(char"s", Cons(char"i", Cons(char"n", Cons(char"g", Nil))))))))))))))))))))))))))))))))))))))))))), Cons(at(Tuple2(17, 9))(Cons(char"t", Cons(char"h", Cons(char"e", Cons(char" ", Cons(char"H", Cons(char"u", Cons(char"g", Cons(char"s", Cons(char" ", Cons(char"f", Cons(char"u", Cons(char"n", Cons(char"c", Cons(char"t", Cons(char"i", Cons(char"o", Cons(char"n", Cons(char"a", Cons(char"l", Cons(char" ", Cons(char"p", Cons(char"r", Cons(char"o", Cons(char"g", Cons(char"r", Cons(char"a", Cons(char"m", Cons(char"m", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char" ", Cons(char"s", Cons(char"y", Cons(char"s", Cons(char"t", Cons(char"e", Cons(char"m", Cons(char".", Nil)))))))))))))))))))))))))))))))))))))))), Cons(at(Tuple2(17, 11))(Cons(char"P", Cons(char"l", Cons(char"e", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"p", Cons(char"r", Cons(char"e", Cons(char"s", Cons(char"s", Cons(char" ", Cons(char"a", Cons(char"n", Cons(char"y", Cons(char" ", Cons(char"k", Cons(char"e", Cons(char"y", Cons(char" ", Cons(char"t", Cons(char"o", Cons(char" ", Cons(char"c", Cons(char"o", Cons(char"n", Cons(char"t", Cons(char"i", Cons(char"n", Cons(char"u", Cons(char"e", Cons(char" ", Cons(char".", Cons(char".", Cons(char".", Nil))))))))))))))))))))))))))))))))))))), Nil))))))))(pressAnyKey(promptReadAt(Tuple2(17, 15))(18)(Cons(char"P", Cons(char"l", Cons(char"e", Cons(char"a", Cons(char"s", Cons(char"e", Cons(char" ", Cons(char"e", Cons(char"n", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char" ", Cons(char"y", Cons(char"o", Cons(char"u", Cons(char"r", Cons(char" ", Cons(char"n", Cons(char"a", Cons(char"m", Cons(char"e", Cons(char":", Cons(char" ", Nil)))))))))))))))))))))))))(
+    name =>
+      let reply = mappend(Cons(char"H", Cons(char"e", Cons(char"l", Cons(char"l", Cons(char"o", Cons(char" ", Nil)))))))(mappend(name)(Cons(char"!", Nil)))
+      writeAt(Tuple2(40 - (div(length(reply))(2)), 18))(reply)(moveTo(Tuple2(1, 23))(writeString(Cons(char"I", Cons(char"m", Cons(char" ", Cons(char"w", Cons(char"a", Cons(char"i", Cons(char"t", Cons(char"i", Cons(char"n", Cons(char"g", Cons(char".", Cons(char".", Cons(char".", Cons(char"`", Nil)))))))))))))))(pressAnyKey(end))))
+  )))(program1)
+fun pressAnyKey(pressAnyKey1) =
+  readChar(pressAnyKey1)(
+    c =>
+      pressAnyKey1
+  )
+fun writeString(writeString1)(writeString2)(writeString3) =
+  mappend(writeString1)(writeString2(writeString3))
+fun loop(loop1)(loop2)(loop3)(loop4) =
+  readChar(return(loop2)(loop4))(
+    c =>
+      let mi = c
+      if mi is
+        char"B" then
+          delete(loop1)(loop2)(loop3)(loop4)
+        char"D" then
+          delete(loop1)(loop2)(loop3)(loop4)
+        char"`" then
+          return(loop2)(loop4)
+        _ then
+          if loop1 < loop3 then
+            writeChar(mi)(loop(loop1 + 1)(Cons(mi, loop2))(loop3)(loop4))
+          else
+            (ringBell(loop(loop1)(loop2)(loop3)(loop4)))
+  )
+fun promptReadAt(promptReadAt1)(promptReadAt2)(promptReadAt3)(promptReadAt4) =
+  if promptReadAt1 is
+    Tuple2(promptReadAt_Tuple2_0, promptReadAt_Tuple2_1) then
+      writeAt(Tuple2(promptReadAt_Tuple2_0, promptReadAt_Tuple2_1))(promptReadAt3)(readAt(Tuple2(promptReadAt_Tuple2_0 + (length(promptReadAt3)), promptReadAt_Tuple2_1))(promptReadAt2)(promptReadAt4))
+fun moveTo(moveTo1) =
+  if moveTo1 is
+    Tuple2(moveTo_Tuple2_0, moveTo_Tuple2_1) then
+      writeString(goto(moveTo_Tuple2_0)(moveTo_Tuple2_1))
+fun return(return1)(return2) =
+  return2(reverse(return1))
+fun ringBell(ringBell1)(ringBell2) =
+  writeChar(char"B")(ringBell1)(ringBell2)
+fun writeChar(writeChar1)(writeChar2)(writeChar3) =
+  Cons(writeChar1, writeChar2(writeChar3))
+fun writeAt(writeAt1)(writeAt2) =
+  if writeAt1 is
+    Tuple2(writeAt_Tuple2_0, writeAt_Tuple2_1) then
+      writeString(mappend(goto(writeAt_Tuple2_0)(writeAt_Tuple2_1))(writeAt2))
+fun highlight(highlight1) =
+  mappend(Cons(char"E", Cons(char"S", Cons(char"C", Cons(char"[", Cons(char"7", Cons(char"m", Nil)))))))(mappend(highlight1)(Cons(char"E", Cons(char"S", Cons(char"C", Cons(char"[", Cons(char"0", Cons(char"m", Nil))))))))
+fun clearScreen =
+  writeString(cls)
+fun unreadChar(unreadChar1)(unreadChar2)(unreadChar3) =
+  unreadChar2(Cons(unreadChar1, unreadChar3))
+fun at(at1)(at2) =
+  if at1 is
+    Tuple2(at_Tuple2_0, at_Tuple2_1) then
+      mappend(goto(at_Tuple2_0)(at_Tuple2_1))(at2)
+fun testAnsi_nofib(testAnsi_nofib1) =
+  foldr(
+    f =>
+      g =>
+        x =>
+          (f(g(x)))
+  )(
+    x =>
+      x
+  )(copy(testAnsi_nofib1)(program))(Cons(char"t", Cons(char"e", Cons(char"s", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"s", Cons(char"t", Cons(char"t", Cons(char"e", Cons(char"s", Cons(char"t", Nil)))))))))))))
+fun readAt(readAt1)(readAt2)(readAt3) =
+  if readAt1 is
+    Tuple2(readAt_Tuple2_0, readAt_Tuple2_1) then
+      writeAt(Tuple2(readAt_Tuple2_0, readAt_Tuple2_1))(copy(readAt2)(char"_"))(moveTo(Tuple2(readAt_Tuple2_0, readAt_Tuple2_1))(loop(0)(Nil)(readAt2)(readAt3)))
+fun copy(copy1)(copy2) =
+  if copy1 > 0 then
+    Cons(copy2, copy(copy1 - 1)(copy2))
+  else
+    Nil
+(testAnsi_nofib(primId(8)))

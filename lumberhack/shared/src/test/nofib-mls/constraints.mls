@@ -1,0 +1,729 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun emptyTable(emptyTable1) =
+  if emptyTable1 is
+    CSP(emptyTable_CSP_0, emptyTable_CSP_1, emptyTable_CSP_2) then
+      Cons(Nil, let f = fp =>
+        if fp is
+          Cons(h, t) then
+            Cons(let f_1 = fp_1 =>
+              if fp_1 is
+                Cons(h_1, t_1) then
+                  Cons(Unknown, f_1(t_1))
+                Nil then
+                  Nil
+            f_1(enumFromTo(1)(emptyTable_CSP_1)), f(t))
+          Nil then
+            Nil
+      f(enumFromTo(1)(emptyTable_CSP_0)))
+fun compareTuple2(compareTuple21)(compareTuple22) =
+  if compareTuple21 is
+    Tuple2(compareTuple2_Tuple2_0, compareTuple2_Tuple2_1) then
+      if compareTuple22 is
+        Tuple2(compareTuple2_Tuple2_0_1, compareTuple2_Tuple2_1_1) then
+          compareTuple2_Tuple2_0 <= compareTuple2_Tuple2_0_1
+fun cacheChecks(cacheChecks1)(cacheChecks2)(cacheChecks3) =
+  if cacheChecks3 is
+    Node(cacheChecks_Node_0, cacheChecks_Node_1) then
+      Node(Tuple2(cacheChecks_Node_0, cacheChecks2), map(cacheChecks(cacheChecks1)(fillTable(cacheChecks_Node_0)(cacheChecks1)(tail(cacheChecks2))))(cacheChecks_Node_1))
+fun bm(bm1)(x) =
+  (x_1 =>
+    (mapTree(fst)(lookupCache(bm1)(x_1))))(cacheChecks(bm1)(emptyTable(bm1))(x))
+fun solver(solver1) =
+  test(solver1)(generate(solver1))
+fun prune(prune1) =
+  filterTree(
+    x_2 =>
+      (not(prune1(x_2)))
+  )
+fun flip(flip1)(flip2)(flip3) =
+  flip1(flip3)(flip2)
+fun rqsort(rqsort1)(rqsort2)(rqsort3) =
+  if rqsort2 is
+    Nil then
+      rqsort3
+    Cons(rqsort_Cons_0, rqsort_Cons_1) then
+      if rqsort_Cons_1 is
+        Nil then
+          Cons(rqsort_Cons_0, rqsort3)
+        _ then
+          rqpart(rqsort1)(rqsort_Cons_0)(rqsort_Cons_1)(Nil)(Nil)(rqsort3)
+fun collect(collect1) =
+  if collect1 is
+    Nil then
+      Nil
+    Cons(collect_Cons_0, collect_Cons_1) then
+      if collect_Cons_0 is
+        Known(collect_Known_0) then
+          union(collect_Known_0)(collect(collect_Cons_1))
+fun knownSolution(knownSolution1) =
+  if knownSolution1 is
+    Known(knownSolution_Known_0) then
+      if knownSolution_Known_0 is
+        Nil then
+          True
+        _ then
+          False
+    _ then
+      False
+fun test(test1) =
+  filter(consistent(test1))
+fun qpart(qpart1)(qpart2)(qpart3)(qpart4)(qpart5)(qpart6) =
+  if qpart3 is
+    Nil then
+      rqsort(qpart1)(qpart4)(Cons(qpart2, rqsort(qpart1)(qpart5)(qpart6)))
+    Cons(qpart_Cons_0, qpart_Cons_1) then
+      if qpart1(qpart2)(qpart_Cons_0) then
+        qpart(qpart1)(qpart2)(qpart_Cons_1)(qpart4)(Cons(qpart_Cons_0, qpart5))(qpart6)
+      else
+        (qpart(qpart1)(qpart2)(qpart_Cons_1)(Cons(qpart_Cons_0, qpart4))(qpart5)(qpart6))
+fun leaves(leaves1) =
+  if leaves1 is
+    Node(leaves_Node_0, leaves_Node_1) then
+      if leaves_Node_1 is
+        Nil then
+          Cons(leaves_Node_0, Nil)
+        _ then
+          concat(map(leaves)(leaves_Node_1))
+fun unionBy(unionBy1)(unionBy2)(unionBy3) =
+  mappend(unionBy2)(foldl(flip(deleteBy(unionBy1)))(nubBy(unionBy1)(unionBy3))(unionBy2))
+fun try(try1)(try2) =
+  length(search(try2)(queens(try1)))
+fun inconsistencies(inconsistencies1)(inconsistencies2) =
+  if inconsistencies1 is
+    CSP(inconsistencies_CSP_0, inconsistencies_CSP_1, inconsistencies_CSP_2) then
+      let f_2 = fp_2 =>
+        if fp_2 is
+          Cons(h_2, t_2) then
+            let f_3 = fp_3 =>
+              if fp_3 is
+                Cons(h_3, t_3) then
+                  if h_2 > h_3 then
+                    if not(inconsistencies_CSP_2(h_2)(h_3)) then
+                      Cons(Tuple2(level(h_2), level(h_3)), f_3(t_3))
+                    else
+                      (f_3(t_3))
+                  else
+                    (f_3(t_3))
+                Nil then
+                  f_2(t_2)
+            f_3(reverse(inconsistencies2))
+          Nil then
+            Nil
+      f_2(inconsistencies2)
+fun union(union1)(union2) =
+  unionBy(
+    a =>
+      b =>
+        (polyEq(a)(b))
+  )(union1)(union2)
+fun qsort(qsort1)(qsort2)(qsort3) =
+  if qsort2 is
+    Nil then
+      qsort3
+    Cons(qsort_Cons_0, qsort_Cons_1) then
+      if qsort_Cons_1 is
+        Nil then
+          Cons(qsort_Cons_0, qsort3)
+        _ then
+          qpart(qsort1)(qsort_Cons_0)(qsort_Cons_1)(Nil)(Nil)(qsort3)
+fun generate(generate1) =
+  if generate1 is
+    CSP(generate_CSP_0, generate_CSP_1, generate_CSP_2) then
+      let g = g1 =>
+        g2 =>
+          if g2 is
+            0 then
+              Cons(Nil, Nil)
+            _ then
+              let f_4 = fp_4 =>
+                if fp_4 is
+                  Cons(h_4, t_4) then
+                    let f_5 = fp_5 =>
+                      if fp_5 is
+                        Cons(h_5, t_5) then
+                          Cons(Cons(Assign(g2, h_4), h_5), f_5(t_5))
+                        Nil then
+                          f_4(t_4)
+                    f_5(g(g1)(g2 - 1))
+                  Nil then
+                    Nil
+              f_4(enumFromTo(1)(g1))
+      g(generate_CSP_1)(generate_CSP_0)
+fun rqpart(rqpart1)(rqpart2)(rqpart3)(rqpart4)(rqpart5)(rqpart6) =
+  if rqpart3 is
+    Nil then
+      qsort(rqpart1)(rqpart4)(Cons(rqpart2, qsort(rqpart1)(rqpart5)(rqpart6)))
+    Cons(rqpart_Cons_0, rqpart_Cons_1) then
+      if rqpart1(rqpart_Cons_0)(rqpart2) then
+        rqpart(rqpart1)(rqpart2)(rqpart_Cons_1)(Cons(rqpart_Cons_0, rqpart4))(rqpart5)(rqpart6)
+      else
+        (rqpart(rqpart1)(rqpart2)(rqpart_Cons_1)(rqpart4)(Cons(rqpart_Cons_0, rqpart5))(rqpart6))
+fun all(all1)(all2) =
+  if all2 is
+    Nil then
+      True
+    Cons(all_Cons_0, all_Cons_1) then
+      if all1(all_Cons_0) then
+        all(all1)(all_Cons_1)
+      else
+        False
+fun bjbt(bjbt1)(x_3) =
+  bj(bjbt1)(bt(bjbt1)(x_3))
+fun fc(fc1)(x_4) =
+  (x_5 =>
+    (domainWipeOut(fc1)(lookupCache(fc1)(x_5))))(cacheChecks(fc1)(emptyTable(fc1))(x_4))
+fun bt(bt1) =
+  let f = s =>
+    (Tuple2(s, let mi = earliestInconsistency(bt1)(s)
+    if mi is
+      Nothing then
+        checkComplete(bt1)(s)
+      Just(bt_Just_0) then
+        if bt_Just_0 is
+          Tuple2(bt_Tuple2_0, bt_Tuple2_1) then
+            Known(Cons(bt_Tuple2_0, Cons(bt_Tuple2_1, Nil)))))
+  mapTree(f)
+fun label(label1) =
+  if label1 is
+    Node(label_Node_0, label_Node_1) then
+      label_Node_0
+fun earliestInconsistency(earliestInconsistency1)(earliestInconsistency2) =
+  if earliestInconsistency1 is
+    CSP(earliestInconsistency_CSP_0, earliestInconsistency_CSP_1, earliestInconsistency_CSP_2) then
+      if earliestInconsistency2 is
+        Nil then
+          Nothing
+        Cons(earliestInconsistency_Cons_0, earliestInconsistency_Cons_1) then
+          let mi_1 = filter(
+            x_6 =>
+              (not(earliestInconsistency_CSP_2(earliestInconsistency_Cons_0)(x_6)))
+          )(reverse(earliestInconsistency_Cons_1))
+          if mi_1 is
+            Nil then
+              Nothing
+            Cons(earliestInconsistency_Cons_0_1, earliestInconsistency_Cons_1_1) then
+              Just(Tuple2(level(earliestInconsistency_Cons_0), level(earliestInconsistency_Cons_0_1)))
+fun testConstraints_nofib(testConstraints_nofib1) =
+  map(try(testConstraints_nofib1))(Cons(bt, Cons(bm, Cons(bjbt, Cons(bjbt', Cons(fc, Nil))))))
+fun bj(bj1) =
+  let f = f1 =>
+    f2 =>
+      if f1 is
+        Tuple2(f_Tuple2_0, f_Tuple2_1) then
+          if f_Tuple2_1 is
+            Known(f_Known_0) then
+              Node(Tuple2(f_Tuple2_0, Known(f_Known_0)), f2)
+            Unknown then
+              Node(Tuple2(f_Tuple2_0, Known(combine(map(label)(f2))(Nil))), f2)
+  foldTree(f)
+fun btsolver0(btsolver01) =
+  (x_7 =>
+    ((x_8 =>
+      ((x_9 =>
+        ((x_10 =>
+          ((x_11 =>
+            (filter(complete(btsolver01))(leaves(x_11))))(mapTree(fst)(x_10))))(prune(
+          x_12 =>
+            ((x =>
+              (x /= Nothing))(snd(x_12)))
+        )(x_9))))(labelInconsistencies(btsolver01)(x_8))))(mkTree(x_7))))(btsolver01)
+fun foldTree(foldTree1)(foldTree2) =
+  if foldTree2 is
+    Node(foldTree_Node_0, foldTree_Node_1) then
+      foldTree1(foldTree_Node_0)(map(foldTree(foldTree1))(foldTree_Node_1))
+fun domainWipeOut(domainWipeOut1)(domainWipeOut2) =
+  if domainWipeOut1 is
+    CSP(domainWipeOut_CSP_0, domainWipeOut_CSP_1, domainWipeOut_CSP_2) then
+      let f = f1_1 =>
+        if f1_1 is
+          Tuple2(f_Tuple2_0_1, f_Tuple2_1_1) then
+            if f_Tuple2_0_1 is
+              Tuple2(f_Tuple2_0_2, f_Tuple2_1_2) then
+                let wipedDomains = let f_6 = fp_6 =>
+                  if fp_6 is
+                    Cons(h_6, t_6) then
+                      if all(knownConflict)(h_6) then
+                        Cons(h_6, f_6(t_6))
+                      else
+                        (f_6(t_6))
+                    Nil then
+                      Nil
+                f_6(f_Tuple2_1_1)
+                let cs' = if null(wipedDomains) then
+                  f_Tuple2_1_2
+                else
+                  (Known(collect(head(wipedDomains))))
+                Tuple2(f_Tuple2_0_2, cs')
+      mapTree(f)(domainWipeOut2)
+fun null(null1) =
+  if null1 is
+    Nil then
+      True
+    Cons(null_Cons_0, null_Cons_1) then
+      False
+fun safe(safe1)(safe2) =
+  if safe1 is
+    Assign(safe_Assign_0, safe_Assign_1) then
+      if safe2 is
+        Assign(safe_Assign_0_1, safe_Assign_1_1) then
+          (safe_Assign_1 /= safe_Assign_1_1) && ((abs(safe_Assign_0 - safe_Assign_0_1)) /= (abs(safe_Assign_1 - safe_Assign_1_1)))
+fun snd(snd1) =
+  if snd1 is
+    Tuple2(snd_Tuple2_0, snd_Tuple2_1) then
+      snd_Tuple2_1
+fun maxLevel(maxLevel1) =
+  if maxLevel1 is
+    Nil then
+      0
+    Cons(maxLevel_Cons_0, maxLevel_Cons_1) then
+      if maxLevel_Cons_0 is
+        Assign(maxLevel_Assign_0, maxLevel_Assign_1) then
+          maxLevel_Assign_0
+fun queens(queens1) =
+  CSP(queens1, queens1, safe)
+fun labelInconsistencies(labelInconsistencies1) =
+  let f = s =>
+    (Tuple2(s, earliestInconsistency(labelInconsistencies1)(s)))
+  mapTree(f)
+fun consistent(consistent1)(x_13) =
+  null(inconsistencies(consistent1)(x_13))
+fun complete(complete1)(complete2) =
+  if complete1 is
+    CSP(complete_CSP_0, complete_CSP_1, complete_CSP_2) then
+      (maxLevel(complete2)) == complete_CSP_0
+fun combine(combine1)(combine2) =
+  if combine1 is
+    Nil then
+      combine2
+    Cons(combine_Cons_0, combine_Cons_1) then
+      if combine_Cons_0 is
+        Tuple2(combine_Tuple2_0, combine_Tuple2_1) then
+          if combine_Tuple2_1 is
+            Known(combine_Known_0) then
+              if notElem(maxLevel(combine_Tuple2_0))(combine_Known_0) then
+                combine_Known_0
+              else
+                (combine(combine_Cons_1)(union(combine_Known_0)(combine2)))
+fun mkTree(mkTree1) =
+  if mkTree1 is
+    CSP(mkTree_CSP_0, mkTree_CSP_1, mkTree_CSP_2) then
+      let next = ss =>
+        if (maxLevel(ss)) < mkTree_CSP_0 then
+          let f_7 = fp_7 =>
+            if fp_7 is
+              Cons(h_7, t_7) then
+                Cons(Cons(Assign((maxLevel(ss)) + 1, h_7), ss), f_7(t_7))
+              Nil then
+                Nil
+          f_7(enumFromTo(1)(mkTree_CSP_1))
+        else
+          Nil
+      initTree(next)(Nil)
+fun notElem(notElem1)(notElem2) =
+  if notElem2 is
+    Nil then
+      True
+    Cons(notElem_Cons_0, notElem_Cons_1) then
+      if polyEq(notElem1)(notElem_Cons_0) then
+        False
+      else
+        (notElem(notElem1)(notElem_Cons_1))
+fun abs(abs1) =
+  if abs1 > 0 then
+    abs1
+  else
+    (0 - abs1)
+fun fst(fst1) =
+  if fst1 is
+    Tuple2(fst_Tuple2_0, fst_Tuple2_1) then
+      fst_Tuple2_0
+fun knownConflict(knownConflict1) =
+  if knownConflict1 is
+    Known(knownConflict_Known_0) then
+      if knownConflict_Known_0 is
+        Cons(knownConflict_Cons_0, knownConflict_Cons_1) then
+          True
+        _ then
+          False
+    _ then
+      False
+fun nubBy(nubBy1)(nubBy2) =
+  if nubBy2 is
+    Nil then
+      Nil
+    Cons(nubBy_Cons_0, nubBy_Cons_1) then
+      Cons(nubBy_Cons_0, nubBy(nubBy1)(filter(
+        y =>
+          (not(nubBy1(nubBy_Cons_0)(y)))
+      )(nubBy_Cons_1)))
+fun bjbt'(bjbt'1)(x_14) =
+  bj'(bjbt'1)(bt(bjbt'1)(x_14))
+fun bj'(bj'1) =
+  let f = f1_2 =>
+    f2_1 =>
+      if f1_2 is
+        Tuple2(f_Tuple2_0_3, f_Tuple2_1_3) then
+          if f_Tuple2_1_3 is
+            Known(f_Known_0_1) then
+              Node(Tuple2(f_Tuple2_0_3, Known(f_Known_0_1)), f2_1)
+            Unknown then
+              let cs' = Known(combine(map(label)(f2_1))(Nil))
+              if knownConflict(cs') then
+                Node(Tuple2(f_Tuple2_0_3, cs'), Nil)
+              else
+                (Node(Tuple2(f_Tuple2_0_3, cs'), f2_1))
+  foldTree(f)
+fun checkComplete(checkComplete1)(checkComplete2) =
+  if complete(checkComplete1)(checkComplete2) then
+    Known(Nil)
+  else
+    Unknown
+fun value(value1) =
+  if value1 is
+    Assign(value_Assign_0, value_Assign_1) then
+      value_Assign_1
+fun filterTree(filterTree1) =
+  let f = a =>
+    cs =>
+      (Node(a, filter(
+        x_15 =>
+          (filterTree1(label(x_15)))
+      )(cs)))
+  foldTree(f)
+fun mapTree(mapTree1)(mapTree2) =
+  if mapTree2 is
+    Node(mapTree_Node_0, mapTree_Node_1) then
+      Node(mapTree1(mapTree_Node_0), map(mapTree(mapTree1))(mapTree_Node_1))
+fun initTree(initTree1)(initTree2) =
+  Node(initTree2, map(initTree(initTree1))(initTree1(initTree2)))
+fun fillTable(fillTable1)(fillTable2)(fillTable3) =
+  if fillTable1 is
+    Nil then
+      fillTable3
+    Cons(fillTable_Cons_0, fillTable_Cons_1) then
+      if fillTable_Cons_0 is
+        Assign(fillTable_Assign_0, fillTable_Assign_1) then
+          if fillTable2 is
+            CSP(fillTable_CSP_0, fillTable_CSP_1, fillTable_CSP_2) then
+              let f = cs =>
+                varval =>
+                  let mi_2 = varval
+                  if mi_2 is
+                    Tuple2(fillTable_Tuple2_0, fillTable_Tuple2_1) then
+                      if (polyEq(cs)(Unknown)) && (not(fillTable_CSP_2(Assign(fillTable_Assign_0, fillTable_Assign_1))(Assign(fillTable_Tuple2_0, fillTable_Tuple2_1)))) then
+                        Known(Cons(fillTable_Assign_0, Cons(fillTable_Tuple2_0, Nil)))
+                      else
+                        cs
+              zipWith(zipWith(f))(fillTable3)(
+                let f_8 = fp_8 =>
+                  if fp_8 is
+                    Cons(h_8, t_8) then
+                      Cons(let f_9 = fp_9 =>
+                        if fp_9 is
+                          Cons(h_9, t_9) then
+                            Cons(Tuple2(h_8, h_9), f_9(t_9))
+                          Nil then
+                            Nil
+                      f_9(enumFromTo(1)(fillTable_CSP_1)), f_8(t_8))
+                    Nil then
+                      Nil
+                f_8(enumFromTo(fillTable_Assign_0 + 1)(fillTable_CSP_0))
+              )
+fun lookupCache(lookupCache1)(lookupCache2) =
+  let f = f1_3 =>
+    f2_2 =>
+      if f2_2 is
+        Tuple2(f_Tuple2_0_4, f_Tuple2_1_4) then
+          if f_Tuple2_0_4 is
+            Nil then
+              Tuple2(Tuple2(Nil, Unknown), f_Tuple2_1_4)
+            Cons(f_Cons_0, f_Cons_1) then
+              let tableEntry = atIndex((value(f_Cons_0)) - 1)(head(f_Tuple2_1_4))
+              let cs = if polyEq(tableEntry)(Unknown) then
+                checkComplete(f1_3)(Cons(f_Cons_0, f_Cons_1))
+              else
+                tableEntry
+              Tuple2(Tuple2(Cons(f_Cons_0, f_Cons_1), cs), f_Tuple2_1_4)
+  mapTree(f(lookupCache1))(lookupCache2)
+fun deleteBy(deleteBy1)(deleteBy2)(deleteBy3) =
+  if deleteBy3 is
+    Nil then
+      Nil
+    Cons(deleteBy_Cons_0, deleteBy_Cons_1) then
+      if deleteBy1(deleteBy2)(deleteBy_Cons_0) then
+        deleteBy_Cons_1
+      else
+        (Cons(deleteBy_Cons_0, deleteBy(deleteBy1)(deleteBy2)(deleteBy_Cons_1)))
+fun level(level1) =
+  if level1 is
+    Assign(level_Assign_0, level_Assign_1) then
+      level_Assign_0
+fun search(search1)(search2) =
+  (x_16 =>
+    ((x_17 =>
+      ((x_18 =>
+        ((x_19 =>
+          ((x_20 =>
+            (map(fst)(filter(
+              x_21 =>
+                (knownSolution(snd(x_21)))
+            )(x_20))))(leaves(x_19))))(prune(
+          x_22 =>
+            (knownConflict(snd(x_22)))
+        )(x_18))))(search1(search2)(x_17))))(mkTree(x_16))))(search2)
+(testConstraints_nofib(primId(6)))

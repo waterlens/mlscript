@@ -1,0 +1,531 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun zerO =
+  Node(Cons(char"0", Nil), Nil)
+fun unGraph(unGraph1) =
+  if unGraph1 is
+    Cons(unGraph_Cons_0, unGraph_Cons_1) then
+      if unGraph_Cons_0 is
+        Tuple3(unGraph_Tuple3_0, unGraph_Tuple3_1, unGraph_Tuple3_2) then
+          let find = c =>
+            (dropWhile(
+              d__ =>
+                let mi = d__
+                if mi is
+                  Tuple3(unGraph_Tuple3_0_1, unGraph_Tuple3_1_1, unGraph_Tuple3_2_1) then
+                    c /= unGraph_Tuple3_0_1
+            )(unGraph_Cons_1))
+          Node(unGraph_Tuple3_1, map(
+            x =>
+              (unGraph(find(x)))
+          )(unGraph_Tuple3_2))
+fun set(set1)(s) =
+  Tuple2(set1, s)
+fun visited(visited1) =
+  bind(fetch)(
+    us =>
+      if inList(visited1)(us) then
+        retURN(True)
+      else
+        bind(set(Cons(visited1, us)))(
+          _p =>
+            (retURN(False))
+        )
+  )
+fun null(null1) =
+  if null1 is
+    Nil then
+      True
+    Cons(null_Cons_0, null_Cons_1) then
+      False
+fun unGraph'(unGraph'1) =
+  let ung = ung1 =>
+    if ung1 is
+      Cons(ung_Cons_0, ung_Cons_1) then
+        if ung_Cons_0 is
+          Tuple3(ung_Tuple3_0, ung_Tuple3_1, ung_Tuple3_2) then
+            let find = c =>
+              (dropWhile(
+                d__ =>
+                  let mi_1 = d__
+                  if mi_1 is
+                    Tuple3(ung_Tuple3_0_1, ung_Tuple3_1_1, ung_Tuple3_2_1) then
+                      c /= ung_Tuple3_0_1
+              )(ung_Cons_1))
+            mif(visited(ung_Tuple3_0))(retURN(Node(Tuple2(ung_Tuple3_0, Cons(char"<", Cons(char">", Nil))), Nil)))(bind(mmapl(
+              x_1 =>
+                (ung(find(x_1)))
+            )(ung_Tuple3_2))(
+              ts =>
+                (retURN(Node(Tuple2(ung_Tuple3_0, ung_Tuple3_1), ts)))
+            ))
+  startingWith(ung(unGraph'1))(Nil)
+fun newlyDefined(newlyDefined1)(newlyDefined2)(newlyDefined3)(newlyDefined4) =
+  if polyEq(newlyDefined1)(newlyDefined4) then
+    newlyDefined2
+  else
+    (newlyDefined3(newlyDefined4))
+fun b =
+  Node(Cons(char"b", Nil), Nil)
+fun example1 =
+  plus_(a)(a)
+fun ltGraph(ltGraph1) =
+  if ltGraph1 is
+    Node(ltGraph_Node_0, ltGraph_Node_1) then
+      if ltGraph_Node_0 is
+        Tuple2(ltGraph_Tuple2_0, ltGraph_Tuple2_1) then
+          let labelOf = labelOf1 =>
+            if labelOf1 is
+              Node(labelOf_Node_0, labelOf_Node_1) then
+                if labelOf_Node_0 is
+                  Tuple2(labelOf_Tuple2_0, labelOf_Tuple2_1) then
+                    labelOf_Tuple2_0
+          Cons(Tuple3(ltGraph_Tuple2_0, ltGraph_Tuple2_1, map(labelOf)(ltGraph_Node_1)), concat(map(ltGraph)(ltGraph_Node_1)))
+fun c =
+  Node(Cons(char"c", Nil), Nil)
+fun update(update1)(s) =
+  Tuple2(update1(s), s)
+fun example2 =
+  plus_(mult_(a)(b))(mult_(a)(b))
+fun mmap(mmap1)(mmap2)(s) =
+  let mi_2 = mmap2(s)
+  if mi_2 is
+    Tuple2(mmap_Tuple2_0, mmap_Tuple2_1) then
+      Tuple2(mmap_Tuple2_0, mmap1(mmap_Tuple2_1))
+fun mfoldl(mfoldl1)(mfoldl2)(mfoldl3) =
+  if mfoldl3 is
+    Nil then
+      retURN(mfoldl2)
+    Cons(mfoldl_Cons_0, mfoldl_Cons_1) then
+      bind(mfoldl1(mfoldl2)(mfoldl_Cons_0))(
+        fax =>
+          (mfoldl(mfoldl1)(fax)(mfoldl_Cons_1))
+      )
+fun mmapr(mmapr1)(mmapr2) =
+  if mmapr2 is
+    Nil then
+      retURN(Nil)
+    Cons(mmapr_Cons_0, mmapr_Cons_1) then
+      bind(mmapr(mmapr1)(mmapr_Cons_1))(
+        ys =>
+          bind(mmapr1(mmapr_Cons_0))(
+            y =>
+              (retURN(Cons(y, ys)))
+          )
+      )
+fun example4 =
+  prod(scanl(plus_)(zerO)(Cons(a, Cons(b, Cons(c, Cons(d, Nil))))))
+fun scanl(scanl1)(scanl2)(scanl3) =
+  Cons(scanl2, let mi_3 = scanl3
+  if mi_3 is
+    Nil then
+      Nil
+    Cons(scanl_Cons_0, scanl_Cons_1) then
+      scanl(scanl1)(scanl1(scanl2)(scanl_Cons_0))(scanl_Cons_1))
+fun example3 =
+  plus_(mult_(plus_(a)(b))(c))(plus_(a)(b))
+fun fetchWith(fetchWith1)(s) =
+  Tuple2(s, fetchWith1(s))
+fun join(join1)(s) =
+  let mi_4 = join1(s)
+  if mi_4 is
+    Tuple2(join_Tuple2_0, join_Tuple2_1) then
+      join_Tuple2_1(join_Tuple2_0)
+fun dropWhile(dropWhile1)(dropWhile2) =
+  if dropWhile2 is
+    Nil then
+      Nil
+    Cons(dropWhile_Cons_0, dropWhile_Cons_1) then
+      if dropWhile1(dropWhile_Cons_0) then
+        dropWhile(dropWhile1)(dropWhile_Cons_1)
+      else
+        (Cons(dropWhile_Cons_0, dropWhile_Cons_1))
+fun a =
+  Node(Cons(char"a", Nil), Nil)
+fun bind(bind1)(bind2)(s) =
+  let mi_5 = bind1(s)
+  if mi_5 is
+    Tuple2(bind_Tuple2_0, bind_Tuple2_1) then
+      bind2(bind_Tuple2_1)(bind_Tuple2_0)
+fun mfoldr(mfoldr1)(mfoldr2)(mfoldr3) =
+  if mfoldr3 is
+    Nil then
+      retURN(mfoldr2)
+    Cons(mfoldr_Cons_0, mfoldr_Cons_1) then
+      bind(mfoldr(mfoldr1)(mfoldr2)(mfoldr_Cons_1))(
+        y =>
+          (mfoldr1(mfoldr_Cons_0)(y))
+      )
+fun mmapl(mmapl1)(mmapl2) =
+  if mmapl2 is
+    Nil then
+      retURN(Nil)
+    Cons(mmapl_Cons_0, mmapl_Cons_1) then
+      bind(mmapl1(mmapl_Cons_0))(
+        b =>
+          bind(mmapl(mmapl1)(mmapl_Cons_1))(
+            bs =>
+              (retURN(Cons(b, bs)))
+          )
+      )
+fun cse(cse1) =
+  findCommon(ltGraph(labelTree(cse1)))
+fun scanr(scanr1)(scanr2)(scanr3) =
+  if scanr3 is
+    Nil then
+      Cons(scanr2, Nil)
+    Cons(scanr_Cons_0, scanr_Cons_1) then
+      let mi_6 = scanr(scanr1)(scanr2)(scanr_Cons_1)
+      if mi_6 is
+        Cons(scanr_Cons_0_1, scanr_Cons_1_1) then
+          Cons(scanr1(scanr_Cons_0)(scanr_Cons_0_1), Cons(scanr_Cons_0_1, scanr_Cons_1_1))
+fun labelTree(labelTree1) =
+  let label = label1 =>
+    if label1 is
+      Node(label_Node_0, label_Node_1) then
+        bind(incr)(
+          n =>
+            bind(mmapl(label)(label_Node_1))(
+              ts =>
+                (retURN(Node(Tuple2(n, label_Node_0), ts)))
+            )
+        )
+  startingWith(label(labelTree1))(0)
+fun example0 =
+  a
+fun startingWith(startingWith1)(startingWith2) =
+  let mi_7 = startingWith1(startingWith2)
+  if mi_7 is
+    Tuple2(startingWith_Tuple2_0, startingWith_Tuple2_1) then
+      startingWith_Tuple2_1
+fun id(id1) =
+  id1
+fun inList(inList1)(inList2) =
+  if inList2 is
+    Cons(inList_Cons_0, inList_Cons_1) then
+      if inList1 == inList_Cons_0 then
+        True
+      else
+        (inList(inList1)(inList_Cons_1))
+    Nil then
+      False
+fun mult_(mult_1)(mult_2) =
+  Node(Cons(char"*", Nil), Cons(mult_1, Cons(mult_2, Nil)))
+fun prod(prod1) =
+  Node(Cons(char"X", Nil), prod1)
+fun fetch(s) =
+  Tuple2(s, s)
+fun mif(mif1)(mif2)(mif3) =
+  bind(mif1)(
+    cond =>
+      if cond then
+        mif2
+      else
+        mif3
+  )
+fun example5 =
+  prod(scanr(plus_)(zerO)(Cons(a, Cons(b, Cons(c, Cons(d, Nil))))))
+fun incr =
+  update(
+    x =>
+      (1 + x)
+  )
+fun testCse_nofib(testCse_nofib1) =
+  map(
+    i =>
+      (map(cse)(take(i % 6)(Cons(example0, Cons(example1, Cons(example2, Cons(example3, Cons(example4, Cons(example5, Nil)))))))))
+  )(primId(enumFromTo(1)(testCse_nofib1)))
+fun plus_(plus_1)(plus_2) =
+  Node(Cons(char"+", Nil), Cons(plus_1, Cons(plus_2, Nil)))
+fun retURN(retURN1)(s) =
+  Tuple2(s, retURN1)
+fun findCommon(findCommon1) =
+  let sim = sim1 =>
+    sim2 =>
+      if sim1 is
+        Tuple3(sim_Tuple3_0, sim_Tuple3_1, sim_Tuple3_2) then
+          if sim2 is
+            Tuple2(sim_Tuple2_0, sim_Tuple2_1) then
+              let rcs = map(sim_Tuple2_0)(sim_Tuple3_2)
+              let ms = let f = fp =>
+                if fp is
+                  Cons(h, t) then
+                    if h is
+                      Tuple3(sim_Tuple3_0_1, sim_Tuple3_1_1, sim_Tuple3_2_1) then
+                        if polyEq(sim_Tuple3_1)(sim_Tuple3_1_1) then
+                          if polyEq(sim_Tuple3_2_1)(rcs) then
+                            Cons(sim_Tuple3_0_1, f(t))
+                          else
+                            (f(t))
+                        else
+                          (f(t))
+                      _ then
+                        f(t)
+                  Nil then
+                    Nil
+              f(sim_Tuple2_1)
+              if null(ms) then
+                Tuple2(sim_Tuple2_0, mappend(Cons(Tuple3(sim_Tuple3_0, sim_Tuple3_1, rcs), Nil))(sim_Tuple2_1))
+              else
+                (Tuple2(newlyDefined(sim_Tuple3_0)(head(ms))(sim_Tuple2_0), sim_Tuple2_1))
+  let mi_8 = foldr(sim)(Tuple2(id, Nil))(findCommon1)
+  if mi_8 is
+    Tuple2(findCommon_Tuple2_0, findCommon_Tuple2_1) then
+      findCommon_Tuple2_1
+fun d =
+  Node(Cons(char"d", Nil), Nil)
+(testCse_nofib(primId(1000)))

@@ -243,7 +243,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
             case "$" => Call(l.toExpr, r.toExpr)
             case ":" => Ctor(Var(BuiltInTypes.ListCons.toLumberhackType), l.toExpr :: r.toExpr :: Nil)
             case "." =>
-              val param = d.nextIdent(false, Var("_lh_funcomp_x"))
+              val param = d.nextIdent(false, Var("_lh_x"))
               Function(
                 param,
                 Call(l.toExpr, Call(r.toExpr, Ref(param)))
@@ -304,7 +304,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
             }
             (pat, body, Map.empty[String, Ident])
           }
-          val matchIdent = d.nextIdent(false, Var("_lh_matchIdent"))
+          val matchIdent = d.nextIdent(false, Var("_lh_mi"))
           LetIn(
             matchIdent,
             scrut,
@@ -532,10 +532,10 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         assert(childs.length == 3)
         val pat = childs(0).toPattern
         val srcList = childs(2).toExpr(using ctx ++ comprehCtx)
-        val recFunName = d.nextIdent(false, Var(s"_lh_listcomp_fun"))
-        val recFunPara = d.nextIdent(false, Var(s"_lh_listcomp_fun_para"))
-        val recFunLsH = d.nextIdent(false, Var(s"_lh_listcomp_fun_ls_h"))
-        val recFunLsT = d.nextIdent(false, Var(s"_lh_listcomp_fun_ls_t"))
+        val recFunName = d.nextIdent(false, Var(s"_lh_f"))
+        val recFunPara = d.nextIdent(false, Var(s"_lh_fp"))
+        val recFunLsH = d.nextIdent(false, Var(s"_lh_h"))
+        val recFunLsT = d.nextIdent(false, Var(s"_lh_t"))
         val recFunBody = Expr.Function(
           recFunPara,
           Expr.Match(
@@ -858,7 +858,7 @@ fun reverse_helper(ls, a) = if ls is
     val funArgNames = {
       val numOfArgs = patsAndBodies.map(_._1.length).toSet
       assert(numOfArgs.size == 1)
-      (1 to numOfArgs.head).map(idx => d.nextIdent(false, Var(s"_lh_${name}_arg$idx")))
+      (1 to numOfArgs.head).map(idx => d.nextIdent(false, Var(s"_lh_${name}$idx")))
     }
     val body = mergeMatchPatterns(
       funArgNames.toList,

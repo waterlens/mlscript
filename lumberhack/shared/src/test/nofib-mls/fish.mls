@@ -1,0 +1,379 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun s(s1) =
+  tile_to_grid(s_tile)(s1)
+fun tup2(tup21)(tup22) =
+  if tup21 is
+    Tuple2(tup2_Tuple2_0, tup2_Tuple2_1) then
+      if tup22 is
+        Tuple2(tup2_Tuple2_0_1, tup2_Tuple2_1_1) then
+          Tuple4(tup2_Tuple2_0, tup2_Tuple2_1, tup2_Tuple2_0_1, tup2_Tuple2_1_1)
+fun t(t1) =
+  quartet(p)(q)(r)(s)(t1)
+fun min(min1)(min2) =
+  if min1 < min2 then
+    min1
+  else
+    min2
+fun corner1(corner11) =
+  quartet(nil)(nil)(nil)(u)(corner11)
+fun nonet(nonet1)(nonet2)(nonet3)(nonet4)(nonet5)(nonet6)(nonet7)(nonet8)(nonet9) =
+  above(1)(2)(beside(1)(2)(nonet1)(beside(1)(1)(nonet2)(nonet3)))(above(1)(1)(beside(1)(2)(nonet4)(beside(1)(1)(nonet5)(nonet6)))(beside(1)(2)(nonet7)(beside(1)(1)(nonet8)(nonet9))))
+fun side2(side21) =
+  quartet(side1)(side1)(rot(t))(t)(side21)
+fun quartet(quartet1)(quartet2)(quartet3)(quartet4) =
+  above(1)(1)(beside(1)(1)(quartet1)(quartet2))(beside(1)(1)(quartet3)(quartet4))
+fun showFourTupleofInt(showFourTupleofInt1) =
+  if showFourTupleofInt1 is
+    Tuple4(showFourTupleofInt_Tuple4_0, showFourTupleofInt_Tuple4_1, showFourTupleofInt_Tuple4_2, showFourTupleofInt_Tuple4_3) then
+      mappend(mappend(mappend(mappend(mappend(mappend(mappend(mappend(Cons(char"(", Nil))(string_of_int(showFourTupleofInt_Tuple4_0)))(Cons(char",", Nil)))(string_of_int(showFourTupleofInt_Tuple4_1)))(Cons(char",", Nil)))(string_of_int(showFourTupleofInt_Tuple4_2)))(Cons(char",", Nil)))(string_of_int(showFourTupleofInt_Tuple4_3)))(Cons(char")", Nil))
+fun side1(side11) =
+  quartet(nil)(nil)(rot(t))(t)(side11)
+fun u(u1) =
+  cycle'(rot(q))(u1)
+fun rot(rot1)(rot2)(rot3)(rot4) =
+  rot1(vec_add(rot2)(rot3))(rot4)(vec_sub(Tuple2(0, 0))(rot3))
+fun vec_sub(vec_sub1)(vec_sub2) =
+  if vec_sub1 is
+    Tuple2(vec_sub_Tuple2_0, vec_sub_Tuple2_1) then
+      if vec_sub2 is
+        Tuple2(vec_sub_Tuple2_0_1, vec_sub_Tuple2_1_1) then
+          Tuple2(vec_sub_Tuple2_0 - vec_sub_Tuple2_0_1, vec_sub_Tuple2_1 - vec_sub_Tuple2_1_1)
+fun vec_add(vec_add1)(vec_add2) =
+  if vec_add1 is
+    Tuple2(vec_add_Tuple2_0, vec_add_Tuple2_1) then
+      if vec_add2 is
+        Tuple2(vec_add_Tuple2_0_1, vec_add_Tuple2_1_1) then
+          Tuple2(vec_add_Tuple2_0 + vec_add_Tuple2_0_1, vec_add_Tuple2_1 + vec_add_Tuple2_1_1)
+fun testFish_nofib(testFish_nofib1) =
+  map(
+    i =>
+      let n = min(0)(i)
+      length(fmt(pseudolimit(Tuple2(0, 0))(Tuple2(640 + n, 0))(Tuple2(0, 640 + n))))
+  )(primId(enumFromTo(0)(testFish_nofib1)))
+fun above(above1)(above2)(above3)(above4)(above5)(above6)(above7) =
+  mappend(above3(vec_add(above5)(scale_vec2(above7)(above2)(above1 + above2)))(above6)(scale_vec2(above7)(above1)(above2 + above1)))(above4(above5)(above6)(scale_vec2(above7)(above2)(above1 + above2)))
+fun nil(nil1)(nil2)(nil3) =
+  Nil
+fun grid(grid1)(grid2)(grid3)(grid4)(grid5)(grid6) =
+  let f = fp =>
+    if fp is
+      Cons(h, t) then
+        if h is
+          Tuple4(grid_Tuple4_0, grid_Tuple4_1, grid_Tuple4_2, grid_Tuple4_3) then
+            Cons(tup2(vec_add(vec_add(grid4)(scale_vec2(grid5)(grid_Tuple4_0)(grid1)))(scale_vec2(grid6)(grid_Tuple4_1)(grid2)))(vec_add(vec_add(grid4)(scale_vec2(grid5)(grid_Tuple4_2)(grid1)))(scale_vec2(grid6)(grid_Tuple4_3)(grid2))), f(t))
+          _ then
+            f(t)
+      Nil then
+        Nil
+  f(grid3)
+fun pseudocorner(pseudocorner1) =
+  quartet(corner2)(side2)(rot(side2))(rot(t))(pseudocorner1)
+fun corner2(corner21) =
+  quartet(corner1)(side1)(rot(side1))(u)(corner21)
+fun s_tile =
+  Cons(Tuple4(0, 0, 4, 2), Cons(Tuple4(4, 2, 8, 2), Cons(Tuple4(8, 2, 16, 0), Cons(Tuple4(0, 4, 2, 1), Cons(Tuple4(0, 6, 7, 4), Cons(Tuple4(0, 8, 8, 6), Cons(Tuple4(0, 10, 7, 8), Cons(Tuple4(0, 12, 7, 10), Cons(Tuple4(0, 14, 7, 13), Cons(Tuple4(13, 13, 16, 14), Cons(Tuple4(14, 11, 16, 12), Cons(Tuple4(15, 9, 16, 10), Cons(Tuple4(16, 0, 10, 4), Cons(Tuple4(10, 4, 8, 6), Cons(Tuple4(8, 6, 7, 8), Cons(Tuple4(7, 8, 7, 13), Cons(Tuple4(7, 13, 8, 16), Cons(Tuple4(12, 16, 13, 13), Cons(Tuple4(13, 13, 14, 11), Cons(Tuple4(14, 11, 15, 9), Cons(Tuple4(15, 9, 16, 8), Cons(Tuple4(10, 16, 11, 10), Cons(Tuple4(12, 4, 10, 6), Cons(Tuple4(10, 6, 12, 7), Cons(Tuple4(12, 7, 12, 4), Cons(Tuple4(15, 5, 13, 7), Cons(Tuple4(13, 7, 15, 8), Cons(Tuple4(15, 8, 15, 5), Nil))))))))))))))))))))))))))))
+fun scale_vec2(scale_vec21)(scale_vec22)(scale_vec23) =
+  if scale_vec21 is
+    Tuple2(scale_vec2_Tuple2_0, scale_vec2_Tuple2_1) then
+      Tuple2(div(scale_vec2_Tuple2_0 * scale_vec22)(scale_vec23), div(scale_vec2_Tuple2_1 * scale_vec22)(scale_vec23))
+fun q(q1) =
+  tile_to_grid(q_tile)(q1)
+fun tile_to_grid(tile_to_grid1) =
+  grid(16)(16)(tile_to_grid1)
+fun q_tile =
+  Cons(Tuple4(0, 8, 4, 7), Cons(Tuple4(4, 7, 6, 7), Cons(Tuple4(6, 7, 8, 8), Cons(Tuple4(8, 8, 12, 10), Cons(Tuple4(12, 10, 16, 16), Cons(Tuple4(0, 12, 3, 13), Cons(Tuple4(3, 13, 5, 14), Cons(Tuple4(5, 14, 7, 15), Cons(Tuple4(7, 15, 8, 16), Cons(Tuple4(2, 16, 3, 13), Cons(Tuple4(4, 16, 5, 14), Cons(Tuple4(6, 16, 7, 15), Cons(Tuple4(0, 10, 7, 11), Cons(Tuple4(9, 13, 8, 15), Cons(Tuple4(8, 15, 11, 15), Cons(Tuple4(11, 15, 9, 13), Cons(Tuple4(10, 10, 8, 12), Cons(Tuple4(8, 12, 12, 12), Cons(Tuple4(12, 12, 10, 10), Cons(Tuple4(2, 0, 4, 5), Cons(Tuple4(4, 5, 4, 7), Cons(Tuple4(4, 0, 6, 5), Cons(Tuple4(6, 5, 6, 7), Cons(Tuple4(6, 0, 8, 5), Cons(Tuple4(8, 5, 8, 8), Cons(Tuple4(10, 0, 14, 11), Cons(Tuple4(12, 0, 13, 4), Cons(Tuple4(13, 4, 16, 8), Cons(Tuple4(16, 8, 15, 10), Cons(Tuple4(15, 10, 16, 16), Cons(Tuple4(13, 0, 16, 6), Cons(Tuple4(14, 0, 16, 4), Cons(Tuple4(15, 0, 16, 2), Cons(Tuple4(0, 0, 8, 0), Cons(Tuple4(12, 0, 16, 0), Cons(Tuple4(0, 0, 0, 8), Cons(Tuple4(0, 12, 0, 16), Nil)))))))))))))))))))))))))))))))))))))
+fun p(p1) =
+  tile_to_grid(p_tile)(p1)
+fun corner(corner1) =
+  nonet(corner2)(side2)(side2)(rot(side2))(u)(rot(t))(rot(side2))(rot(t))(rot(q))(corner1)
+fun p_tile =
+  Cons(Tuple4(0, 3, 3, 4), Cons(Tuple4(3, 4, 0, 8), Cons(Tuple4(0, 8, 0, 3), Cons(Tuple4(6, 0, 4, 4), Cons(Tuple4(4, 5, 4, 10), Cons(Tuple4(4, 10, 7, 6), Cons(Tuple4(7, 6, 4, 5), Cons(Tuple4(11, 0, 10, 4), Cons(Tuple4(10, 4, 9, 6), Cons(Tuple4(9, 6, 8, 8), Cons(Tuple4(8, 8, 4, 13), Cons(Tuple4(4, 13, 0, 16), Cons(Tuple4(0, 16, 6, 15), Cons(Tuple4(6, 15, 8, 16), Cons(Tuple4(8, 16, 12, 12), Cons(Tuple4(12, 12, 16, 12), Cons(Tuple4(10, 16, 12, 14), Cons(Tuple4(12, 14, 16, 13), Cons(Tuple4(12, 16, 13, 15), Cons(Tuple4(13, 15, 16, 14), Cons(Tuple4(14, 16, 16, 15), Cons(Tuple4(8, 12, 16, 10), Cons(Tuple4(8, 8, 12, 9), Cons(Tuple4(12, 9, 16, 8), Cons(Tuple4(9, 6, 12, 7), Cons(Tuple4(12, 7, 16, 6), Cons(Tuple4(10, 4, 13, 5), Cons(Tuple4(13, 5, 16, 4), Cons(Tuple4(11, 0, 14, 2), Cons(Tuple4(14, 2, 16, 2), Nil))))))))))))))))))))))))))))))
+fun pseudolimit(pseudolimit1) =
+  cycle'(pseudocorner)(pseudolimit1)
+fun fmt(fmt1) =
+  if fmt1 is
+    Nil then
+      Cons(char"[", Cons(char"]", Nil))
+    Cons(fmt_Cons_0, fmt_Cons_1) then
+      let showl = showl1 =>
+        showl2 =>
+          if showl1 is
+            Nil then
+              Cons(char"]", showl2)
+            Cons(showl_Cons_0, showl_Cons_1) then
+              (x =>
+                ((x_1 =>
+                  ((s =>
+                    (mappend(Cons(char",", Cons(char"|", Nil)))(s)))((s =>
+                    (mappend(showFourTupleofInt(showl_Cons_0))(s)))(x_1))))(showl(showl_Cons_1)(x))))(showl2)
+      (x_2 =>
+        ((x_3 =>
+          ((s =>
+            (mappend(Cons(char"[", Cons(char"|", Nil)))(s)))((s =>
+            (mappend(showFourTupleofInt(fmt_Cons_0))(s)))(x_3))))(showl(fmt_Cons_1)(x_2))))(Nil)
+fun r(r1) =
+  tile_to_grid(r_tile)(r1)
+fun cycle'(cycle'1) =
+  quartet(cycle'1)(rot(rot(rot(cycle'1))))(rot(cycle'1))(rot(rot(cycle'1)))
+fun r_tile =
+  Cons(Tuple4(0, 0, 8, 8), Cons(Tuple4(12, 12, 16, 16), Cons(Tuple4(0, 4, 5, 10), Cons(Tuple4(0, 8, 2, 12), Cons(Tuple4(0, 12, 1, 14), Cons(Tuple4(16, 6, 11, 10), Cons(Tuple4(11, 10, 6, 16), Cons(Tuple4(16, 4, 14, 6), Cons(Tuple4(14, 6, 8, 8), Cons(Tuple4(8, 8, 5, 10), Cons(Tuple4(5, 10, 2, 12), Cons(Tuple4(2, 12, 0, 16), Cons(Tuple4(16, 8, 12, 12), Cons(Tuple4(12, 12, 11, 16), Cons(Tuple4(1, 1, 4, 0), Cons(Tuple4(2, 2, 8, 0), Cons(Tuple4(3, 3, 8, 2), Cons(Tuple4(8, 2, 12, 0), Cons(Tuple4(5, 5, 12, 3), Cons(Tuple4(12, 3, 16, 0), Cons(Tuple4(11, 16, 12, 12), Cons(Tuple4(12, 12, 16, 8), Cons(Tuple4(13, 13, 16, 10), Cons(Tuple4(14, 14, 16, 12), Cons(Tuple4(15, 15, 16, 14), Nil)))))))))))))))))))))))))
+fun beside(beside1)(beside2)(beside3)(beside4)(beside5)(beside6)(beside7) =
+  mappend(beside3(beside5)(scale_vec2(beside6)(beside1)(beside1 + beside2))(beside7))(beside4(vec_add(beside5)(scale_vec2(beside6)(beside1)(beside1 + beside2)))(scale_vec2(beside6)(beside2)(beside2 + beside1))(beside7))
+fun squarelimit(squarelimit1) =
+  cycle'(corner)(squarelimit1)
+(testFish_nofib(primId(30)))

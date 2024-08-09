@@ -1,0 +1,570 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun apply_subst(apply_subst1)(apply_subst2) =
+  if apply_subst2 is
+    Var(apply_subst_Var_0) then
+      let mi = find(apply_subst_Var_0)(apply_subst1)
+      if mi is
+        Tuple2(apply_subst_Tuple2_0, apply_subst_Tuple2_1) then
+          if apply_subst_Tuple2_0 then
+            apply_subst_Tuple2_1
+          else
+            (Var(apply_subst_Var_0))
+    Fun(apply_subst_Fun_0, apply_subst_Fun_1, apply_subst_Fun_2) then
+      Fun(apply_subst_Fun_0, map(apply_subst(apply_subst1))(apply_subst_Fun_1), apply_subst_Fun_2)
+fun test0(test01) =
+  let
+    fun f(f1) =
+      Fun(F, Cons(f1, Nil), lazy(Nil))
+    let boyerTrue =
+      Fun(TRUE, Nil, lazy(Nil))
+    fun append(append1)(append2) =
+      Fun(APPEND, Cons(append1, Cons(append2, Nil)), lazy(Cons(Tuple2(append(append(x)(y))(z), append(x)(append(y)(z))), Nil)))
+    fun difference(difference1)(difference2) =
+      Fun(DIFFERENCE, Cons(difference1, Cons(difference2, Nil)), lazy(Cons(Tuple2(difference(x)(x), zero), Cons(Tuple2(difference(plus(x)(y))(x), y), Cons(Tuple2(difference(plus(y)(x))(x), y), Cons(Tuple2(difference(plus(x)(y))(plus(x)(z)), difference(y)(z)), Cons(Tuple2(difference(plus(y)(plus(x)(z)))(x), plus(y)(z)), Cons(Tuple2(difference(add1(plus(y)(z)))(z), add1(y)), Cons(Tuple2(difference(add1(add1(x)))(two), x), Nil)))))))))
+    fun listp(listp1) =
+      Fun(LISTP, Cons(listp1, Nil), lazy(Cons(Tuple2(listp(x), or_(nilp(x))(consp(x))), Nil)))
+    fun iff(iff1)(iff2) =
+      Fun(IFF, Cons(iff1, Cons(iff2, Nil)), lazy(Cons(Tuple2(iff(x)(y), and_(implies(x)(y))(implies(y)(x))), Nil)))
+    let z =
+      Var(Z)
+    fun remainder(remainder1)(remainder2) =
+      Fun(REMAINDER, Cons(remainder1, Cons(remainder2, Nil)), lazy(Cons(Tuple2(remainder(x)(one), zero), Cons(Tuple2(remainder(x)(x), zero), Cons(Tuple2(remainder(times(x)(y))(x), zero), Cons(Tuple2(remainder(times(x)(y))(y), zero), Nil))))))
+    fun nlistp(nlistp1) =
+      Fun(NLISTP, Cons(nlistp1, Nil), lazy(Cons(Tuple2(nlistp(x), not_(listp(x))), Nil)))
+    fun and_(and_1)(and_2) =
+      Fun(AND, Cons(and_1, Cons(and_2, Nil)), lazy(Cons(Tuple2(and_(x)(y), if_(x)(if_(y)(boyerTrue)(boyerFalse))(boyerFalse)), Nil)))
+    fun implies(implies1)(implies2) =
+      Fun(IMPLIES, Cons(implies1, Cons(implies2, Nil)), lazy(Cons(Tuple2(implies(x)(y), if_(x)(if_(y)(boyerTrue)(boyerFalse))(boyerTrue)), Nil)))
+    fun equal(equal1)(equal2) =
+      Fun(EQUAL, Cons(equal1, Cons(equal2, Nil)), lazy(Cons(Tuple2(equal(plus(x)(y))(zero), and_(zerop(x))(zerop(y))), Cons(Tuple2(equal(plus(x)(y))(plus(x)(z)), equal(y)(z)), Cons(Tuple2(equal(zero)(difference(x)(y)), not_(lessp(y)(x))), Cons(Tuple2(equal(x)(difference(x)(y)), or_(equal(x)(zero))(zerop(y))), Cons(Tuple2(equal(times(x)(y))(zero), or_(zerop(x))(zerop(y))), Cons(Tuple2(equal(append(x)(y))(append(x)(z)), equal(y)(z)), Cons(Tuple2(equal(y)(times(x)(y)), or_(equal(y)(zero))(equal(x)(one))), Cons(Tuple2(equal(x)(times(x)(y)), or_(equal(x)(zero))(equal(y)(one))), Cons(Tuple2(equal(times(x)(y))(one), and_(equal(x)(one))(equal(y)(one))), Cons(Tuple2(equal(difference(x)(y))(difference(z)(y)), if_(lessp(x)(y))(not_(lessp(y)(z)))(if_(lessp(z)(y))(not_(lessp(y)(x)))(equal(x)(z)))), Cons(Tuple2(equal(lessp(x)(y))(z), if_(lessp(x)(y))(equal(boyerTrue)(z))(equal(boyerFalse)(z))), Nil)))))))))))))
+    fun divides(divides1)(divides2) =
+      Fun(DIVIDES, Cons(divides1, Cons(divides2, Nil)), lazy(Cons(Tuple2(divides(x)(y), zerop(remainder(y)(x))), Nil)))
+    let b =
+      Var(B)
+    fun lesseqp(lesseqp1)(lesseqp2) =
+      Fun(LESSEQP, Cons(lesseqp1, Cons(lesseqp2, Nil)), lazy(Cons(Tuple2(lesseqp(x)(y), not_(lessp(y)(x))), Nil)))
+    fun exp_(exp_1)(exp_2) =
+      Fun(EXP, Cons(exp_1, Cons(exp_2, Nil)), lazy(Cons(Tuple2(exp_(x)(plus(y)(z)), times(exp_(x)(y))(exp_(x)(z))), Cons(Tuple2(exp_(x)(times(y)(z)), exp_(exp_(x)(y))(z)), Nil))))
+    fun lessp(lessp1)(lessp2) =
+      Fun(LESSP, Cons(lessp1, Cons(lessp2, Nil)), lazy(Cons(Tuple2(lessp(remainder(x)(y))(y), not_(zerop(y))), Cons(Tuple2(lessp(quotient(x)(y))(x), and_(not_(zerop(x)))(lessp(one)(y))), Cons(Tuple2(lessp(plus(x)(y))(plus(x)(z)), lessp(y)(z)), Cons(Tuple2(lessp(times(x)(z))(times(y)(z)), and_(not_(zerop(z)))(lessp(x)(y))), Cons(Tuple2(lessp(y)(plus(x)(y)), not_(zerop(x))), Nil)))))))
+    fun reverse_(reverse_1) =
+      Fun(REVERSE, Cons(reverse_1, Nil), lazy(Cons(Tuple2(reverse_(append(x)(y)), append(reverse_(y))(reverse_(x))), Nil)))
+    fun zerop(zerop1) =
+      Fun(ZEROP, Cons(zerop1, Nil), lazy(Cons(Tuple2(zerop(x), equal(x)(zero)), Nil)))
+    let zero =
+      Fun(ZERO, Nil, lazy(Nil))
+    let u =
+      Var(U)
+    fun times(times1)(times2) =
+      Fun(TIMES, Cons(times1, Cons(times2, Nil)), lazy(Cons(Tuple2(times(x)(plus(y)(z)), plus(times(x)(y))(times(x)(z))), Cons(Tuple2(times(times(x)(y))(z), times(x)(times(y)(z))), Cons(Tuple2(times(x)(difference(y)(z)), difference(times(y)(x))(times(z)(x))), Cons(Tuple2(times(x)(add1(y)), plus(x)(times(x)(y))), Nil))))))
+    let one =
+      Fun(ONE, Nil, lazy(Cons(Tuple2(one, add1(zero)), Nil)))
+    fun plus(plus1)(plus2) =
+      Fun(PLUS, Cons(plus1, Cons(plus2, Nil)), lazy(Cons(Tuple2(plus(plus(x)(y))(z), plus(x)(plus(y)(z))), Cons(Tuple2(plus(remainder(x)(y))(times(y)(quotient(x)(y))), x), Cons(Tuple2(plus(x)(add1(y)), add1(plus(x)(y))), Nil)))))
+    fun if_(if_1)(if_2)(if_3) =
+      Fun(IF, Cons(if_1, Cons(if_2, Cons(if_3, Nil))), lazy(Cons(Tuple2(if_(if_(x)(y)(z))(u)(w), if_(x)(if_(y)(u)(w))(if_(z)(u)(w))), Nil)))
+    let x =
+      Var(X)
+    let w =
+      Var(W)
+    let nil =
+      Fun(NIL, Nil, lazy(Nil))
+    fun odd_(odd_1) =
+      Fun(ODD, Cons(odd_1, Nil), lazy(Cons(Tuple2(odd_(x), even_(sub1(x))), Nil)))
+    let a =
+      Var(A)
+    let y =
+      Var(Y)
+    fun greatereqp(greatereqp1)(greatereqp2) =
+      Fun(GREATEREQP, Cons(greatereqp1, Cons(greatereqp2, Nil)), lazy(Cons(Tuple2(greatereqp(x)(y), not_(lessp(x)(y))), Nil)))
+    fun not_(not_1) =
+      Fun(NOT, Cons(not_1, Nil), lazy(Cons(Tuple2(not_(x), if_(x)(boyerFalse)(boyerTrue)), Nil)))
+    fun member(member1)(member2) =
+      Fun(MEMBER, Cons(member1, Cons(member2, Nil)), lazy(Cons(Tuple2(member(x)(append(y)(z)), or_(member(x)(y))(member(x)(z))), Cons(Tuple2(member(x)(reverse_(y)), member(x)(y)), Nil))))
+    let d =
+      Var(D)
+    let c =
+      Var(C)
+    fun consp(consp1) =
+      Fun(CONSP, Cons(consp1, Nil), lazy(Cons(Tuple2(consp(cons(x)(y)), boyerTrue), Nil)))
+    fun nilp(nilp1) =
+      Fun(NILP, Cons(nilp1, Nil), lazy(Cons(Tuple2(nilp(x), equal(x)(nil)), Nil)))
+    let two =
+      Fun(TWO, Nil, lazy(Cons(Tuple2(two, add1(one)), Nil)))
+    fun sub1(sub11) =
+      Fun(SUB1, Cons(sub11, Nil), lazy(Cons(Tuple2(sub1(add1(x)), x), Nil)))
+    fun add1(add11) =
+      Fun(ADD1, Cons(add11, Nil), lazy(Nil))
+    fun greaterp(greaterp1)(greaterp2) =
+      Fun(GREATERP, Cons(greaterp1, Cons(greaterp2, Nil)), lazy(Cons(Tuple2(greaterp(x)(y), lessp(y)(x)), Nil)))
+    fun or_(or_1)(or_2) =
+      Fun(OR, Cons(or_1, Cons(or_2, Nil)), lazy(Cons(Tuple2(or_(x)(y), if_(x)(boyerTrue)(if_(y)(boyerTrue)(boyerFalse))), Nil)))
+    fun length_(length_1) =
+      Fun(LENGTH, Cons(length_1, Nil), lazy(Cons(Tuple2(length_(reverse_(x)), length_(x)), Cons(Tuple2(length_(cons(x)(cons(y)(cons(z)(cons(u)(w))))), plus(four)(length_(w))), Nil))))
+    let boyerFalse =
+      Fun(FALSE, Nil, lazy(Nil))
+    let four =
+      Fun(FOUR, Nil, lazy(Cons(Tuple2(four, add1(add1(two))), Nil)))
+    fun cons(cons1)(cons2) =
+      Fun(CONS, Cons(cons1, Cons(cons2, Nil)), lazy(Nil))
+    fun quotient(quotient1)(quotient2) =
+      Fun(QUOTIENT, Cons(quotient1, Cons(quotient2, Nil)), lazy(Cons(Tuple2(quotient(plus(x)(plus(x)(y)))(two), plus(x)(quotient(y)(two))), Cons(Tuple2(quotient(times(y)(x))(y), if_(zerop(y))(zero)(x)), Nil))))
+    fun gcd_(gcd_1)(gcd_2) =
+      Fun(GCD, Cons(gcd_1, Cons(gcd_2, Nil)), lazy(Cons(Tuple2(gcd_(x)(y), gcd_(y)(x)), Cons(Tuple2(gcd_(times(x)(z))(times(y)(z)), times(z)(gcd_(x)(y))), Nil))))
+    fun even_(even_1) =
+      Fun(EVEN, Cons(even_1, Nil), lazy(Cons(Tuple2(even_(x), if_(zerop(x))(boyerTrue)(odd_(sub1(x)))), Nil)))
+  (let subst0 = Cons(Tuple2(X, f(plus(plus(a)(b))(plus(c)(zero)))), Cons(Tuple2(Y, f(times(times(a)(b))(plus(c)(d)))), Cons(Tuple2(Z, f(reverse_(append(append(a)(b))(nil)))), Cons(Tuple2(U, equal(plus(a)(b))(difference(x)(y))), Cons(Tuple2(W, lessp(remainder(a)(b))(member(a)(length_(b)))), Nil)))))
+  let theorem = implies(and_(implies(test01)(y))(and_(implies(y)(z))(and_(implies(z)(u))(implies(u)(w)))))(implies(x)(w))
+  tautp(apply_subst(subst0)(theorem)))
+fun replicate(replicate1)(replicate2) =
+  if replicate1 == 0 then
+    Nil
+  else
+    (Cons(replicate2, replicate(replicate1 - 1)(replicate2)))
+fun rewrite_with_lemmas(rewrite_with_lemmas1)(rewrite_with_lemmas2) =
+  rewrite_with_lemmas_helper(rewrite_with_lemmas1)(force(rewrite_with_lemmas2))
+fun truep(truep1)(truep2) =
+  if truep1 is
+    Fun(truep_Fun_0, truep_Fun_1, truep_Fun_2) then
+      if truep_Fun_0 is
+        TRUE then
+          True
+        _ then
+          termInList(truep1)(truep2)
+    _ then
+      termInList(truep1)(truep2)
+fun termInList(termInList1)(termInList2) =
+  if termInList2 is
+    Cons(termInList_Cons_0, termInList_Cons_1) then
+      if termEq(termInList1)(termInList_Cons_0) then
+        True
+      else
+        (termInList(termInList1)(termInList_Cons_1))
+    Nil then
+      False
+fun testBoyer_nofib(testBoyer_nofib1) =
+  all(test0)(replicate(testBoyer_nofib1)(Var(X)))
+fun one_way_unify1(one_way_unify11)(one_way_unify12)(one_way_unify13) =
+  if one_way_unify12 is
+    Var(one_way_unify1_Var_0) then
+      let mi_1 = find(one_way_unify1_Var_0)(one_way_unify13)
+      if mi_1 is
+        Tuple2(one_way_unify1_Tuple2_0, one_way_unify1_Tuple2_1) then
+          if one_way_unify1_Tuple2_0 then
+            Tuple2(termEq(one_way_unify11)(one_way_unify1_Tuple2_1), one_way_unify13)
+          else
+            (Tuple2(True, Cons(Tuple2(one_way_unify1_Var_0, one_way_unify11), one_way_unify13)))
+    _ then
+      if one_way_unify11 is
+        Fun(one_way_unify1_Fun_0, one_way_unify1_Fun_1, one_way_unify1_Fun_2) then
+          if one_way_unify12 is
+            Fun(one_way_unify1_Fun_0_1, one_way_unify1_Fun_1_1, one_way_unify1_Fun_2_1) then
+              if polyEq(one_way_unify1_Fun_0)(one_way_unify1_Fun_0_1) then
+                one_way_unify1_lst(one_way_unify1_Fun_1)(one_way_unify1_Fun_1_1)(one_way_unify13)
+              else
+                (Tuple2(False, Nil))
+            _ then
+              Tuple2(False, Nil)
+        _ then
+          Tuple2(False, Nil)
+fun one_way_unify(one_way_unify1)(one_way_unify2) =
+  one_way_unify1(one_way_unify1)(one_way_unify2)(Nil)
+fun falsep(falsep1)(falsep2) =
+  if falsep1 is
+    Fun(falsep_Fun_0, falsep_Fun_1, falsep_Fun_2) then
+      if falsep_Fun_0 is
+        FALSE then
+          True
+        _ then
+          termInList(falsep1)(falsep2)
+    _ then
+      termInList(falsep1)(falsep2)
+fun tautologyp(tautologyp1)(tautologyp2)(tautologyp3) =
+  if truep(tautologyp1)(tautologyp2) then
+    True
+  else
+    if falsep(tautologyp1)(tautologyp3) then
+      False
+    else
+      (let mi_2 = tautologyp1
+      if mi_2 is
+        Fun(tautologyp_Fun_0, tautologyp_Fun_1, tautologyp_Fun_2) then
+          if tautologyp_Fun_0 is
+            IF then
+              if tautologyp_Fun_1 is
+                Cons(tautologyp_Cons_0, tautologyp_Cons_1) then
+                  if tautologyp_Cons_1 is
+                    Cons(tautologyp_Cons_0_1, tautologyp_Cons_1_1) then
+                      if tautologyp_Cons_1_1 is
+                        Cons(tautologyp_Cons_0_2, tautologyp_Cons_1_2) then
+                          if tautologyp_Cons_1_2 is
+                            Nil then
+                              if truep(tautologyp_Cons_0)(tautologyp2) then
+                                tautologyp(tautologyp_Cons_0_1)(tautologyp2)(tautologyp3)
+                              else
+                                if falsep(tautologyp_Cons_0)(tautologyp3) then
+                                  tautologyp(tautologyp_Cons_0_2)(tautologyp2)(tautologyp3)
+                                else
+                                  ((tautologyp(tautologyp_Cons_0_1)(Cons(tautologyp_Cons_0, tautologyp2))(tautologyp3)) && (tautologyp(tautologyp_Cons_0_2)(tautologyp2)(Cons(tautologyp_Cons_0, tautologyp3))))
+                            _ then
+                              False
+                        _ then
+                          False
+                    _ then
+                      False
+                _ then
+                  False
+            _ then
+              False
+        _ then
+          False)
+fun find(find1)(find2) =
+  if find2 is
+    Nil then
+      Tuple2(False, ERROR)
+    Cons(find_Cons_0, find_Cons_1) then
+      if find_Cons_0 is
+        Tuple2(find_Tuple2_0, find_Tuple2_1) then
+          if polyEq(find1)(find_Tuple2_0) then
+            Tuple2(True, find_Tuple2_1)
+          else
+            (find(find1)(find_Cons_1))
+fun tautp(tautp1) =
+  tautologyp(rewrite(tautp1))(Nil)(Nil)
+fun termLsEq(termLsEq1)(termLsEq2) =
+  if termLsEq1 is
+    Cons(termLsEq_Cons_0, termLsEq_Cons_1) then
+      if termLsEq2 is
+        Cons(termLsEq_Cons_0_1, termLsEq_Cons_1_1) then
+          if termEq(termLsEq_Cons_0)(termLsEq_Cons_0_1) then
+            termLsEq(termLsEq_Cons_1)(termLsEq_Cons_1_1)
+          else
+            False
+    Nil then
+      if termLsEq2 is
+        Nil then
+          True
+fun rewrite_with_lemmas_helper(rewrite_with_lemmas_helper1)(rewrite_with_lemmas_helper2) =
+  let mi_3 = rewrite_with_lemmas_helper2
+  if mi_3 is
+    Nil then
+      rewrite_with_lemmas_helper1
+    Cons(rewrite_with_lemmas_helper_Cons_0, rewrite_with_lemmas_helper_Cons_1) then
+      if rewrite_with_lemmas_helper_Cons_0 is
+        Tuple2(rewrite_with_lemmas_helper_Tuple2_0, rewrite_with_lemmas_helper_Tuple2_1) then
+          let mi_4 = one_way_unify(rewrite_with_lemmas_helper1)(rewrite_with_lemmas_helper_Tuple2_0)
+          if mi_4 is
+            Tuple2(rewrite_with_lemmas_helper_Tuple2_0_1, rewrite_with_lemmas_helper_Tuple2_1_1) then
+              if rewrite_with_lemmas_helper_Tuple2_0_1 then
+                rewrite(apply_subst(rewrite_with_lemmas_helper_Tuple2_1_1)(rewrite_with_lemmas_helper_Tuple2_1))
+              else
+                (rewrite_with_lemmas_helper(rewrite_with_lemmas_helper1)(rewrite_with_lemmas_helper_Cons_1))
+fun termEq(termEq1)(termEq2) =
+  if termEq1 is
+    Var(termEq_Var_0) then
+      if termEq2 is
+        Var(termEq_Var_0_1) then
+          polyEq(termEq_Var_0)(termEq_Var_0_1)
+        _ then
+          False
+    Fun(termEq_Fun_0, termEq_Fun_1, termEq_Fun_2) then
+      if termEq2 is
+        Fun(termEq_Fun_0_1, termEq_Fun_1_1, termEq_Fun_2_1) then
+          (polyEq(termEq_Fun_0)(termEq_Fun_0_1)) && (termLsEq(termEq_Fun_1)(termEq_Fun_1_1))
+        _ then
+          False
+    _ then
+      False
+fun all(all1)(all2) =
+  if all2 is
+    Nil then
+      True
+    Cons(all_Cons_0, all_Cons_1) then
+      if all1(all_Cons_0) then
+        all(all1)(all_Cons_1)
+      else
+        False
+fun rewrite(rewrite1) =
+  if rewrite1 is
+    Var(rewrite_Var_0) then
+      Var(rewrite_Var_0)
+    Fun(rewrite_Fun_0, rewrite_Fun_1, rewrite_Fun_2) then
+      rewrite_with_lemmas(Fun(rewrite_Fun_0, map(rewrite)(rewrite_Fun_1), rewrite_Fun_2))(rewrite_Fun_2)
+fun one_way_unify1_lst(one_way_unify1_lst1)(one_way_unify1_lst2)(one_way_unify1_lst3) =
+  if one_way_unify1_lst1 is
+    Nil then
+      if one_way_unify1_lst2 is
+        Nil then
+          Tuple2(True, one_way_unify1_lst3)
+        _ then
+          Tuple2(False, Nil)
+    Cons(one_way_unify1_lst_Cons_0, one_way_unify1_lst_Cons_1) then
+      if one_way_unify1_lst2 is
+        Cons(one_way_unify1_lst_Cons_0_1, one_way_unify1_lst_Cons_1_1) then
+          let mi_5 = one_way_unify1(one_way_unify1_lst_Cons_0)(one_way_unify1_lst_Cons_0_1)(one_way_unify1_lst3)
+          if mi_5 is
+            Tuple2(one_way_unify1_lst_Tuple2_0, one_way_unify1_lst_Tuple2_1) then
+              let mi_6 = one_way_unify1_lst(one_way_unify1_lst_Cons_1)(one_way_unify1_lst_Cons_1_1)(one_way_unify1_lst_Tuple2_1)
+              if mi_6 is
+                Tuple2(one_way_unify1_lst_Tuple2_0_1, one_way_unify1_lst_Tuple2_1_1) then
+                  Tuple2(one_way_unify1_lst_Tuple2_0 && one_way_unify1_lst_Tuple2_0_1, one_way_unify1_lst_Tuple2_1_1)
+        _ then
+          Tuple2(False, Nil)
+    _ then
+      Tuple2(False, Nil)
+(testBoyer_nofib(primId(5)))

@@ -1,0 +1,385 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun findallawards(findallawards1) =
+  map(
+    name_scores =>
+      let mi = name_scores
+      if mi is
+        Tuple2(findallawards_Tuple2_0, findallawards_Tuple2_1) then
+          Tuple2(findallawards_Tuple2_0, findawards(findallawards_Tuple2_1))
+  )(findallawards1)
+fun qpart(qpart1)(qpart2)(qpart3)(qpart4)(qpart5)(qpart6) =
+  if qpart3 is
+    Nil then
+      rqsort(qpart1)(qpart4)(Cons(qpart2, rqsort(qpart1)(qpart5)(qpart6)))
+    Cons(qpart_Cons_0, qpart_Cons_1) then
+      if qpart1(qpart2)(qpart_Cons_0) then
+        qpart(qpart1)(qpart2)(qpart_Cons_1)(qpart4)(Cons(qpart_Cons_0, qpart5))(qpart6)
+      else
+        (qpart(qpart1)(qpart2)(qpart_Cons_1)(Cons(qpart_Cons_0, qpart4))(qpart5)(qpart6))
+fun qsort(qsort1)(qsort2)(qsort3) =
+  if qsort2 is
+    Nil then
+      qsort3
+    Cons(qsort_Cons_0, qsort_Cons_1) then
+      if qsort_Cons_1 is
+        Nil then
+          Cons(qsort_Cons_0, qsort3)
+        _ then
+          qpart(qsort1)(qsort_Cons_0)(qsort_Cons_1)(Nil)(Nil)(qsort3)
+fun competitors(competitors1) =
+  Cons(Tuple2(Cons(char"S", Cons(char"i", Cons(char"m", Cons(char"o", Cons(char"n", Nil))))), Cons(35, Cons(27, Cons(40, Cons(competitors1, Cons(34, Cons(21, Nil))))))), Cons(Tuple2(Cons(char"H", Cons(char"a", Cons(char"n", Cons(char"s", Nil)))), Cons(23, Cons(19, Cons(45, Cons(competitors1, Cons(17, Cons(10, Cons(5, Cons(8, Cons(14, Nil)))))))))), Cons(Tuple2(Cons(char"P", Cons(char"h", Cons(char"i", Cons(char"l", Nil)))), Cons(1, Cons(18, Cons(competitors1, Cons(20, Cons(21, Cons(19, Cons(34, Cons(8, Cons(16, Cons(21, Nil))))))))))), Cons(Tuple2(Cons(char"K", Cons(char"e", Cons(char"v", Cons(char"i", Cons(char"n", Nil))))), Cons(9, Cons(23, Cons(17, Cons(54, Cons(competitors1, Cons(41, Cons(9, Cons(18, Cons(14, Nil)))))))))), Nil))))
+fun compareTuple2(compareTuple21)(compareTuple22) =
+  if compareTuple21 is
+    Tuple2(compareTuple2_Tuple2_0, compareTuple2_Tuple2_1) then
+      if compareTuple22 is
+        Tuple2(compareTuple2_Tuple2_0_1, compareTuple2_Tuple2_1_1) then
+          compareTuple2_Tuple2_0 <= compareTuple2_Tuple2_0_1
+fun rqpart(rqpart1)(rqpart2)(rqpart3)(rqpart4)(rqpart5)(rqpart6) =
+  if rqpart3 is
+    Nil then
+      qsort(rqpart1)(rqpart4)(Cons(rqpart2, qsort(rqpart1)(rqpart5)(rqpart6)))
+    Cons(rqpart_Cons_0, rqpart_Cons_1) then
+      if rqpart1(rqpart_Cons_0)(rqpart2) then
+        rqpart(rqpart1)(rqpart2)(rqpart_Cons_1)(Cons(rqpart_Cons_0, rqpart4))(rqpart5)(rqpart6)
+      else
+        (rqpart(rqpart1)(rqpart2)(rqpart_Cons_1)(rqpart4)(Cons(rqpart_Cons_0, rqpart5))(rqpart6))
+fun listDiff =
+  foldl(delete)
+fun testAwards_nofib(testAwards_nofib1) =
+  map(
+    x =>
+      (findallawards(competitors(x % 100)))
+  )(primId(enumFromTo(1)(testAwards_nofib1)))
+fun awards(awards1) =
+  let sumscores = map(
+    p =>
+      (Tuple2(sum(p), p))
+  )(perms(3)(awards1))
+  let atleast = threshold =>
+    (filter(
+      sum_p =>
+        let mi_1 = sum_p
+        if mi_1 is
+          Tuple2(awards_Tuple2_0, awards_Tuple2_1) then
+            awards_Tuple2_0 >= threshold
+    )(sumscores))
+  let award = name_threshold =>
+    let mi_2 = name_threshold
+    if mi_2 is
+      Tuple2(awards_Tuple2_0_1, awards_Tuple2_1_1) then
+        map(
+          ps =>
+            (Tuple2(awards_Tuple2_0_1, ps))
+        )(sort(atleast(awards_Tuple2_1_1)))
+  mappend(mappend(award(Tuple2(Cons(char"G", Cons(char"o", Cons(char"l", Cons(char"d", Nil)))), 70)))(award(Tuple2(Cons(char"S", Cons(char"i", Cons(char"l", Cons(char"v", Cons(char"e", Cons(char"r", Nil)))))), 60))))(award(Tuple2(Cons(char"B", Cons(char"r", Cons(char"o", Cons(char"n", Cons(char"z", Cons(char"e", Nil)))))), 50)))
+fun perms(perms1)(perms2) =
+  if perms2 is
+    Nil then
+      Nil
+    _ then
+      if perms1 is
+        1 then
+          map(
+            x =>
+              (Cons(x, Nil))
+          )(perms2)
+        _ then
+          if perms2 is
+            Cons(perms_Cons_0, perms_Cons_1) then
+              mappend(map(
+                x =>
+                  (Cons(perms_Cons_0, x))
+              )(perms(perms1 - 1)(perms_Cons_1)))(perms(perms1)(perms_Cons_1))
+fun delete(delete1)(delete2) =
+  if delete1 is
+    Cons(delete_Cons_0, delete_Cons_1) then
+      if polyEq(delete_Cons_0)(delete2) then
+        delete(delete_Cons_1)(delete2)
+      else
+        (Cons(delete_Cons_0, delete(delete_Cons_1)(delete2)))
+    Nil then
+      Nil
+fun rqsort(rqsort1)(rqsort2)(rqsort3) =
+  if rqsort2 is
+    Nil then
+      rqsort3
+    Cons(rqsort_Cons_0, rqsort_Cons_1) then
+      if rqsort_Cons_1 is
+        Nil then
+          Cons(rqsort_Cons_0, rqsort3)
+        _ then
+          rqpart(rqsort1)(rqsort_Cons_0)(rqsort_Cons_1)(Nil)(Nil)(rqsort3)
+fun sort(sort1) =
+  qsort(
+    a =>
+      b =>
+        (compareTuple2(a)(b))
+  )(sort1)(Nil)
+fun findawards(findawards1) =
+  let mi_3 = awards(findawards1)
+  if mi_3 is
+    Nil then
+      Nil
+    Cons(findawards_Cons_0, findawards_Cons_1) then
+      let mi_4 = findawards_Cons_0
+      if mi_4 is
+        Tuple2(findawards_Tuple2_0, findawards_Tuple2_1) then
+          if findawards_Tuple2_1 is
+            Tuple2(findawards_Tuple2_0_1, findawards_Tuple2_1_1) then
+              Cons(Tuple2(findawards_Tuple2_0, Tuple2(findawards_Tuple2_0_1, findawards_Tuple2_1_1)), findawards(listDiff(findawards1)(findawards_Tuple2_1_1)))
+(testAwards_nofib(primId(500)))

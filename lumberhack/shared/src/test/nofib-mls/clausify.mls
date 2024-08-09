@@ -1,0 +1,526 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun elim(elim1) =
+  if elim1 is
+    Sym(elim_Sym_0) then
+      Sym(elim_Sym_0)
+    Not(elim_Not_0) then
+      Not(elim(elim_Not_0))
+    Dis(elim_Dis_0, elim_Dis_1) then
+      Dis(elim(elim_Dis_0), elim(elim_Dis_1))
+    Con(elim_Con_0, elim_Con_1) then
+      Con(elim(elim_Con_0), elim(elim_Con_1))
+    Imp(elim_Imp_0, elim_Imp_1) then
+      Dis(Not(elim(elim_Imp_0)), elim(elim_Imp_1))
+    Eqv(elim_Eqv_0, elim_Eqv_1) then
+      Con(elim(Imp(elim_Eqv_0, elim_Eqv_1)), elim(Imp(elim_Eqv_1, elim_Eqv_0)))
+fun conjunct(conjunct1) =
+  if conjunct1 is
+    Con(conjunct_Con_0, conjunct_Con_1) then
+      True
+    _ then
+      False
+fun insert(insert1)(insert2) =
+  if insert2 is
+    Nil then
+      Cons(insert1, Nil)
+    Cons(insert_Cons_0, insert_Cons_1) then
+      if polyLt(insert1)(insert_Cons_0) then
+        Cons(insert1, Cons(insert_Cons_0, insert_Cons_1))
+      else
+        if polyGt(insert1)(insert_Cons_0) then
+          Cons(insert_Cons_0, insert(insert1)(insert_Cons_1))
+        else
+          (Cons(insert_Cons_0, insert_Cons_1))
+fun tautclause(tautclause1) =
+  if tautclause1 is
+    Tuple2(tautclause_Tuple2_0, tautclause_Tuple2_1) then
+      polyNeq(
+        let f = fp =>
+          if fp is
+            Cons(h, t) then
+              if contains(h)(tautclause_Tuple2_1) then
+                Cons(h, f(t))
+              else
+                (f(t))
+            Nil then
+              Nil
+        f(tautclause_Tuple2_0)
+      )(Nil)
+fun interleave(interleave1)(interleave2) =
+  if interleave1 is
+    Cons(interleave_Cons_0, interleave_Cons_1) then
+      Cons(interleave_Cons_0, interleave(interleave2)(interleave_Cons_1))
+    Nil then
+      Nil
+fun disin(disin1) =
+  if disin1 is
+    Dis(disin_Dis_0, disin_Dis_1) then
+      if disin_Dis_1 is
+        Con(disin_Con_0_1, disin_Con_1_1) then
+          Con(disin(Dis(disin_Dis_0, disin_Con_0_1)), disin(Dis(disin_Dis_0, disin_Con_1_1)))
+        _ then
+          if disin_Dis_0 is
+            Con(disin_Con_0, disin_Con_1) then
+              Con(disin(Dis(disin_Con_0, disin_Dis_1)), disin(Dis(disin_Con_1, disin_Dis_1)))
+            _ then
+              let dp = disin(disin_Dis_0)
+              let dq = disin(disin_Dis_1)
+              if (conjunct(dp)) || (conjunct(dq)) then
+                disin(Dis(dp, dq))
+              else
+                (Dis(dp, dq))
+    Con(disin_Con_0_2, disin_Con_1_2) then
+      Con(disin(disin_Con_0_2), disin(disin_Con_1_2))
+    _ then
+      disin1
+fun opri(opri1) =
+  if opri1 is
+    char"(" then
+      0
+    char"=" then
+      1
+    char">" then
+      2
+    char"|" then
+      3
+    char"&" then
+      4
+    char"~" then
+      5
+fun clauseHelper(clauseHelper1)(clauseHelper2) =
+  if clauseHelper1 is
+    Dis(clauseHelper_Dis_0, clauseHelper_Dis_1) then
+      clauseHelper(clauseHelper_Dis_0)(clauseHelper(clauseHelper_Dis_1)(clauseHelper2))
+    Sym(clauseHelper_Sym_0) then
+      if clauseHelper2 is
+        Tuple2(clauseHelper_Tuple2_0, clauseHelper_Tuple2_1) then
+          Tuple2(insert(clauseHelper_Sym_0)(clauseHelper_Tuple2_0), clauseHelper_Tuple2_1)
+    Not(clauseHelper_Not_0) then
+      if clauseHelper_Not_0 is
+        Sym(clauseHelper_Sym_0_1) then
+          if clauseHelper2 is
+            Tuple2(clauseHelper_Tuple2_0_1, clauseHelper_Tuple2_1_1) then
+              Tuple2(clauseHelper_Tuple2_0_1, insert(clauseHelper_Sym_0_1)(clauseHelper_Tuple2_1_1))
+fun testClausify_nofib(testClausify_nofib1) =
+  let xs = copy(testClausify_nofib1)(Cons(char"(", Cons(char"a", Cons(char" ", Cons(char"=", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"=", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char"=", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char" ", Cons(char"=", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"=", Cons(char" ", Cons(char"a", Cons(char")", Cons(char" ", Cons(char"=", Cons(char" ", Cons(char"(", Cons(char"a", Cons(char" ", Cons(char"=", Cons(char" ", Cons(char"a", Cons(char" ", Cons(char"=", Cons(char" ", Cons(char"a", Cons(char")", Nil))))))))))))))))))))))))))))))))))))))))
+  concat(map(clauses)(xs))
+fun parse(parse1) =
+  let mi = parseHelper(parse1)(Nil)
+  if mi is
+    Cons(parse_Cons_0, parse_Cons_1) then
+      if parse_Cons_0 is
+        Ast(parse_Ast_0) then
+          if parse_Cons_1 is
+            Nil then
+              parse_Ast_0
+fun split(split1) =
+  splitHelper(split1)(Nil)
+fun redstar(redstar1) =
+  while(
+    x =>
+      (0 /= (spri(x)))
+  )(red)(redstar1)
+fun spri(spri1) =
+  if spri1 is
+    Cons(spri_Cons_0, spri_Cons_1) then
+      if spri_Cons_0 is
+        Ast(spri_Ast_0) then
+          if spri_Cons_1 is
+            Cons(spri_Cons_0_1, spri_Cons_1_1) then
+              if spri_Cons_0_1 is
+                Lex(spri_Lex_0) then
+                  opri(spri_Lex_0)
+                _ then
+                  0
+            _ then
+              0
+        _ then
+          0
+    _ then
+      0
+fun splitHelper(splitHelper1)(splitHelper2) =
+  if splitHelper1 is
+    Con(splitHelper_Con_0, splitHelper_Con_1) then
+      splitHelper(splitHelper_Con_0)(splitHelper(splitHelper_Con_1)(splitHelper2))
+    _ then
+      Cons(splitHelper1, splitHelper2)
+fun clauses(clauses1) =
+  (x_1 =>
+    ((x_2 =>
+      ((x_3 =>
+        ((x_4 =>
+          ((x_5 =>
+            ((x_6 =>
+              ((x_7 =>
+                (concat(map(disp)(x_7))))(unicl(x_6))))(split(x_5))))(disin(x_4))))(negin(x_3))))(elim(x_2))))(parse(x_1))))(clauses1)
+fun negin(negin1) =
+  if negin1 is
+    Not(negin_Not_0) then
+      if negin_Not_0 is
+        Not(negin_Not_0_1) then
+          negin(negin_Not_0_1)
+        Con(negin_Con_0, negin_Con_1) then
+          Dis(negin(Not(negin_Con_0)), negin(Not(negin_Con_1)))
+        Dis(negin_Dis_0, negin_Dis_1) then
+          Con(negin(Not(negin_Dis_0)), negin(Not(negin_Dis_1)))
+        _ then
+          negin1
+    Dis(negin_Dis_0_1, negin_Dis_1_1) then
+      Dis(negin(negin_Dis_0_1), negin(negin_Dis_1_1))
+    Con(negin_Con_0_1, negin_Con_1_1) then
+      Con(negin(negin_Con_0_1), negin(negin_Con_1_1))
+    _ then
+      negin1
+fun uniclHelper(uniclHelper1)(uniclHelper2) =
+  let cp = clause(uniclHelper1)
+  if tautclause(cp) then
+    uniclHelper2
+  else
+    (insert(cp)(uniclHelper2))
+fun while(while1)(while2)(while3) =
+  if while1(while3) then
+    while(while1)(while2)(while2(while3))
+  else
+    while3
+fun unicl(unicl1) =
+  foldr(uniclHelper)(Nil)(unicl1)
+fun disp(disp1) =
+  if disp1 is
+    Tuple2(disp_Tuple2_0, disp_Tuple2_1) then
+      mappend(mappend(interleave(disp_Tuple2_0)(spaces(length(disp_Tuple2_0))))(Cons(char"<", Cons(char"=", Nil))))(mappend(interleave(spaces(length(disp_Tuple2_1)))(disp_Tuple2_1))(Cons(char"n", Nil)))
+fun copy(copy1)(copy2) =
+  if copy1 > 0 then
+    Cons(copy2, copy(copy1 - 1)(copy2))
+  else
+    Nil
+fun parseHelper(parseHelper1)(parseHelper2) =
+  if parseHelper1 is
+    Nil then
+      redstar(parseHelper2)
+    Cons(parseHelper_Cons_0, parseHelper_Cons_1) then
+      if parseHelper_Cons_0 is
+        char" " then
+          parseHelper(parseHelper_Cons_1)(parseHelper2)
+        char"(" then
+          parseHelper(parseHelper_Cons_1)(Cons(Lex(char"("), parseHelper2))
+        char")" then
+          let mi_1 = redstar(parseHelper2)
+          if mi_1 is
+            Cons(parseHelper_Cons_0_1, parseHelper_Cons_1_1) then
+              if parseHelper_Cons_1_1 is
+                Cons(parseHelper_Cons_0_2, parseHelper_Cons_1_2) then
+                  if parseHelper_Cons_0_2 is
+                    Lex(parseHelper_Lex_0) then
+                      if parseHelper_Lex_0 is
+                        char"(" then
+                          parseHelper(parseHelper_Cons_1)(Cons(parseHelper_Cons_0_1, parseHelper_Cons_1_2))
+        _ then
+          if (polyLeq(char"a")(parseHelper_Cons_0)) && (polyLeq(parseHelper_Cons_0)(char"z")) then
+            parseHelper(parseHelper_Cons_1)(Cons(Ast(Sym(parseHelper_Cons_0)), parseHelper2))
+          else
+            if (spri(parseHelper2)) > (opri(parseHelper_Cons_0)) then
+              parseHelper(Cons(parseHelper_Cons_0, parseHelper_Cons_1))(red(parseHelper2))
+            else
+              (parseHelper(parseHelper_Cons_1)(Cons(Lex(parseHelper_Cons_0), parseHelper2)))
+fun contains(contains1)(contains2) =
+  if contains2 is
+    Cons(contains_Cons_0, contains_Cons_1) then
+      (polyEq(contains1)(contains_Cons_0)) || (contains(contains1)(contains_Cons_1))
+    Nil then
+      False
+fun clause(clause1) =
+  clauseHelper(clause1)(Tuple2(Nil, Nil))
+fun spaces(spaces1) =
+  copy(spaces1)(char" ")
+fun red(red1) =
+  if red1 is
+    Cons(red_Cons_0, red_Cons_1) then
+      if red_Cons_0 is
+        Ast(red_Ast_0) then
+          if red_Cons_1 is
+            Cons(red_Cons_0_1, red_Cons_1_1) then
+              if red_Cons_0_1 is
+                Lex(red_Lex_0) then
+                  if red_Lex_0 is
+                    char"=" then
+                      if red_Cons_1_1 is
+                        Cons(red_Cons_0_2, red_Cons_1_2) then
+                          if red_Cons_0_2 is
+                            Ast(red_Ast_0_1) then
+                              Cons(Ast(Eqv(red_Ast_0_1, red_Ast_0)), red_Cons_1_2)
+                    char">" then
+                      if red_Cons_1_1 is
+                        Cons(red_Cons_0_3, red_Cons_1_3) then
+                          if red_Cons_0_3 is
+                            Ast(red_Ast_0_2) then
+                              Cons(Ast(Imp(red_Ast_0_2, red_Ast_0)), red_Cons_1_3)
+                    char"|" then
+                      if red_Cons_1_1 is
+                        Cons(red_Cons_0_4, red_Cons_1_4) then
+                          if red_Cons_0_4 is
+                            Ast(red_Ast_0_3) then
+                              Cons(Ast(Dis(red_Ast_0_3, red_Ast_0)), red_Cons_1_4)
+                    char"&" then
+                      if red_Cons_1_1 is
+                        Cons(red_Cons_0_5, red_Cons_1_5) then
+                          if red_Cons_0_5 is
+                            Ast(red_Ast_0_4) then
+                              Cons(Ast(Con(red_Ast_0_4, red_Ast_0)), red_Cons_1_5)
+                    char"~" then
+                      Cons(Ast(Not(red_Ast_0)), red_Cons_1_1)
+(testClausify_nofib(primId(10)))

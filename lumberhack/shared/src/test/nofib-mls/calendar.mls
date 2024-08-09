@@ -1,0 +1,423 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun emptyPic(emptyPic1) =
+  if emptyPic1 is
+    Tuple2(emptyPic_Tuple2_0, emptyPic_Tuple2_1) then
+      copy(emptyPic_Tuple2_0)(copy(emptyPic_Tuple2_1)(char" "))
+fun rjustify(rjustify1)(rjustify2) =
+  mappend(space(rjustify1 - (length(rjustify2))))(rjustify2)
+fun jan1st(jan1st1) =
+  let last = jan1st1 - 1
+  (div((div((div(jan1st1 + last)(4)) - last)(100)) + last)(400)) % 7
+fun unlines(unlines1) =
+  concat(map(
+    l =>
+      (mappend(l)(Cons(char"n", Nil)))
+  )(unlines1))
+fun height(height1) =
+  length(height1)
+fun block(block1)(x) =
+  (x_1 =>
+    (stack(map(spread)(x_1))))(groop(block1)(x))
+fun blockT(blockT1)(x_2) =
+  (x_3 =>
+    (spread(map(stack)(x_3))))(groop(blockT1)(x_2))
+fun monthNames =
+  Cons(Cons(char"J", Cons(char"a", Cons(char"n", Cons(char"u", Cons(char"a", Cons(char"r", Cons(char"y", Nil))))))), Cons(Cons(char"F", Cons(char"e", Cons(char"b", Cons(char"r", Cons(char"u", Cons(char"a", Cons(char"r", Cons(char"y", Nil)))))))), Cons(Cons(char"M", Cons(char"a", Cons(char"r", Cons(char"c", Cons(char"h", Nil))))), Cons(Cons(char"A", Cons(char"p", Cons(char"r", Cons(char"i", Cons(char"l", Nil))))), Cons(Cons(char"M", Cons(char"a", Cons(char"y", Nil))), Cons(Cons(char"J", Cons(char"u", Cons(char"n", Cons(char"e", Nil)))), Cons(Cons(char"J", Cons(char"u", Cons(char"l", Cons(char"y", Nil)))), Cons(Cons(char"A", Cons(char"u", Cons(char"g", Cons(char"u", Cons(char"s", Cons(char"t", Nil)))))), Cons(Cons(char"S", Cons(char"e", Cons(char"p", Cons(char"t", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Nil))))))))), Cons(Cons(char"O", Cons(char"c", Cons(char"t", Cons(char"o", Cons(char"b", Cons(char"e", Cons(char"r", Nil))))))), Cons(Cons(char"N", Cons(char"o", Cons(char"v", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Nil)))))))), Cons(Cons(char"D", Cons(char"e", Cons(char"c", Cons(char"e", Cons(char"m", Cons(char"b", Cons(char"e", Cons(char"r", Nil)))))))), Nil))))))))))))
+fun stack(stack1) =
+  foldr1(
+    a =>
+      b =>
+        (mappend(a)(b))
+  )(stack1)
+fun copy(copy1)(copy2) =
+  if copy1 > 0 then
+    Cons(copy2, copy(copy1 - 1)(copy2))
+  else
+    Nil
+fun cjustify(cjustify1)(cjustify2) =
+  let m = cjustify1 - (length(cjustify2))
+  let halfm = div(m)(2)
+  mappend(mappend(space(halfm))(cjustify2))(space(m - halfm))
+fun ljustify(ljustify1)(ljustify2) =
+  mappend(ljustify2)(space(ljustify1 - (length(ljustify2))))
+fun foldr1(foldr11)(foldr12) =
+  if foldr12 is
+    Cons(foldr1_Cons_0, foldr1_Cons_1) then
+      foldr(foldr11)(foldr1_Cons_0)(foldr1_Cons_1)
+fun width(width1) =
+  length(head(width1))
+fun lframe(lframe1)(lframe2) =
+  if lframe1 is
+    Tuple2(lframe_Tuple2_0, lframe_Tuple2_1) then
+      let h = height(lframe2)
+      let w = width(lframe2)
+      mappend(zipWith(mappend)(lframe2)(emptyPic(Tuple2(h, lframe_Tuple2_1 - w))))(emptyPic(Tuple2(lframe_Tuple2_0 - h, lframe_Tuple2_1)))
+fun spread(spread1) =
+  foldr1(
+    a =>
+      b =>
+        (zipWith(mappend)(a)(b))
+  )(spread1)
+fun scanl(scanl1)(scanl2)(scanl3) =
+  Cons(scanl2, let mi = scanl3
+  if mi is
+    Nil then
+      Nil
+    Cons(scanl_Cons_0, scanl_Cons_1) then
+      scanl(scanl1)(scanl1(scanl2)(scanl_Cons_0))(scanl_Cons_1))
+fun monthLengths(monthLengths1) =
+  let feb = if leap(monthLengths1) then
+    29
+  else
+    28
+  Cons(31, Cons(feb, Cons(31, Cons(30, Cons(31, Cons(30, Cons(31, Cons(31, Cons(30, Cons(31, Cons(30, Cons(31, Nil))))))))))))
+fun testCalendar_nofib(testCalendar_nofib1) =
+  map(
+    n =>
+      (length(cal(n)))
+  )(primId(enumFromTo(1993)(1993 + testCalendar_nofib1)))
+fun groop(groop1)(groop2) =
+  if groop2 is
+    Nil then
+      Nil
+    _ then
+      Cons(take(groop1)(groop2), groop(groop1)(drop(groop1)(groop2)))
+fun cal(cal1) =
+  let
+    fun pic(pic1) =
+      if pic1 is
+        Tuple3(pic_Tuple3_0, pic_Tuple3_1, pic_Tuple3_2) then
+          mappend(title(pic_Tuple3_0))(table(pic_Tuple3_1)(pic_Tuple3_2))
+    fun table(table1)(table2) =
+      mappend(daynames)(entries(table1)(table2))
+    let daynames =
+      Cons(Cons(char" ", Cons(char"S", Cons(char"u", Cons(char" ", Cons(char"M", Cons(char"o", Cons(char" ", Cons(char"T", Cons(char"u", Cons(char" ", Cons(char"W", Cons(char"e", Cons(char" ", Cons(char"T", Cons(char"h", Cons(char" ", Cons(char"F", Cons(char"r", Cons(char" ", Cons(char"S", Cons(char"a", Nil))))))))))))))))))))), Nil)
+    fun pad(pad1) =
+      mappend(zipWith(mappend)(zipWith(mappend)(side)(pad1))(side))(end)
+    fun months(months1) =
+      zip3(monthNames)(firstDays(months1))(monthLengths(months1))
+    fun entries(entries1)(entries2) =
+      block(7)(dates(entries1)(entries2))
+    let side =
+      emptyPic(Tuple2(8, 2))
+    fun body(x_4) =
+      (x_5 =>
+        (block(3)(map(
+          x_6 =>
+            (pad(pic(x_6)))
+        )(x_5))))(months(x_4))
+    fun banner(banner1) =
+      mappend(Cons(cjustify(75)(string_of_int(banner1)), Nil))(emptyPic(Tuple2(1, 75)))
+    let end =
+      emptyPic(Tuple2(1, 25))
+    fun title(title1) =
+      Cons(cjustify(21)(title1), Nil)
+  (unlines(mappend(banner(cal1))(body(cal1))))
+fun drop(drop1)(drop2) =
+  if drop2 is
+    Nil then
+      Nil
+    Cons(drop_Cons_0, drop_Cons_1) then
+      if drop1 > 0 then
+        drop(drop1 - 1)(drop_Cons_1)
+      else
+        drop_Cons_1
+fun zip3(zip31)(zip32)(zip33) =
+  let mi_1 = zip31
+  if mi_1 is
+    Cons(zip3_Cons_0, zip3_Cons_1) then
+      let mi_2 = zip32
+      if mi_2 is
+        Cons(zip3_Cons_0_1, zip3_Cons_1_1) then
+          let mi_3 = zip33
+          if mi_3 is
+            Cons(zip3_Cons_0_2, zip3_Cons_1_2) then
+              Cons(Tuple3(zip3_Cons_0, zip3_Cons_0_1, zip3_Cons_0_2), zip3(zip3_Cons_1)(zip3_Cons_1_1)(zip3_Cons_1_2))
+            Nil then
+              Nil
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun space(space1) =
+  copy(space1)(char" ")
+fun dates(dates1)(dates2) =
+  map(
+    d =>
+      (date(dates2)(d))
+  )(enumFromTo(1 - dates1)(42 - dates1))
+fun date(date1)(date2) =
+  if date2 < 1 || date1 < date2 then
+    Cons(Cons(char" ", Cons(char" ", Cons(char" ", Nil))), Nil)
+  else
+    (Cons(rjustify(3)(string_of_int(date2)), Nil))
+fun leap(leap1) =
+  if leap1 % 100 == 0 then
+    leap1 % 400 == 0
+  else
+    (leap1 % 4 == 0)
+fun firstDays(firstDays1) =
+  take(12)(map(
+    a =>
+      (a % 7)
+  )(scanl(
+    a =>
+      b =>
+        (a + b)
+  )(jan1st(firstDays1))(monthLengths(firstDays1))))
+(testCalendar_nofib(primId(100)))

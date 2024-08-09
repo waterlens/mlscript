@@ -4,16 +4,38 @@ object ExprToMls {
   import mlscript.lumberhack.{Expr => LE, _}
   import mlscript._
 
+  private def id2tm(x: Ident) = 
+    if x.tree.name.startsWith("_lh") then
+      val newName = x.tree.name.stripPrefix("_lh_")
+      if x.uid.toString == "0" then
+        Var(substCtor(newName))
+      else
+        Var(substCtor(newName) + "_" + x.uid.toString)
+    else
+      Var(substCtor(x.tree.name))
+
+  private def substCtor(x: String) =
+    x.replaceAll("LH_C", "Cons")
+      .replaceAll("LH_N", "Nil")
+      .replaceAll("LH_P", "Tuple")
+
+  private def convCtor(x: String) = x match
+    case "LH_C" => "Cons"
+    case "LH_N" => "Nil"
+    case x if x.startsWith("LH_P") => "Tuple" + x.stripPrefix("LH_P")
+    case x => x
+  
   private def f(x: Expr): Term = x match
     case LE.Const(lit) => lit
-    case LE.Ref(id) => id.tree
+    case LE.Ref(id) => id2tm(id)
     case LE.Call(lhs, rhs) => App(f(lhs), f(rhs))
     case LE.Ctor(name, args) =>
+      val name2 = convCtor(name.name)
       val xs = args.map(x => None -> Fld(false, false, f(x)))
-      App(name, Tup(xs))
-    case LE.LetIn(id, rhs, body) => Let(false, id.tree, f(rhs), f(body))
+      App(Var(name2), Tup(xs))
+    case LE.LetIn(id, rhs, body) => Let(false, id2tm(id), f(rhs), f(body))
     case LE.LetGroup(defs, body) =>
-      val names = defs.map(_._1.tree).toList
+      val names = defs.map(x => id2tm(x._1)).toList
       val rhss = defs.map(x => f(x._2)).toList
       LetGroup(names, rhss, f(body))
     case LE.Match(scrut, arms) => 
@@ -21,10 +43,14 @@ object ExprToMls {
       val lines = arms.flatMap {        
         case (Var("_"), _, LE.Ref(id)) if id.tree.name == "error" =>
           None
+        case (c, Nil, body) if c.name.startsWith("'") =>
+          Some(Left(IfThen(CharLit(c.name.stripPrefix("'").stripSuffix("'").charAt(0)), f(body))))
         case (c, Nil, body) =>
-          Some(Left(IfThen(c, f(body))))
+          val c2 = convCtor(c.name)
+          Some(Left(IfThen(Var(c2), f(body))))
         case (c, xs, body) =>
-          Some(Left(IfThen(App(c, Tup(xs.map(x => (None -> Fld(false, false, x.tree))))), f(body))))
+          val c2 = convCtor(c.name)
+          Some(Left(IfThen(App(Var(c2), Tup(xs.map(x => (None -> Fld(false, false, id2tm(x)))))), f(body))))
       }
       If(IfOpApp(scrut2, Var("is"), IfBlock(lines)), None)
     case LE.IfThenElse(scrut, thenn, elze) =>
@@ -32,14 +58,14 @@ object ExprToMls {
       val tru = f(thenn)
       val fls = f(elze)
       If(IfThen(cond, tru), Some(fls))
-    case LE.Function(param, body) => Lam(param.tree, f(body))
+    case LE.Function(param, body) => Lam(id2tm(param), f(body))
     case LE.Sequence(fst, snd) => Tup(List(None -> Fld(false, false, f(fst)), None -> Fld(false, false, f(snd))))
   
   private def f(x: ProgDef): Statement = x match
     case ProgDef(id, lam @ LE.Function(param, body)) =>
-      NuFunDef(None, id.tree, List(), Left(f(lam)))
+      NuFunDef(None, id2tm(id), List(), Left(f(lam)))
     case ProgDef(id, expr) =>
-      NuFunDef(None, id.tree, List(), Left(f(expr)))
+      NuFunDef(None, id2tm(id), List(), Left(f(expr)))
 
   private def f(x: Program): TypingUnit =
     val stmts = x.contents.map {
@@ -84,6 +110,15 @@ object MlsPrettyPrinter {
     case _ =>
       throw new Exception(s"toDoc: $x ${x.getClass.getSimpleName}")
 
+  private def indentSensitiveInner(x: Statement): Bool = x match
+    case _: NuDecl => true
+    case _: Let => true
+    case _: LetGroup => true
+    case _: Lam => true
+    case _: Blk => true
+    case _: If => true
+    case _ => false
+
   private def toDoc(x: Statement, needBrackets: Bool = true, prev_prec: Opt[Int] = None): Document =
     def needBracketsPrec(cur_prec: Int) = prev_prec match
       case Some(prev_prec) =>
@@ -102,43 +137,57 @@ object MlsPrettyPrinter {
         <:> (tm |> aux |> indent)
         <:> raw(")")
       case Blk(stmts) =>
-        stack(
-          raw("{"),
-          stmts.map(aux) |> stack_list |> indent,
-          raw("}")
-        )
+        stmts.map(aux) |> stack_list |> indent
       case IntLit(v) => raw(v.toString)
       case DecLit(v) => raw(v.toString)
       case StrLit(v) => raw(s"\"$v\"")
-      case CharLit(v) => raw(s"'$v'")
+      case CharLit(v) => raw(s"char\"$v\"")
       case UnitLit(v) => raw(if v then "undefined" else "null")
       case Var(x) => raw(x)
       case Asc(tm, ty) => (aux(tm) <#> raw(":") <#> raw(ty.toString)) |> bra
-      case Lam(name, rhs: Lam) => 
-        (raw(s"$name") <#> raw("=>") <#> toDoc(rhs, false)) |> bra      
-      case Lam(name, rhs) => stack(
-        raw(s"$name") <#> raw("=>"),
-        aux(rhs) |> indent) |> bra
+      case Lam(name, rhs) => 
+        if indentSensitiveInner(rhs) then
+          stack(
+            raw(s"$name") <#> raw("=>"),
+            toDoc(rhs, false) |> indent) |> bra
+        else
+          stack(
+            raw(s"$name") <#> raw("=>"),
+            aux(rhs) |> indent) |> bra
       case App(app1 @ App(Var(name), x), y) if parser.opPrecOpt(name).isDefined  =>
         val next_prec = parser.opPrecOpt(name).get._1
         braWithPrec(toDoc(x, true, Some(next_prec))
          <#> raw(name)
          <#> toDoc(y, true, Some(next_prec)), next_prec)
       case App(app1 @ App(f, x), y) =>
-        (toDoc(app1, false) <:> raw("(") <:> toDoc(y, false) <:> raw(")")) |> bra
+        if indentSensitiveInner(y) then
+          stack(
+            toDoc(app1, false) <:> raw("("),
+            toDoc(y, false) |> indent,
+            raw(")"))
+        else
+          (toDoc(app1, false) <:> raw("(") <:> toDoc(y, false) <:> raw(")")) |> bra
+      case App(f, x @ Tup(Nil)) =>
+        aux(f)
       case App(f, x @ Tup(_)) =>
-        (aux(f) <#> aux(x)) |> bra
+        (aux(f) <:> aux(x)) |> bra
       case App(f, x) =>
-        (aux(f) <:> raw("(") <:> toDoc(x, false) <:> raw(")")) |> bra
+        if indentSensitiveInner(x) then
+          stack(
+            aux(f) <:> raw("("),
+            toDoc(x, false) |> indent,
+            raw(")")) |> bra
+        else
+          (aux(f) <:> raw("(") <:> toDoc(x, false) <:> raw(")")) |> bra
       case Sel(e, field) =>
         raw("(") <:> toDoc(e, false) <:> raw(")") <:> raw(".") <:> raw(field.toString)
       case Let(is_rec, name, rhs, body) =>
         stack(
-          raw(if is_rec then "let rec" else "let") <#> raw(name.toString) <#> raw("=") <#> toDoc(rhs, false),
+          raw(if is_rec then "fun" else "let") <#> raw(name.toString) <#> raw("=") <#> toDoc(rhs, false),
           toDoc(body, false)) |> bra
       case LetGroup(name, rhs, body) =>
         stack(
-          raw("let rec"),
+          raw("let"),
           indent(stack_list(
             name.zip(rhs).map { case (n, r) =>
               r match
@@ -169,9 +218,9 @@ object MlsPrettyPrinter {
         stack(
           raw("if") <#> toDoc(body),
           raw("else"),
-          aux(els) |> indent) |> bra
+          toDoc(els) |> indent)
       case If(body, None) =>
-          raw("if") <#> toDoc(body) |> bra
+          raw("if") <#> toDoc(body)
       case decl: NuDecl => toDoc(decl)
       case _ =>
         throw new Exception(s"toDoc: $x ${x.getClass.getSimpleName}")
@@ -193,7 +242,7 @@ object MlsPrettyPrinter {
     case Right(x) => (raw(""), raw(x.toString))
     
   private def toDoc(x: NuDecl): Document = x match
-    case NuFunDef(N, n, _, b) =>
+    case NuFunDef(N | S(true), n, _, b) =>
       val (params, body) = paramsToDoc(b)
       stack(
         raw("fun") <#> raw(n.toString) <:> params <#> raw("="),
@@ -203,10 +252,6 @@ object MlsPrettyPrinter {
       stack(
         raw("let") <#> raw(n.toString) <:> params <#> raw("="),
         body |> indent)
-    case NuFunDef(S(true), n, _, b) =>
-      stack(
-        raw("let") <#> raw("rec") <#> raw(n.toString) <#> raw("="),
-        toDoc(b) |> indent)
     case NuTypeDef(k, n, Nil, sps, Nil, b) =>
       stack(
         raw(k.str) <#> raw(n.name) <#> toDoc(sps),

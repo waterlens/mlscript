@@ -1,0 +1,875 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun pad_circuit(pad_circuit1) =
+  if pad_circuit1 is
+    Tuple4(pad_circuit_Tuple4_0, pad_circuit_Tuple4_1, pad_circuit_Tuple4_2, pad_circuit_Tuple4_3) then
+      let p2 = nearest_power_of_two(pad_circuit_Tuple4_0)
+      Tuple4(p2, pad_circuit_Tuple4_1, pad_circuit_Tuple4_2, take_lz(p2)(append__lz(pad_circuit_Tuple4_3)(copy_lz(p2)(emptyState))))
+fun update_outports(update_outports1)(update_outports2) =
+  updateOutports(update_outports1)(
+    let f = fp =>
+      if fp is
+        Cons(h, t) then
+          if h is
+            Tuple6(update_outports_Tuple6_0, update_outports_Tuple6_1, update_outports_Tuple6_2, update_outports_Tuple6_3, update_outports_Tuple6_4, update_outports_Tuple6_5) then
+              Cons(Tuple6(update_outports_Tuple6_0, update_outports2, update_outports_Tuple6_2, update_outports_Tuple6_3, update_outports_Tuple6_4, update_outports_Tuple6_5), f(t))
+            _ then
+              f(t)
+        Nil then
+          Nil
+    f(outports(update_outports1))
+  )
+fun pathDepth(pathDepth1) =
+  if pathDepth1 is
+    PS(pathDepth_PS_0, pathDepth_PS_1, pathDepth_PS_2, pathDepth_PS_3, pathDepth_PS_4) then
+      pathDepth_PS_2
+fun or(or1) =
+  if or1 is
+    Nil then
+      False
+    Cons(or_Cons_0, or_Cons_1) then
+      if or_Cons_0 then
+        True
+      else
+        (or(or_Cons_1))
+fun check_left(check_left1)(check_left2) =
+  if check_left1 is
+    Tuple8(check_left_Tuple8_0, check_left_Tuple8_1, check_left_Tuple8_2, check_left_Tuple8_3, check_left_Tuple8_4, check_left_Tuple8_5, check_left_Tuple8_6, check_left_Tuple8_7) then
+      if check_left2 is
+        Tuple6(check_left_Tuple6_0, check_left_Tuple6_1, check_left_Tuple6_2, check_left_Tuple6_3, check_left_Tuple6_4, check_left_Tuple6_5) then
+          if check_left_Tuple8_5 && check_left_Tuple8_6 > 0 then
+            Tuple6(check_left_Tuple6_0, check_left_Tuple6_1, check_left_Tuple6_2, check_left_Tuple6_3, check_left_Tuple6_4, check_left_Tuple6_5)
+          else
+            (Tuple6(check_left_Tuple6_0, check_left_Tuple6_1, check_left_Tuple6_2, check_left_Tuple6_3, False, check_left_Tuple6_5))
+fun send_right(send_right1)(send_right2) =
+  if send_right1 is
+    Tuple8(send_right_Tuple8_0, send_right_Tuple8_1, send_right_Tuple8_2, send_right_Tuple8_3, send_right_Tuple8_4, send_right_Tuple8_5, send_right_Tuple8_6, send_right_Tuple8_7) then
+      if send_right2 is
+        Tuple8(send_right_Tuple8_0_1, send_right_Tuple8_1_1, send_right_Tuple8_2_1, send_right_Tuple8_3_1, send_right_Tuple8_4_1, send_right_Tuple8_5_1, send_right_Tuple8_6_1, send_right_Tuple8_7_1) then
+          if send_right_Tuple8_5 && send_right_Tuple8_6 > send_right_Tuple8_7_1 then
+            Tuple8(send_right_Tuple8_0, send_right_Tuple8_1, send_right_Tuple8_2, send_right_Tuple8_3, send_right_Tuple8_4, send_right_Tuple8_5, send_right_Tuple8_6 - send_right_Tuple8_7_1, send_right_Tuple8_7 + send_right_Tuple8_7_1)
+          else
+            (Tuple8(send_right_Tuple8_0_1, send_right_Tuple8_1_1, send_right_Tuple8_2_1, send_right_Tuple8_3_1, send_right_Tuple8_4_1, send_right_Tuple8_5_1, send_right_Tuple8_6_1, send_right_Tuple8_7 + send_right_Tuple8_7_1))
+fun pad_packets(pad_packets1) =
+  let pad = xs =>
+    let max_ps = maximum(map(length)(pad_packets1))
+    take_lz(max_ps)(append__lz(xs)(copy_lz(max_ps)(emptyPacket)))
+  map(pad)(pad_packets1)
+fun updateOutports(updateOutports1)(updateOutports2) =
+  PS(pid(updateOutports1), compType(updateOutports1), pathDepth(updateOutports1), inports(updateOutports1), updateOutports2)
+fun append__lz(append__lz1)(append__lz2) =
+  let mi = append__lz1
+  if mi is
+    Nil then
+      append__lz2
+    Cons(append__lz_Cons_0, append__lz_Cons_1) then
+      lazy(Cons(append__lz_Cons_0, append__lz(append__lz_Cons_1)(append__lz2)))
+fun regs(regs1) =
+  let
+    fun ilabel(ilabel1)(ilabel2) =
+      Tuple2(mappend(Cons(char"x", Nil))(string_of_int(ilabel1)), ilabel2)
+    fun olabel(olabel1)(olabel2) =
+      Tuple2(mappend(Cons(char"y", Nil))(string_of_int(olabel1)), olabel2)
+  (let is = Cons(Tuple2(Cons(char"s", Cons(char"t", Cons(char"o", Nil))), 0), zipWith_lz_nl(ilabel)(enumFrom(0))(
+    let f_1 = fp_1 =>
+      if fp_1 is
+        Cons(h_1, t_1) then
+          Cons(7 * h_1 + 1, f_1(t_1))
+        Nil then
+          Nil
+    f_1(enumFromTo(0)(regs1 - 1))
+  ))
+  let os = zipWith_lz_nl(olabel)(enumFrom(0))(
+    let f_2 = fp_2 =>
+      if fp_2 is
+        Cons(h_2, t_2) then
+          Cons(7 * h_2 + 7, f_2(t_2))
+        Nil then
+          Nil
+    f_2(enumFromTo(0)(regs1 - 1))
+  )
+  let sto = PS(0, Inp, 0, Nil, Cons(Tuple6(0, F, False, 0, True, 8 * (regs1 - 1) + 5), Nil))
+  let states = Cons(sto, concat(map(reg(0))(
+    let f_3 = fp_3 =>
+      if fp_3 is
+        Cons(h_3, t_3) then
+          Cons(7 * h_3 + 1, f_3(t_3))
+        Nil then
+          Nil
+    f_3(enumFromTo(0)(regs1 - 1))
+  )))
+  Tuple4(1 + 7 * regs1, is, os, states))
+fun simulate(simulate1)(simulate2) =
+  if simulate2 is
+    Tuple4(simulate_Tuple4_0, simulate_Tuple4_1, simulate_Tuple4_2, simulate_Tuple4_3) then
+      tail(scanl(do_cycle(critical_path_depth(Tuple4(simulate_Tuple4_0, simulate_Tuple4_1, simulate_Tuple4_2, simulate_Tuple4_3))))(Tuple4(simulate_Tuple4_0, simulate_Tuple4_1, simulate_Tuple4_2, map(init_dffs)(simulate_Tuple4_3)))(simulate1))
+fun simulate_component(simulate_component1)(simulate_component2) =
+  let out_signals = let f_4 = fp_4 =>
+    if fp_4 is
+      Cons(h_4, t_4) then
+        if h_4 is
+          Tuple3(simulate_component_Tuple3_0, simulate_component_Tuple3_1, simulate_component_Tuple3_2) then
+            Cons(simulate_component_Tuple3_2, f_4(t_4))
+          _ then
+            f_4(t_4)
+      Nil then
+        Nil
+  f_4(inports(simulate_component2))
+  let new_value = apply_component(compType(simulate_component2))(out_signals)
+  if (simulate_component1 == (pathDepth(simulate_component2))) && (not(polyEq(new_value)(Nothing))) then
+    let mi_1 = new_value
+    if mi_1 is
+      Just(simulate_component_Just_0) then
+        update_outports(simulate_component2)(simulate_component_Just_0)
+  else
+    simulate_component2
+fun compType(compType1) =
+  if compType1 is
+    PS(compType_PS_0, compType_PS_1, compType_PS_2, compType_PS_3, compType_PS_4) then
+      compType_PS_1
+fun scanl(scanl1)(scanl2)(scanl3) =
+  Cons(scanl2, let mi_2 = scanl3
+  if mi_2 is
+    Nil then
+      Nil
+    Cons(scanl_Cons_0, scanl_Cons_1) then
+      scanl(scanl1)(scanl1(scanl2)(scanl_Cons_0))(scanl_Cons_1))
+fun critical_path_depth(critical_path_depth1) =
+  if critical_path_depth1 is
+    Tuple4(critical_path_depth_Tuple4_0, critical_path_depth_Tuple4_1, critical_path_depth_Tuple4_2, critical_path_depth_Tuple4_3) then
+      maximum(map(pathDepth)(critical_path_depth_Tuple4_3))
+fun upsweep(upsweep1)(upsweep2) =
+  if upsweep2 is
+    Cell(upsweep_Cell_0) then
+      Tuple2(upsweep_Cell_0, Cell(upsweep_Cell_0))
+    Node(upsweep_Node_0, upsweep_Node_1, upsweep_Node_2) then
+      let mi_3 = upsweep(upsweep1)(upsweep_Node_1)
+      if mi_3 is
+        Tuple2(upsweep_Tuple2_0, upsweep_Tuple2_1) then
+          let mi_4 = upsweep(upsweep1)(upsweep_Node_2)
+          if mi_4 is
+            Tuple2(upsweep_Tuple2_0_1, upsweep_Tuple2_1_1) then
+              Tuple2(upsweep1(upsweep_Tuple2_0)(upsweep_Tuple2_0_1), Node(Tuple2(upsweep_Tuple2_0, upsweep_Tuple2_0_1), upsweep_Tuple2_1, upsweep_Tuple2_1_1))
+fun check_right(check_right1)(check_right2) =
+  if check_right1 is
+    Tuple8(check_right_Tuple8_0, check_right_Tuple8_1, check_right_Tuple8_2, check_right_Tuple8_3, check_right_Tuple8_4, check_right_Tuple8_5, check_right_Tuple8_6, check_right_Tuple8_7) then
+      if check_right2 is
+        Tuple6(check_right_Tuple6_0, check_right_Tuple6_1, check_right_Tuple6_2, check_right_Tuple6_3, check_right_Tuple6_4, check_right_Tuple6_5) then
+          if check_right_Tuple8_3 && check_right_Tuple8_4 > 0 then
+            Tuple6(check_right_Tuple6_0, check_right_Tuple6_1, check_right_Tuple6_2, check_right_Tuple6_3, check_right_Tuple6_4, check_right_Tuple6_5)
+          else
+            (Tuple6(check_right_Tuple6_0, check_right_Tuple6_1, False, check_right_Tuple6_3, check_right_Tuple6_4, check_right_Tuple6_5))
+fun reg(reg1)(reg2) =
+  Cons(PS(reg2, Inp, 0, Nil, Cons(Tuple6(0, F, False, 0, True, 4), Nil)), Cons(PS(reg2 + 1, Dff, 1, Cons(Tuple3(reg2 + 5, 0, F), Nil), Cons(Tuple6(0, F, False, 0, True, 5), Nil)), Cons(PS(reg2 + 2, Inv, 1, Cons(Tuple3(reg1, 0, F), Nil), Cons(Tuple6(0, F, False, 0, True, 1), Nil)), Cons(PS(reg2 + 3, And2, 2, Cons(Tuple3(reg2 + 1, 0, F), Cons(Tuple3(reg2 + 2, 0, F), Nil)), Cons(Tuple6(0, F, False, 0, True, 2), Nil)), Cons(PS(reg2 + 4, And2, 1, Cons(Tuple3(reg1, 0, F), Cons(Tuple3(reg2, 0, F), Nil)), Cons(Tuple6(0, F, False, 0, True, 1), Nil)), Cons(PS(reg2 + 5, Or2, 3, Cons(Tuple3(reg2 + 3, 0, F), Cons(Tuple3(reg2 + 4, 0, F), Nil)), Cons(Tuple6(0, F, True, 4, False, 0), Nil)), Cons(PS(reg2 + 6, Outp, 4, Cons(Tuple3(reg2 + 1, 0, F), Nil), Nil), Nil)))))))
+fun splitAt(splitAt1)(splitAt2) =
+  Tuple2(take(splitAt1)(splitAt2), drop(splitAt1)(splitAt2))
+fun acknowledge(acknowledge1)(acknowledge2) =
+  let
+    fun check_lr_requests(check_lr_requests1) =
+      if check_lr_requests1 is
+        Tuple6(check_lr_requests_Tuple6_0, check_lr_requests_Tuple6_1, check_lr_requests_Tuple6_2, check_lr_requests_Tuple6_3, check_lr_requests_Tuple6_4, check_lr_requests_Tuple6_5) then
+          check_lr_requests_Tuple6_2 || check_lr_requests_Tuple6_4
+    fun check_requests(check_requests1) =
+      or(map(check_lr_requests)(check_requests1))
+  (let states1 = map(check_depth(acknowledge1))(acknowledge2)
+  not(or(map(
+    x =>
+      (check_requests(outports(x)))
+  )(states1))))
+fun update_io(update_io1)(update_io2)(update_io3) =
+  let update_is = state =>
+    (updateInports(state)(foldr(update_i)(inports(state))(update_io2)))
+  let update_os = state =>
+    if (pathDepth(state)) == update_io1 then
+      updateOutports(state)(zipWith(update_o)(update_io2)(outports(state)))
+    else
+      state
+  update_os(update_is(update_io3))
+fun update_o(update_o1)(update_o2) =
+  if update_o1 is
+    Tuple2(update_o_Tuple2_0, update_o_Tuple2_1) then
+      check_left(update_o_Tuple2_0)(check_right(update_o_Tuple2_1)(update_o2))
+fun sweep_ud(sweep_ud1)(sweep_ud2)(sweep_ud3)(sweep_ud4) =
+  let mi_5 = upsweep(sweep_ud1)(sweep_ud4)
+  if mi_5 is
+    Tuple2(sweep_ud_Tuple2_0, sweep_ud_Tuple2_1) then
+      Tuple2(sweep_ud_Tuple2_0, downsweep(sweep_ud2)(sweep_ud3)(sweep_ud_Tuple2_1))
+fun testCircsim_nofib(testCircsim_nofib1) =
+  run(8)(testCircsim_nofib1)
+fun do_sends(do_sends1)(do_sends2) =
+  until(acknowledge(do_sends1))(do_send(do_sends1))(do_sends2)
+fun inports(inports1) =
+  if inports1 is
+    PS(inports_PS_0, inports_PS_1, inports_PS_2, inports_PS_3, inports_PS_4) then
+      inports_PS_3
+fun outports(outports1) =
+  if outports1 is
+    PS(outports_PS_0, outports_PS_1, outports_PS_2, outports_PS_3, outports_PS_4) then
+      outports_PS_4
+fun scanlr(scanlr1)(scanlr2)(scanlr3)(scanlr4)(scanlr5) =
+  let
+    fun down(down1)(down2)(down3)(down4)(down5) =
+      if down3 is
+        Tuple2(down_Tuple2_0, down_Tuple2_1) then
+          if down4 is
+            Tuple2(down_Tuple2_0_1, down_Tuple2_1_1) then
+              if down5 is
+                Tuple2(down_Tuple2_0_2, down_Tuple2_1_2) then
+                  Tuple2(Tuple2(down_Tuple2_0_2, down2(down_Tuple2_1_1)(down_Tuple2_1_2)), Tuple2(down1(down_Tuple2_0_2)(down_Tuple2_0), down_Tuple2_1_2))
+    fun up(up1)(up2)(up3)(up4) =
+      if up3 is
+        Tuple2(up_Tuple2_0, up_Tuple2_1) then
+          if up4 is
+            Tuple2(up_Tuple2_0_1, up_Tuple2_1_1) then
+              Tuple2(up1(up_Tuple2_0)(up_Tuple2_0_1), up2(up_Tuple2_1)(up_Tuple2_1_1))
+  (let xs' = map(
+    x =>
+      (Tuple2(x, x))
+  )(scanlr5)
+  let mi_6 = sweep_ud(up(scanlr1)(scanlr2))(down(scanlr1)(scanlr2))(Tuple2(scanlr3, scanlr4))(put(xs'))
+  if mi_6 is
+    Tuple2(scanlr_Tuple2_0, scanlr_Tuple2_1) then
+      if scanlr_Tuple2_0 is
+        Tuple2(scanlr_Tuple2_0_1, scanlr_Tuple2_1_1) then
+          let ans = Tuple2(scanlr2(scanlr_Tuple2_1_1)(scanlr4), scanlr1(scanlr3)(scanlr_Tuple2_0_1))
+          Tuple2(ans, get(scanlr_Tuple2_1)))
+fun run(run1)(run2) =
+  let example = pad_circuit(regs(run1))
+  let inputs = copy(run1 + 1)(T)
+  let cycles = copy(run2)(inputs)
+  circuit_simulate(cycles)(example)
+fun restore_requests(restore_requests1)(restore_requests2) =
+  let
+    fun restore(restore1)(restore2) =
+      updateOutports(restore2)(zipWith(restore_outport)(outports(restore1))(outports(restore2)))
+    fun restore_outport(restore_outport1)(restore_outport2) =
+      if restore_outport1 is
+        Tuple6(restore_outport_Tuple6_0, restore_outport_Tuple6_1, restore_outport_Tuple6_2, restore_outport_Tuple6_3, restore_outport_Tuple6_4, restore_outport_Tuple6_5) then
+          if restore_outport2 is
+            Tuple6(restore_outport_Tuple6_0_1, restore_outport_Tuple6_1_1, restore_outport_Tuple6_2_1, restore_outport_Tuple6_3_1, restore_outport_Tuple6_4_1, restore_outport_Tuple6_5_1) then
+              Tuple6(restore_outport_Tuple6_0, restore_outport_Tuple6_1_1, restore_outport_Tuple6_2, restore_outport_Tuple6_3, restore_outport_Tuple6_4, restore_outport_Tuple6_5)
+  (zipWith(restore)(restore_requests1)(restore_requests2))
+fun unzip(unzip1) =
+  foldr(
+    ab =>
+      asbs =>
+        let mi_7 = ab
+        if mi_7 is
+          Tuple2(unzip_Tuple2_0, unzip_Tuple2_1) then
+            let mi_8 = asbs
+            if mi_8 is
+              Tuple2(unzip_Tuple2_0_1, unzip_Tuple2_1_1) then
+                Tuple2(Cons(unzip_Tuple2_0, unzip_Tuple2_0_1), Cons(unzip_Tuple2_1, unzip_Tuple2_1_1))
+  )(Tuple2(Nil, Nil))(unzip1)
+fun init_dffs(init_dffs1) =
+  if polyEq(compType(init_dffs1))(Dff) then
+    update_outports(init_dffs1)(F)
+  else
+    init_dffs1
+fun update_requests(update_requests1)(update_requests2) =
+  updateOutports(update_requests2)(
+    let f_5 = fp_5 =>
+      if fp_5 is
+        Cons(h_5, t_5) then
+          if h_5 is
+            Tuple6(update_requests_Tuple6_0, update_requests_Tuple6_1, update_requests_Tuple6_2, update_requests_Tuple6_3, update_requests_Tuple6_4, update_requests_Tuple6_5) then
+              Cons(Tuple6(update_requests_Tuple6_0, update_requests_Tuple6_1, update_requests1, update_requests_Tuple6_3, update_requests1, update_requests_Tuple6_5), f_5(t_5))
+            _ then
+              f_5(t_5)
+        Nil then
+          Nil
+    f_5(outports(update_requests2))
+  )
+fun simulate_components(simulate_components1)(simulate_components2) =
+  map(simulate_component(simulate_components1))(simulate_components2)
+fun emptyState =
+  PS(0 - 1, None, 0 - 1, Nil, Nil)
+fun until(until1)(until2)(until3) =
+  if until1(until3) then
+    until3
+  else
+    (until(until1)(until2)(until2(until3)))
+fun apply_component(apply_component1)(apply_component2) =
+  if apply_component1 is
+    Inp then
+      Nothing
+    Outp then
+      if apply_component2 is
+        Cons(apply_component_Cons_0, apply_component_Cons_1) then
+          if apply_component_Cons_1 is
+            Nil then
+              Just(apply_component_Cons_0)
+    Dff then
+      if apply_component2 is
+        Cons(apply_component_Cons_0_1, apply_component_Cons_1_1) then
+          if apply_component_Cons_1_1 is
+            Nil then
+              Just(apply_component_Cons_0_1)
+    Inv then
+      if apply_component2 is
+        Cons(apply_component_Cons_0_2, apply_component_Cons_1_2) then
+          if apply_component_Cons_1_2 is
+            Nil then
+              Just(inv(apply_component_Cons_0_2))
+    And2 then
+      if apply_component2 is
+        Cons(apply_component_Cons_0_3, apply_component_Cons_1_3) then
+          if apply_component_Cons_1_3 is
+            Cons(apply_component_Cons_0_4, apply_component_Cons_1_4) then
+              if apply_component_Cons_1_4 is
+                Nil then
+                  Just(and2(apply_component_Cons_0_3)(apply_component_Cons_0_4))
+    Or2 then
+      if apply_component2 is
+        Cons(apply_component_Cons_0_5, apply_component_Cons_1_5) then
+          if apply_component_Cons_1_5 is
+            Cons(apply_component_Cons_0_6, apply_component_Cons_1_6) then
+              if apply_component_Cons_1_6 is
+                Nil then
+                  Just(or2(apply_component_Cons_0_5)(apply_component_Cons_0_6))
+    Xor then
+      if apply_component2 is
+        Cons(apply_component_Cons_0_7, apply_component_Cons_1_7) then
+          if apply_component_Cons_1_7 is
+            Cons(apply_component_Cons_0_8, apply_component_Cons_1_8) then
+              if apply_component_Cons_1_8 is
+                Nil then
+                  Just(xor(apply_component_Cons_0_7)(apply_component_Cons_0_8))
+    None then
+      Nothing
+fun snd(snd1) =
+  if snd1 is
+    Tuple2(snd_Tuple2_0, snd_Tuple2_1) then
+      snd_Tuple2_1
+fun drop(drop1)(drop2) =
+  if drop2 is
+    Nil then
+      Nil
+    Cons(drop_Cons_0, drop_Cons_1) then
+      if drop1 <= 0 then
+        Cons(drop_Cons_0, drop_Cons_1)
+      else
+        (drop(drop1 - 1)(drop_Cons_1))
+fun downsweep(downsweep1)(downsweep2)(downsweep3) =
+  if downsweep3 is
+    Cell(downsweep_Cell_0) then
+      Cell(downsweep2)
+    Node(downsweep_Node_0, downsweep_Node_1, downsweep_Node_2) then
+      if downsweep_Node_0 is
+        Tuple2(downsweep_Tuple2_0, downsweep_Tuple2_1) then
+          let mi_9 = downsweep1(downsweep_Tuple2_0)(downsweep_Tuple2_1)(downsweep2)
+          if mi_9 is
+            Tuple2(downsweep_Tuple2_0_1, downsweep_Tuple2_1_1) then
+              let mi_10 = Tuple2(downsweep(downsweep1)(downsweep_Tuple2_0_1)(downsweep_Node_1), downsweep(downsweep1)(downsweep_Tuple2_1_1)(downsweep_Node_2))
+              if mi_10 is
+                Tuple2(downsweep_Tuple2_0_2, downsweep_Tuple2_1_2) then
+                  Node(Unit, downsweep_Tuple2_0_2, downsweep_Tuple2_1_2)
+fun copy_lz(copy_lz1)(copy_lz2) =
+  if copy_lz1 > 0 then
+    lazy(Cons(copy_lz2, copy_lz(copy_lz1 - 1)(copy_lz2)))
+  else
+    (lazy(Nil))
+fun quotRem(quotRem1)(quotRem2) =
+  Tuple2(div(quotRem1)(quotRem2), mod(quotRem1)(quotRem2))
+fun maximum(maximum1) =
+  if maximum1 is
+    Cons(maximum_Cons_0, maximum_Cons_1) then
+      let go = go1 =>
+        go2 =>
+          if go2 is
+            Nil then
+              go1
+            Cons(go_Cons_0, go_Cons_1) then
+              if go1 > go_Cons_0 then
+                go(go1)(go_Cons_1)
+              else
+                (go(go_Cons_0)(go_Cons_1))
+      go(maximum_Cons_0)(maximum_Cons_1)
+fun nearest_power_of_two(nearest_power_of_two1) =
+  until(
+    a =>
+      (a >= nearest_power_of_two1)
+  )(
+    a =>
+      (a * 2)
+  )(1)
+fun make_packet(make_packet1) =
+  let f_6 = fp_6 =>
+    if fp_6 is
+      Cons(h_6, t_6) then
+        if h_6 is
+          Tuple6(make_packet_Tuple6_0, make_packet_Tuple6_1, make_packet_Tuple6_2, make_packet_Tuple6_3, make_packet_Tuple6_4, make_packet_Tuple6_5) then
+            Cons(Tuple8(pid(make_packet1), make_packet_Tuple6_0, make_packet_Tuple6_1, make_packet_Tuple6_2, make_packet_Tuple6_3, make_packet_Tuple6_4, make_packet_Tuple6_5, 1), f_6(t_6))
+          _ then
+            f_6(t_6)
+      Nil then
+        Nil
+  f_6(outports(make_packet1))
+fun pid(pid1) =
+  if pid1 is
+    PS(pid_PS_0, pid_PS_1, pid_PS_2, pid_PS_3, pid_PS_4) then
+      pid_PS_0
+fun xor(xor1)(xor2) =
+  if polyEq(xor1)(xor2) then
+    T
+  else
+    F
+fun update_i(update_i1)(update_i2) =
+  if update_i1 is
+    Tuple2(update_i_Tuple2_0, update_i_Tuple2_1) then
+      up_i(update_i_Tuple2_0)(up_i(update_i_Tuple2_1)(update_i2))
+fun circuit_simulate(circuit_simulate1)(circuit_simulate2) =
+  map(collect_outputs)(simulate(circuit_simulate1)(circuit_simulate2))
+fun scanR(scanR1)(scanR2)(scanR3) =
+  let down = l =>
+    r =>
+      x =>
+        (Tuple2(scanR1(r)(x), x))
+  let mi_11 = sweep_ud(scanR1)(down)(scanR2)(put(scanR3))
+  if mi_11 is
+    Tuple2(scanR_Tuple2_0, scanR_Tuple2_1) then
+      Tuple2(scanR_Tuple2_0, get(scanR_Tuple2_1))
+fun combine(combine1)(combine2)(combine3)(combine4) =
+  Cons(Cons(combine1, combine2), transpose(Cons(combine3, combine4)))
+fun copy(copy1)(copy2) =
+  if copy1 > 0 then
+    Cons(copy2, copy(copy1 - 1)(copy2))
+  else
+    Nil
+fun put(put1) =
+  if put1 is
+    Cons(put_Cons_0, put_Cons_1) then
+      if put_Cons_1 is
+        Nil then
+          Cell(put_Cons_0)
+        _ then
+          let mi_12 = splitAt(div(length(put1))(2))(put1)
+          if mi_12 is
+            Tuple2(put_Tuple2_0, put_Tuple2_1) then
+              Node(Unit, put(put_Tuple2_0), put(put_Tuple2_1))
+    _ then
+      let mi_12 = splitAt(div(length(put1))(2))(put1)
+      if mi_12 is
+        Tuple2(put_Tuple2_0, put_Tuple2_1) then
+          Node(Unit, put(put_Tuple2_0), put(put_Tuple2_1))
+fun send_left(send_left1)(send_left2) =
+  if send_left1 is
+    Tuple8(send_left_Tuple8_0, send_left_Tuple8_1, send_left_Tuple8_2, send_left_Tuple8_3, send_left_Tuple8_4, send_left_Tuple8_5, send_left_Tuple8_6, send_left_Tuple8_7) then
+      if send_left2 is
+        Tuple8(send_left_Tuple8_0_1, send_left_Tuple8_1_1, send_left_Tuple8_2_1, send_left_Tuple8_3_1, send_left_Tuple8_4_1, send_left_Tuple8_5_1, send_left_Tuple8_6_1, send_left_Tuple8_7_1) then
+          if send_left_Tuple8_3_1 && send_left_Tuple8_4_1 > send_left_Tuple8_7 then
+            Tuple8(send_left_Tuple8_0_1, send_left_Tuple8_1_1, send_left_Tuple8_2_1, send_left_Tuple8_3_1, send_left_Tuple8_4_1 - send_left_Tuple8_7, send_left_Tuple8_5_1, send_left_Tuple8_6_1, send_left_Tuple8_7 + send_left_Tuple8_7_1)
+          else
+            (Tuple8(send_left_Tuple8_0, send_left_Tuple8_1, send_left_Tuple8_2, send_left_Tuple8_3, send_left_Tuple8_4, send_left_Tuple8_5, send_left_Tuple8_6, send_left_Tuple8_7 + send_left_Tuple8_7_1))
+fun get(get1) =
+  if get1 is
+    Cell(get_Cell_0) then
+      Cons(get_Cell_0, Nil)
+    Node(get_Node_0, get_Node_1, get_Node_2) then
+      mappend(get(get_Node_1))(get(get_Node_2))
+fun transpose(transpose1) =
+  if transpose1 is
+    Nil then
+      Nil
+    Cons(transpose_Cons_0, transpose_Cons_1) then
+      if transpose_Cons_0 is
+        Nil then
+          transpose(transpose_Cons_1)
+        Cons(transpose_Cons_0_1, transpose_Cons_1_1) then
+          let mi_13 = unzip(
+            let f_7 = fp_7 =>
+              if fp_7 is
+                Cons(h_7, t_7) then
+                  if h_7 is
+                    Cons(transpose_Cons_0_2, transpose_Cons_1_2) then
+                      Cons(Tuple2(transpose_Cons_0_2, transpose_Cons_1_2), f_7(t_7))
+                    _ then
+                      f_7(t_7)
+                Nil then
+                  Nil
+            f_7(transpose_Cons_1)
+          )
+          if mi_13 is
+            Tuple2(transpose_Tuple2_0, transpose_Tuple2_1) then
+              combine(transpose_Cons_0_1)(transpose_Tuple2_0)(transpose_Cons_1_1)(transpose_Tuple2_1)
+fun power(power1)(power2) =
+  if power2 == 0 then
+    1
+  else
+    (power1 * (power(power1)(power2 - 1)))
+fun compare_and_update(compare_and_update1)(compare_and_update2) =
+  if compare_and_update1 is
+    Tuple3(compare_and_update_Tuple3_0, compare_and_update_Tuple3_1, compare_and_update_Tuple3_2) then
+      if compare_and_update2 is
+        Tuple3(compare_and_update_Tuple3_0_1, compare_and_update_Tuple3_1_1, compare_and_update_Tuple3_2_1) then
+          if polyEq(Tuple2(compare_and_update_Tuple3_0, compare_and_update_Tuple3_1))(Tuple2(compare_and_update_Tuple3_0_1, compare_and_update_Tuple3_1_1)) then
+            Tuple3(compare_and_update_Tuple3_0_1, compare_and_update_Tuple3_1_1, compare_and_update_Tuple3_2)
+          else
+            (Tuple3(compare_and_update_Tuple3_0_1, compare_and_update_Tuple3_1_1, compare_and_update_Tuple3_2_1))
+fun inv(inv1) =
+  if polyEq(inv1)(T) then
+    F
+  else
+    T
+fun scanL(scanL1)(scanL2)(scanL3) =
+  let down = l =>
+    r =>
+      x =>
+        (Tuple2(x, scanL1(x)(l)))
+  let mi_14 = sweep_ud(scanL1)(down)(scanL2)(put(scanL3))
+  if mi_14 is
+    Tuple2(scanL_Tuple2_0, scanL_Tuple2_1) then
+      Tuple2(scanL_Tuple2_0, get(scanL_Tuple2_1))
+fun and2(and21)(and22) =
+  if (polyEq(and21)(T)) && (polyEq(and22)(T)) then
+    T
+  else
+    F
+fun emptyPacket =
+  Tuple8(0 - 1, 0 - 1, F, False, 0, False, 0, 1)
+fun updateInports(updateInports1)(updateInports2) =
+  PS(pid(updateInports1), compType(updateInports1), pathDepth(updateInports1), updateInports2, outports(updateInports1))
+fun check_depth(check_depth1)(check_depth2) =
+  if (pathDepth(check_depth2)) == check_depth1 then
+    check_depth2
+  else
+    (update_requests(False)(check_depth2))
+fun store_inputs(store_inputs1)(store_inputs2) =
+  if store_inputs2 is
+    PS(store_inputs_PS_0, store_inputs_PS_1, store_inputs_PS_2, store_inputs_PS_3, store_inputs_PS_4) then
+      if store_inputs_PS_1 is
+        Inp then
+          head(
+            let f_8 = fp_8 =>
+              if fp_8 is
+                Cons(h_8, t_8) then
+                  if h_8 is
+                    Tuple2(store_inputs_Tuple2_0, store_inputs_Tuple2_1) then
+                      if store_inputs_Tuple2_0 is
+                        Tuple2(store_inputs_Tuple2_0_1, store_inputs_Tuple2_1_1) then
+                          if store_inputs_PS_0 == store_inputs_Tuple2_1_1 then
+                            Cons(update_outports(PS(store_inputs_PS_0, Inp, store_inputs_PS_2, store_inputs_PS_3, store_inputs_PS_4))(store_inputs_Tuple2_1), f_8(t_8))
+                          else
+                            (f_8(t_8))
+                        _ then
+                          f_8(t_8)
+                    _ then
+                      f_8(t_8)
+                Nil then
+                  Nil
+            f_8(store_inputs1)
+          )
+        _ then
+          store_inputs2
+    _ then
+      store_inputs2
+fun collect_outputs(collect_outputs1) =
+  if collect_outputs1 is
+    Tuple4(collect_outputs_Tuple4_0, collect_outputs_Tuple4_1, collect_outputs_Tuple4_2, collect_outputs_Tuple4_3) then
+      let
+        fun third(third1) =
+          if third1 is
+            Tuple3(third_Tuple3_0, third_Tuple3_1, third_Tuple3_2) then
+              third_Tuple3_2
+        fun get_output(get_output1)(get_output2) =
+          if get_output2 is
+            Tuple2(get_output_Tuple2_0, get_output_Tuple2_1) then
+              third(head(
+                let f_9 = fp_9 =>
+                  if fp_9 is
+                    Cons(h_9, t_9) then
+                      if get_output_Tuple2_1 == (pid(h_9)) then
+                        Cons(head(inports(h_9)), f_9(t_9))
+                      else
+                        (f_9(t_9))
+                    Nil then
+                      Nil
+                f_9(get_output1)
+              ))
+      (map(get_output(collect_outputs_Tuple4_3))(collect_outputs_Tuple4_2))
+fun do_cycle(do_cycle1)(do_cycle2)(do_cycle3) =
+  if do_cycle2 is
+    Tuple4(do_cycle_Tuple4_0, do_cycle_Tuple4_1, do_cycle_Tuple4_2, do_cycle_Tuple4_3) then
+      let sim_then_send = sim_then_send1 =>
+        sim_then_send2 =>
+          (do_sends(sim_then_send2)(simulate_components(sim_then_send2)(sim_then_send1)))
+      let states1 = map(store_inputs(zip(do_cycle_Tuple4_1)(do_cycle3)))(do_cycle_Tuple4_3)
+      let states2 = do_sends(0)(states1)
+      let states3 = foldl(sim_then_send)(states2)(enumFromTo(1)(do_cycle1))
+      let states4 = restore_requests(do_cycle_Tuple4_3)(states3)
+      Tuple4(do_cycle_Tuple4_0, do_cycle_Tuple4_1, do_cycle_Tuple4_2, states4)
+fun up_i(up_i1)(up_i2) =
+  if up_i1 is
+    Tuple8(up_i_Tuple8_0, up_i_Tuple8_1, up_i_Tuple8_2, up_i_Tuple8_3, up_i_Tuple8_4, up_i_Tuple8_5, up_i_Tuple8_6, up_i_Tuple8_7) then
+      map(compare_and_update(Tuple3(up_i_Tuple8_0, up_i_Tuple8_1, up_i_Tuple8_2)))(up_i2)
+fun or2(or21)(or22) =
+  if (polyEq(or21)(T)) || (polyEq(or22)(T)) then
+    T
+  else
+    F
+fun do_send(do_send1)(do_send2) =
+  let states1 = map(check_depth(do_send1))(do_send2)
+  let send_results = map(
+    x_1 =>
+      (snd(send(x_1)))
+  )((x_2 =>
+    (transpose(pad_packets(x_2))))(map(make_packet)(states1)))
+  let pss' = transpose(send_results)
+  zipWith(update_io(do_send1))(pss')(do_send2)
+fun send(send1) =
+  scanlr(send_right)(send_left)(emptyPacket)(emptyPacket)(send1)
+(testCircsim_nofib(primId(40)))

@@ -1,0 +1,319 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun testCryptarithm_nofib(testCryptarithm_nofib1) =
+  map(
+    i =>
+      let p0 = take(10)(enumFromTo(0)(9 + i))
+      filter(condition)(permutations(p0))
+  )(enumFromTo(1)(testCryptarithm_nofib1))
+fun expand(expand1)(expand2)(expand3)(expand4)(expand5)(expand6) =
+  expand6 + expand5 * 10 + expand4 * 100 + expand3 * 1000 + expand2 * 10000 + expand1 * 100000
+fun addj(addj1)(addj2) =
+  if addj2 is
+    Nil then
+      Cons(Cons(addj1, Nil), Nil)
+    Cons(addj_Cons_0, addj_Cons_1) then
+      Cons(Cons(addj1, Cons(addj_Cons_0, addj_Cons_1)), let f = fp =>
+        if fp is
+          Cons(h, t) then
+            Cons(Cons(addj_Cons_0, h), f(t))
+          Nil then
+            Nil
+      f(addj(addj1)(addj_Cons_1)))
+fun condition(condition1) =
+  if condition1 is
+    Cons(condition_Cons_0, condition_Cons_1) then
+      if condition_Cons_1 is
+        Cons(condition_Cons_0_1, condition_Cons_1_1) then
+          if condition_Cons_1_1 is
+            Cons(condition_Cons_0_2, condition_Cons_1_2) then
+              if condition_Cons_1_2 is
+                Cons(condition_Cons_0_3, condition_Cons_1_3) then
+                  if condition_Cons_1_3 is
+                    Cons(condition_Cons_0_4, condition_Cons_1_4) then
+                      if condition_Cons_1_4 is
+                        Cons(condition_Cons_0_5, condition_Cons_1_5) then
+                          if condition_Cons_1_5 is
+                            Cons(condition_Cons_0_6, condition_Cons_1_6) then
+                              if condition_Cons_1_6 is
+                                Cons(condition_Cons_0_7, condition_Cons_1_7) then
+                                  if condition_Cons_1_7 is
+                                    Cons(condition_Cons_0_8, condition_Cons_1_8) then
+                                      if condition_Cons_1_8 is
+                                        Cons(condition_Cons_0_9, condition_Cons_1_9) then
+                                          if condition_Cons_1_9 is
+                                            Nil then
+                                              (expand(condition_Cons_0)(condition_Cons_0_1)(condition_Cons_0_2)(condition_Cons_0_3)(condition_Cons_0)(condition_Cons_0_4)) + 5 * (expand(condition_Cons_0)(condition_Cons_0_5)(condition_Cons_0_6)(condition_Cons_0_7)(condition_Cons_0_8)(condition_Cons_0_6)) == (expand(condition_Cons_0_9)(condition_Cons_0_2)(condition_Cons_0_9)(condition_Cons_0_6)(condition_Cons_0)(condition_Cons_0_4))
+fun permutations(permutations1) =
+  if permutations1 is
+    Nil then
+      Cons(Nil, Nil)
+    Cons(permutations_Cons_0, permutations_Cons_1) then
+      let f_1 = fp_1 =>
+        if fp_1 is
+          Cons(h_1, t_1) then
+            let f_2 = fp_2 =>
+              if fp_2 is
+                Cons(h_2, t_2) then
+                  Cons(h_2, f_2(t_2))
+                Nil then
+                  f_1(t_1)
+            f_2(addj(permutations_Cons_0)(h_1))
+          Nil then
+            Nil
+      f_1(permutations(permutations_Cons_1))
+(testCryptarithm_nofib(primId(1)))

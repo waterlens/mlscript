@@ -1,0 +1,515 @@
+fun map(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      Cons(f(h), map(f)(t))
+    Nil then
+      Nil
+fun map_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        Cons(f(h), map_lz(f)(t))
+      Nil then
+        Nil
+  )
+fun filter(f)(ls) =
+  if ls is
+    Cons(h, t) then
+      if f(h) then
+        Cons(h, filter(f)(t))
+      else
+        (filter(f)(t))
+    Nil then
+      Nil
+fun filter_lz(f)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        if f(h) then
+          Cons(h, filter_lz(f)(t))
+        else
+          (force(filter_lz(f)(t)))
+      Nil then
+        Nil
+  )
+fun foldl(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      foldl(f)(f(i)(h))(t)
+    Nil then
+      i
+fun foldr(f)(i)(ls) =
+  if ls is
+    Cons(h, t) then
+      f(h)(foldr(f)(i)(t))
+    Nil then
+      i
+fun foldr_lz(f)(i)(ls) =
+  lazy(
+    if force(ls) is
+      Cons(h, t) then
+        f(h)(foldr_lz(f)(i)(t))
+      Nil then
+        i
+  )
+fun zip(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_nl_lz(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(Tuple2(hx, hy), zip_nl_lz(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_nl(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(Tuple2(hx, hy), zip_lz_nl(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zip_lz_lz(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(Tuple2(hx, hy), zip_lz_lz(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun zipWith(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if ys is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_nl_lz(f)(xs)(ys) =
+  if xs is
+    Cons(hx, tx) then
+      if force(ys) is
+        Cons(hy, ty) then
+          Cons(f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_nl(f)(xs)(ys) =
+  if ys is
+    Cons(hy, ty) then
+      if force(xs) is
+        Cons(hx, tx) then
+          Cons(f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
+        Nil then
+          Nil
+    Nil then
+      Nil
+fun zipWith_lz_lz(f)(xs)(ys) =
+  lazy(
+    if force(xs) is
+      Cons(hx, tx) then
+        if force(ys) is
+          Cons(hy, ty) then
+            Cons(f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
+          Nil then
+            Nil
+      Nil then
+        Nil
+  )
+fun head(ls) =
+  if ls is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun head_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      h
+    Nil then
+      error
+fun tail(ls) =
+  if ls is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun tail_lz(ls) =
+  if force(ls) is
+    Cons(h, t) then
+      t
+    Nil then
+      error
+fun enumFromTo(a)(b) =
+  if a <= b then
+    Cons(a, enumFromTo(a + 1)(b))
+  else
+    Nil
+fun enumFromThenTo(a)(t)(b) =
+  if a <= b then
+    Cons(a, enumFromThenTo(t)(2 * t - a)(b))
+  else
+    Nil
+fun enumFrom(a) =
+  lazy(Cons(a, enumFrom(a + 1)))
+fun enumFromThen(a)(t) =
+  lazy(Cons(a, enumFromThen(t)(2 * t - a)))
+fun repeat(x) =
+  lazy(Cons(x, repeat(x)))
+fun iterate(f)(x) =
+  lazy(Cons(x, iterate(f)(f(x))))
+fun take(n)(ls) =
+  if n > 0 then
+    if ls is
+      Cons(h, t) then
+        Cons(h, take(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun take_lz(n)(ls) =
+  if n > 0 then
+    if force(ls) is
+      Cons(h, t) then
+        Cons(h, take_lz(n - 1)(t))
+      Nil then
+        Nil
+  else
+    Nil
+fun length(ls) =
+  if ls is
+    Cons(h, t) then
+      1 + (length(t))
+    Nil then
+      0
+fun mappend(xs)(ys) =
+  if xs is
+    Cons(h, t) then
+      Cons(h, mappend(t)(ys))
+    Nil then
+      ys
+fun sum(ls) =
+  sumAux(ls)(0)
+fun sumAux(ls)(a) =
+  if ls is
+    Nil then
+      a
+    Cons(h, t) then
+      sumAux(t)(a + h)
+fun atIndex(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex(n - 1)(t))
+      Nil then
+        error
+fun atIndex_lz(n)(ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      Cons(h, t) then
+        if n == 0 then
+          h
+        else
+          (atIndex_lz(n - 1)(t))
+      Nil then
+        error
+fun concat(lss) =
+  if lss is
+    Cons(h, t) then
+      mappend(h)(concat(t))
+    Nil then
+      Nil
+fun reverse(ls) =
+  reverse_helper(ls)(Nil)
+fun reverse_helper(ls)(a) =
+  if ls is
+    Cons(h, t) then
+      reverse_helper(t)(Cons(h, a))
+    Nil then
+      a
+fun firstSuccess(firstSuccess1)(firstSuccess2) =
+  first(0)(map_lz(firstSuccess1)(firstSuccess2))
+fun hinsert(hinsert1)(hinsert2) =
+  if hinsert2 is
+    H(hinsert_H_0, hinsert_H_1, hinsert_H_2) then
+      let lo' = minm(hinsert_H_0)(hinsert1)
+      let hi' = maxm(hinsert_H_1)(hinsert1)
+      if (member(hinsert1)(hinsert_H_2)) || 1 + hi' - lo' > numberofkeys then
+        Nothing
+      else
+        (Just(H(Just(lo'), Just(hi'), Cons(hinsert1, hinsert_H_2))))
+fun union(union1)(union2) =
+  mappend(union1)(
+    let f = fp =>
+      if fp is
+        Cons(h, t) then
+          if not(member(h)(union1)) then
+            Cons(h, f(t))
+          else
+            (f(t))
+        Nil then
+          Nil
+    f(union2)
+  )
+fun freq(freq1) =
+  assoc(freq1)(freqtab)
+fun histo(histo1) =
+  foldr(histins)(Nil)(histo1)
+fun maxm(maxm1)(maxm2) =
+  if maxm1 is
+    Nothing then
+      maxm2
+    Just(maxm_Just_0) then
+      max(maxm_Just_0)(maxm2)
+fun last(last1) =
+  if last1 is
+    Cons(last_Cons_0, last_Cons_1) then
+      let go = go1 =>
+        go2 =>
+          if go2 is
+            Nil then
+              go1
+            Cons(go_Cons_0, go_Cons_1) then
+              go(go_Cons_0)(go_Cons_1)
+      go(last_Cons_0)(last_Cons_1)
+fun assocm(assocm1)(assocm2) =
+  if assocm2 is
+    Nil then
+      Nothing
+    Cons(assocm_Cons_0, assocm_Cons_1) then
+      if assocm_Cons_0 is
+        Tuple2(assocm_Tuple2_0, assocm_Tuple2_1) then
+          if polyEq(assocm1)(assocm_Tuple2_0) then
+            Just(assocm_Tuple2_1)
+          else
+            (assocm(assocm1)(assocm_Cons_1))
+fun blocked(blocked1) =
+  blocked'(Nil)(blocked1)
+fun assoc(assoc1)(assoc2) =
+  if assoc2 is
+    Cons(assoc_Cons_0, assoc_Cons_1) then
+      if assoc_Cons_0 is
+        Tuple2(assoc_Tuple2_0, assoc_Tuple2_1) then
+          if polyEq(assoc1)(assoc_Tuple2_0) then
+            assoc_Tuple2_1
+          else
+            (assoc(assoc1)(assoc_Cons_1))
+fun keys =
+  Cons(Cons(char"c", Cons(char"a", Cons(char"s", Cons(char"e", Nil)))), Cons(Cons(char"c", Cons(char"l", Cons(char"a", Cons(char"s", Cons(char"s", Nil))))), Cons(Cons(char"d", Cons(char"a", Cons(char"t", Cons(char"a", Nil)))), Cons(Cons(char"d", Cons(char"e", Cons(char"f", Cons(char"a", Cons(char"u", Cons(char"l", Cons(char"t", Nil))))))), Cons(Cons(char"d", Cons(char"e", Cons(char"r", Cons(char"i", Cons(char"v", Cons(char"i", Cons(char"n", Cons(char"g", Nil)))))))), Cons(Cons(char"e", Cons(char"l", Cons(char"s", Cons(char"e", Nil)))), Cons(Cons(char"h", Cons(char"i", Cons(char"d", Cons(char"i", Cons(char"n", Cons(char"g", Nil)))))), Cons(Cons(char"i", Cons(char"f", Nil)), Cons(Cons(char"i", Cons(char"m", Cons(char"p", Cons(char"o", Cons(char"r", Cons(char"t", Nil)))))), Cons(Cons(char"i", Cons(char"n", Nil)), Cons(Cons(char"i", Cons(char"n", Cons(char"f", Cons(char"i", Cons(char"x", Nil))))), Cons(Cons(char"i", Cons(char"n", Cons(char"f", Cons(char"i", Cons(char"x", Cons(char"l", Nil)))))), Cons(Cons(char"i", Cons(char"n", Cons(char"s", Cons(char"t", Cons(char"a", Cons(char"n", Cons(char"c", Cons(char"e", Nil)))))))), Cons(Cons(char"i", Cons(char"n", Cons(char"t", Cons(char"e", Cons(char"r", Cons(char"f", Cons(char"a", Cons(char"c", Cons(char"e", Nil))))))))), Cons(Cons(char"l", Cons(char"e", Cons(char"t", Nil))), Cons(Cons(char"m", Cons(char"o", Cons(char"d", Cons(char"u", Cons(char"l", Cons(char"e", Nil)))))), Cons(Cons(char"o", Cons(char"f", Nil)), Cons(Cons(char"r", Cons(char"e", Cons(char"n", Cons(char"a", Cons(char"m", Cons(char"i", Cons(char"n", Cons(char"g", Nil)))))))), Cons(Cons(char"t", Cons(char"h", Cons(char"e", Cons(char"n", Nil)))), Cons(Cons(char"t", Cons(char"o", Nil)), Cons(Cons(char"t", Cons(char"y", Cons(char"p", Cons(char"e", Nil)))), Cons(Cons(char"w", Cons(char"h", Cons(char"e", Cons(char"r", Cons(char"e", Nil))))), Nil))))))))))))))))))))))
+fun ends(ends1) =
+  if ends1 is
+    K(ends_K_0, ends_K_1, ends_K_2, ends_K_3) then
+      Cons(ends_K_1, Cons(ends_K_2, Nil))
+fun partition'(partition'1) =
+  foldr(select(partition'1))(Tuple2(Nil, Nil))
+fun numberofkeys =
+  length(keys)
+fun findhash'(findhash'1)(findhash'2)(findhash'3) =
+  if findhash'3 is
+    Nil then
+      YesIts(1, findhash'2)
+    Cons(findhash'_Cons_0, findhash'_Cons_1) then
+      if findhash'_Cons_0 is
+        K(findhash'_K_0, findhash'_K_1, findhash'_K_2, findhash'_K_3) then
+          let try = newAssocs =>
+            let newCharAssocs = mappend(newAssocs)(findhash'2)
+            let mi = hinsert(hash(newCharAssocs)(K(findhash'_K_0, findhash'_K_1, findhash'_K_2, findhash'_K_3)))(findhash'1)
+            if mi is
+              Nothing then
+                NotEver(1)
+              Just(findhash'_Just_0) then
+                findhash'(findhash'_Just_0)(newCharAssocs)(findhash'_Cons_1)
+          let mi_1 = Tuple2(assocm(findhash'_K_1)(findhash'2), assocm(findhash'_K_2)(findhash'2))
+          if mi_1 is
+            Tuple2(findhash'_Tuple2_0, findhash'_Tuple2_1) then
+              if findhash'_Tuple2_0 is
+                Nothing then
+                  if findhash'_Tuple2_1 is
+                    Nothing then
+                      if polyEq(findhash'_K_1)(findhash'_K_2) then
+                        firstSuccess(
+                          m =>
+                            (try(Cons(Tuple2(findhash'_K_1, m), Nil)))
+                        )(enumFromTo_lz(0)(maxval))
+                      else
+                        firstSuccess(
+                          mn =>
+                            let mi_2 = mn
+                            if mi_2 is
+                              Tuple2(findhash'_Tuple2_0_1, findhash'_Tuple2_1_1) then
+                                try(Cons(Tuple2(findhash'_K_1, findhash'_Tuple2_0_1), Cons(Tuple2(findhash'_K_2, findhash'_Tuple2_1_1), Nil)))
+                        )(
+                          let f_1 = fp_1 =>
+                            if force(fp_1) is
+                              Cons(h_1, t_1) then
+                                let f_2 = fp_2 =>
+                                  if force(fp_2) is
+                                    Cons(h_2, t_2) then
+                                      lazy(Cons(Tuple2(h_1, h_2), f_2(t_2)))
+                                    Nil then
+                                      f_1(t_1)
+                                f_2(enumFromTo_lz(0)(maxval))
+                              Nil then
+                                lazy(Nil)
+                          f_1(enumFromTo_lz(0)(maxval))
+                        )
+                    Just(findhash'_Just_0_1) then
+                      firstSuccess(
+                        m =>
+                          (try(Cons(Tuple2(findhash'_K_1, m), Nil)))
+                      )(enumFromTo_lz(0)(maxval))
+                Just(findhash'_Just_0_2) then
+                  if findhash'_Tuple2_1 is
+                    Nothing then
+                      firstSuccess(
+                        n =>
+                          (try(Cons(Tuple2(findhash'_K_2, n), Nil)))
+                      )(enumFromTo_lz(0)(maxval))
+                    Just(findhash'_Just_0_3) then
+                      try(Nil)
+fun all(all1)(all2) =
+  if all2 is
+    Nil then
+      True
+    Cons(all_Cons_0, all_Cons_1) then
+      if all1(all_Cons_0) then
+        all(all1)(all_Cons_1)
+      else
+        False
+fun minm(minm1)(minm2) =
+  if minm1 is
+    Nothing then
+      minm2
+    Just(minm_Just_0) then
+      min(minm_Just_0)(minm2)
+fun freqtab =
+  histo(concat(map(ends)(attribkeys(keys))))
+fun min(min1)(min2) =
+  if min1 < min2 then
+    min1
+  else
+    min2
+fun enumFromTo_lz(enumFromTo_lz1)(enumFromTo_lz2) =
+  lazy(
+    if enumFromTo_lz1 <= enumFromTo_lz2 then
+      Cons(enumFromTo_lz1, enumFromTo_lz(enumFromTo_lz1 + 1)(enumFromTo_lz2))
+    else
+      Nil
+  )
+fun prog(prog1) =
+  cichelli(prog1)
+fun histins(histins1)(histins2) =
+  if histins2 is
+    Nil then
+      Cons(Tuple2(histins1, 1), Nil)
+    Cons(histins_Cons_0, histins_Cons_1) then
+      if histins_Cons_0 is
+        Tuple2(histins_Tuple2_0, histins_Tuple2_1) then
+          if polyEq(histins1)(histins_Tuple2_0) then
+            Cons(Tuple2(histins_Tuple2_0, histins_Tuple2_1 + 1), histins_Cons_1)
+          else
+            (Cons(Tuple2(histins_Tuple2_0, histins_Tuple2_1), histins(histins1)(histins_Cons_1)))
+fun attribkeys(attribkeys1) =
+  map(
+    k =>
+      (K(k, head(k), last(k), length(k)))
+  )(attribkeys1)
+fun select(select1)(select2)(select3) =
+  if select3 is
+    Tuple2(select_Tuple2_0, select_Tuple2_1) then
+      if select1(select2) then
+        Tuple2(Cons(select2, select_Tuple2_0), select_Tuple2_1)
+      else
+        (Tuple2(select_Tuple2_0, Cons(select2, select_Tuple2_1)))
+fun blocked'(blocked'1)(blocked'2) =
+  if blocked'2 is
+    Nil then
+      Nil
+    Cons(blocked'_Cons_0, blocked'_Cons_1) then
+      let ds' = union(blocked'1)(ends(blocked'_Cons_0))
+      let mi_3 = partition'(
+        x =>
+          (subset(ends(x))(ds'))
+      )(blocked'_Cons_1)
+      if mi_3 is
+        Tuple2(blocked'_Tuple2_0, blocked'_Tuple2_1) then
+          mappend(Cons(blocked'_Cons_0, blocked'_Tuple2_0))(blocked'(ds')(blocked'_Tuple2_1))
+fun morefreq(morefreq1)(morefreq2) =
+  if morefreq1 is
+    K(morefreq_K_0, morefreq_K_1, morefreq_K_2, morefreq_K_3) then
+      if morefreq2 is
+        K(morefreq_K_0_1, morefreq_K_1_1, morefreq_K_2_1, morefreq_K_3_1) then
+          (freq(morefreq_K_1)) + (freq(morefreq_K_2)) > (freq(morefreq_K_1_1)) + (freq(morefreq_K_2_1))
+fun maxval =
+  length(freqtab)
+fun hash(hash1)(hash2) =
+  if hash2 is
+    K(hash_K_0, hash_K_1, hash_K_2, hash_K_3) then
+      hash_K_3 + (assoc(hash_K_1)(hash1)) + (assoc(hash_K_2)(hash1))
+fun max(max1)(max2) =
+  if max1 > max2 then
+    max1
+  else
+    max2
+fun cichelli(cichelli1) =
+  let attribkeys' = attribkeys(mappend(keys)(take(cichelli1 % 2)(keys)))
+  let hashkeys = (x =>
+    (blocked(freqsorted(x))))(attribkeys')
+  findhash(hashkeys)
+fun member(member1)(member2) =
+  if member2 is
+    Nil then
+      False
+    Cons(member_Cons_0, member_Cons_1) then
+      (polyEq(member1)(member_Cons_0)) || (member(member1)(member_Cons_1))
+fun findhash(findhash1) =
+  findhash'(H(Nothing, Nothing, Nil))(Nil)(findhash1)
+fun subset(subset1)(subset2) =
+  all(
+    x =>
+      (member(x)(subset2))
+  )(subset1)
+fun freqsorted(freqsorted1) =
+  freqsorted1
+fun testCichelli_nofib(testCichelli_nofib1) =
+  prog(testCichelli_nofib1)
+fun first(first1)(first2) =
+  let mi_4 = force(first2)
+  if mi_4 is
+    Nil then
+      NotEver(first1)
+    Cons(first_Cons_0, first_Cons_1) then
+      let mi_5 = first_Cons_0
+      if mi_5 is
+        YesIts(first_YesIts_0, first_YesIts_1) then
+          YesIts(first1 + first_YesIts_0, first_YesIts_1)
+        NotEver(first_NotEver_0) then
+          first(first1 + first_NotEver_0)(first_Cons_1)
+(testCichelli_nofib(primId(6)))

@@ -521,10 +521,38 @@ final class Builder(fresh: Fresh, fnUid: FreshInt, classUid: FreshInt, tag: Fres
         specialized = None,
         buildResultFromTerm(body) { x => x }
       )
+    case nfd @ NuFunDef(_, Var(name), None, Nil, L(body)) =>
+      val defnInfoPartial = getDefnInfoPartial(ctx.fnCtx.keySet ++ ctx.classCtx.keySet ++ fields, ctx)(nfd).get
+      val params = defnInfoPartial.params
+      val names = params map (fresh.make(_))
+      val ctx2 =  ctxJoin(ctx, defnInfoPartial.ctx)
+      given Ctx = ctx2.copy(nameCtx = ctx2.nameCtx ++ (params zip names))
+      Defn(
+        fnUid.make,
+        name,
+        params = names,
+        resultNum = 1,
+        specialized = None,
+        buildResultFromTerm(body) { x => x }
+      )
     case fd @ _ => throw IRError("unsupported NuFunDef " + fd.toString)
 
   private def buildDefFromNuFunDef(using ctx: Ctx)(nfd: Statement): Defn = nfd match
     case nfd @ NuFunDef(_, Var(name), None, Nil, L(Lam(xs @ Tup(_), body))) =>
+      val defnInfoPartial = getDefnInfoPartial(ctx.fnCtx.keySet ++ ctx.classCtx.keySet, ctx)(nfd).get
+      val params = defnInfoPartial.params
+      val names = params map (fresh.make(_))
+      val ctx2 =  ctxJoin(ctx, defnInfoPartial.ctx)
+      given Ctx = ctx2.copy(nameCtx = ctx2.nameCtx ++ (params zip names))
+      Defn(
+        fnUid.make,
+        name,
+        params = names,
+        resultNum = 1,
+        specialized = None,
+        buildResultFromTerm(body) { x => x }
+      )
+    case nfd @ NuFunDef(_, Var(name), None, Nil, L(body)) =>
       val defnInfoPartial = getDefnInfoPartial(ctx.fnCtx.keySet ++ ctx.classCtx.keySet, ctx)(nfd).get
       val params = defnInfoPartial.params
       val names = params map (fresh.make(_))
@@ -577,6 +605,14 @@ final class Builder(fresh: Fresh, fnUid: FreshInt, classUid: FreshInt, tag: Fres
       val originalFvs = freeVariables(nfd)._2
       val fvs = (originalFvs -- builtin -- ops -- names).toList
       val params = getTupleFields(tp) ++ fvs
+      val dip = DefnInfoPartial(name, params)
+      dip.freeVars = fvs
+      dip.ctx = ctx
+      S(dip)
+    case NuFunDef(_, Var(name), _, _, Left(_)) =>
+      val originalFvs = freeVariables(nfd)._2
+      val fvs = (originalFvs -- builtin -- ops -- names).toList
+      val params = fvs
       val dip = DefnInfoPartial(name, params)
       dip.freeVars = fvs
       dip.ctx = ctx

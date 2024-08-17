@@ -11,7 +11,7 @@
       (system:
       let 
         sbtOverlay = self: super: {
-          sbt = super.sbt.override { jre = super.jdk17; };
+          sbt = super.sbt.override { jre = super.jdk8_headless; };
         };
         pkgs = import nixpkgs { 
           inherit system;
@@ -21,12 +21,13 @@
           devShells.default = mkShell {
             buildInputs = [
               clang
+              gcc
               gnumake
               boost
               gmp
               mimalloc
               sbt
-              nodejs
+              nodejs_22
             ];
           };
       });

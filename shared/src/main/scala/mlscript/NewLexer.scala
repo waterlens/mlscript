@@ -280,6 +280,7 @@ class NewLexer(origin: Origin, raise: Diagnostic => Unit, dbg: Bool) {
     def isQuasiquoteTripleOpening(i: Int): Bool =  matches(i, BracketKind.QuasiquoteTriple.beg, 0)
     def isUnquoteOpening(i: Int): Bool = matches(i, BracketKind.Unquote.beg, 0)
     def isQuasiquoteTripleClosing(i: Int): Bool = matches(i, BracketKind.QuasiquoteTriple.end, 0)
+    // @inline 
     // def go(j: Int, tok: Token) = lex(j, ind, (tok, loc(i, j)) :: acc)
     def next(j: Int, tok: Token) = (tok, loc(i, j)) :: acc
     c match {
@@ -301,11 +302,6 @@ class NewLexer(origin: Origin, raise: Diagnostic => Unit, dbg: Bool) {
           BracketKind.Quasiquote
         val len = bracket_kind.beg.length
         lex(i + len, ind, next(i + len, OPEN_BRACKET(bracket_kind)))(bracket_kind :: qqList)
-      case 'c' if matches(i, "char\"", 0) =>
-        val j = i + "char\"".length
-        val (ch, k) = char(j)
-        val m = closeChar(k)
-        lex(m, ind, next(m, LITVAL(CharLit(ch))))
       case '$' if isUnquoteOpening(i) =>
         lex(i + 2, ind, next(i + 2, OPEN_BRACKET(BracketKind.Unquote)))
       case '$' if i + 1 < length && isIdentFirstChar(bytes(i + 1)) =>

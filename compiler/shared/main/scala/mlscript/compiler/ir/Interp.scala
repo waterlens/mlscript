@@ -9,6 +9,7 @@ import scala.collection.immutable._
 import scala.annotation._
 import shorthands._
 import scala.collection.mutable.ListBuffer
+import scala.util.boundary, boundary.break
 
 enum Stuck:
   case StuckExpr(expr: Expr, msg: Str)
@@ -103,14 +104,30 @@ class Interpreter(verbose: Bool):
         case Value.Class(cls2, xs) => L(StuckExpr(expr, s"unexpected class $cls2"))
         case x => L(StuckExpr(expr, s"unexpected value $x"))
       }
-    case BasicOp(name, args) =>
+    case BasicOp(name, args) => boundary:
       evalArgs(args).flatMap(
         xs => 
           name match
             case "+" | "-" | "*" | "/" | "==" | "!=" | "<=" | ">=" | "<" | ">" => 
-              if xs.length < 2 then return L(StuckExpr(expr, s"not enough arguments for basic operation $name"))
+              if xs.length < 2 then break:
+                L(StuckExpr(expr, s"not enough arguments for basic operation $name"))
               else eval(name, xs.head, xs.tail.head).toRight(StuckExpr(expr, s"unable to evaluate basic operation"))
             case _ => L(StuckExpr(expr, s"unexpected basic operation $name")))
+    case AssignField(assignee, cls, field, value) =>
+      for {
+        x <- eval(Ref(assignee): TrivialExpr)
+        y <- eval(value)
+        res <- x match
+          case obj @ Value.Class(cls2, xs) if cls.name == cls2.name =>
+            xs.zip(cls2.fields).find{_._2 == field} match
+              case Some((_, _)) =>
+                obj.fields = xs.map(x => if x == obj then y else x)
+                // Ideally, we should return a unit value here, but here we return the assignee value for simplicity.
+                R(obj)
+              case None => L(StuckExpr(expr, s"unable to find selected field $field"))
+          case Value.Class(cls2, xs) => L(StuckExpr(expr, s"unexpected class $cls2"))
+          case x => L(StuckExpr(expr, s"unexpected value $x"))
+      } yield res
 
   private def eval(node: Node)(using ctx: Ctx): Result[Ls[Value]] = node match
     case Result(res) => evalArgs(res)
@@ -131,7 +148,7 @@ class Interpreter(verbose: Bool):
             case None => 
               default match
                 case S(x) => eval(x)
-                case N => L(StuckNode(node, s"can not find the matched case, $cls expected"))
+                case N => L(StuckNode(node, s"can not find the matched case, ${cls.name} expected"))
           }
         case Value.Literal(lit) => 
           cases.find {

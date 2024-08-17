@@ -216,7 +216,7 @@ abstract class TyperHelpers { Typer: Typer =>
     def rebuild(cs: Ls[Ls[ST]]): ST =
       cs.iterator.map(_.foldLeft(TopType: ST)(_ & _)).foldLeft(BotType: ST)(_ | _)
     if (cs.sizeCompare(1) <= 0) return rebuild(cs)
-    val factors = MutMap.empty[Factorizable, Int]
+    val factors = LinkedHashMap.empty[Factorizable, Int]
     cs.foreach { c =>
       c.foreach {
         case tv: TV =>
@@ -646,9 +646,6 @@ abstract class TyperHelpers { Typer: Typer =>
       case ComposedType(false, l, r) => l.negNormPos(f, p) | r.negNormPos(f, p)
       case NegType(n) => f(n).withProv(p)
       case tr: TypeRef if !preserveTypeRefs && tr.canExpand => tr.expandOrCrash.negNormPos(f, p)
-      case _: RecordType | _: FunctionType => BotType // Only valid in positive positions!
-        // Because Top<:{x:S}|{y:T}, any record type negation neg{x:S}<:{y:T} for any y=/=x,
-        // meaning negated records are basically bottoms.
       case rw => NegType(f(rw))(p)
     }
     def withProvOf(ty: SimpleType): ST = withProv(ty.prov)

@@ -11,8 +11,9 @@ import mlscript.compiler.codegen.cpp._
 import mlscript.compiler.optimizer.OptimizingError
 import mlscript.Diagnostic
 
-class IRDiffTestCompiler extends DiffTests {
-  import IRDiffTestCompiler.*
+import IRDiffTestCompiler.*
+
+class IRDiffTestCompiler extends DiffTests(State) {
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) = {
     val p = new java.io.PrintWriter(f)
     try { op(p) } finally { p.close() }
@@ -27,12 +28,13 @@ class IRDiffTestCompiler extends DiffTests {
       output("\nPreluded.")
     else if (mode.useIR || mode.irVerbose)
       try
-        output("\n\nIR:")
         val (fresh, freshFnId, freshClassId, freshTag) = (Fresh(), FreshInt(), FreshInt(), FreshInt())
-        val gb = Builder(fresh, freshFnId, freshClassId, freshTag, mode.irVerbose)
+        val gb = Builder(fresh, freshFnId, freshClassId, freshTag, raise, mode.irVerbose)
         val prelude = TypingUnit(preludeSource.toList)
-        val graph = gb.buildGraph(prelude, originalUnit)
+        var graph = gb.buildGraph(prelude, originalUnit)
         val hiddenNames = gb.getHiddenNames(prelude)
+
+        output("\n\nIR:")
         output(graph.show(hiddenNames))
         var interp_result: Opt[Str] = None
         if (mode.interpIR)
@@ -101,21 +103,11 @@ class IRDiffTestCompiler extends DiffTests {
       
     (outputBuilder.toString.linesIterator.toList, None)
   
-  override protected lazy val files = allFiles.filter { file =>
-      val fileName = file.baseName
-      validExt(file.ext) && filter(file.relativeTo(pwd))
-  }
 }
 
 object IRDiffTestCompiler {
-
-  private val pwd = os.pwd
-  private val dir = pwd/"compiler"/"shared"/"test"/"diff-ir"
   
-  private val allFiles = os.walk(dir).filter(_.toIO.isFile)
-  
-  private val validExt = Set("fun", "mls")
-
-  private def filter(file: os.RelPath) = DiffTests.filter(file)
+  lazy val State =
+    new DiffTests.State(DiffTests.pwd/"compiler"/"shared"/"test"/"diff-ir")
   
 }

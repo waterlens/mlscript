@@ -1,7 +1,6 @@
 package mlscript.compiler.optimizer
 
 import mlscript._
-import mlscript.compiler.{Expr => ASTExpr}
 import mlscript.compiler.ir._
 import mlscript.utils._
 import shorthands._
@@ -40,6 +39,9 @@ class UsefulnessAnalysis(verbose: Bool = false):
     case CtorApp(name, args) => args.foreach(f)
     case Select(name, cls, field) => addUse(name)
     case BasicOp(name, args) => args.foreach(f)
+    case AssignField(assignee, _, _, value) =>
+      addUse(assignee)
+      f(value)
   
   private def f(x: Node): Unit = x match
     case Result(res) => res.foreach(f)
@@ -68,6 +70,10 @@ class FreeVarAnalysis(extended_scope: Bool = true, verbose: Bool = false):
     case CtorApp(name, args) => args.foldLeft(fv)((acc, arg) => f(using defined)(arg.toExpr, acc))
     case Select(name, cls, field) => if (defined.contains(name.str)) fv else fv + name.str
     case BasicOp(name, args) => args.foldLeft(fv)((acc, arg) => f(using defined)(arg.toExpr, acc))
+    case AssignField(assignee, _, _, value) => f(using defined)(
+      value.toExpr, 
+      if defined.contains(assignee.str) then fv + assignee.str else fv
+    ) 
   private def f(using defined: Set[Str])(node: Node, fv: Set[Str]): Set[Str] = node match
     case Result(res) => res.foldLeft(fv)((acc, arg) => f(using defined)(arg.toExpr, acc))
     case Jump(defnref, args) =>

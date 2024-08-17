@@ -2,7 +2,7 @@ import Wart._
 
 enablePlugins(ScalaJSPlugin)
 
-ThisBuild / scalaVersion     := "2.13.12"
+ThisBuild / scalaVersion     := "2.13.14"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
 ThisBuild / organization     := "io.lptk"
 ThisBuild / organizationName := "LPTK"
@@ -10,6 +10,9 @@ ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
   "-feature",
   "-unchecked",
+  "-language:higherKinds",
+  if (insideCI.value) "-Wconf:any:error"
+  else                "-Wconf:any:warning",
 )
 
 lazy val root = project.in(file("."))
@@ -23,14 +26,9 @@ lazy val mlscript = crossProject(JSPlatform, JVMPlatform).in(file("."))
   .settings(
     name := "mlscript",
     scalacOptions ++= Seq(
-      "-language:higherKinds",
       "-Ywarn-value-discard",
       "-Ypatmat-exhaust-depth:160",
     ),
-    scalacOptions ++= {
-      if (insideCI.value) Seq("-Wconf:any:error")
-      else                Seq("-Wconf:any:warning")
-    },
     wartremoverWarnings ++= Warts.allBut(
       Recursion, Throw, Nothing, Return, While, IsInstanceOf,
       Var, MutableDataStructures, NonUnitStatements,
@@ -54,7 +52,7 @@ lazy val mlscript = crossProject(JSPlatform, JVMPlatform).in(file("."))
   )
   .jsSettings(
     scalaJSUseMainModuleInitializer := true,
-    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.1.0",
+    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0",
   )
 
 lazy val mlscriptJVM = mlscript.jvm
@@ -81,10 +79,12 @@ lazy val ts2mlsTest = project.in(file("ts2mls"))
 lazy val compiler = crossProject(JSPlatform, JVMPlatform).in(file("compiler"))
   .settings(
     name := "mlscript-compiler",
-    scalaVersion := "3.1.3",
+    scalaVersion := "3.3.3",
     sourceDirectory := baseDirectory.value.getParentFile()/"shared",
     watchSources += WatchSource(
       baseDirectory.value.getParentFile()/"shared"/"test"/"diff", "*.mls", NothingFilter),
+    watchSources += WatchSource(
+      baseDirectory.value.getParentFile()/"shared"/"test"/"diff-ir", "*.mls", NothingFilter),
   )
   .dependsOn(mlscript % "compile->compile;test->test")
 

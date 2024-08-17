@@ -17,6 +17,9 @@ private final class RefResolver(defs: Map[Str, Defn], classes: Map[Str, ClassInf
       case None => throw IRError(f"unknown class ${cls.name} in ${classes.keySet.mkString(",")}")
       case Some(value) => cls.cls = Left(value)
     case Expr.BasicOp(name, args) =>
+    case Expr.AssignField(assigneee, cls, field, value) => classes.get(cls.name) match
+      case None => throw IRError(f"unknown class ${cls.name} in ${classes.keySet.mkString(",")}")
+      case Some(value) => cls.cls = Left(value)
 
   private def f(x: Pat): Unit = x match
     case Pat.Lit(lit) => 

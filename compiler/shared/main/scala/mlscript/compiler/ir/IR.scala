@@ -7,6 +7,8 @@ import mlscript.compiler.utils._
 import mlscript.compiler.optimizer._
 import mlscript.compiler.ir._
 
+import mlscript.Loc
+
 import collection.mutable.{Map as MutMap, Set as MutSet, HashMap, ListBuffer}
 import annotation.unused
 import util.Sorting
@@ -158,6 +160,7 @@ enum Expr:
   case CtorApp(cls: ClassRef, args: Ls[TrivialExpr])
   case Select(name: Name, cls: ClassRef, field: Str)
   case BasicOp(name: Str, args: Ls[TrivialExpr])
+  case AssignField(assignee: Name, cls: ClassRef, field: Str, value: TrivialExpr)
   
   override def toString: String = show
 
@@ -179,6 +182,13 @@ enum Expr:
       cls.name <#> "." <#> fld <#> "(" <#> s.toString <#> ")"
     case BasicOp(name: Str, args) =>
       name <#> "(" <#> (args |> showArguments) <#> ")"
+    case AssignField(assignee, clsInfo, fieldName, value) => 
+      stack(
+        "assign"
+        <:> (assignee.toString + "." + fieldName)
+        <:> ":="
+        <:> value.toDocument
+      )
 
   def mapName(f: Name => Name): Expr = this match
     case Ref(name) => Ref(f(name))
@@ -186,6 +196,7 @@ enum Expr:
     case CtorApp(cls, args) => CtorApp(cls, args.map(_.mapNameOfTrivialExpr(f)))
     case Select(x, cls, field) => Select(f(x), cls, field)
     case BasicOp(name, args) => BasicOp(name, args.map(_.mapNameOfTrivialExpr(f)))
+    case AssignField(assignee, clsInfo, fieldName, value) => AssignField(f(assignee), clsInfo, fieldName, value.mapNameOfTrivialExpr(f))
 
   def locMarker: LocMarker = this match
     case Ref(name) => LocMarker.MRef(name.str)
@@ -193,6 +204,7 @@ enum Expr:
     case CtorApp(cls, args) => LocMarker.MCtorApp(cls, args.map(_.toExpr.locMarker))
     case Select(name, cls, field) => LocMarker.MSelect(name.str, cls, field)
     case BasicOp(name, args) => LocMarker.MBasicOp(name, args.map(_.toExpr.locMarker))
+    case AssignField(assignee, clsInfo, fieldName, value) => LocMarker.MAssignField(assignee.str, fieldName, value.toExpr.locMarker)
 
 enum Pat:
   case Lit(lit: mlscript.Lit)
@@ -518,6 +530,7 @@ enum LocMarker:
   case MCtorApp(name: ClassRef, args: Ls[LocMarker])
   case MSelect(name: Str, cls: ClassRef, field: Str)
   case MBasicOp(name: Str, args: Ls[LocMarker])
+  case MAssignField(assignee: Str, field: Str, value: LocMarker)
   case MResult(res: Ls[LocMarker])
   case MJump(name: Str, args: Ls[LocMarker])
   case MCase(scrut: Str, cases: Ls[Pat], default: Bool)

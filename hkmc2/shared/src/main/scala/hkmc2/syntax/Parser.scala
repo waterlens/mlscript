@@ -194,7 +194,7 @@ abstract class Parser(
   
   
   final def maybeIndented[R](f: (Parser, Bool) => R): R =
-    cur match
+    yeetSpaces match
       case (br @ BRACKETS(Indent | Curly, toks), _) :: _ =>
         consume
         rec(toks, S(br.innerLoc), br.describe).concludeWith(f(_, true))

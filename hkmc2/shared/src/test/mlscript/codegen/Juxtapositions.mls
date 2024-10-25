@@ -10,25 +10,64 @@
 log(42)
 //│ > 42
 
-fun inc(x) = x + 42
-
-42 inc()
-//│ = 84
-
-42 inc() inc()
-//│ = 126
-
-42 inc() inc() log()
-//│ > 126
-
 42 console.log()
 //│ > 42
+
+
+fun inc(x) = x + 1
+
+42 inc()
+//│ = 43
+
+42 inc() inc()
+//│ = 44
+
+42 inc() inc() log()
+//│ > 44
+
+inc(42) inc() log()
+//│ > 44
+
+
+fun add(x, y) = x + y
+
+42 add(1)
+//│ = 43
+
+42 add(1) inc()
+//│ = 44
+
+:w
+42
+add(1)
+//│ ╔══[WARNING] Pure expression in statement position
+//│ ║  l.41: 	42
+//│ ╙──      	^^
+//│ = NaN
+
+:todo
+42
+  add(1)
+//│ ╔══[PARSE ERROR] Unexpected identifier here
+//│ ║  l.50: 	  add(1)
+//│ ╙──      	  ^^^
+//│ = 42
+
+:todo
+42
+  add(1)
+  inc()
+//│ ╔══[PARSE ERROR] Unexpected identifier here
+//│ ║  l.58: 	  add(1)
+//│ ╙──      	  ^^^
+//│ = 42
+
 
 
 :e
 42 console.log
 //│ ╔══[ERROR] Illegal juxtaposition right-hand side.
-//│ ║  l.29: 	42 console.log
+//│ ║  l.68: 	42 console.log
 //│ ╙──      	   ^^^^^^^
 //│ = 42
 

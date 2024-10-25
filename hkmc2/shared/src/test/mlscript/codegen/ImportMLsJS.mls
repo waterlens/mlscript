@@ -1,15 +1,9 @@
 :js
 
-// :showRepl
-:sjs
-import "../../mlscript-compile/Option.mjs"
-//│ JS:
-//│ this.Option = await import("/Users/parreaux/work/Research/experiments/hkmc2/hkmc2/shared/src/test/mlscript-compile/Option.mjs");
-//│ if (this.Option.default !== undefined) this.Option = this.Option.default;
-//│ undefined
-//│ Option = Option { Some: [class Some], None: None {} }
 
-// let opt = Option.default
+import "../../mlscript-compile/Option.mjs"
+//│ Option = Option { Some: [class Some], None: None {}, Both: [class Both] }
+
 
 Option.isDefined(new Option.Some(1))
 //│ = true
@@ -17,7 +11,18 @@ Option.isDefined(new Option.Some(1))
 Option.isDefined(Option.None)
 //│ = false
 
+
 Option.test()
 //│ = 2134
+
+
+String(Option.None)
+//│ = 'None'
+
+String(new Option.Some(1))
+//│ = 'Some(1)'
+
+String(new Option.Both(1, 2))
+//│ = 'Both(1, 2)'
 
 

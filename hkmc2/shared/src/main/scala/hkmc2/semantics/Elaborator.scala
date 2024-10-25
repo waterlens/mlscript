@@ -32,6 +32,7 @@ object Elaborator:
       "console" -> TermSymbol(ImmutVal, N, Ident("console")),
       "process" -> TermSymbol(ImmutVal, N, Ident("process")),
       "fs" -> TermSymbol(ImmutVal, N, Ident("fs")),
+      "String" -> TermSymbol(ImmutVal, N, Ident("String")),
       "Error" -> errorSymbol,
     ))
   type Ctxl[A] = Ctx ?=> A

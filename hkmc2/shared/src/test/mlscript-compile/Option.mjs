@@ -5,11 +5,21 @@ const Option = new class Option {
         this.value = value;
         
       }
+      toString() { return "Some(" + this.value + ")"; }
     };
     this.None = new class None {
       constructor() {
         
       }
+      toString() { return "None"; }
+    };
+    this.Both = class Both {
+      constructor(fst, snd) {
+        this.fst = fst;
+        this.snd = snd;
+        
+      }
+      toString() { return "Both(" + this.fst + ", " + this.snd + ")"; }
     };
   }
   isDefined(x) {
@@ -26,6 +36,7 @@ const Option = new class Option {
   test() {
     return 2134
   }
+  toString() { return "Option"; }
 };
 undefined
 export default Option;

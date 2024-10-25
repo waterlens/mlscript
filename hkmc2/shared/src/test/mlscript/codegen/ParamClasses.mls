@@ -9,7 +9,7 @@
 
 class Foo()
 //│ JS:
-//│ this.Foo = class Foo { constructor() {  } }; undefined
+//│ this.Foo = class Foo { constructor() {  } toString() { return "Foo(" +  + ")"; } }; undefined
 
 Foo
 //│ JS:
@@ -24,7 +24,14 @@ Foo()
 
 class Foo(a)
 //│ JS:
-//│ this.Foo = class Foo { constructor(a) { this.a = a;  } }; undefined
+//│ this.Foo = class Foo {
+//│   constructor(a) {
+//│     this.a = a;
+//│     
+//│   }
+//│   toString() { return "Foo(" + this.a + ")"; }
+//│ };
+//│ undefined
 
 Foo
 //│ JS:
@@ -44,7 +51,15 @@ Foo(1).a
 
 class Foo(a, b)
 //│ JS:
-//│ this.Foo = class Foo { constructor(a, b) { this.a = a; this.b = b;  } }; undefined
+//│ this.Foo = class Foo {
+//│   constructor(a, b) {
+//│     this.a = a;
+//│     this.b = b;
+//│     
+//│   }
+//│   toString() { return "Foo(" + this.a + ", " + this.b + ")"; }
+//│ };
+//│ undefined
 
 let foo = Foo
 //│ JS:
@@ -107,6 +122,7 @@ class Inner(c) with
 //│   i1(d) {
 //│     return this.c + d
 //│   }
+//│   toString() { return "Inner(" + this.c + ")"; }
 //│ };
 //│ undefined
 

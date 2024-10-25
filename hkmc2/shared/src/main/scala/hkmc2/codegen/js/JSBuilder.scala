@@ -124,6 +124,18 @@ class JSBuilder extends CodeBuilder:
                 body(td.body)
               } #}  # }"
             .mkDocument(" ")
+          }${
+            if mtds.exists(_.sym.nme == "toString")
+            then doc""
+            else doc""" # toString() { return "${sym.nme}${
+              if clsDefn.paramsOpt.isEmpty then doc"""""""
+              else doc"""(" + ${
+                  ctorParams.headOption.fold("")("this." + _._2)
+                }${
+                  ctorParams.tailOption.fold("")(_.map(
+                    """ + ", " + this.""" + _._2).mkString)
+                } + ")""""
+            }; }"""
           } #}  # }"
           if clsDefn.kind is syntax.Mod then sym.owner match
           case S(owner) =>
@@ -199,7 +211,7 @@ class JSBuilder extends CodeBuilder:
         }"); # if ($v.default !== undefined) $v = $v.default;"""
     imps.mkDocument(doc" # ") :/: block(p.main) :: (
       exprt match
-        case S(e) => doc"\nexport default ${e};"
+        case S(e) => doc"\nexport default ${e};\n"
         case N => doc""
       )
   

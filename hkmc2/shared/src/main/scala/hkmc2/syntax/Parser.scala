@@ -852,6 +852,9 @@ abstract class Parser(
                 err((msg"Expected ${rule.whatComesAfter} after ${rule.name}; found ${kw.name} instead" -> S(l0) :: Nil))
                 acc
           case _ => acc
+      case (IDENT(id, false), _) :: _
+      if prec < AppPrec && !Keyword.all.contains(id) =>
+        exprCont(Jux(acc, expr(AppPrec, allowNewlines)), prec, allowNewlines)
       case (tok, _) :: _ =>
         printDbg(s"stops at ${tok.toString}")
         acc

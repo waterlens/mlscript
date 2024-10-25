@@ -97,18 +97,11 @@ object ParseRule:
       ParseRule(s"'${k.str}' binding keyword")(
         Expr(
           ParseRule(s"'${k.str}' binding head")(
-            Expr(
-              ParseRule(s"'${k.str}' binding name part")(
-                funBody(k),
-                End(N),
-              )
-            ) { case (sym, rhs) => (S(sym), rhs) },
-            funBody(k).map(b => (N, b)),
-            End((N, N)),
+            funBody(k),
+            End(N),
           )
         ) {
-          case (lhs, (N, rhs)) => TermDef(k, N, S(lhs), rhs)
-          case (lhs, (sym, rhs)) => TermDef(k, S(lhs), sym, rhs)
+          case (lhs, rhs) => TermDef(k, lhs, rhs)
         }
       )
   
@@ -116,24 +109,7 @@ object ParseRule:
     ParseRule("type declaration keyword"):
       Expr(
         ParseRule("type declaration head")(
-          End((N, N, N)),
-          Expr(
-            ParseRule("type declaration name")(
-              End((N, N)),
-              Kw(`extends`):
-                ParseRule("extension clause")(
-                  Expr(
-                    ParseRule("parent specification")(
-                      typeDeclTemplate,
-                      End(N),
-                    )
-                  ) { case (ext, bod) => (S(ext), bod) }
-                ),
-              typeDeclTemplate.map(bod => (N, bod)),
-            )
-          ):
-            case (head, (ext, bod)) => (S(head), ext, bod)
-          ,
+          End((N, N)),
           Kw(`extends`):
             ParseRule("extension clause")(
               Expr(
@@ -141,14 +117,13 @@ object ParseRule:
                   typeDeclTemplate,
                   End(N),
                 )
-              ) { case (ext, bod) => (N, S(ext), bod) }
+              ) { case (ext, bod) => (S(ext), bod) }
             ),
-          typeDeclTemplate.map(bod => (N, N, bod)),
+          typeDeclTemplate.map(bod => (N, bod)),
         )
-      // ) { case (head, ext, bod) => TypeDecl(head, ext, bod) }
       ):
-        case (symName, (S(head), ext, bod)) => TypeDef(k, S(symName), head, ext, bod)
-        case (head, (N, ext, bod)) => TypeDef(k, N, head, ext, bod)
+        case (head, (ext, bod)) =>
+          TypeDef(k, head, ext, bod)
   
   def letLike(kw: Keyword.letLike) = 
     Kw(kw):
@@ -263,7 +238,7 @@ object ParseRule:
                     End(())
                   )
                 ) { (rhs, _) => rhs }
-        ) { (lhs, rhs) => TypeDef(Als, N, lhs, S(rhs), N) },
+        ) { (lhs, rhs) => TypeDef(Als, lhs, S(rhs), N) },
     Kw(`class`)(typeDeclBody(Cls)),
     Kw(`trait`)(typeDeclBody(Trt)),
     Kw(`module`)(typeDeclBody(Mod)),

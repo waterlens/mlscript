@@ -233,15 +233,23 @@ extends Importer:
       Term.Error
     case Error() =>
       Term.Error
-    case TermDef(k, sym, nme, rhs) =>
+    case TermDef(k, nme, rhs) =>
       raise(ErrorReport(msg"Illegal definition in term position." -> tree.toLoc :: Nil))
       Term.Error
-    case TypeDef(k, symName, head, extension, body) =>
+    case TypeDef(k, head, extension, body) =>
       raise(ErrorReport(msg"Illegal type declaration in term position." -> tree.toLoc :: Nil))
       Term.Error
     case Modified(kw, kwLoc, body) =>
       raise(ErrorReport(msg"Illegal position for '${kw.name}' modifier." -> kwLoc :: Nil))
       term(body)
+    case Jux(lhs, rhs) =>
+      rhs match
+      case ap @ App(f, tup @ Tup(args)) =>
+        val sym = FlowSymbol("‹app-res›", nextUid)
+        Term.App(term(f), Term.Tup(fld(lhs) :: args.map(fld))(tup))(ap, sym)
+      case _ =>
+        raise(ErrorReport(msg"Illegal juxtaposition right-hand side." -> rhs.toLoc :: Nil))
+        term(lhs)
     // case _ =>
     //   ???
   
@@ -375,7 +383,7 @@ extends Importer:
         case _ =>
           raise(ErrorReport(msg"Wrong number of type arguments" -> lhs.toLoc :: Nil)) // TODO BE
           go(sts, Term.Error :: acc)
-      case (td @ TermDef(k, sym, nme, rhs)) :: sts =>
+      case (td @ TermDef(k, nme, rhs)) :: sts =>
         log(s"Processing term definition $nme")
         td.name match
           case R(id) =>
@@ -400,9 +408,10 @@ extends Importer:
               tdf
             go(sts, tdf :: acc)
           case L(d) => go(sts, acc) // error already raised in newMembers initialization
-      case TypeDef(k, symName, head, extension, body) :: sts =>
+      case TypeDef(k, head, extension, body) :: sts =>
         assert((k is Als) || (k is Cls) || (k is Mod), k)
-        def processHead(head: Tree): Ctxl[(Ident, Ls[TyParam], Opt[Ls[Param]], Ctx)] = head match
+        def processHead(head: Tree): Ctxl[(Ident, Ls[TyParam], Opt[Ls[Param]], Ctx)] =
+          head match
           case TyApp(base, tparams) =>
             
             val (name, tas, as, newCtx) = processHead(base)
@@ -439,6 +448,8 @@ extends Importer:
             processHead(lhs)
           case InfixApp(derived, Keyword.`extends`, base) =>
             processHead(derived)
+          case Jux(lhs, rhs) =>
+            processHead(rhs)
 
           // case _ => ???
         val (nme, _, _, _) = processHead(head) // ! FIXME dumb!!!! recomputation
@@ -455,7 +466,7 @@ extends Importer:
             sym.defn = S(d)
             d
         case k: ClsLikeKind =>
-          val sym = newMembers(nme.name).asInstanceOf[ClassSymbol] // TODO improve
+          val sym = newMembers.getOrElse(nme.name, ???).asInstanceOf[ClassSymbol] // TODO improve
           ctx.nest(S(sym)).givenIn:
             val (nme, tps, ps, newCtx) = processHead(head)
             log(s"Processing type definition $nme")
@@ -497,7 +508,7 @@ extends Importer:
     case InfixApp(lhs: Ident, Keyword.`:`, rhs) =>
       Param(FldFlags.empty, fieldOrVarSym(ParamBind, lhs), S(term(rhs))) :: Nil
     case App(Ident(","), list) => params(list)._1
-    case TermDef(ImmutVal, _, S(inner), _) => param(inner)
+    case TermDef(ImmutVal, inner, _) => param(inner)
   
   def params(t: Tree): Ctxl[(Ls[Param], Ctx)] = t match
     case Tup(ps) =>

@@ -23,7 +23,7 @@ a, b, c
 
 class A, res
 //│ Parsed:
-//│ 	TypeDef(Cls,None,Ident(A),None,None)
+//│ 	TypeDef(Cls,Ident(A),None,None)
 //│ 	Ident(res)
 
 
@@ -87,23 +87,21 @@ let a = 1 in { 2, 3 }
 //│ 	LetLike(keyword 'let',Ident(a),Some(IntLit(1)),Some(Block(List(IntLit(2), IntLit(3)))))
 
 
+foo a
+//│ Parsed:
+//│ 	Jux(Ident(foo),Ident(a))
+
+
 
 // --- ERROR CASES ---
 
 :global
 :pe
 
-foo a
-//│ ╔══[PARSE ERROR] Expected end of input; found identifier instead
-//│ ║  l.96: 	foo a
-//│ ╙──      	    ^
-//│ Parsed:
-//│ 	Ident(foo)
-
 foo
   a
 //│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.104: 	  a
+//│ ║  l.102: 	  a
 //│ ╙──       	  ^
 //│ Parsed:
 //│ 	Ident(foo)
@@ -112,7 +110,7 @@ foo
   a
   b
 //│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.112: 	  a
+//│ ║  l.110: 	  a
 //│ ╙──       	  ^
 //│ Parsed:
 //│ 	Ident(foo)
@@ -121,7 +119,7 @@ foo
   a,
   b
 //│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.121: 	  a,
+//│ ║  l.119: 	  a,
 //│ ╙──       	  ^
 //│ Parsed:
 //│ 	Ident(foo)

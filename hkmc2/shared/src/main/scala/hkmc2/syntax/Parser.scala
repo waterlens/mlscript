@@ -516,7 +516,7 @@ abstract class Parser(
         case _ => unsupportedQuote(S(loc))
       }
     case (BRACKETS(Indent | Curly, _), loc) :: _ =>
-      err((msg"Expected an expression; found indented block instead" -> lastLoc :: Nil))
+      err((msg"Expected an expression; found block instead" -> lastLoc :: Nil))
       errExpr
     case (tok, loc) :: _ =>
       TODO(tok)

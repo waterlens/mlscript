@@ -54,7 +54,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
       // val nestedScp = codegen.js.Scope(S(baseScp), curCtx.outer, collection.mutable.Map.empty) // * not needed
       
       val je = nestedScp.givenIn:
-        jsb.program(le)
+        jsb.program(le, N)
       val jsStr = je.stripBreaks.mkString(100)
       if sjs.isSet then
         output(s"JS:")

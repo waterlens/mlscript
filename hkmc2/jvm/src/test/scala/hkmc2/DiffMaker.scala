@@ -102,7 +102,7 @@ abstract class DiffMaker:
   
   val tests = Command("tests"):
     case "" =>
-      new DiffTestRunner(new DiffTestRunner.State).execute()
+      new DiffTestRunner(new DiffTestRunner.State){}.execute()
   
   
   val fileName = file.last

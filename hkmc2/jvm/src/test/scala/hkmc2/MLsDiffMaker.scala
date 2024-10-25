@@ -5,13 +5,11 @@ import scala.collection.mutable
 import mlscript.utils.*, shorthands.*
 import utils.*
 
-import hkmc2.syntax.Keyword.all
-import hkmc2.semantics.MemberSymbol
 import hkmc2.semantics.Elaborator
-import hkmc2.syntax.Keyword.`override`
 
 
 abstract class MLsDiffMaker extends DiffMaker:
+  
   class DebugTreeCommand(name: Str) extends Command[Product => Str](name)(
     line => if line.contains("loc") then
       (t: Product) => t match

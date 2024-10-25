@@ -38,7 +38,7 @@ class ParseRule[+A](val name: Str)(val alts: Alt[A]*):
     alts.map:
       case Alt.Kw(kw) => s"'${kw.name}' keyword"
       case Alt.Expr(rest) => "expression"
-      case Alt.Blk(rest) => "indented block"
+      case Alt.Blk(rest) => "block"
       case Alt.End(_) => "end of input"
     .toList
     match

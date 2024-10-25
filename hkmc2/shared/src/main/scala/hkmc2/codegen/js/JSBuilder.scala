@@ -119,7 +119,7 @@ class JSBuilder extends CodeBuilder:
             ctorCode.stripBreaks
           } #}  # }${
             mtds.map: td =>
-              val vars = td.params.get.map(p => scope.allocateName(p.sym)).mkDocument(", ")
+              val vars = td.params.getOrElse(Nil).map(p => scope.allocateName(p.sym)).mkDocument(", ")
               doc" # ${td.sym.nme}($vars) { #{  # ${
                 body(td.body)
               } #}  # }"
@@ -190,12 +190,18 @@ class JSBuilder extends CodeBuilder:
     
     // case _ => ???
   
-  def program(p: Program)(using Raise, Scope): Document =
+  def program(p: Program, exprt: Opt[Str])(using Raise, Scope): Document =
     p.imports.foreach: i =>
       i._1 -> scope.allocateName(i._1)
     val imps = p.imports.map: i =>
-      doc"""this.${getVar(i._1)} = await import("${i._2.toString}");"""
-    imps.mkDocument(doc" # ") :/: block(p.main)
+      val v = doc"this.${getVar(i._1)}"
+      doc"""$v = await import("${i._2.toString
+        }"); # if ($v.default !== undefined) $v = $v.default;"""
+    imps.mkDocument(doc" # ") :/: block(p.main) :: (
+      exprt match
+        case S(e) => doc"\nexport default ${e};"
+        case N => doc""
+      )
   
   def block(t: Block)(using Raise, Scope): Document =
     if t.definedVars.isEmpty then returningTerm(t).stripBreaks else

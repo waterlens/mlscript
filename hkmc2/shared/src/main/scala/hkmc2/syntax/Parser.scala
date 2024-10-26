@@ -23,7 +23,7 @@ object Parser:
   private val MinPrec = 0
   private val NoElsePrec = MinPrec + 1
   
-  private val prec: Map[Char,Int] =
+  private val precOf: Map[Char,Int] =
     List(
       "", // `of` rhs
       ",",
@@ -53,18 +53,18 @@ object Parser:
   // private val CommaPrec = prec(',')
   private val CommaPrec = 0
   private val CommaPrecNext = CommaPrec + 1
-  private val AppPrec = prec('.') - 1
+  private val AppPrec = precOf('.') - 1
   private val PrefixOpsPrec = AppPrec - 1
   
-  final def opCharPrec(opChar: Char): Int = prec(opChar)
+  final def opCharPrec(opChar: Char): Int = precOf(opChar)
   final def opPrec(opStr: Str): (Int, Int) = opStr match {
     case "+." | "-." | "*." =>
-      (prec(opStr.head), prec(opStr.head))
+      (precOf(opStr.head), precOf(opStr.head))
     case _ if opStr.exists(_.isLetter) =>
       (Keyword.maxPrec.get, Keyword.maxPrec.get)
     case _ =>
       val r = opStr.last
-      (prec(opStr.head), prec(r) - (if r === '@' || r === '/' || r === ',' || r === ':' then 1 else 0))
+      (precOf(opStr.head), precOf(r) - (if r === '@' || r === '/' || r === ',' || r === ':' then 1 else 0))
   }
   val prefixOps: Set[Str] = Set("!", "+", "-", "~", "@")
   
@@ -112,7 +112,7 @@ abstract class Parser(
   protected var indent = 0
   private var _cur: Ls[TokLoc] = tokens
   
-  private def wrap[R](args: => Any)(mkRes: => R)(implicit l: Line, n: Name): R =
+  private def wrap[R](args: => Any)(using l: Line, n: Name)(mkRes: => R): R =
     printDbg(s"@ ${n.value}${args match {
       case it: Iterable[_] => it.mkString("(", ",", ")")
       case _: Product => args
@@ -182,7 +182,7 @@ abstract class Parser(
       case Nil => ()
     res
   
-  final def concludeWith[R](f: this.type => R): R =
+  final def concludeWith[R](using l: Line)(f: this.type => R): R = wrap(()):
     val res = f(this)
     cur.dropWhile(tk => (tk._1 === SPACE || tk._1 === NEWLINE) && { consume; true }) match
       case c @ (tk, tkl) :: _ =>
@@ -852,19 +852,34 @@ abstract class Parser(
                 err((msg"Expected ${rule.whatComesAfter} after ${rule.name}; found ${kw.name} instead" -> S(l0) :: Nil))
                 acc
           case _ => acc
-      case (IDENT(id, false), _) :: _
-      if prec < AppPrec && !Keyword.all.contains(id) =>
-        exprCont(Jux(acc, expr(AppPrec, allowNewlines)), prec, allowNewlines)
-      case (tok, _) :: _ =>
-        printDbg(s"stops at ${tok.toString}")
-        acc
-      case Nil =>
-        printDbg(s"stops at the end of input")
-        acc
+      case _ =>
+        exprJux(acc, prec, allowNewlines = false)
   
-
-
   
+  final def exprJux(acc: Tree, prec: Int, allowNewlines: Bool)(using Line): Tree =
+    wrap(prec, s"`$acc`", allowNewlines)(exprJuxImpl(acc, prec, allowNewlines))
+  
+  final def exprJuxImpl(acc: Tree, prec: Int, allowNewlines: Bool): Tree =
+    cur match
+    case (NEWLINE, _) :: _ if allowNewlines =>
+      consume
+      exprJux(acc, prec, allowNewlines)
+    case (IDENT(id, false), _) :: _
+    if prec < AppPrec && !Keyword.all.contains(id) =>
+      val res = exprCont(Jux(acc, expr(AppPrec, allowNewlines)), prec, allowNewlines)
+      exprJux(res, prec, allowNewlines)
+    case (br @ BRACKETS(Curly | Indent, toks @ (IDENT(id, false), _) :: _), _) :: _
+    if prec < AppPrec && !Keyword.all.contains(id) =>
+      consume
+      val res = rec(toks, S(br.innerLoc), br.describe).concludeWith:
+        _.exprJux(acc, prec, allowNewlines = true)
+      exprCont(res, prec, allowNewlines = true)
+    case (tok, _) :: _ =>
+      printDbg(s"stops at ${tok.toString}")
+      acc
+    case Nil =>
+      printDbg(s"stops at the end of input")
+      acc  
 
 
 

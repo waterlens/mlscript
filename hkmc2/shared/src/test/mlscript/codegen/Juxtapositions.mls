@@ -31,44 +31,138 @@ inc(42) inc() log()
 
 fun add(x, y) = x + y
 
-42 add(1)
-//│ = 43
-
-42 add(1) inc()
+42 add(2)
 //│ = 44
+
+42 add(2) inc()
+//│ = 45
 
 :w
 42
-add(1)
+add(2)
 //│ ╔══[WARNING] Pure expression in statement position
 //│ ║  l.41: 	42
 //│ ╙──      	^^
 //│ = NaN
 
-:todo
-42
-  add(1)
-//│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.50: 	  add(1)
-//│ ╙──      	  ^^^
-//│ = 42
 
-:todo
+42 add(2) + 1
+//│ = 45
+
+42 add(2) * 1 add(1)
+//│ = 88
+
+
 42
-  add(1)
+  add(2)
+//│ = 44
+
+42
+  add(2)
   inc()
+//│ = 45
+
+
+42 { inc() }
+//│ = 43
+
+42 { inc() }
+  inc()
+//│ = 44
+
+42 { add(2) } inc()
+//│ = 45
+
+42 { add(2) inc() }
+//│ = 45
+
+42 { add(2) } { inc() }
+//│ = 45
+
+:pe
+42 { add(2) { inc() } }
 //│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.58: 	  add(1)
-//│ ╙──      	  ^^^
-//│ = 42
+//│ ║  l.83: 	42 { add(2) { inc() } }
+//│ ╙──      	              ^^^
+//│ = 44
+
+
+42
+  inc() * 1
+    add(2)
+//│ = 129
+
+:pe
+42
+  inc()
+    add(2)
+//│ ╔══[PARSE ERROR] Unexpected identifier here
+//│ ║  l.98: 	    add(2)
+//│ ╙──      	    ^^^
+//│ = 43
+
+
+// :dp
+42
+  inc() + 1
+//│ = 44
+
+42
+  add(2) + 1
+  inc()
+//│ = 46
+
+42
+  add(2)
+  inc() + 1
+//│ = 46
+
+2 * 2
+  inc()
+  inc()
+//│ = 8
+
+(2 * 2)
+  inc()
+  inc()
+//│ = 6
+
+(2 * 2
+  inc()) inc()
+//│ = 7
+
+// FIXME
+(2 * 2
+  inc())
+  inc()
+//│ = NaN
+
+:fixme
+(2 * 2
+  inc())
+inc()
+//│ ╔══[PARSE ERROR] Unexpected closing indentation
+//│ ║  l.142: 	  inc())
+//│ ║         	        ^
+//│ ║  l.143: 	inc()
+//│ ╙──       	
+//│ = NaN
+
+
+42
+  console.log()
+"Done."
+  console.log()
+//│ > 42
+//│ > Done.
 
 
 
 :e
 42 console.log
 //│ ╔══[ERROR] Illegal juxtaposition right-hand side.
-//│ ║  l.68: 	42 console.log
-//│ ╙──      	   ^^^^^^^
+//│ ║  l.162: 	42 console.log
+//│ ╙──       	   ^^^^^^^
 //│ = 42
 
 

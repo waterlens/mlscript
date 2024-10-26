@@ -91,6 +91,17 @@ foo a
 //│ Parsed:
 //│ 	Jux(Ident(foo),Ident(a))
 
+foo
+  a
+//│ Parsed:
+//│ 	Jux(Ident(foo),Ident(a))
+
+foo
+  a
+  b
+//│ Parsed:
+//│ 	Jux(Jux(Ident(foo),Ident(a)),Ident(b))
+
 
 
 // --- ERROR CASES ---
@@ -99,30 +110,13 @@ foo a
 :pe
 
 foo
-  a
-//│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.102: 	  a
-//│ ╙──       	  ^
-//│ Parsed:
-//│ 	Ident(foo)
-
-foo
-  a
-  b
-//│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.110: 	  a
-//│ ╙──       	  ^
-//│ Parsed:
-//│ 	Ident(foo)
-
-foo
   a,
   b
-//│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.119: 	  a,
-//│ ╙──       	  ^
+//│ ╔══[PARSE ERROR] Unexpected comma here
+//│ ║  l.113: 	  a,
+//│ ╙──       	   ^
 //│ Parsed:
-//│ 	Ident(foo)
+//│ 	Jux(Ident(foo),Ident(a))
 
 
 

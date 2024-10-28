@@ -73,33 +73,67 @@ add(2)
 42 { add(2) } inc()
 //│ = 45
 
-42 { add(2) inc() }
-//│ = 45
-
 42 { add(2) } { inc() }
 //│ = 45
 
-:pe
+42 { add(2), inc() }
+//│ = 45
+
+:e
+42 { add(2) inc() }
+//│ ╔══[ERROR] Illegal juxtaposition right-hand side.
+//│ ║  l.83: 	42 { add(2) inc() }
+//│ ╙──      	     ^^^^^^^^^^^^
+//│ = 42
+
+:e
 42 { add(2) { inc() } }
-//│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.83: 	42 { add(2) { inc() } }
-//│ ╙──      	              ^^^
-//│ = 44
+//│ ╔══[ERROR] Illegal juxtaposition right-hand side.
+//│ ║  l.90: 	42 { add(2) { inc() } }
+//│ ╙──      	     ^^^^^^^^^^^^^^
+//│ = 42
 
+2 * 2
+  inc()
+//│ = 6
 
+:pt
+inc(2) * 2
+  inc()
+//│ Parsed tree:
+//│ App:
+//│   lhs = Ident of "*"
+//│   rhs = Tup of Ls of 
+//│     App:
+//│       lhs = Ident of "inc"
+//│       rhs = Tup of Ls of 
+//│         IntLit of 2
+//│     Jux:
+//│       lhs = IntLit of 2
+//│       rhs = Block of Ls of 
+//│         App:
+//│           lhs = Ident of "inc"
+//│           rhs = Tup of Nil
+//│ = 9
+
+// :pt
+// :elt
+// :sjs
 42
   inc() * 1
     add(2)
 //│ = 129
 
-:pe
+:e
 42
   inc()
     add(2)
-//│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.98: 	    add(2)
-//│ ╙──      	    ^^^
-//│ = 43
+//│ ╔══[ERROR] Illegal juxtaposition right-hand side.
+//│ ║  l.129: 	  inc()
+//│ ║         	  ^^^^^
+//│ ║  l.130: 	    add(2)
+//│ ╙──       	^^^^^^^^^^
+//│ = 42
 
 
 // :dp
@@ -142,9 +176,9 @@ add(2)
   inc())
 inc()
 //│ ╔══[PARSE ERROR] Unexpected closing indentation
-//│ ║  l.142: 	  inc())
+//│ ║  l.176: 	  inc())
 //│ ║         	        ^
-//│ ║  l.143: 	inc()
+//│ ║  l.177: 	inc()
 //│ ╙──       	
 //│ = NaN
 
@@ -161,7 +195,7 @@ inc()
 :e
 42 console.log
 //│ ╔══[ERROR] Illegal juxtaposition right-hand side.
-//│ ║  l.162: 	42 console.log
+//│ ║  l.196: 	42 console.log
 //│ ╙──       	   ^^^^^^^
 //│ = 42
 

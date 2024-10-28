@@ -51,6 +51,8 @@ class Lowering(using TL, Raise, Elaborator.State):
       k(Value.Lit(lit))
     case st.Ret(res) =>
       returnedTerm(res)
+    case st.Asc(lhs, rhs) =>
+      term(lhs)(k)
     case st.Tup(fs) =>
       fs.foldRight[Ls[Path] => Block](args => k(Value.Arr(args.reverse)))((a, acc) =>
         args => subTerm(a.value)(r => acc(r :: args))

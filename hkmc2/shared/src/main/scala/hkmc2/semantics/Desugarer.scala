@@ -155,7 +155,8 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
    *          accepts a context with additional bindings from the enclosing
    *          matches and splits
    */
-  def termSplit(tree: Tree, finish: Term => Term): Split => Sequel = tree match
+  def termSplit(tree: Tree, finish: Term => Term): Split => Sequel =
+    tree match
     case Block(branches) =>
       branches.foldRight(default): (t, elabFallback) =>
         t match
@@ -259,9 +260,9 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
             raise(ErrorReport(msg"Unrecognized operator branch." -> op.toLoc :: Nil))
             elabFallback(ctx)
     case _ => fallback => _ =>
-      raise(ErrorReport(msg"Unrecognized term split." -> tree.toLoc :: Nil))
-      fallback
-
+      raise(ErrorReport(msg"Unrecognized term split (${tree.describe})." -> tree.toLoc :: Nil))
+      fallback.withoutLoc // Hacky... a loc is always added for the result
+  
   /** Given a elaborated scrutinee, give it a name and add it to the context.
    *  @param baseCtx the context to be extended with the new symbol
    *  @param scrutinee the elaborated scrutinee

@@ -5,7 +5,27 @@ import collection.mutable
 import mlscript.utils.*, shorthands.*
 
 
-class Keyword(val name: String, val leftPrec: Opt[Int], val rightPrec: Opt[Int]):
+class Keyword(
+    val name: String,
+    val leftPrec: Opt[Int],
+    val rightPrec: Opt[Int],
+    
+    /** If the operator can be used infix, can it be done on a newline (witth no indent)?
+        For instance, if `via` has `canStartInfixOnNewLine`, then one can write:
+          foo
+          via f
+          via g
+        But `is` does not have `canStartInfixOnNewLine` so that
+          if x
+            is A then foo
+            is B then bar
+        does not parse as
+          if x { is A then foo { is B then ... } }
+        Note: Currently, this just fails to parse.
+        We should probably rather make `is` a normal operator like `+`; then it would work.
+      */
+    val canStartInfixOnNewLine: Bool = true
+):
   Keyword.all += name -> this
   def assumeLeftPrec: Int = leftPrec.getOrElse(lastWords(s"$this does not have left precedence"))
   def assumeRightPrec: Int = rightPrec.getOrElse(lastWords(s"$this does not have right precedence"))
@@ -49,7 +69,7 @@ object Keyword:
   val `of` = Keyword("of", N, N)
   val `or` = Keyword("or", nextPrec, curPrec)
   val `and` = Keyword("and", nextPrec, nextPrec)
-  val `is` = Keyword("is", nextPrec, curPrec)
+  val `is` = Keyword("is", nextPrec, curPrec, canStartInfixOnNewLine = false)
   val `let` = Keyword("let", nextPrec, curPrec)
   val `region` = Keyword("region", curPrec, curPrec)
   val `rec` = Keyword("rec", N, N)
@@ -70,6 +90,7 @@ object Keyword:
   val `new` = Keyword("new", N, curPrec) // TODO: check the prec
   // val `namespace` = Keyword("namespace", N, N)
   val `module` = Keyword("module", N, N)
+  val `open` = Keyword("open", N, curPrec)
   val `type` = Keyword("type", N, N)
   val `where` = Keyword("where", N, N)
   val `forall` = Keyword("forall", N, N)

@@ -41,13 +41,34 @@ fun f(x, y, z) = if x then y else z
 //│       modLoc = N
 //│       body = Ident of "z"
 
-:pe
+fun f(x, y, z) =
+  if x
+    then y
+    else z
+//│ Parsed tree:
+//│ TermDef:
+//│   k = Fun
+//│   head = App:
+//│     lhs = Ident of "f"
+//│     rhs = Tup of Ls of 
+//│       Ident of "x"
+//│       Ident of "y"
+//│       Ident of "z"
+//│   rhs = S of Block of Ls of 
+//│     If of Block of Ls of 
+//│       InfixApp:
+//│         lhs = Ident of "x"
+//│         kw = keyword 'then'
+//│         rhs = Ident of "y"
+//│       Modified:
+//│         modifier = keyword 'else'
+//│         modLoc = N
+//│         body = Ident of "z"
+
+// :pe
 fun f(x, y, z) = if x
                  then y
                  else z
-//│ ╔══[PARSE ERROR] Unexpected 'then' keyword here
-//│ ║  l.46: 	                 then y
-//│ ╙──      	                 ^^^^
 //│ Parsed tree:
 //│ TermDef:
 //│   k = Fun
@@ -57,14 +78,19 @@ fun f(x, y, z) = if x
 //│       Ident of "x"
 //│       Ident of "y"
 //│       Ident of "z"
-//│   rhs = S of If of Ident of "x"
+//│   rhs = S of If of Block of Ls of 
+//│     InfixApp:
+//│       lhs = Ident of "x"
+//│       kw = keyword 'then'
+//│       rhs = Ident of "y"
+//│     Modified:
+//│       modifier = keyword 'else'
+//│       modLoc = N
+//│       body = Ident of "z"
 
-:pe
+// :pe
 fun f(x, y, z) = if x then y
   else z
-//│ ╔══[PARSE ERROR] Unexpected 'else' keyword here
-//│ ║  l.64: 	  else z
-//│ ╙──      	  ^^^^
 //│ Parsed tree:
 //│ TermDef:
 //│   k = Fun
@@ -74,10 +100,15 @@ fun f(x, y, z) = if x then y
 //│       Ident of "x"
 //│       Ident of "y"
 //│       Ident of "z"
-//│   rhs = S of If of InfixApp:
-//│     lhs = Ident of "x"
-//│     kw = keyword 'then'
-//│     rhs = Ident of "y"
+//│   rhs = S of If of Block of Ls of 
+//│     InfixApp:
+//│       lhs = Ident of "x"
+//│       kw = keyword 'then'
+//│       rhs = Ident of "y"
+//│     Modified:
+//│       modifier = keyword 'else'
+//│       modLoc = N
+//│       body = Ident of "z"
 
 fun f(x, y, z) = if
   x then y
@@ -150,38 +181,9 @@ fun f(x, y, z) =
 //│         modLoc = N
 //│         body = Ident of "z"
 
-:pe
 fun f(x, y, z) =
-  if x
-  then y
-  else z
-//│ ╔══[PARSE ERROR] Expected 'let' keyword, 'set' keyword, 'new' keyword, 'in' keyword, 'if' keyword, 'else' keyword, 'case' keyword, 'region' keyword, 'fun' keyword, 'val' keyword, 'type' keyword, 'class' keyword, 'trait' keyword, 'module' keyword, 'abstract' keyword, 'mut' keyword, 'virtual' keyword, 'override' keyword, 'declare' keyword, 'public' keyword, 'private' keyword, 'out' keyword, 'return' keyword, 'import' keyword, expression, 'true' keyword, or 'false' keyword after start of statement; found 'then' keyword instead
-//│ ║  l.156: 	  then y
-//│ ╙──       	  ^^^^
-//│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.156: 	  then y
-//│ ╙──       	       ^
-//│ Parsed tree:
-//│ TermDef:
-//│   k = Fun
-//│   head = App:
-//│     lhs = Ident of "f"
-//│     rhs = Tup of Ls of 
-//│       Ident of "x"
-//│       Ident of "y"
-//│       Ident of "z"
-//│   rhs = S of Block of Ls of 
-//│     If of Ident of "x"
-//│     Error
-
-:pe
-fun f(x, y, z) =
-  if x
-    then y
+  if x then y
     else z
-//│ ╔══[PARSE ERROR] Unexpected 'then' keyword here
-//│ ║  l.180: 	    then y
-//│ ╙──       	    ^^^^
 //│ Parsed tree:
 //│ TermDef:
 //│   k = Fun
@@ -191,25 +193,102 @@ fun f(x, y, z) =
 //│       Ident of "x"
 //│       Ident of "y"
 //│       Ident of "z"
-//│   rhs = S of Block of Ls of 
-//│     If of Ident of "x"
-
-:fixme
-fun f() =
-  if
-    x then y else z
-//│ ╔══[PARSE ERROR] Unexpected 'else' keyword here
-//│ ║  l.200: 	    x then y else z
-//│ ╙──       	             ^^^^
-//│ Parsed tree:
-//│ TermDef:
-//│   k = Fun
-//│   head = App:
-//│     lhs = Ident of "f"
-//│     rhs = Tup of Nil
 //│   rhs = S of Block of Ls of 
 //│     If of Block of Ls of 
 //│       InfixApp:
 //│         lhs = Ident of "x"
 //│         kw = keyword 'then'
 //│         rhs = Ident of "y"
+//│       Modified:
+//│         modifier = keyword 'else'
+//│         modLoc = N
+//│         body = Ident of "z"
+
+fun f(x, y, z) =
+  if x
+  then y
+  else z
+//│ Parsed tree:
+//│ TermDef:
+//│   k = Fun
+//│   head = App:
+//│     lhs = Ident of "f"
+//│     rhs = Tup of Ls of 
+//│       Ident of "x"
+//│       Ident of "y"
+//│       Ident of "z"
+//│   rhs = S of Block of Ls of 
+//│     If of Block of Ls of 
+//│       InfixApp:
+//│         lhs = Ident of "x"
+//│         kw = keyword 'then'
+//│         rhs = Ident of "y"
+//│       Modified:
+//│         modifier = keyword 'else'
+//│         modLoc = N
+//│         body = Ident of "z"
+
+fun f(x, y, z) =
+  if x
+    then y
+    else z
+//│ Parsed tree:
+//│ TermDef:
+//│   k = Fun
+//│   head = App:
+//│     lhs = Ident of "f"
+//│     rhs = Tup of Ls of 
+//│       Ident of "x"
+//│       Ident of "y"
+//│       Ident of "z"
+//│   rhs = S of Block of Ls of 
+//│     If of Block of Ls of 
+//│       InfixApp:
+//│         lhs = Ident of "x"
+//│         kw = keyword 'then'
+//│         rhs = Ident of "y"
+//│       Modified:
+//│         modifier = keyword 'else'
+//│         modLoc = N
+//│         body = Ident of "z"
+
+:fixme
+fun f(x, y, z) =
+  if
+    x then y else z
+//│ ╔══[PARSE ERROR] Unexpected 'else' keyword here
+//│ ║  l.258: 	    x then y else z
+//│ ╙──       	             ^^^^
+//│ Parsed tree:
+//│ TermDef:
+//│   k = Fun
+//│   head = App:
+//│     lhs = Ident of "f"
+//│     rhs = Tup of Ls of 
+//│       Ident of "x"
+//│       Ident of "y"
+//│       Ident of "z"
+//│   rhs = S of Block of Ls of 
+//│     If of Block of Ls of 
+//│       InfixApp:
+//│         lhs = Ident of "x"
+//│         kw = keyword 'then'
+//│         rhs = Ident of "y"
+
+
+fun f(x, y) =
+  if x
+    then y
+//│ Parsed tree:
+//│ TermDef:
+//│   k = Fun
+//│   head = App:
+//│     lhs = Ident of "f"
+//│     rhs = Tup of Ls of 
+//│       Ident of "x"
+//│       Ident of "y"
+//│   rhs = S of Block of Ls of 
+//│     If of InfixApp:
+//│       lhs = Ident of "x"
+//│       kw = keyword 'then'
+//│       rhs = Ident of "y"

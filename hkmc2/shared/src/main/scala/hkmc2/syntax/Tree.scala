@@ -52,6 +52,7 @@ enum Tree extends AutoLocated:
   case Def(lhs: Tree, rhs: Tree)
   case TermDef(k: TermDefKind, head: Tree, rhs: Opt[Tree]) extends Tree with TermDefImpl
   case TypeDef(k: TypeDefKind, head: Tree, extension: Opt[Tree], body: Opt[Tree]) extends Tree with TypeDefImpl
+  case Open(body: Tree)
   case Modified(modifier: Keyword, modLoc: Opt[Loc], body: Tree)
   case Quoted(body: Tree)
   case Unquoted(body: Tree)
@@ -96,6 +97,7 @@ enum Tree extends AutoLocated:
     case Effectful(eff, body) => eff :: body :: Nil
     case TyTup(tys) => tys
     case Sel(prefix, name) => prefix :: Nil
+    case Open(bod) => bod :: Nil
   
   def describe: Str = this match
     case Empty() => "empty"

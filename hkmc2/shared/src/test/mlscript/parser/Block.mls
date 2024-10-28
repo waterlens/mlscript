@@ -94,13 +94,19 @@ foo a
 foo
   a
 //│ Parsed:
-//│ 	Jux(Ident(foo),Ident(a))
+//│ 	Jux(Ident(foo),Block(List(Ident(a))))
 
 foo
   a
   b
 //│ Parsed:
-//│ 	Jux(Jux(Ident(foo),Ident(a)),Ident(b))
+//│ 	Jux(Ident(foo),Block(List(Ident(a), Ident(b))))
+
+foo
+  a,
+  b
+//│ Parsed:
+//│ 	Jux(Ident(foo),Block(List(Ident(a), Ident(b))))
 
 
 
@@ -108,15 +114,6 @@ foo
 
 :global
 :pe
-
-foo
-  a,
-  b
-//│ ╔══[PARSE ERROR] Unexpected comma here
-//│ ║  l.113: 	  a,
-//│ ╙──       	   ^
-//│ Parsed:
-//│ 	Jux(Ident(foo),Ident(a))
 
 
 

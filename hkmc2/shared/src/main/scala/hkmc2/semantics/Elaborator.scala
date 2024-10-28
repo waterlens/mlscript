@@ -243,13 +243,34 @@ extends Importer:
       raise(ErrorReport(msg"Illegal position for '${kw.name}' modifier." -> kwLoc :: Nil))
       term(body)
     case Jux(lhs, rhs) =>
-      rhs match
-      case ap @ App(f, tup @ Tup(args)) =>
-        val sym = FlowSymbol("‹app-res›", nextUid)
-        Term.App(term(f), Term.Tup(fld(lhs) :: args.map(fld))(tup))(ap, sym)
-      case _ =>
-        raise(ErrorReport(msg"Illegal juxtaposition right-hand side." -> rhs.toLoc :: Nil))
-        term(lhs)
+      def go(acc: Term, trees: Ls[Tree]): Term =
+        trees match
+        case Nil => acc
+        
+        // * FIXME this `f.name.head.isLetter` test is a big hack...
+        // * TODO would be better to keep the fixity of applications part of the Tree repr.
+        case (ap @ App(f: Ident, tup @ Tup(lhs :: args))) :: trees if !f.name.head.isLetter =>
+          val res = go(acc, lhs :: Nil)
+          val sym = FlowSymbol("‹app-res›", nextUid)
+          val fl = Fld(FldFlags.empty, res, N)
+          val app = Term.App(term(f), Term.Tup(
+            fl :: args.map(fld))(tup))(ap, sym)
+          go(app, trees)
+        case (ap @ App(f, tup @ Tup(args))) :: trees =>
+          val sym = FlowSymbol("‹app-res›", nextUid)
+          go(Term.App(term(f),
+              Term.Tup(Fld(FldFlags.empty, acc, N) :: args.map(fld))(tup)
+            )(ap, sym), trees)
+        case Block(sts) :: trees =>
+          go(acc, sts ::: trees)
+        case tree :: trees =>
+          raise(ErrorReport(msg"Illegal juxtaposition right-hand side." -> tree.toLoc :: Nil))
+          go(acc, trees)
+      
+      go(term(lhs), rhs :: Nil)
+    case Open(body) =>
+      raise(ErrorReport(msg"Illegal position for 'open' statement." -> tree.toLoc :: Nil))
+      Term.Error
     // case _ =>
     //   ???
   
@@ -260,14 +281,23 @@ extends Importer:
   
   def unit: Term.Lit = Term.Lit(UnitLit(true))
   
+  
+  
+  
   def block(_sts: Ls[Tree])(using c: Ctx): (Term.Blk, Ctx) = trace[(Term.Blk, Ctx)](
     pre = s"Elab block ${_sts.toString.truncate(30, "[...]")} ${ctx.outer}", r => s"~> ${r._1}"
   ):
+    
     val sts = _sts.map(_.desugared)
     val newMembers = mutable.Map.empty[Str, MemberSymbol[?]] // * Definitions with implementations
     val newSignatures = mutable.Map.empty[Str, MemberSymbol[?]] // * Definitions containing only signatures
     val newSignatureTrees = mutable.Map.empty[Str, Tree] // * Store trees of signatures, passing them to definition objects
+    
     @tailrec def preprocessStatement(statement: Tree): Unit = statement match
+      case Open(body) =>
+        body match
+        case _ =>
+          raise(ErrorReport(msg"Illegal 'open' statement shape." -> body.toLoc :: Nil))
       case td: TermDef =>
         log(s"Found TermDef ${td.name}")
         td.name match
@@ -327,16 +357,20 @@ extends Importer:
         preprocessStatement(body)
       case tree =>
         log(s"Found something else $tree")
-    sts.foreach(preprocessStatement)      
+    end preprocessStatement
+    sts.foreach(preprocessStatement)
+    
     newSignatures.foreach:
       case (name, sym) =>
         if !newMembers.contains(name) then
           newMembers += name -> sym
+    
     @tailrec
     def go(sts: Ls[Tree], acc: Ls[Statement]): Ctxl[(Term.Blk, Ctx)] = sts match
       case Nil =>
         val res = unit
         (Term.Blk(acc.reverse, res), ctx)
+      case Open(_) :: sts => go(sts, acc)
       case (m @ Modified(Keyword.`import`, absLoc, arg)) :: sts =>
         val (newCtx, newAcc) = arg match
           case Tree.StrLit(path) =>
@@ -450,6 +484,7 @@ extends Importer:
             processHead(derived)
           case Jux(lhs, rhs) =>
             processHead(rhs)
+          // case _ => ???
 
           // case _ => ???
         val (nme, _, _, _) = processHead(head) // ! FIXME dumb!!!! recomputation
@@ -492,11 +527,14 @@ extends Importer:
       case (st: Tree) :: sts =>
         val res = term(st) // TODO reject plain term statements? Currently, `(1, 2)` is allowed to elaborate (tho it should be rejected in type checking later)
         go(sts, res :: acc)
+    end go
+    
     c.copy(members = c.members ++ newMembers).givenIn:
       sts match
         case (_: TermDef | _: TypeDef) :: _ => go(sts, Nil)
         // case s :: Nil => (term(s), ctx)
         case _ => go(sts, Nil)
+  
   
   def fieldOrVarSym(k: TermDefKind, id: Ident)(using Ctx): LocalSymbol & NamedSymbol =
     if ctx.outer.isDefined then TermSymbol(k, ctx.outer, id)

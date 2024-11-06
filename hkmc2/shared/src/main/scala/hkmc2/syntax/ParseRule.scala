@@ -258,10 +258,17 @@ object ParseRule:
     modified(`return`),
     modified(`import`), // TODO improve – only allow strings
     // modified(`type`),
+    singleKw(`true`)(BoolLit(true)),
+    singleKw(`false`)(BoolLit(false)),
+    singleKw(`undefined`)(UnitLit(true)),
+    singleKw(`null`)(UnitLit(false)),
+    singleKw(`this`)(Ident("this")),
     standaloneExpr,
-    Kw(`true`)(ParseRule("'true' keyword")(End(BoolLit(true)))),
-    Kw(`false`)(ParseRule("'false' keyword")(End(BoolLit(false)))),
   )
+  
+  def singleKw[T](kw: Keyword)(v: T): Alt[T] =
+    Kw(kw)(ParseRule(s"'${kw.name}' keyword")(End(v)))
+  
   
   val prefixRulesAllowIndentedBlock: ParseRule[Tree] =
     ParseRule(prefixRules.name)(prefixRules.alts :+ 

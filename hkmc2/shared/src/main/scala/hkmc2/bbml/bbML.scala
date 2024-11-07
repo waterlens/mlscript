@@ -287,7 +287,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
       val res = freshVar(using ctx)
       constrain(bodyCtx, sk | res)
       (bodyTy, rhsCtx | res, rhsEff | bodyEff)
-    case Term.If(Split.Cons(Branch(cond, Pattern.LitPat(BoolLit(true)), Split.Else(cons)), Split.Else(alts))) =>
+    case Term.IfLike(Keyword.`if`, Split.Cons(Branch(cond, Pattern.LitPat(BoolLit(true)), Split.Else(cons)), Split.Else(alts))) =>
       val (condTy, condCtx, condEff) = typeCode(cond)
       val (consTy, consCtx, consEff) = typeCode(cons)
       val (altsTy, altsCtx, altsEff) = typeCode(alts)
@@ -373,7 +373,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
       given Ctx = nextCtx
       constrain(ascribe(term, skolemize(pt))._2, Bot) // * never generalize terms with effects
       (pt, Bot)
-    case (Term.If(branches), ty) => // * propagate
+    case (Term.IfLike(Keyword.`if`, branches), ty) => // * propagate
       typeSplit(branches, S(ty))
     case (Term.Asc(term, ty), rhs) =>
       ascribe(term, typeType(ty))
@@ -536,7 +536,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
       case Term.Asc(term, ty) =>
         val res = typeType(ty)(using ctx)
         ascribe(term, res)
-      case Term.If(branches) => typeSplit(branches, N)
+      case Term.IfLike(Keyword.`if`, branches) => typeSplit(branches, N)
       case Term.Region(sym, body) =>
         val nestCtx = ctx.nextLevel
         given Ctx = nestCtx

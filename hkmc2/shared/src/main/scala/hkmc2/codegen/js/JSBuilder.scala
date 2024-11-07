@@ -203,6 +203,18 @@ class JSBuilder extends CodeBuilder:
     
     case Throw(res) =>
       doc" # throw ${result(res)}"
+    
+    case Break(lbl, false) =>
+      doc" # break ${getVar(lbl)}"
+    
+    case Break(lbl, true) =>
+      doc" # continue ${getVar(lbl)}"
+    
+    case Label(lbl, bod, rst) =>
+      scope.allocateName(lbl)
+      doc" # ${getVar(lbl)}: while (true) { #{ ${
+        returningTerm(bod)
+      } # break; #}  # }${returningTerm(rst)}"
       
     case TryBlock(sub, fin, rst) =>
       doc" # try { #{ ${returningTerm(sub)

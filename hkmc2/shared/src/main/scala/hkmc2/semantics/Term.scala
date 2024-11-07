@@ -16,7 +16,7 @@ enum Term extends Statement:
   case TyApp(lhs: Term, targs: Ls[Term])
   case Sel(prefix: Term, nme: Tree.Ident)
   case Tup(fields: Ls[Fld])(val tree: Tree.Tup)
-  case If(desugared: Split)(val normalized: Split)
+  case IfLike(kw: Keyword.`if`.type | Keyword.`while`.type, desugared: Split)(val normalized: Split)
   case Lam(params: Ls[Param], body: Term)
   case FunTy(lhs: Term, rhs: Term, eff: Opt[Term])
   case Forall(tvs: Ls[QuantVar], body: Term)
@@ -63,7 +63,8 @@ enum Term extends Statement:
     case TyApp(lhs, targs) => "type application"
     case Sel(pre, nme) => "selection"
     case Tup(fields) => "tuple literal"
-    case If(body) => "`if` expression"
+    case IfLike(Keyword.`if`, body) => "`if` expression"
+    case IfLike(Keyword.`while`, body) => "`while` expression"
     case Lam(params, body) => "function literal"
     case FunTy(lhs, rhs, eff) => "function type"
     case Forall(tvs, body) => "universal quantification"
@@ -95,7 +96,7 @@ sealed trait Statement extends AutoLocated:
     case TyApp(pre, tarsg) => pre :: tarsg
     case Sel(pre, _) => pre :: Nil
     case Tup(fields) => fields.map(_.value)
-    case If(body) => Nil // TODO
+    case IfLike(_, body) => Nil // TODO
     case Lam(params, body) => body :: Nil
     case Blk(stats, res) => stats.flatMap(_.subTerms) ::: res :: Nil
     case Quoted(term) => term :: Nil
@@ -158,7 +159,7 @@ sealed trait Statement extends AutoLocated:
     case Forall(tvs, body) => s"forall ${tvs.mkString(", ")}: ${body.toString}"
     case WildcardTy(in, out) => s"in ${in.map(_.toString).getOrElse("⊥")} out ${out.map(_.toString).getOrElse("⊤")}"
     case Sel(pre, nme) => s"${pre.showDbg}.${nme.name}"
-    case If(body) => s"if { ${body.showDbg} }"
+    case IfLike(kw, body) => s"${kw.name} { ${body.showDbg} }"
     case Lam(params, body) => s"λ${params.map(_.showDbg).mkString(", ")}. ${body.showDbg}"
     case Blk(stats, res) =>
       (stats.map(_.showDbg + "; ") :+ (res match { case Lit(Tree.UnitLit(true)) => "" case x => x.showDbg + " " }))

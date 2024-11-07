@@ -159,6 +159,33 @@ object ParseRule:
         // ) { case (lhs, body) => Let(lhs, lhs, body) }
       )
   
+  def ifLike(kw: `if`.type | `while`.type): Alt[Tree] =
+    Kw(kw):
+      ParseRule(s"'${kw.name}' keyword")(
+        Expr(
+          ParseRule(s"'${kw.name}' expression")(
+            End(N),
+            Kw(`else`):
+              ParseRule(s"`else` keyword")(
+                exprOrBlk(ParseRule(s"`else` expression")(End(()))):
+                  case (body, _) => S(body)
+                *
+              )
+          )
+        ):
+          case (split, S(default)) =>
+            val clause = Modified(`else`, N/* TODO */, default)
+            val items = split match
+              case Block(stmts) => stmts.appended(clause)
+              case _ => split :: clause :: Nil
+            IfLike(kw, Block(items))
+          case (split, N) => IfLike(kw, split)
+        ,
+        Blk(
+          ParseRule(s"'${kw.name}' block")(End(()))
+        ) { case (body, _) => IfLike(kw, body) }
+      )
+  
   val prefixRules: ParseRule[Tree] = ParseRule("start of statement", omitAltsStr = true)(
     letLike(`let`),
     letLike(`set`),
@@ -178,32 +205,8 @@ object ParseRule:
           case (lhs, S(rhs)) => Tup(Tree.Modified(`in`, N/* TODO */, lhs) :: rhs :: Nil)
         }
     ,
-    Kw(`if`):
-      ParseRule("`if` keyword")(
-        Expr(
-          ParseRule("`if` expression")(
-            End(N),
-            Kw(`else`):
-              ParseRule(s"`else` keyword")(
-                exprOrBlk(ParseRule(s"`else` expression")(End(()))):
-                  case (body, _) => S(body)
-                *
-              )
-          )
-        ):
-          case (split, S(default)) =>
-            val clause = Modified(`else`, N/* TODO */, default)
-            val items = split match
-              case Block(stmts) => stmts.appended(clause)
-              case _ => split :: clause :: Nil
-            If(Block(items))
-          case (split, N) => If(split)
-        ,
-        Blk(
-          ParseRule("`if` block")(End(()))
-        ) { case (body, _) => If(body) }
-      )
-    ,
+    ifLike(`if`),
+    ifLike(`while`),
     Kw(`else`):
       ParseRule("`else` clause")(
         Expr(ParseRule("`else` expression")(End(()))):

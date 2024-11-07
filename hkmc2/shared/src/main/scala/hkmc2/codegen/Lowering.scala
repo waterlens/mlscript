@@ -204,31 +204,39 @@ class Lowering(using TL, Raise, Elaborator.State):
             )
     */
     
-    case iftrm: st.If =>
+    case iftrm: st.IfLike =>
       
-      tl.log(s"If $iftrm")
+      tl.log(s"${iftrm.kw} $iftrm")
+      
+      val isIf = iftrm.kw match
+        case syntax.Keyword.`if` => true
+        case syntax.Keyword.`while` => false
+      val isWhile = !isIf
       
       var usesResTmp = false
       lazy val l =
         usesResTmp = true
         new TempSymbol(summon[Elaborator.State].nextUid, S(t))
       
-      def go(split: Split)(using Subst): Block = split match
+      lazy val lbl =
+        new TempSymbol(summon[Elaborator.State].nextUid, S(t))
+      
+      def go(split: Split, topLevel: Bool)(using Subst): Block = split match
         case Split.Let(sym, trm, tl) =>
           term(trm): r =>
-            Assign(sym, r, go(tl))
+            Assign(sym, r, go(tl, topLevel))
         case Split.Cons(Branch(scrut, pat, tail), restSplit) =>
           subTerm(scrut): sr =>
             tl.log(s"Binding scrut $scrut to $sr ${summon[Subst].map}")
             val cse = pat match
-              case Pattern.LitPat(lit) => Case.Lit(lit) -> go(tail)
+              case Pattern.LitPat(lit) => Case.Lit(lit) -> go(tail, topLevel = false)
               case Pattern.Class(cls, args0, _refined) =>
                 val args = args0.getOrElse(Nil)
                 val clsDefn = cls.defn.getOrElse(die)
                 val clsParams = clsDefn.paramsOpt.getOrElse(Nil)
                 assert(args0.isEmpty || clsParams.length === args.length)
                 def mkArgs(args: Ls[Param -> BlockLocalSymbol])(using Subst): Case -> Block = args match
-                  case Nil => Case.Cls(cls) -> go(tail)
+                  case Nil => Case.Cls(cls) -> go(tail, topLevel = false)
                   case (param, arg) :: args =>
                     // summon[Subst].+(arg -> Value.Ref(new TempSymbol(summon[Elaborator.State].nextUid, N)))
                     // Assign(arg, Select(sr, Tree.Ident("head")), mkArgs(args))
@@ -236,20 +244,29 @@ class Lowering(using TL, Raise, Elaborator.State):
                     (cse, Assign(arg, Select(sr, param.sym.id/*FIXME incorrect Ident?*/), blk))
                 mkArgs(clsParams.zip(args))
             Match(sr, cse :: Nil,
-              // elseBranch,
-              S(go(restSplit)),
+              S(go(restSplit, topLevel = true)),
               End()
             )
         case Split.Else(els) =>
-          if k.isInstanceOf[Ret] then term(els)(k)
-          else term(els)(r => Assign(l, r, End()))
+          if k.isInstanceOf[Ret] && isIf then term(els)(k)
+          else
+            term(els): r =>
+              Assign(l, r,
+                if isWhile && !topLevel then Break(lbl, toBeginning = true)
+                // if isWhile then Break(lbl, toBeginning = !topLevel)
+                else End()
+              )
         case Split.Nil =>
           Throw(Instantiate(Value.Ref(Elaborator.Ctx.errorSymbol),
             Value.Lit(syntax.Tree.StrLit("match error")) :: Nil)) // TODO add failed-match scrutinee info
       
-      if k.isInstanceOf[Ret] then go(iftrm.normalized)
-      else Begin(
-          go(iftrm.normalized),
+      if k.isInstanceOf[Ret] && isIf then go(iftrm.normalized, topLevel = true)
+      else
+        val body = if isWhile
+          then Label(lbl, go(iftrm.normalized, topLevel = true), End())
+          else go(iftrm.normalized, topLevel = true)
+        Begin(
+          body,
           if usesResTmp then k(Value.Ref(l))
           else k(Value.Lit(syntax.Tree.UnitLit(true))) // * it seems this currently never happens
         )

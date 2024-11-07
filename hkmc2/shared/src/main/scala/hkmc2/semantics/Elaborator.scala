@@ -144,7 +144,7 @@ extends Importer:
     case InfixApp(lhs, Keyword.`is` | Keyword.`and`, rhs) =>
       val des = new Desugarer(tl, this).shorthands(tree)(ctx)
       val nor = new ucs.Normalization(tl)(des)
-      Term.If(des)(nor)
+      Term.IfLike(Keyword.`if`, des)(nor)
     case App(Ident("|"), Tree.Tup(lhs :: rhs :: Nil)) =>
       Term.CompType(term(lhs), term(rhs), true)
     case App(Ident("&"), Tree.Tup(lhs :: rhs :: Nil)) =>
@@ -174,14 +174,14 @@ extends Importer:
         Term.New(term(cls), Nil).withLocOf(tree)
       // case _ =>
       //   raise(ErrorReport(msg"Illegal new expression." -> tree.toLoc :: Nil))
-    case Tree.If(split) =>
+    case Tree.IfLike(kw, split) =>
       val desugared = new Desugarer(tl, this).termSplit(split, identity)(Split.Nil)(ctx)
       scoped("ucs:desugared"):
         log(s"Desugared:\n${Split.display(desugared)}")
       val normalized = new ucs.Normalization(tl)(desugared)
       scoped("ucs:normalized"):
         log(s"Normalized:\n${Split.display(normalized)}")
-      Term.If(desugared)(normalized)
+      Term.IfLike(kw, desugared)(normalized)
     case IfElse(InfixApp(InfixApp(scrutinee, Keyword.`is`, ctor @ Ident(cls)), Keyword.`then`, cons), alts) =>
       ctx.get(cls) match
         case S(sym: ClassSymbol) =>
@@ -192,7 +192,7 @@ extends Importer:
             Pattern.Class(sym, N, true)(ctor),
             Split.default(term(cons))
           ) :: Split.default(term(alts)))
-          Term.If(body)(body)
+          Term.IfLike(Keyword.`if`, body)(body)
         case _ =>
           raise(ErrorReport(msg"Illegal pattern $cls." -> tree.toLoc :: Nil))
           Term.Error
@@ -203,7 +203,7 @@ extends Importer:
         scrutVar.ref(),
         Split.default(term(cons))
       ) :: Split.default(term(alts)))
-      Term.If(body)(body)
+      Term.IfLike(Keyword.`if`, body)(body)
     case Tree.Quoted(body) => Term.Quoted(term(body))
     case Tree.Unquoted(body) => Term.Unquoted(term(body))
     case Tree.Case(branches) =>
@@ -215,7 +215,7 @@ extends Importer:
       val nor = new ucs.Normalization(tl)(des)
       scoped("ucs:normalized"):
         log(s"Normalized:\n${Split.display(nor)}")
-      Term.Lam(Param(FldFlags.empty, scrut, N) :: Nil, Term.If(des)(nor))
+      Term.Lam(Param(FldFlags.empty, scrut, N) :: Nil, Term.IfLike(Keyword.`if`, des)(nor))
     case Modified(Keyword.`return`, kwLoc, body) =>
       Term.Ret(term(body))
     case Tree.Region(id: Tree.Ident, body) =>

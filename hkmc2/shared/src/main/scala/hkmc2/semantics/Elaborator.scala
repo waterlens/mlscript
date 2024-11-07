@@ -34,6 +34,7 @@ object Elaborator:
       "process" -> TermSymbol(ImmutVal, N, Ident("process")),
       "fs" -> TermSymbol(ImmutVal, N, Ident("fs")),
       "String" -> TermSymbol(ImmutVal, N, Ident("String")),
+      "Math" -> TermSymbol(ImmutVal, N, Ident("Math")),
       "Error" -> errorSymbol,
     ))
   type Ctxl[A] = Ctx ?=> A
@@ -175,7 +176,7 @@ extends Importer:
       // case _ =>
       //   raise(ErrorReport(msg"Illegal new expression." -> tree.toLoc :: Nil))
     case Tree.IfLike(kw, split) =>
-      val desugared = new Desugarer(tl, this).termSplit(split, identity)(Split.Nil)(ctx)
+      val desugared = new Desugarer(tl, this).termSplit(split, identity)(Split.End)(ctx)
       scoped("ucs:desugared"):
         log(s"Desugared:\n${Split.display(desugared)}")
       val normalized = new ucs.Normalization(tl)(desugared)
@@ -191,7 +192,7 @@ extends Importer:
             scrutVar.ref(),
             Pattern.Class(sym, N, true)(ctor),
             Split.default(term(cons))
-          ) :: Split.default(term(alts)))
+          ) ~: Split.default(term(alts)))
           Term.IfLike(Keyword.`if`, body)(body)
         case _ =>
           raise(ErrorReport(msg"Illegal pattern $cls." -> tree.toLoc :: Nil))
@@ -202,14 +203,14 @@ extends Importer:
       val body = Split.Let(scrutVar, scrutTerm, Branch(
         scrutVar.ref(),
         Split.default(term(cons))
-      ) :: Split.default(term(alts)))
+      ) ~: Split.default(term(alts)))
       Term.IfLike(Keyword.`if`, body)(body)
     case Tree.Quoted(body) => Term.Quoted(term(body))
     case Tree.Unquoted(body) => Term.Unquoted(term(body))
     case Tree.Case(branches) =>
       val scrut = VarSymbol(Ident("caseScrut"), nextUid)
       val desugarer = new Desugarer(tl, this)
-      val des = desugarer.patternSplit(branches, scrut)(Split.Nil)(ctx)
+      val des = desugarer.patternSplit(branches, scrut)(Split.End)(ctx)
       scoped("ucs:desugared"):
         log(s"Desugared:\n${Split.display(des)}")
       val nor = new ucs.Normalization(tl)(des)
@@ -218,6 +219,8 @@ extends Importer:
       Term.Lam(Param(FldFlags.empty, scrut, N) :: Nil, Term.IfLike(Keyword.`if`, des)(nor))
     case Modified(Keyword.`return`, kwLoc, body) =>
       Term.Ret(term(body))
+    case Modified(Keyword.`do`, kwLoc, body) =>
+      Term.Blk(term(body) :: Nil, unit)
     case Tree.Region(id: Tree.Ident, body) =>
       val sym = VarSymbol(id, nextUid)
       val nestCtx = ctx.copy(locals = ctx.locals ++ Ls(id.name -> sym))

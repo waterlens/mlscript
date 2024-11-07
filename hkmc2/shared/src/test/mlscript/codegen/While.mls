@@ -100,6 +100,49 @@ while log("checking"); i < 3
 //│ i = 3
 
 
+// * Infinite loop!
+:sjs
+() =>
+while
+  let i = 0
+  i < 10 then set i += 1
+//│ JS:
+//│ () => {
+//│   let i, scrut, tmp, tmp1;
+//│   tmp2: while (true) {
+//│     i = 0;
+//│     scrut = i < 10;
+//│     if (scrut) {
+//│       tmp = i + 1;
+//│       i = tmp;
+//│       tmp1 = undefined;
+//│       continue tmp2
+//│     } else {
+//│       throw new this.Error("match error")
+//│     }
+//│     break;
+//│   }
+//│   return tmp1
+//│ }
+//│ = [Function (anonymous)]
+
+
+let i = 0 in
+  while i < 10 then set i += 1
+  else i
+//│ = 10
+
+
+let i = 0 in while
+  let _ = log(i)
+  i < 3 then set i += 1
+  else ()
+//│ > 0
+//│ > 1
+//│ > 2
+//│ > 3
+
+
 // * Note that the semantics of UCS-while is quite subtle.
 // * Currently, we only treat the *top-level* `else` as terminating the loop;
 // * indeed, other `else` branches are currently indistinguishable from `then` branches
@@ -115,10 +158,10 @@ if x
   else 42
 //│ Normalized:
 //│ >  if
-//│ >    let $scrut@98 = globalThis:block#6.x#2
-//│ >    $scrut@98 is true and
-//│ >      let $scrut@99 = globalThis:block#6.y#0
-//│ >      $scrut@99 is true then 0
+//│ >    let $scrut@129 = globalThis:block#6.x#2
+//│ >    $scrut@129 is true and
+//│ >      let $scrut@130 = globalThis:block#6.y#0
+//│ >      $scrut@130 is true then 0
 //│ >      else 1
 //│ >    else 42
 //│ = 42
@@ -131,10 +174,10 @@ if x
   else 42
 //│ Normalized:
 //│ >  if
-//│ >    let $scrut@101 = globalThis:block#6.x#3
-//│ >    $scrut@101 is true and
-//│ >      let $scrut@102 = globalThis:block#6.y#1
-//│ >      $scrut@102 is true then 0
+//│ >    let $scrut@132 = globalThis:block#6.x#3
+//│ >    $scrut@132 is true and
+//│ >      let $scrut@133 = globalThis:block#6.y#1
+//│ >      $scrut@133 is true then 0
 //│ >      else 1
 //│ >    else 42
 //│ = 42
@@ -196,7 +239,7 @@ while log("Hello World"); false
   then 0(0)
   else 1
 //│ ╔══[PARSE ERROR] Unexpected 'then' keyword here
-//│ ║  l.196: 	  then 0(0)
+//│ ║  l.239: 	  then 0(0)
 //│ ╙──       	  ^^^^
 //│ ═══[ERROR] Unrecognized term split (false literal).
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token 'break'

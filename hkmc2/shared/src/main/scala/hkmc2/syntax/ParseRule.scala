@@ -254,6 +254,7 @@ object ParseRule:
           case (body, _) => Open(body)}*),
     modified(`abstract`, Kw(`class`)(typeDeclBody(Cls))),
     modified(`mut`),
+    modified(`do`),
     modified(`virtual`),
     modified(`override`),
     modified(`declare`),

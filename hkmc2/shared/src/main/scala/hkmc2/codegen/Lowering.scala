@@ -105,6 +105,8 @@ class Lowering(using TL, Raise, Elaborator.State):
         TODO("Other argument list forms")
     
     case st.Blk(Nil, res) => term(res)(k)
+    case st.Blk(Lit(Tree.UnitLit(true)) :: stats, res) =>
+      subTerm(st.Blk(stats, res))(k)
     case st.Blk((p @ (_: Ref | _: Lit)) :: stats, res) =>
       raise(WarningReport(msg"Pure expression in statement position" -> p.toLoc :: Nil))
       subTerm(st.Blk(stats, res))(k)
@@ -256,7 +258,7 @@ class Lowering(using TL, Raise, Elaborator.State):
                 // if isWhile then Break(lbl, toBeginning = !topLevel)
                 else End()
               )
-        case Split.Nil =>
+        case Split.End =>
           Throw(Instantiate(Value.Ref(Elaborator.Ctx.errorSymbol),
             Value.Lit(syntax.Tree.StrLit("match error")) :: Nil)) // TODO add failed-match scrutinee info
       

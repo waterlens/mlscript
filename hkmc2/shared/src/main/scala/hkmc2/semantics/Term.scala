@@ -96,7 +96,7 @@ sealed trait Statement extends AutoLocated:
     case TyApp(pre, tarsg) => pre :: tarsg
     case Sel(pre, _) => pre :: Nil
     case Tup(fields) => fields.map(_.value)
-    case IfLike(_, body) => Nil // TODO
+    case IfLike(_, body) => body.subTerms
     case Lam(params, body) => body :: Nil
     case Blk(stats, res) => stats.flatMap(_.subTerms) ::: res :: Nil
     case Quoted(term) => term :: Nil

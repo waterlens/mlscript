@@ -44,7 +44,7 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
   extension (split: Split)
     /** Concatenate two splits. */
     def ++(fallback: Split): Split =
-      if fallback == Split.Nil then
+      if fallback == Split.End then
         split
       else if split.isFull then
         raise:
@@ -55,7 +55,7 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
       else (split match
         case Split.Cons(head, tail) => Split.Cons(head, tail ++ fallback)
         case Split.Let(name, term, tail) => Split.Let(name, term, tail ++ fallback)
-        case Split.Else(_) /* impossible */ | Split.Nil => fallback)
+        case Split.Else(_) /* impossible */ | Split.End => fallback)
 
   import collection.mutable.HashMap
 
@@ -177,7 +177,7 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
       // expand from the N-th to the second match.
       lazy val tailSplit =
         val innermostSplit = consequent match
-          case L(tree) => termSplit(tree, identity)(Split.Nil)
+          case L(tree) => termSplit(tree, identity)(Split.End)
           case R(tree) => (ctx: Ctx) => Split.default(term(tree)(using ctx))
         tail.foldRight(innermostSplit):
           case ((coda, pat), sequel) => ctx => trace(
@@ -185,7 +185,7 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
             post = (res: Split) => s"conjunct matches >>> $res"
           ):
             nominate(ctx, term(coda)(using ctx)):
-              expandMatch(_, pat, sequel)(Split.Nil)
+              expandMatch(_, pat, sequel)(Split.End)
       // We apply `finish` to the first coda and expand the first match.
       // Note that the scrutinee might be not an identifier.
       headCoda match
@@ -321,7 +321,7 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
         post = (res: Split) => s"patternSplit (else) >>> ${res.showDbg}"
       ):
         elabFallback(backup)(ctx) match
-          case Split.Nil => ()
+          case Split.End => ()
           case _ => raise(ErrorReport(msg"Any following branches are unreachable." -> branch.toLoc :: Nil))
         Split.default(term(body)(using ctx))
       case branch => backup => ctx => trace(
@@ -338,12 +338,12 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
       // expand from the N-th to the second match.
       val tailSplit =
         val innermostSplit = consequent match
-          case L(tree) => termSplit(tree, identity)(Split.Nil)
+          case L(tree) => termSplit(tree, identity)(Split.End)
           case R(tree) => (ctx: Ctx) => Split.default(term(tree)(using ctx))
         tail.foldRight(innermostSplit):
           case ((coda, pat), sequel) => ctx =>
             nominate(ctx, term(coda)(using ctx)):
-              expandMatch(_, pat, sequel)(Split.Nil)
+              expandMatch(_, pat, sequel)(Split.End)
         .traced(
           pre = s"conjunct matches <<< $tail",
           post = (res: Split) => s"conjunct matches >>> $res")
@@ -376,7 +376,7 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
       // A single variable pattern or constructor pattern without parameters.
       case ctor: Ident => fallback => ctx => ctx.get(ctor.name) match
         case S(sym: ClassSymbol) => // TODO: refined
-          Branch(ref, Pattern.Class(sym, N, false)(ctor), sequel(ctx)) :: fallback
+          Branch(ref, Pattern.Class(sym, N, false)(ctor), sequel(ctx)) ~: fallback
         case S(_: VarSymbol) | N =>
           // If the identifier refers to a variable or nothing, we interpret it
           // as a variable pattern. If `fallback` is not used when `sequel`
@@ -405,8 +405,8 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
             Branch(
               ref,
               Pattern.Class(cls, S(params), false)(ctor), // TODO: refined?
-              subMatches(params zip args, sequel)(Split.Nil)(ctx)
-            ) :: fallback
+              subMatches(params zip args, sequel)(Split.End)(ctx)
+            ) ~: fallback
           case _ =>
             // Raise an error and discard `sequel`. Use `fallback` instead.
             raise(ErrorReport(msg"Unknown constructor `${ctor.name}`." -> ctor.toLoc :: Nil))
@@ -416,10 +416,10 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
         pre = s"expandMatch: literal <<< $literal",
         post = (r: Split) => s"expandMatch: literal >>> ${r.showDbg}"
       ):
-        Branch(ref, Pattern.LitPat(literal), sequel(ctx)) :: fallback
+        Branch(ref, Pattern.LitPat(literal), sequel(ctx)) ~: fallback
       // A single pattern in conjunction with more conditions
       case pattern and consequent => fallback => ctx => 
-        val innerSplit = termSplit(consequent, identity)(Split.Nil)
+        val innerSplit = termSplit(consequent, identity)(Split.End)
         expandMatch(scrutSymbol, pattern, innerSplit)(fallback)(ctx)
       case _ => fallback => _ =>
         // Raise an error and discard `sequel`. Use `fallback` instead.

@@ -65,15 +65,16 @@ object ParseRule:
     Expr(body)(k) ::
     Blk(body)(k) ::
     Nil
-  
-  val typeDeclTemplate: Alt[Opt[Tree]] =
+
+  def typeDeclTemplateThen[A](after: Alt[A]*): Alt[(S[Tree], A)] =
     Kw(`with`):
       ParseRule("type declaration body")(
         Blk(
-          ParseRule("type declaration block"):
-            End(())
-        ) { case (res, ()) => S(res) }
+          ParseRule("type declaration block")(after*)
+        ) { case (res, t) => (S(res), t) }
       )
+  
+  val typeDeclTemplate: Alt[Opt[Tree]] = typeDeclTemplateThen(End(())).map((res, _) => res)
   
   /*
   def termDefBody(k: TermDefKind): ParseRule[Tree] = 
@@ -138,8 +139,8 @@ object ParseRule:
                   ParseRule(s"'${kw.name}' binding right-hand side")(
                     Kw(`in`):
                       ParseRule(s"'${kw.name}' binding `in` clause")(
-                        exprOrBlk(ParseRule(s"'${kw.name}' binding body")(End(())))((body, _: Unit) => S(body))
-                    *),
+                        exprOrBlk(ParseRule(s"'${kw.name}' binding body")(End(())))((body, _: Unit) => S(body))*
+                      ),
                     End(N)
                   )
                 ) { (rhs, body) => (S(rhs), body) }*
@@ -189,6 +190,25 @@ object ParseRule:
   val prefixRules: ParseRule[Tree] = ParseRule("start of statement", omitAltsStr = true)(
     letLike(`let`),
     letLike(`set`),
+    
+    Kw(`handle`):
+      ParseRule("'handle' binding keyword"):
+        Expr(
+          ParseRule("'handle' binding head"):
+            Kw(`=`):
+              ParseRule("'handle' binding equals sign"):
+                Expr(
+                  ParseRule("'handle' binding class name"):
+                    typeDeclTemplateThen(
+                      Kw(`in`):
+                        ParseRule(s"'handle' binding `in` clause")(
+                          exprOrBlk(ParseRule(s"'handle' binding body")(End(())))((body, _: Unit) => S(body))*
+                        ),
+                      End(None)
+                    )
+                ) { case (rhs, (S(defs), body)) => (rhs, defs, body) }
+        ) { case (lhs, (rhs, defs, body))=> Handle(lhs, rhs, defs, body) }
+    ,
     Kw(`new`):
       ParseRule("`new` keyword"):
         Expr(ParseRule("`new` expression")(End(())))((body, _: Unit) => New(body))

@@ -72,7 +72,7 @@ extends Importer:
       term(Block(LetLike(`let`, lhs, rhso, N) :: bod :: Nil))
     case LetLike(`let`, lhs, S(rhs), N) =>
       raise(ErrorReport(
-        msg"Expected a right-hand side for let bindings in expression position" ->
+        msg"Expected a body for let bindings in expression position" ->
           tree.toLoc :: Nil))
       block(LetLike(`let`, lhs, S(rhs), N) :: Nil)._1
     case LetLike(`set`, lhs, S(rhs), N) =>
@@ -89,6 +89,23 @@ extends Importer:
           term(bod),
         ), Term.Assgn(lt, sym.ref(id))))
       case _ => ??? // TODO error
+    case Handle(id, cls, blk, S(bod)) =>
+      term(Block(Handle(id, cls, blk, N) :: bod :: Nil))
+    case Handle(id: Ident, cls: Ident, Block(sts), N) =>
+      raise(ErrorReport(
+        msg"Expected a body for handle bindings in expression position" ->
+          tree.toLoc :: Nil))
+          
+      val sym =
+        fieldOrVarSym(Handler, id)
+      val newCtx = ctx.copy(locals = ctx.locals + (id.name -> sym))
+      Term.Handle(sym, term(cls)(using newCtx), ObjBody(block(sts)._1))
+      
+    case h: Handle =>
+      raise(ErrorReport(
+        msg"Unsupported handle binding shape" ->
+          h.toLoc :: Nil))
+      Term.Error
     case id @ Ident("this") =>
       ctx.getOuter match
       case S(sym) =>
@@ -425,6 +442,17 @@ extends Importer:
       case (tree @ LetLike(`let`, lhs, S(rhs), N)) :: sts =>
         raise(ErrorReport(msg"Unsupported let binding shape" -> tree.toLoc :: Nil))
         go(sts, Term.Error :: acc)
+      case (hd @ Handle(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
+        val sym =
+          fieldOrVarSym(LetBind, id)
+        log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
+        val newAcc = Term.Handle(sym, term(cls), ObjBody(block(sts_)._1)) :: acc
+        ctx.copy(locals = ctx.locals + (id.name -> sym)) givenIn:
+          go(sts, newAcc)
+      case (tree @ Handle(_, _, _, N)) :: sts =>
+        raise(ErrorReport(msg"Unsupported handle binding shape" -> tree.toLoc :: Nil))
+        go(sts, Term.Error :: acc)
+
       case Def(lhs, rhs) :: sts =>
         lhs match
         case id: Ident =>

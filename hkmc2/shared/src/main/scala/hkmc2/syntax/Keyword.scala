@@ -72,6 +72,7 @@ object Keyword:
   val `is` = Keyword("is", nextPrec, curPrec, canStartInfixOnNewLine = false)
   val `as` = Keyword("as", nextPrec, curPrec)
   val `let` = Keyword("let", nextPrec, curPrec)
+  val `handle` = Keyword("handle", nextPrec, curPrec)
   val `region` = Keyword("region", curPrec, curPrec)
   val `rec` = Keyword("rec", N, N)
   val `in` = Keyword("in", curPrec, curPrec)

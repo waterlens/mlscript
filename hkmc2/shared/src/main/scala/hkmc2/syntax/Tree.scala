@@ -49,6 +49,7 @@ enum Tree extends AutoLocated:
   case Block(stmts: Ls[Tree])
   case OpBlock(items: Ls[Tree -> Tree])
   case LetLike(kw: Keyword.letLike, lhs: Tree, rhs: Opt[Tree], body: Opt[Tree])
+  case Handle(lhs: Tree, cls: Tree, defs: Tree, body: Opt[Tree])
   case Def(lhs: Tree, rhs: Tree)
   case TermDef(k: TermDefKind, head: Tree, rhs: Opt[Tree]) extends Tree with TermDefImpl
   case TypeDef(k: TypeDefKind, head: Tree, extension: Opt[Tree], body: Opt[Tree]) extends Tree with TypeDefImpl
@@ -77,6 +78,9 @@ enum Tree extends AutoLocated:
     case OpBlock(items) => items.flatMap:
       case (op, body) => op :: body :: Nil
     case LetLike(kw, lhs, rhs, body) => lhs :: Nil ++ rhs ++ body
+    case Handle(lhs, rhs, defs, body) => body match
+      case Some(value) => lhs :: rhs :: defs :: value :: Nil
+      case None => lhs :: rhs :: defs :: Nil
     case TypeDef(k, head, extension, body) =>
       head :: extension.toList ::: body.toList
     case Modified(_, _, body) => Ls(body)
@@ -129,6 +133,7 @@ enum Tree extends AutoLocated:
     case Region(name, body) => "region"
     case RegRef(reg, value) => "region reference"
     case Effectful(eff, body) => "effectful"
+    case Handle(_, _, _, _) => "handle"
   
   def showDbg: Str = toString // TODO
   
@@ -171,6 +176,7 @@ sealed abstract class Val(str: Str, desc: Str) extends ValLike(str, desc)
 case object ImmutVal extends Val("val", "value")
 case object MutVal extends Val("mut val", "mutable value")
 case object LetBind extends ValLike("let", "let binding")
+case object Handler extends TermDefKind("handler", "handler binding")
 case object ParamBind extends ValLike("", "parameter")
 case object Fun extends TermDefKind("fun", "function")
 sealed abstract class TypeDefKind(desc: Str) extends DeclKind(desc)

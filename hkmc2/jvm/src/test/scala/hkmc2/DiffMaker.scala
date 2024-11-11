@@ -84,6 +84,7 @@ abstract class DiffMaker:
   global.setCurrentValue(()) // * Starts enabled at the top of the file
   
   val fixme = Command("fixme")(_ => ())
+  val breakme = Command("breakme")(_ => ())
   val todo = Command("todo")(_ => ())
   def tolerateErrors = fixme.isSet || todo.isSet
   
@@ -126,6 +127,14 @@ abstract class DiffMaker:
   var _allowTypeErrors = false
   var _showRelativeLineNums = false
   
+  
+  def uncaught(err: Throwable): Unit =
+    output("/!!!\\ Uncaught error: " + err +
+      err.getStackTrace().take(
+        if fullExceptionStack.isSet || debug.isSet then Int.MaxValue
+        else if tolerateErrors || err.isInstanceOf[StackOverflowError] then 0
+        else 10
+      ).map("\n" + "\tat: " + _).mkString)
   
   
   def processBlock(origin: Origin): Unit =
@@ -181,16 +190,19 @@ abstract class DiffMaker:
     
     // Note: when `todo` is set, we allow the lack of errors.
     // Use `todo` when the errors are expected but not yet implemented.
-    if expectParseErrors.isSet && parseErrors == 0 && todo.isUnset then
+    if expectParseErrors.isSet && parseErrors == 0 && todo.isUnset && breakme.isUnset then
       failures += globalStartLineNum
       unexpected("lack of parse error", blockLineNum)
-    if expectTypeErrors.isSet && typeErrors == 0 && todo.isUnset then
+    if expectTypeErrors.isSet && typeErrors == 0 && todo.isUnset && breakme.isUnset then
       failures += globalStartLineNum
       unexpected("lack of type error", blockLineNum)
-    if expectRuntimeErrors.isSet && runtimeErrors == 0 && todo.isUnset then
+    if expectCodeGenErrors.isSet && compilationErrors == 0 && todo.isUnset && breakme.isUnset then
+      failures += globalStartLineNum
+      unexpected("lack of compilation error", blockLineNum)
+    if expectRuntimeErrors.isSet && runtimeErrors == 0 && todo.isUnset && breakme.isUnset then
       failures += globalStartLineNum
       unexpected("lack of runtime error", blockLineNum)
-    if expectWarnings.isSet && warnings == 0 && todo.isUnset then
+    if expectWarnings.isSet && warnings == 0 && todo.isUnset && breakme.isUnset then
       failures += globalStartLineNum
       unexpected("lack of warnings", blockLineNum)
     
@@ -281,12 +293,7 @@ abstract class DiffMaker:
             unhandled(blockLineNum, err)
           // err.printStackTrace(out)
           // println(err.getCause())
-          output("/!!!\\ Uncaught error: " + err +
-            err.getStackTrace().take(
-              if fullExceptionStack.isSet || debug.isSet then Int.MaxValue
-              else if tolerateErrors || err.isInstanceOf[StackOverflowError] then 0
-              else 10
-            ).map("\n" + "\tat: " + _).mkString)
+          uncaught(err)
       
       rec(lines.drop(block.size))
       

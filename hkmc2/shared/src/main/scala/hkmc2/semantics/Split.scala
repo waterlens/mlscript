@@ -55,6 +55,7 @@ enum Split extends AutoLocated with ProductWithTail:
         // `Split.Nil` must not have a location. This prevents sharing locations,
         // which causes the assertion of distinctness of origins to fail.
         case Split.End => N
+        case _: Split.Else => N // FIXME: @Luyu pls clean up this mess
         case _ => loco
 
   var isFallback: Bool = false

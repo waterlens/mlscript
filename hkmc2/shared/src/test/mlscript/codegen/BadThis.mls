@@ -1,0 +1,25 @@
+:js
+
+
+globalThis.navigator
+//│ = Navigator {}
+
+class A
+
+:re
+if 0 is A then 1
+//│ ═══[RUNTIME ERROR] Error: match error
+
+
+// * Unhygienic binding...
+// * TODO: prevent rebinding of `globalThis`
+val globalThis = "oops"
+//│ globalThis = 'oops'
+
+globalThis.navigator
+
+:re
+if 0 is A then 1
+//│ ═══[RUNTIME ERROR] TypeError: globalThis.Error is not a constructor
+
+

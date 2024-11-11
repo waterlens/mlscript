@@ -14,7 +14,7 @@ import hkmc2.semantics.TopLevelSymbol
 import hkmc2.semantics.MemberSymbol
 import hkmc2.semantics.ParamList
 import hkmc2.codegen.Value.Lam
-import hkmc2.semantics.ImportedSymbol
+import hkmc2.semantics.ThisSymbol
 
 
 // TODO factor some logic for other codegen backends
@@ -54,14 +54,27 @@ class JSBuilder extends CodeBuilder:
         }"
       case N =>
         ts.id.name
-    case ts: semantics.ClassSymbol => // TODO dedup
-      ts.owner match
-      case S(owner) =>
-        doc"${result(Value.This(owner))}.${ts.id.name}"
-      case N =>
-        ts.id.name
-    case imp: ImportedSymbol =>
-      doc"${getVar(imp.base)}.${imp.id.name}"
+    case ts: semantics.BlockMemberSymbol => // this means it's a locally-defined member
+      ts.nme
+      // ts.trmTree
+    // case ts: semantics.ClassSymbol => // TODO dedup
+    //   ts.owner match
+    //   case S(owner) => // TODO rm owners
+    //     doc"${result(Value.This(owner))}.${ts.id.name}"
+    //   case N =>
+    //     ts.id.name
+    // case ts: semantics.ModuleSymbol => // TODO dedup
+    //   ts.owner match
+    //   case S(owner) => // TODO rm owners
+    //     doc"${result(Value.This(owner))}.${ts.id.name}"
+    //   case N =>
+    //     ts.id.name
+    case ThisSymbol(sym) =>
+      summon[Scope].findThis_!(sym)
+    // case imp: ImportedSymbol =>
+    //   doc"${getVar(imp.base)}.${imp.id.name}"
+    case sym: TopLevelSymbol =>
+      summon[Scope].findThis_!(sym)
     case _ => summon[Scope].lookup_!(l)
   
   def result(r: Result)(using Raise, Scope): Document = r match
@@ -69,10 +82,19 @@ class JSBuilder extends CodeBuilder:
     case Value.Ref(l) => getVar(l)
     case Value.Lit(Tree.StrLit(value)) => JSBuilder.makeStringLiteral(value)
     case Value.Lit(lit) => lit.idStr
-    case Call(Value.Ref(l: semantics.MemberSymbol[?]), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
-      val op = builtinOpsMap(l.nme)
+    
+    // * FIXME: this should be done in the Elaborator
+    // case Call(Value.Ref(l: semantics.MemberSymbol[?]), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
+    // case Call(Value.Ref(l), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
+    case Call(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident(nme)), lhs :: rhs :: Nil) if builtinOpsMap contains nme =>
+      val op = builtinOpsMap(nme)
       val res = doc"${result(lhs)} ${op} ${result(rhs)}"
       if needsParens(op) then doc"(${res})" else res
+    case Call(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident(nme)), lhs :: Nil) if builtinOpsMap contains nme =>
+      val op = builtinOpsMap(nme)
+      val res = doc"${op} ${result(lhs)}"
+      if needsParens(op) then doc"(${res})" else res
+    
     case Call(fun, args) =>
       val base = fun match
         case _: Value.Lam => doc"(${result(fun)})"
@@ -99,66 +121,103 @@ class JSBuilder extends CodeBuilder:
   def returningTerm(t: Block)(using Raise, Scope): Document = t match
     case Assign(l, r, rst) =>
       doc" # ${getVar(l)} = ${result(r)};${returningTerm(rst)}"
+    case AssignField(p, n, r, rst) =>
+      doc" # ${result(p)}.${n.name} = ${result(r)};${returningTerm(rst)}"
     case Define(defn, rst) =>
       def mkThis(sym: MemberSymbol[?]): Document =
         result(Value.This(sym))
-      val (thisProxy, res) = scope.nestRebindThis(defn.sym):
-        val defnJS = defn match
-        case TermDefn(syntax.Fun, sym, Nil, body) =>
-          TODO("getters")
-        case TermDefn(syntax.Fun, sym, ParamList(_, ps) :: pss, bod) =>
-          val paramList = ps.map(p => scope.allocateName(p.sym)).mkDocument(", ")
-          val result = pss.foldRight(bod):
-            case (ParamList(_, ps), block) => 
-              Return(Lam(ps, block), false)
-          doc"function ${sym.nme}(${paramList}) { #{  # ${body(result)} #}  # }"
-        case ClsDefn(sym, syntax.Cls, mtds, flds, ctor) =>
-          val clsDefn = sym.defn.getOrElse(die)
-          val clsParams = clsDefn.paramsOpt.getOrElse(Nil)
-          val ctorParams = clsParams.map(p => p.sym -> scope.allocateName(p.sym))
-          val ctorCode = ctorParams.foldRight(body(ctor)):
-            case ((sym, nme), acc) =>
-              doc"this.${sym.name} = $nme; # ${acc}"
-          val clsJS = doc"class ${sym.nme} { #{ ${
-            flds.map(f => doc" # #${f.nme};").mkDocument(doc"")
-          } # constructor(${
-            ctorParams.unzip._2.mkDocument(", ")
-          }) { #{  # ${
-            ctorCode.stripBreaks
-          } #}  # }${
-            mtds.map: 
-              case td @ TermDefn(_, _, ParamList(_, ps) :: Nil, _) =>
-                val vars = ps.map(p => scope.allocateName(p.sym)).mkDocument(", ")
-                doc" # ${td.sym.nme}($vars) { #{  # ${
-                  body(td.body)
-                } #}  # }"
-            .mkDocument(" ")
-          }${
-            if mtds.exists(_.sym.nme == "toString")
-            then doc""
-            else doc""" # toString() { return "${sym.nme}${
-              if clsDefn.paramsOpt.isEmpty then doc"""""""
-              else doc"""(" + ${
-                  ctorParams.headOption.fold("")("this." + _._2)
-                }${
-                  ctorParams.tailOption.fold("")(_.map(
-                    """ + ", " + this.""" + _._2).mkString)
-                } + ")""""
-            }; }"""
-          } #}  # }"
-          if clsDefn.kind is syntax.Mod then sym.owner match
-          case S(owner) =>
-            assert(clsDefn.paramsOpt.isEmpty)
-            doc"${mkThis(owner)}.${sym.nme} = new ${clsJS}"
-          case N => doc"const ${sym.nme} = new $clsJS"
-          else sym.owner match
-          case S(owner) =>
-            doc"${mkThis(owner)}.${sym.nme} = ${clsJS}"
-          case N => clsJS
-        doc" # ${defnJS}"
-      thisProxy match
-        case S(proxy) => doc" # const $proxy = this; # ${res.stripBreaks};${returningTerm(rst)}"
-        case N => doc"$res;${returningTerm(rst)}"
+      // println(defn.sym)
+      val resJS = defn match
+      // case FunDefn(k: syntax.Val, sym, pss, bod) =>
+      case ValDefn(own, k: syntax.Val, sym, p) =>
+        // scope.nest.givenIn:
+        val sym = defn.sym
+        // assert(pss.isEmpty)
+        // val result = returningTerm(bod)
+        // doc"const ${sym.nme} = ${result}"
+        own match
+        case N =>
+          doc"const ${sym.nme} = ${result(p)};${returningTerm(rst)}"
+        case S(owner) =>
+          // doc"const ${sym.nme} = ${result(p)}; # ${mkThis(owner)}.${sym.nme} = ${sym.nme}"
+          doc"${mkThis(owner)}.${sym.nme} = ${result(p)};${returningTerm(rst)}"
+      case _ =>
+        val (thisProxy, res) = scope.nestRebindThis(defn.sym):
+          defn match
+          case FunDefn(sym, Nil, body) =>
+            TODO("getters")
+          case FunDefn(sym, ParamList(_, ps) :: pss, bod) =>
+            val paramList = ps.map(p => scope.allocateName(p.sym)).mkDocument(", ")
+            val result = pss.foldRight(bod):
+              case (ParamList(_, ps), block) => 
+                Return(Lam(ps, block), false)
+            doc"function ${sym.nme}(${paramList}) { #{  # ${body(result)} #}  # }"
+          case ClsLikeDefn(sym, syntax.Cls, mtds, flds, ctor) =>
+            val clsDefn = sym.defn.getOrElse(die)
+            val clsParams = clsDefn.paramsOpt.getOrElse(Nil)
+            val ctorParams = clsParams.map(p => p.sym -> scope.allocateName(p.sym))
+            val ctorCode = ctorParams.foldRight(body(ctor)):
+              case ((sym, nme), acc) =>
+                doc"this.${sym.name} = $nme; # ${acc}"
+            val clsJS = doc"class ${sym.nme} { #{ ${
+                flds.map(f => doc" # #${f.nme};").mkDocument(doc"")
+              } # constructor(${
+                ctorParams.unzip._2.mkDocument(", ")
+              }) { #{  # ${
+                ctorCode.stripBreaks
+              } #}  # }${
+                mtds.map: 
+                  case td @ FunDefn(_, ParamList(_, ps) :: Nil, _) =>
+                    val vars = ps.map(p => scope.allocateName(p.sym)).mkDocument(", ")
+                    doc" # ${td.sym.nme}($vars) { #{  # ${
+                      body(td.body)
+                    } #}  # }"
+                .mkDocument(" ")
+              }${
+                if mtds.exists(_.sym.nme == "toString")
+                then doc""
+                else doc""" # toString() { return "${sym.nme}${
+                  if clsDefn.paramsOpt.isEmpty then doc"""""""
+                  else doc"""(" + ${
+                      ctorParams.headOption.fold("")("this." + _._2)
+                    }${
+                      ctorParams.tailOption.fold("")(_.map(
+                        """ + ", " + this.""" + _._2).mkString)
+                    } + ")""""
+                }; }"""
+              } #}  # }"
+            if clsDefn.kind is syntax.Mod then
+              val clsTmp = summon[Scope].allocateName(new semantics.TempSymbol(0/*TODO rm this useless param*/, N, sym.nme+"$"+"class"))
+              clsDefn.owner match
+              case S(owner) =>
+                assert(clsDefn.paramsOpt.isEmpty)
+                // doc"${mkThis(owner)}.${sym.nme} = new ${clsJS}"
+                doc"const $clsTmp = ${clsJS}; # ${mkThis(owner)}.${sym.nme} = new ${clsTmp
+                  }; # ${mkThis(owner)}.${sym.nme}.class = $clsTmp"
+              case N => doc"const $clsTmp = ${clsJS}; const ${sym.nme} = new ${clsTmp
+                  }; # ${sym.nme}.class = $clsTmp"
+            else
+              val fun = clsDefn.paramsOpt match
+                case S(params) =>
+                  val args = params.map(p => scope.allocateName(p.sym)).mkDocument(", ")
+                  S(doc"function ${sym.nme}($args) { return new ${sym.nme}.class($args); }")
+                case N => N
+              clsDefn.owner match
+              case S(owner) =>
+                val ths = mkThis(owner)
+                fun match
+                case S(f) =>
+                  doc"${ths}.${sym.nme} = ${f}; # ${ths}.${sym.nme}.class = ${clsJS}"
+                case N =>
+                  doc"${ths}.${sym.nme} = ${clsJS}"
+              case N =>
+                fun match
+                case S(f) => doc"${f}; # ${sym.nme}.class = ${clsJS}"
+                case N => clsJS
+        thisProxy match
+          case S(proxy) => doc" # const $proxy = this; # ${res.stripBreaks};${returningTerm(rst)}"
+          case N => doc"$res;${returningTerm(rst)}"
+      doc" # ${resJS}"
     case Return(res, true) => doc" # ${result(res)}"
     case Return(res, false) => doc" # return ${result(res)}"
     
@@ -172,10 +231,10 @@ class JSBuilder extends CodeBuilder:
         doc" else { #{ ${ returningTerm(el) } #}  # }"
       case N  => doc""
       t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Cls(cls) -> trm :: Nil, els, rest) =>
+    case Match(scrut, Case.Cls(cls, pth) -> trm :: Nil, els, rest) =>
       val test = cls.defn.getOrElse(die).kind match
-        case syntax.Mod => doc"=== ${getVar(cls)}"
-        case _ => doc"instanceof ${getVar(cls)}"
+        // case syntax.Mod => doc"=== ${result(pth)}"
+        case _ => doc"instanceof ${result(pth)}"
       val t = doc" # if (${ result(scrut) } $test) { #{ ${
           returningTerm(trm)
         } #}  # }"

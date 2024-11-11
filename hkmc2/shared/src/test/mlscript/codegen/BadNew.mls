@@ -11,9 +11,12 @@ new
 new 2
 //│ ═══[RUNTIME ERROR] TypeError: 2 is not a constructor
 
-:ge
+:sjs
+:re
 new 2 + 2
-//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token '+'
+//│ JS:
+//│ new this["+"].class(2, 2)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'class')
 
 :re
 new()
@@ -22,14 +25,14 @@ new()
 :pe
 new {}
 //│ ╔══[PARSE ERROR] Expected expression after `new` keyword; found end of block instead
-//│ ║  l.23: 	new {}
+//│ ║  l.26: 	new {}
 //│ ╙──      	    ^^
 
 // FIXME the error...
 :todo
 new { x = 1 }
 //│ ╔══[ERROR] Wrong number of type arguments
-//│ ║  l.30: 	new { x = 1 }
+//│ ║  l.33: 	new { x = 1 }
 //│ ╙──      	      ^
 
 

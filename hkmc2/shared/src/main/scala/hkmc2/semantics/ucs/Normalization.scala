@@ -45,13 +45,13 @@ class Normalization(tl: TraceLogger)(using raise: Raise):
   extension (lhs: Pattern)
     /** Checks if two patterns are the same. */
     def =:=(rhs: Pattern): Bool = (lhs, rhs) match
-      case (Pattern.Class(s1, _, _), Pattern.Class(s2, _, _)) => s1 === s2
+      case (c1: Pattern.ClassLike, c2: Pattern.ClassLike) => c1.sym === c2.sym
       case (Pattern.LitPat(l1), Pattern.LitPat(l2)) => l1 === l2
       case (_, _) => false
     /** Checks if `self` can be subsumed under `rhs`. */
     def <:<(rhs: Pattern): Bool =
-      def mk(pattern: Pattern): Option[Literal | ClassSymbol] = lhs match
-        case Pattern.Class(s, _, _) => S(s)
+      def mk(pattern: Pattern): Option[Literal | ClassSymbol | ModuleSymbol] = lhs match
+        case c: Pattern.ClassLike => S(c.sym)
         case Pattern.LitPat(l) => S(l)
         case _ => N
       compareCasePattern(mk(lhs), mk(rhs))
@@ -60,16 +60,17 @@ class Normalization(tl: TraceLogger)(using raise: Raise):
       * inconsistency as a warning.
       */
     infix def reportInconsistentRefinedWith(rhs: Pattern): Unit = (lhs, rhs) match
-      case (Pattern.Class(n1, _, r1), Pattern.Class(n2, _, r2)) if r1 =/= r2 =>
+      // case (Pattern.Class(n1, _, r1), Pattern.Class(n2, _, r2)) if r1 =/= r2 =>
+      case (c1: Pattern.ClassLike, c2: Pattern.ClassLike) if c1.refined =/= c2.refined =>
         def be(value: Bool): Str = if value then "is" else "is not"
         raiseDesugaringWarning(
           msg"inconsistent refined pattern" -> rhs.toLoc,
-          msg"pattern `${n1.nme}` ${be(r1)} refined" -> n1.toLoc,
-          msg"but pattern `${n2.nme}` ${be(r2)} refined" -> n2.toLoc)
+          msg"pattern `${c1.sym.nme}` ${be(c1.refined)} refined" -> c1.sym.toLoc,
+          msg"but pattern `${c2.sym.nme}` ${be(c2.refined)} refined" -> c2.sym.toLoc)
       case (_, _) => ()
     /** If the pattern is a class-like pattern, override its `refined` flag. */
     def markAsRefined: Unit = lhs match
-      case lhs: Pattern.Class => lhs.refined = true
+      case lhs: Pattern.ClassLike => lhs.refined = true
       case _ => ()
   
   inline def apply(split: Split): Split = normalize(split)(using VarSet())
@@ -89,7 +90,7 @@ class Normalization(tl: TraceLogger)(using raise: Raise):
         case Pattern.Var(vs) =>
           log(s"ALIAS: $scrutinee is $vs")
           Split.Let(vs, scrutinee, rec(consequent ++ alternative))
-        case pattern @ (Pattern.LitPat(_) | Pattern.Class(_, _, _)) =>
+        case pattern @ (Pattern.LitPat(_) | _: Pattern.ClassLike) =>
           log(s"MATCH: $scrutinee is $pattern")
           val whenTrue = normalize(specialize(consequent ++ alternative, +, scrutinee, pattern))
           val whenFalse = rec(specialize(alternative, -, scrutinee, pattern).clearFallback)
@@ -185,7 +186,7 @@ class Normalization(tl: TraceLogger)(using raise: Raise):
     rec(split)(using mode, summon)
   
   private def aliasBindings(p: Pattern, q: Pattern): Split => Split = (p, q) match
-    case (Pattern.Class(_, S(ps1), _), Pattern.Class(_, S(ps2), _)) =>
+    case (Pattern.ClassLike(_, _, S(ps1), _), Pattern.ClassLike(_, _, S(ps2), _)) =>
       ps1.iterator.zip(ps2.iterator).foldLeft(identity[Split]):
         case (acc, (p1, p2)) if p1 == p2 => acc
         case (acc, (p1, p2)) => innermost => Split.Let(p2, p1.ref(), acc(innermost))
@@ -197,17 +198,18 @@ object Normalization:
     * Hard-coded subtyping relations used in normalization and coverage checking.
     */
   def compareCasePattern(
-      lhs: Opt[Literal | ClassSymbol],
-      rhs: Opt[Literal | ClassSymbol]
+      lhs: Opt[Literal | ClassSymbol | ModuleSymbol],
+      rhs: Opt[Literal | ClassSymbol | ModuleSymbol]
   ): Bool = (lhs, rhs) match
     case (S(lhs), S(rhs)) => compareCasePattern(lhs, rhs)
     case (_, _) => false
   /**
     * Hard-coded subtyping relations used in normalization and coverage checking.
+    * TODO use base classes and also handle modules
     */
   def compareCasePattern(
-      lhs: Literal | ClassSymbol,
-      rhs: Literal | ClassSymbol
+      lhs: Literal | ClassSymbol | ModuleSymbol,
+      rhs: Literal | ClassSymbol | ModuleSymbol
   ): Bool = (lhs, rhs) match
     case (_, s: ClassSymbol) if s.nme === "Object" => true
     case (s1: ClassSymbol, s2: ClassSymbol) if s1.nme === "Int" && s2.nme === "Num" => true

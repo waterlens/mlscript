@@ -9,32 +9,32 @@ fun map(f) = case
   None as n then n
 //│ Desugared:
 //│ >  if
-//│ >    caseScrut@31 is Some($param0@33) and
-//│ >      let x@34 = $param0@33#0
-//│ >      else class:Some#1(f@30#0(x@34#0))
-//│ >    caseScrut@31 is None and
-//│ >      let n@32 = caseScrut@31#1
-//│ >      else n@32#0
+//│ >    caseScrut@32 is Some($param0@34) and
+//│ >      let x@35 = $param0@34#0
+//│ >      else globalThis:import#Option#666.Some‹member:Some›(f@31#666(x@35#666))
+//│ >    caseScrut@32 is None and
+//│ >      let n@33 = caseScrut@32#1
+//│ >      else n@33#666
 
 fun map(f) = case
   Some(x as n) then Some of f(n)
   None as n then n
 //│ Desugared:
 //│ >  if
-//│ >    caseScrut@40 is Some($param0@42) and
-//│ >      let x@44 = $param0@42#0
-//│ >      let n@43 = $param0@42#1
-//│ >      else class:Some#3(f@39#0(n@43#0))
-//│ >    caseScrut@40 is None and
-//│ >      let n@41 = caseScrut@40#1
-//│ >      else n@41#0
+//│ >    caseScrut@41 is Some($param0@43) and
+//│ >      let x@45 = $param0@43#0
+//│ >      let n@44 = $param0@43#1
+//│ >      else globalThis:import#Option#666.Some‹member:Some›(f@40#666(n@44#666))
+//│ >    caseScrut@41 is None and
+//│ >      let n@42 = caseScrut@41#1
+//│ >      else n@42#666
 
 fun foo = case
   Some(Some(a as b) as c) as d then [a, b, c, d]
 //│ Desugared:
-//│ >  if caseScrut@49 is Some($param0@51) and $param0@51 is Some($param0@53) and
-//│ >    let a@55 = $param0@53#0
-//│ >    let b@54 = $param0@53#1
-//│ >    let c@52 = $param0@51#1
-//│ >    let d@50 = caseScrut@49#1
-//│ >    else [a@55#0, b@54#0, c@52#0, d@50#0]
+//│ >  if caseScrut@50 is Some($param0@52) and $param0@52 is Some($param0@54) and
+//│ >    let a@56 = $param0@54#0
+//│ >    let b@55 = $param0@54#1
+//│ >    let c@53 = $param0@52#1
+//│ >    let d@51 = caseScrut@50#1
+//│ >    else [a@56#666, b@55#666, c@53#666, d@51#666]

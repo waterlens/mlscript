@@ -70,6 +70,7 @@ class Scope(val parent: Opt[Scope], val curThis: Opt[MemberSymbol[?]], val bindi
     bindings.valuesIterator.contains(name) || parent.exists(_.inScope(name))
   
   def lookup(l: Local): Opt[Str] =
+    // curThis.filter(_ is l).map(_ => thisProxy) orElse
     bindings.get(l).orElse(parent.flatMap(_.lookup(l)))
   
   def lookup_!(l: Local)(using Raise): Str =

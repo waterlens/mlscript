@@ -46,7 +46,8 @@ class MLsCompiler(predefFile: os.Path):
     given Elaborator.State = new Elaborator.State
     given Elaborator.Ctx = Elaborator.Ctx.init.nest(N)
     val elab = Elaborator(etl, file / os.up)
-    val (blk, newCtx) = elab.importFrom(res)
+    val resBlk = new syntax.Tree.Block(res)
+    val (blk, newCtx) = elab.importFrom(resBlk)
     val low = ltl.givenIn:
       codegen.Lowering()
     val jsb = codegen.js.JSBuilder()

@@ -19,44 +19,39 @@
 //│ ║  l.15: 	1
 //│ ╙──      	^
 //│ JS:
-//│ let tmp, tmp1; tmp = +(2); tmp1 = +(3); tmp1
+//│ let tmp, tmp1; tmp = + 2; tmp1 = + 3; tmp1
 //│ = 3
 
 :w
 :pe
-:ge
 1
 * 2
 * 3
 //│ ╔══[PARSE ERROR] Expected end of input; found literal instead
-//│ ║  l.29: 	* 2
+//│ ║  l.28: 	* 2
 //│ ╙──      	  ^
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.28: 	1
+//│ ║  l.27: 	1
 //│ ╙──      	^
-//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token '*'
 
 
-:fixme
+:sjs
 +
-//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token '}'
+//│ JS:
+//│ this["+"]
 
-:fixme
 *
-//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token '*'
 
 :w
 :pt
-:ge
 1
 *
 //│ Parsed tree:
 //│ IntLit of 1
 //│ Ident of "*"
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.51: 	1
+//│ ║  l.47: 	1
 //│ ╙──      	^
-//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token '*'
 
 
 fun (??) foo(x, y) = x + y
@@ -83,7 +78,7 @@ fun (??) foo(x, y) = x + y
 :pe
 ?? 1
 //│ ╔══[PARSE ERROR] Expected end of input; found literal instead
-//│ ║  l.84: 	?? 1
+//│ ║  l.79: 	?? 1
 //│ ╙──      	   ^
 //│ = [Function: foo]
 
@@ -92,10 +87,10 @@ fun (??) foo(x, y) = x + y
 1
 ?? 2
 //│ ╔══[PARSE ERROR] Expected end of input; found literal instead
-//│ ║  l.93: 	?? 2
+//│ ║  l.88: 	?? 2
 //│ ╙──      	   ^
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.92: 	1
+//│ ║  l.87: 	1
 //│ ╙──      	^
 //│ = [Function: foo]
 

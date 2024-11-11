@@ -22,7 +22,8 @@ object Desugarer:
       case _ => N
 end Desugarer
 
-class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, state: Elaborator.State):
+class Desugarer(tl: TraceLogger, elaborator: Elaborator)
+    (using raise: Raise, state: Elaborator.State, c: Elaborator.Ctx):
   import Desugarer.*
   import Elaborator.Ctx
   import elaborator.term
@@ -373,44 +374,44 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)(using raise: Raise, sta
           val ctxWithAlias = ctx + (alias.name -> aliasSymbol)
           Split.Let(aliasSymbol, ref, sequel(ctxWithAlias))
         expandMatch(scrutSymbol, pat, inner)(fallback)
-      // A single variable pattern or constructor pattern without parameters.
-      case ctor: Ident => fallback => ctx => ctx.get(ctor.name) match
-        case S(sym: ClassSymbol) => // TODO: refined
-          Branch(ref, Pattern.Class(sym, N, false)(ctor), sequel(ctx)) ~: fallback
-        case S(_: VarSymbol) | N =>
-          // If the identifier refers to a variable or nothing, we interpret it
-          // as a variable pattern. If `fallback` is not used when `sequel`
-          // is full, then we raise an error.
-          val aliasSymbol = VarSymbol(ctor, nextUid)
-          val ctxWithAlias = ctx + (ctor.name -> aliasSymbol)
-          Split.Let(aliasSymbol, ref, sequel(ctxWithAlias) ++ fallback)
-        case S(_) =>
+      case id @ Ident(nme) if nme.headOption.forall(_.isLower) => fallback => ctx =>
+        val aliasSymbol = VarSymbol(id, nextUid)
+        val ctxWithAlias = ctx + (nme -> aliasSymbol)
+        Split.Let(aliasSymbol, ref, sequel(ctxWithAlias) ++ fallback)
+      case ctor @ (_: Ident | _: Sel) => fallback => ctx =>
+        val clsTrm = elaborator.cls(ctor)
+        clsTrm.symbol.flatMap(_.asClsLike) match
+        case S(cls: ClassSymbol) =>
+            Branch(ref, Pattern.ClassLike(cls, clsTrm, N, false)(ctor), sequel(ctx)) ~: fallback
+        case S(cls: ModuleSymbol) =>
+          Branch(ref, Pattern.ClassLike(cls, clsTrm, N, false)(ctor), sequel(ctx)) ~: fallback
+        case N =>
           // Raise an error and discard `sequel`. Use `fallback` instead.
-          raise(ErrorReport(msg"Unknown symbol `${ctor.name}`." -> ctor.toLoc :: Nil))
+          raise(ErrorReport(msg"Cannot use this ${ctor.describe} as a pattern" -> ctor.toLoc :: Nil))
           fallback
       // A single constructor pattern.
-      case pat @ App(ctor: Ident, Tup(args)) => fallback => ctx => trace(
-        pre = s"expandMatch <<< ${ctor.name}(${args.iterator.map(_.showDbg).mkString(", ")})",
+      case pat @ App(ctor @ (_: Ident | _: Sel), Tup(args)) => fallback => ctx => trace(
+        pre = s"expandMatch <<< ${ctor}(${args.iterator.map(_.showDbg).mkString(", ")})",
         post = (r: Split) => s"expandMatch >>> ${r.showDbg}"
       ):
-        ctx.get(ctor.name) match
-          case S(cls: ClassSymbol) =>
-            val arity = cls.defn.flatMap(_.paramsOpt.map(_.length)).getOrElse(0)
-            if args.length =/= arity then
-              val n = arity.toString
-              val m = args.length.toString
-              raise(ErrorReport(msg"mismatched arity: expect $n, found $m" -> pat.toLoc :: Nil))
-            val params = scrutSymbol.getSubScrutinees(cls)
-            val clsRef = cls.ref(ctor)
-            Branch(
-              ref,
-              Pattern.Class(cls, S(params), false)(ctor), // TODO: refined?
-              subMatches(params zip args, sequel)(Split.End)(ctx)
-            ) ~: fallback
-          case _ =>
-            // Raise an error and discard `sequel`. Use `fallback` instead.
-            raise(ErrorReport(msg"Unknown constructor `${ctor.name}`." -> ctor.toLoc :: Nil))
-            fallback
+        val clsTrm = elaborator.cls(ctor)
+        clsTrm.symbol.flatMap(_.asClsLike) match
+        case S(cls: ClassSymbol) =>
+          val arity = cls.defn.flatMap(_.paramsOpt.map(_.length)).getOrElse(0)
+          if args.length =/= arity then
+            val n = arity.toString
+            val m = args.length.toString
+            raise(ErrorReport(msg"mismatched arity: expect $n, found $m" -> pat.toLoc :: Nil))
+          val params = scrutSymbol.getSubScrutinees(cls)
+          Branch(
+            ref,
+            Pattern.ClassLike(cls, clsTrm, S(params), false)(ctor), // TODO: refined?
+            subMatches(params zip args, sequel)(Split.End)(ctx)
+          ) ~: fallback
+        case _ =>
+          // Raise an error and discard `sequel`. Use `fallback` instead.
+          raise(ErrorReport(msg"Cannot use this ${ctor.describe} as an extractor" -> ctor.toLoc :: Nil))
+          fallback
       // A single literal pattern
       case literal: Literal => fallback => ctx => trace(
         pre = s"expandMatch: literal <<< $literal",

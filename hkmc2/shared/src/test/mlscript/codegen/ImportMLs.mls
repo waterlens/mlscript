@@ -2,13 +2,21 @@
 
 
 import "../../mlscript-compile/Option.mls"
-//│ Option = Option { Some: [class Some], None: None {}, Both: [class Both] }
+//│ > Option {
+//│ >   Some: [Function: Some] { class: [class Some] },
+//│ >   None: None { class: [class None] },
+//│ >   Both: [Function: Both] { class: [class Both] },
+//│ >   class: [class Option]
+//│ Option = }
 
 
 open Option { isDefined }
 
 Option.None isDefined()
 //│ = false
+
+Option.Some(1) isDefined()
+//│ = true
 
 
 open Option
@@ -21,17 +29,28 @@ None isDefined()
 //│ Option.isDefined(Option.None)
 //│ = false
 
+Some(1) isDefined()
+//│ = true
+
+Some(1)
+  isDefined()
+//│ = true
+
+// TODO: make it `new Option.Some.class(1)`
+:sjs
 (new Some(1)) isDefined()
+//│ JS:
+//│ let tmp; tmp = new Option.Some(1); Option.isDefined(tmp)
 //│ = true
 
 :re
 new Some(1) isDefined()
-//│ ═══[RUNTIME ERROR] TypeError: Class constructor Some cannot be invoked without 'new'
+//│ ═══[RUNTIME ERROR] TypeError: tmp1 is not a constructor
 
 :re
 new Some(1)
   isDefined()
-//│ ═══[RUNTIME ERROR] TypeError: Class constructor Some cannot be invoked without 'new'
+//│ ═══[RUNTIME ERROR] TypeError: tmp1 is not a constructor
 
 
 open Option { Some, None, isDefined }

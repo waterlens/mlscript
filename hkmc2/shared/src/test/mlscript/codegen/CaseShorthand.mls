@@ -18,14 +18,20 @@ case { x then x }
 x => if x is
   0 then true
 //│ JS:
-//│ (x) => { if (x === 0) { return true } else { throw new this.Error("match error") } }
+//│ (x) => { if (x === 0) { return true } else { throw new globalThis.Error("match error") } }
 //│ = [Function (anonymous)]
 
 :sjs
 case
   0 then true
 //│ JS:
-//│ (caseScrut) => { if (caseScrut === 0) { return true } else { throw new this.Error("match error") } }
+//│ (caseScrut) => {
+//│   if (caseScrut === 0) {
+//│     return true
+//│   } else {
+//│     throw new globalThis.Error("match error")
+//│   }
+//│ }
 //│ = [Function (anonymous)]
 
 :sjs
@@ -39,20 +45,19 @@ case
 class Some(value)
 module None
 
-// FIXME
 :sjs
 val isDefined = case
   Some then true
   None then false
 //│ JS:
 //│ this.isDefined = (caseScrut) => {
-//│   if (caseScrut instanceof this.Some) {
+//│   if (caseScrut instanceof this.Some.class) {
 //│     return true
 //│   } else {
-//│     if (caseScrut === this.None) {
+//│     if (caseScrut instanceof this.None.class) {
 //│       return false
 //│     } else {
-//│       throw new this.Error("match error")
+//│       throw new globalThis.Error("match error")
 //│     }
 //│   }
 //│ };

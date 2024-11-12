@@ -175,8 +175,8 @@ sealed trait Statement extends AutoLocated:
         case S(x) => " = " + x.showDbg
         case N => ""
       }"
-    case cls: ClassDef =>
-      s"class ${cls.sym.nme}${
+    case cls: ClassLikeDef =>
+      s"${cls.kind} ${cls.sym.nme}${
         cls.tparams.map(_.showDbg).mkStringOr(", ", "[", "]")}${
         cls.paramsOpt.fold("")(_.map(_.showDbg).mkString("(", ", ", ")"))} ${cls.body}"
     case Import(sym, file) => s"import ${sym} from ${file}"
@@ -200,7 +200,7 @@ case class ObjBody(blk: Term.Blk):
   override def toString: String = blk.showDbg
 
 
-case class Import(sym: TermSymbol, file: Str) extends Statement
+case class Import(sym: MemberSymbol[?], file: Str) extends Statement
 
 
 sealed abstract class Declaration:
@@ -215,6 +215,7 @@ sealed abstract class ClassLikeDef extends Definition:
   val owner: Opt[InnerSymbol]
   val sym: MemberSymbol[? <: ClassLikeDef]
   val paramsOpt: Opt[Ls[Param]]
+  val tparams: Ls[TyParam]
   val kind: ClsLikeKind
   val body: ObjBody
 

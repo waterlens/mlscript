@@ -54,8 +54,10 @@ object Elaborator:
       def symbol = S(sym)
     final case class SelElem(val base: Elem, val nme: Str, val symOpt: Opt[Symbol]) extends Elem:
       def ref(id: Tree.Ident): Term =
-        // * Note: due to symbolic ops, we may have `id.name =/= nme`
-        Term.Sel(base.ref(Ident(base.nme)), new Tree.Ident(nme).withLocOf(id))(symOpt)
+        // * Note: due to symbolic ops, we may have `id.name =/= nme`;
+        // * e.g., we can have `id.name = "|>"` and `nme = "pipe"`.
+        Term.Sel(base.ref(Ident(base.nme)),
+          new Tree.Ident(nme).withLocOf(id))(symOpt)
       def symbol = symOpt
     given Conversion[Symbol, Elem] = RefElem(_)
     val empty: Ctx = Ctx(N, N, Map.empty)
@@ -233,7 +235,7 @@ extends Importer:
       Term.App(term(lhs), term(rhs))(tree, sym)
     case Sel(pre, nme) =>
       val preTrm = term(pre)
-      val sym = resolveField(tree, preTrm.symbol, nme)
+      val sym = resolveField(nme, preTrm.symbol, nme)
       Term.Sel(preTrm, nme)(sym)
     case tree @ Tup(fields) =>
       Term.Tup(fields.map(fld(_)))(tree)
@@ -399,7 +401,7 @@ extends Importer:
         val (newCtx, newAcc) = arg match
           case Tree.StrLit(path) =>
             val stmt = importPath(path)
-            (ctx + (stmt.sym.name -> stmt.sym),
+            (ctx + (stmt.sym.nme -> stmt.sym),
             stmt.withLocOf(m) :: acc)
           case _ =>
             raise(ErrorReport(

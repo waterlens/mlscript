@@ -2,12 +2,6 @@
 
 
 import "../../mlscript-compile/Option.mls"
-//│ > Option {
-//│ >   Some: [Function: Some] { class: [class Some] },
-//│ >   None: None { class: [class None] },
-//│ >   Both: [Function: Both] { class: [class Both] },
-//│ >   class: [class Option]
-//│ Option = }
 
 
 open Option { isDefined }
@@ -36,11 +30,10 @@ Some(1)
   isDefined()
 //│ = true
 
-// TODO: make it `new Option.Some.class(1)`
 :sjs
 (new Some(1)) isDefined()
 //│ JS:
-//│ let tmp; tmp = new Option.Some(1); Option.isDefined(tmp)
+//│ let tmp; tmp = new Option.Some.class(1); Option.isDefined(tmp)
 //│ = true
 
 :re
@@ -63,5 +56,26 @@ None isDefined()
 
 None == Option.None
 //│ = true
+
+
+:e
+Option.oops
+//│ ╔══[ERROR] Module 'Option' does not contain member 'oops'
+//│ ║  l.62: 	Option.oops
+//│ ╙──      	      ^^^^^
+
+:e
+open Option { oops }
+//│ ╔══[ERROR] Module 'Option' does not contain member 'oops'
+//│ ║  l.68: 	open Option { oops }
+//│ ╙──      	              ^^^^
+
+oops
+
+:e
+Option.None.oops
+//│ ╔══[ERROR] Module 'None' does not contain member 'oops'
+//│ ║  l.76: 	Option.None.oops
+//│ ╙──      	           ^^^^^
 
 

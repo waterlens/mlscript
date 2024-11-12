@@ -382,7 +382,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
   trace[(GeneralType, Type)](s"${ctx.lvl}. Typing ${t.showDbg}", res => s": $res"):
     given CCtx = CCtx.init(t, N)
     t match
-      case sel @ Term.Sel(Ref(_: TopLevelSymbol | ThisSymbol(_: TopLevelSymbol)), nme)
+      case sel @ Term.Sel(Ref(_: TopLevelSymbol), nme)
         if sel.symbol.isDefined =>
         typeCheck(Ref(sel.symbol.get)(sel.nme, 666)) // FIXME 666
       case Ref(sym) =>

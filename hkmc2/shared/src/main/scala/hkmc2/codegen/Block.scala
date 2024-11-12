@@ -98,7 +98,7 @@ final case class FunDefn(
 ) extends Defn
 
 final case class ValDefn(
-    owner: Opt[MemberSymbol[?]],
+    owner: Opt[InnerSymbol],
     k: syntax.Val,
     sym: BlockMemberSymbol,
     // params: Ls[ParamList],
@@ -138,7 +138,7 @@ case class Select(qual: Path, name: Tree.Ident) extends Path
 
 enum Value extends Path:
   case Ref(l: Local)
-  case This(sym: MemberSymbol[?]) // TODO rm – just use Ref
+  case This(sym: InnerSymbol) // TODO rm – just use Ref
   case Lit(lit: Literal)
   case Lam(params: Ls[Param], body: Block)
   case Arr(elems: Ls[Path])

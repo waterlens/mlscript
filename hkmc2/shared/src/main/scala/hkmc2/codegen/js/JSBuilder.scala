@@ -11,10 +11,9 @@ import hkmc2.syntax.ImmutVal
 import hkmc2.semantics.Elaborator
 import hkmc2.syntax.Tree
 import hkmc2.semantics.TopLevelSymbol
-import hkmc2.semantics.MemberSymbol
+import hkmc2.semantics.InnerSymbol
 import hkmc2.semantics.ParamList
 import hkmc2.codegen.Value.Lam
-import hkmc2.semantics.ThisSymbol
 
 
 // TODO factor some logic for other codegen backends
@@ -57,24 +56,8 @@ class JSBuilder extends CodeBuilder:
     case ts: semantics.BlockMemberSymbol => // this means it's a locally-defined member
       ts.nme
       // ts.trmTree
-    // case ts: semantics.ClassSymbol => // TODO dedup
-    //   ts.owner match
-    //   case S(owner) => // TODO rm owners
-    //     doc"${result(Value.This(owner))}.${ts.id.name}"
-    //   case N =>
-    //     ts.id.name
-    // case ts: semantics.ModuleSymbol => // TODO dedup
-    //   ts.owner match
-    //   case S(owner) => // TODO rm owners
-    //     doc"${result(Value.This(owner))}.${ts.id.name}"
-    //   case N =>
-    //     ts.id.name
-    case ThisSymbol(sym) =>
-      summon[Scope].findThis_!(sym)
-    // case imp: ImportedSymbol =>
-    //   doc"${getVar(imp.base)}.${imp.id.name}"
-    case sym: TopLevelSymbol =>
-      summon[Scope].findThis_!(sym)
+    case ts: semantics.InnerSymbol =>
+      summon[Scope].findThis_!(ts)
     case _ => summon[Scope].lookup_!(l)
   
   def result(r: Result)(using Raise, Scope): Document = r match
@@ -84,7 +67,7 @@ class JSBuilder extends CodeBuilder:
     case Value.Lit(lit) => lit.idStr
     
     // * FIXME: this should be done in the Elaborator
-    // case Call(Value.Ref(l: semantics.MemberSymbol[?]), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
+    // case Call(Value.Ref(l: semantics.InnerSymbol), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
     // case Call(Value.Ref(l), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
     case Call(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident(nme)), lhs :: rhs :: Nil) if builtinOpsMap contains nme =>
       val op = builtinOpsMap(nme)
@@ -124,7 +107,7 @@ class JSBuilder extends CodeBuilder:
     case AssignField(p, n, r, rst) =>
       doc" # ${result(p)}.${n.name} = ${result(r)};${returningTerm(rst)}"
     case Define(defn, rst) =>
-      def mkThis(sym: MemberSymbol[?]): Document =
+      def mkThis(sym: InnerSymbol): Document =
         result(Value.This(sym))
       // println(defn.sym)
       val resJS = defn match
@@ -142,7 +125,10 @@ class JSBuilder extends CodeBuilder:
           // doc"const ${sym.nme} = ${result(p)}; # ${mkThis(owner)}.${sym.nme} = ${sym.nme}"
           doc"${mkThis(owner)}.${sym.nme} = ${result(p)};${returningTerm(rst)}"
       case _ =>
-        val (thisProxy, res) = scope.nestRebindThis(defn.sym):
+        val (thisProxy, res) = scope.nestRebindThis(
+            // * Either this is an InnerSymbol or this is a Fun,
+            // * and we need to rebind `this` to None to shadow it.
+            S(defn.sym).collectFirst{ case s: InnerSymbol => s }):
           defn match
           case FunDefn(sym, Nil, body) =>
             TODO("getters")

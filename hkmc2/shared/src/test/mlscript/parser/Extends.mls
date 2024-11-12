@@ -4,43 +4,43 @@
 class Base
 class Derived extends Base
 //│ Env:
-//│   Base -> SelElem(RefElem(globalThis:block#0.this),Base,Some(member:Base))
-//│   Derived -> SelElem(RefElem(globalThis:block#0.this),Derived,Some(member:Derived))
+//│   Base -> SelElem(RefElem(globalThis:block#0),Base,Some(member:Base))
+//│   Derived -> SelElem(RefElem(globalThis:block#0),Derived,Some(member:Derived))
 
 // Extension with parameters
 abstract class Box
 class IntBox(val value: Int) extends Box
 class StrBox(val value: Str) extends Box
 //│ Env:
-//│   Box -> SelElem(RefElem(globalThis:block#1.this),Box,Some(member:Box))
-//│   IntBox -> SelElem(RefElem(globalThis:block#1.this),IntBox,Some(member:IntBox))
-//│   StrBox -> SelElem(RefElem(globalThis:block#1.this),StrBox,Some(member:StrBox))
+//│   Box -> SelElem(RefElem(globalThis:block#1),Box,Some(member:Box))
+//│   IntBox -> SelElem(RefElem(globalThis:block#1),IntBox,Some(member:IntBox))
+//│   StrBox -> SelElem(RefElem(globalThis:block#1),StrBox,Some(member:StrBox))
 
 // Extension with symbolic name
 abstract class Ring
 module End extends Ring
 class (++) Link(left: Ring, right: Ring) extends Ring
 //│ Env:
-//│   ++ -> SelElem(RefElem(globalThis:block#2.this),Link,Some(member:Link))
-//│   End -> SelElem(RefElem(globalThis:block#2.this),End,Some(member:End))
-//│   Link -> SelElem(RefElem(globalThis:block#2.this),Link,Some(member:Link))
-//│   Ring -> SelElem(RefElem(globalThis:block#2.this),Ring,Some(member:Ring))
+//│   ++ -> SelElem(RefElem(globalThis:block#2),Link,Some(member:Link))
+//│   End -> SelElem(RefElem(globalThis:block#2),End,Some(member:End))
+//│   Link -> SelElem(RefElem(globalThis:block#2),Link,Some(member:Link))
+//│   Ring -> SelElem(RefElem(globalThis:block#2),Ring,Some(member:Ring))
 
 // Extension with type parameters
 abstract class Option[T]: (Some[T] | None)
 class Some[T](val value: T) extends Option[T]
 module None extends Option[nothing]
 //│ Env:
-//│   None -> SelElem(RefElem(globalThis:block#3.this),None,Some(member:None))
-//│   Option -> SelElem(RefElem(globalThis:block#3.this),Option,Some(member:Option))
-//│   Some -> SelElem(RefElem(globalThis:block#3.this),Some,Some(member:Some))
+//│   None -> SelElem(RefElem(globalThis:block#3),None,Some(member:None))
+//│   Option -> SelElem(RefElem(globalThis:block#3),Option,Some(member:Option))
+//│   Some -> SelElem(RefElem(globalThis:block#3),Some,Some(member:Some))
 
 // Extension with type parameters and symbolic name
 abstract class List[T]: (Cons[T] | Nil)
 class (::) Cons[T](val head: T, val tail: List[T]) extends List[T]
 module Nil extends List[nothing]
 //│ Env:
-//│   :: -> SelElem(RefElem(globalThis:block#4.this),Cons,Some(member:Cons))
-//│   Cons -> SelElem(RefElem(globalThis:block#4.this),Cons,Some(member:Cons))
-//│   List -> SelElem(RefElem(globalThis:block#4.this),List,Some(member:List))
-//│   Nil -> SelElem(RefElem(globalThis:block#4.this),Nil,Some(member:Nil))
+//│   :: -> SelElem(RefElem(globalThis:block#4),Cons,Some(member:Cons))
+//│   Cons -> SelElem(RefElem(globalThis:block#4),Cons,Some(member:Cons))
+//│   List -> SelElem(RefElem(globalThis:block#4),List,Some(member:List))
+//│   Nil -> SelElem(RefElem(globalThis:block#4),Nil,Some(member:Nil))

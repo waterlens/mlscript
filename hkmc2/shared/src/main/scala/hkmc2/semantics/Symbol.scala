@@ -83,14 +83,8 @@ class VarSymbol(val id: Ident, uid: Int) extends BlockLocalSymbol(id.name, uid) 
   // override def toString: Str = s"$name@$uid"
 
 
-// TODO: rm; handle `this` references as This terms in Elab instead
-case class ThisSymbol(outer: MemberSymbol[?]) extends Symbol:
-  def nme: Str = "this"
-  def toLoc: Option[Loc] = N
-  override def toString: Str =
-    s"$outer.this"
-
-
+/** This is the outside-facing symbol associated to a possibly-overloaded
+  * definition living in a block – e.g., a module or class. */
 class BlockMemberSymbol(val nme: Str, val trees: Ls[Tree]) extends MemberSymbol[Definition]:
   
   def toLoc: Option[Loc] = Loc(trees)
@@ -114,12 +108,12 @@ class BlockMemberSymbol(val nme: Str, val trees: Ls[Tree]) extends MemberSymbol[
 end BlockMemberSymbol
 
 
-abstract class MemberSymbol[Defn <: Definition] extends Symbol:
+sealed abstract class MemberSymbol[Defn <: Definition] extends Symbol:
   def nme: Str
   var defn: Opt[Defn] = N
 
 
-class TermSymbol(val k: TermDefKind, val owner: Opt[MemberSymbol[?]], val id: Tree.Ident)
+class TermSymbol(val k: TermDefKind, val owner: Opt[InnerSymbol], val id: Tree.Ident)
     extends MemberSymbol[Definition] with LocalSymbol with NamedSymbol:
   def nme: Str = id.name
   def name: Str = nme
@@ -147,14 +141,19 @@ case class TupSymbol(arity: Opt[Int]) extends CtorSymbol:
 type TypeSymbol = ClassSymbol | TypeAliasSymbol
 
 
+/** This is the symbol associated to specific definitions.
+  * One overloaded `BlockMemberSymbol` may correspond to multiple `InnerSymbol`s
+  * A `Ref(_: InnerSymbol)` represents a `this`-like reference to the current object. */
+sealed trait InnerSymbol extends Symbol
+
 class ClassSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)
-    extends MemberSymbol[ClassDef] with CtorSymbol:
+    extends MemberSymbol[ClassDef] with CtorSymbol with InnerSymbol:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of classe here
   override def toString: Str = s"class:$nme"
 
 class ModuleSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)
-    extends MemberSymbol[ModuleDef] with CtorSymbol:
+    extends MemberSymbol[ModuleDef] with CtorSymbol with InnerSymbol:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of module here
   override def toString: Str = s"module:${id.name}"
@@ -164,7 +163,8 @@ class TypeAliasSymbol(val id: Tree.Ident) extends MemberSymbol:
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of type alias here
   override def toString: Str = s"module:${id.name}"
 
-class TopLevelSymbol(blockNme: Str) extends MemberSymbol[ModuleDef]:
+class TopLevelSymbol(blockNme: Str)
+    extends MemberSymbol[ModuleDef] with InnerSymbol:
   def nme = blockNme
   def toLoc: Option[Loc] = N
   override def toString: Str = s"globalThis:$blockNme"

@@ -18,7 +18,7 @@ import Keyword.{`let`, `set`}
 
 object Elaborator:
   
-  case class Ctx(outer: Opt[MemberSymbol[?]], parent: Opt[Ctx], env: Map[Str, Ctx.Elem]):
+  case class Ctx(outer: Opt[InnerSymbol], parent: Opt[Ctx], env: Map[Str, Ctx.Elem]):
     def +(local: Str -> Symbol): Ctx = copy(outer, env = env + local.mapSecond(Ctx.RefElem(_)))
     def ++(locals: IterableOnce[Str -> Symbol]): Ctx =
       copy(outer, env = env ++ locals.mapValues(Ctx.RefElem(_)))
@@ -32,10 +32,10 @@ object Elaborator:
           case N => sym: Ctx.Elem
         )
       )
-    def nest(outer: Opt[MemberSymbol[?]]): Ctx = Ctx(outer, Some(this), Map.empty)
+    def nest(outer: Opt[InnerSymbol]): Ctx = Ctx(outer, Some(this), Map.empty)
     def get(name: Str): Opt[Ctx.Elem] =
       env.get(name).orElse(parent.flatMap(_.get(name)))
-    def getOuter: Opt[MemberSymbol[?]] = outer.orElse(parent.flatMap(_.getOuter))
+    def getOuter: Opt[InnerSymbol] = outer.orElse(parent.flatMap(_.getOuter))
     lazy val allMembers: Map[Str, Symbol] =
       parent.fold(Map.empty)(_.allMembers) ++ env.flatMap:
         case (n, re: Ctx.RefElem) => (n, re.sym) :: Nil
@@ -59,7 +59,8 @@ object Elaborator:
       def symbol = symOpt
     given Conversion[Symbol, Elem] = RefElem(_)
     val empty: Ctx = Ctx(N, N, Map.empty)
-    val globalThisSymbol = TermSymbol(ImmutVal, N, Ident("globalThis"))
+    // val globalThisSymbol = TermSymbol(ImmutVal, N, Ident("globalThis"))
+    val globalThisSymbol = TopLevelSymbol("globalThis")
     val seqSymbol = TermSymbol(ImmutVal, N, Ident(";"))
     def init(using State): Ctx = empty.copy(env = Map(
       "globalThis" -> globalThisSymbol,
@@ -159,8 +160,7 @@ extends Importer:
       Term.Error
     case id @ Ident("this") =>
       ctx.getOuter match
-      case S(sym) =>
-        Term.This(sym)
+      case S(sym) => sym.ref(id)
       case N =>
         raise(ErrorReport(msg"Cannot use 'this' outside of an object scope." -> tree.toLoc :: Nil))
         Term.Error
@@ -486,7 +486,8 @@ extends Importer:
           case L(d) =>
             raise(d)
             new Ident("<error>") // TODO improve
-        var newCtx = ctx.nest(S(td.symbol))
+        var newCtx = ctx.nest(S(td.symbol).collectFirst{
+          case s: InnerSymbol => s })
         val tps = td.typeParams match
           case S(ts) =>
             ts.tys.flatMap: targ =>
@@ -521,8 +522,9 @@ extends Importer:
             res
         val defn = k match
         case Als =>
-          val alsSym = td.symbol.asInstanceOf[TypeAliasSymbol] // TODO improve
-          newCtx.nest(S(alsSym)).givenIn:
+          val alsSym = td.symbol.asInstanceOf[TypeAliasSymbol] // TODO improve `asInstanceOf`
+          // newCtx.nest(S(alsSym)).givenIn:
+          newCtx.nest(N).givenIn:
             assert(ps.isEmpty)
             assert(body.isEmpty)
             val d =
@@ -531,7 +533,7 @@ extends Importer:
             alsSym.defn = S(d)
             d
         case Mod =>
-          val clsSym = td.symbol.asInstanceOf[ModuleSymbol] // TODO: improve
+          val clsSym = td.symbol.asInstanceOf[ModuleSymbol] // TODO: improve `asInstanceOf`
           val owner = ctx.outer
           newCtx.nest(S(clsSym)).givenIn:
             log(s"Processing type definition $nme")
@@ -545,7 +547,7 @@ extends Importer:
             clsSym.defn = S(cd)
             cd
         case Cls =>
-          val clsSym = td.symbol.asInstanceOf[MemberSymbol[ClassDef]] // TODO: improve
+          val clsSym = td.symbol.asInstanceOf[ClassSymbol] // TODO: improve `asInstanceOf`
           val owner = ctx.outer
           newCtx.nest(S(clsSym)).givenIn:
             log(s"Processing type definition $nme")
@@ -576,7 +578,7 @@ extends Importer:
         go(sts, res :: acc)
     end go
     
-    c.withMembers(members, c.outer.map(out => ThisSymbol(out))).givenIn:
+    c.withMembers(members, c.outer).givenIn:
       go(blk.desugStmts, Nil)
   
   

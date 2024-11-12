@@ -93,7 +93,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
       
       import Elaborator.Ctx.*
       def definedValues = curCtx.env.iterator.flatMap:
-        case (nme, e @ (_: RefElem | SelElem(RefElem(ThisSymbol(_)), _, _))) =>
+        case (nme, e @ (_: RefElem | SelElem(RefElem(_: InnerSymbol), _, _))) =>
           e.symbol match
           case S(ts: TermSymbol) if ts.k.isInstanceOf[syntax.ValLike] => S((nme, ts))
           case S(ts: BlockMemberSymbol)

@@ -57,8 +57,6 @@ class Lowering(using TL, Raise, Elaborator.State):
       fs.foldRight[Ls[Path] => Block](args => k(Value.Arr(args.reverse)))((a, acc) =>
         args => subTerm(a.value)(r => acc(r :: args))
       )(Nil)
-    case st.This(sym) =>
-      k(subst(Value.This(sym)))
     case st.Ref(sym) =>
       sym match
       case sym: BlockMemberSymbol =>
@@ -71,8 +69,6 @@ class Lowering(using TL, Raise, Elaborator.State):
       case sym: ModuleSymbol =>
         k(subst(Value.Ref(sym)))
       case sym: TopLevelSymbol =>
-        k(subst(Value.Ref(sym)))
-      case sym: ThisSymbol =>
         k(subst(Value.Ref(sym)))
       /* // * Old logic that auto-lifted `C` ~> `(...) => new C(...)`
       case sym: ClassSymbol => // TODO rm

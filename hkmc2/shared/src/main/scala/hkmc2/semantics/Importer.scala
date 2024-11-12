@@ -33,9 +33,12 @@ class Importer:
       val id = new syntax.Tree.Ident(nme) // TODO loc
       
       file.ext match
+      
       case "mjs" | "js" =>
         Import(sym, file.toString)
+        
       case "mls" =>
+        
         val block = os.read(file)
         val fph = new FastParseHelpers(block)
         val origin = Origin(file.toString, 0, fph)
@@ -69,9 +72,11 @@ class Importer:
         
         val jsFile = file / os.up / (file.baseName + ".mjs")
         Import(sym, jsFile.toString)
+        
       case _ =>
         raise(ErrorReport(msg"Unsupported file extension: ${file.ext}" -> N :: Nil))
         Import(sym, file.toString)
+      
     else
       Import(sym, path)
     

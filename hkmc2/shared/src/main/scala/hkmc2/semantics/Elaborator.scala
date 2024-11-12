@@ -369,26 +369,37 @@ extends Importer:
       case Open(bod) :: sts =>
         bod match
           case Jux(bse, Block(sts)) =>
-            S(bse -> sts)
+            some(bse -> some(sts))
           // * There could be other shapes of open statements...
+          case bse: Ident =>
+            some(bse -> N)
           case _ =>
             raise(ErrorReport(msg"Illegal 'open' statement shape." -> bod.toLoc :: Nil))
             N
         match
         case N => go(sts, acc)
-        case S(base, importedTrees) =>
+        case S((base, importedTrees)) =>
           base match
           case baseId: Ident =>
             ctx.get(baseId.name) match
-            case S(baseSym) =>
-              val importedNames = importedTrees.flatMap:
-                case id: Ident =>
-                  val sym = resolveField(id, baseSym.symbol, id)
-                  val e = Ctx.SelElem(baseSym, id.name, sym)
-                  id.name -> e :: Nil
-                case t =>
-                  raise(ErrorReport(msg"Illegal 'open' statement element." -> t.toLoc :: Nil))
-                  Nil
+            case S(baseElem) =>
+              val importedNames = importedTrees match
+                case N => // "wilcard" open
+                  baseElem.symbol match
+                  case S(sym: BlockMemberSymbol) if sym.modTree.isDefined =>
+                    sym.modTree.get.definedSymbols.map:
+                      case (nme, sym) => nme -> Ctx.SelElem(baseElem, nme, S(sym))
+                  case _ =>
+                    raise(ErrorReport(msg"Wildcard 'open' not supported for this kind of symbol." -> baseId.toLoc :: Nil))
+                    Nil
+                case S(sts) => sts.flatMap:
+                  case id: Ident =>
+                    val sym = resolveField(id, baseElem.symbol, id)
+                    val e = Ctx.SelElem(baseElem, id.name, sym)
+                    id.name -> e :: Nil
+                  case t =>
+                    raise(ErrorReport(msg"Illegal 'open' statement element." -> t.toLoc :: Nil))
+                    Nil
               (ctx elem_++ importedNames).givenIn:
                 go(sts, acc)
             case N =>

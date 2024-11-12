@@ -5,11 +5,21 @@ module Foo with
   val x = 1
 
 
+(open Foo { x })
+
+(((open Foo { x })))
+
+:e
+(open Foo { x }) + 1
+//│ ╔══[ERROR] Illegal position for 'open' statement.
+//│ ║  l.13: 	(open Foo { x }) + 1
+//│ ╙──      	      ^^^^^^^
+
 :e
 open Foo { y }
 //│ ╔══[ERROR] Module 'Foo' does not contain member 'y'
-//│ ║  l.9: 	open Foo { y }
-//│ ╙──     	           ^
+//│ ║  l.19: 	open Foo { y }
+//│ ╙──      	           ^
 
 :sjs
 y

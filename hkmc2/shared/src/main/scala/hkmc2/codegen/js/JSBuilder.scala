@@ -268,13 +268,19 @@ class JSBuilder extends CodeBuilder:
     
     // case _ => ???
   
-  def program(p: Program, exprt: Opt[Str])(using Raise, Scope): Document =
+  def program(p: Program, exprt: Opt[Str], wd: os.Path)(using Raise, Scope): Document =
+    val compilingFile: Bool = exprt.isDefined // * If there's an export, it means we're not in the worksheet
     p.imports.foreach: i =>
       i._1 -> scope.allocateName(i._1)
     val imps = p.imports.map: i =>
-      val v = doc"this.${getVar(i._1)}"
-      doc"""$v = await import("${i._2.toString
-        }"); # if ($v.default !== undefined) $v = $v.default;"""
+      if compilingFile
+      then
+        val relPath = os.Path(i._2.toString).relativeTo(wd).toString
+        doc"""import "./${relPath}";"""
+      else
+        val v = doc"this.${getVar(i._1)}"
+        doc"""$v = await import("${i._2.toString
+          }"); # if ($v.default !== undefined) $v = $v.default;"""
     imps.mkDocument(doc" # ") :/: block(p.main) :: (
       exprt match
         case S(e) => doc"\nexport default ${e};\n"

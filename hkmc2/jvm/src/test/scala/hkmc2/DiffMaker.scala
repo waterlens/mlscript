@@ -80,6 +80,8 @@ abstract class DiffMaker:
         else self.setCurrentValue(())
     if init then setCurrentValue(()) else disable.setCurrentValue(())
   
+  val initCmd = NullaryCommand("init")
+  initCmd.setCurrentValue(()) // * Starts enabled at the top of the file
   val global = NullaryCommand("global")
   global.setCurrentValue(()) // * Starts enabled at the top of the file
   
@@ -217,6 +219,8 @@ abstract class DiffMaker:
     case "" :: Nil => // To prevent adding an extra newline at the end
     case (line @ "") :: ls =>
       out.println(line)
+      if initCmd.isSet then
+        init()
       resetCommands
       rec(ls)
     case ":exit" :: ls =>
@@ -308,6 +312,10 @@ abstract class DiffMaker:
       println(s"Updating $file...")
       os.write.over(file, result)
   
+  // * Called after the very first command block
+  // * and every time a further command block with `:init` finishes
+  def init(): Unit =
+    ()
   
   
 end DiffMaker

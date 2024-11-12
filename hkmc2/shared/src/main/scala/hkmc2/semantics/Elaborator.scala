@@ -388,7 +388,7 @@ extends Importer:
                   baseElem.symbol match
                   case S(sym: BlockMemberSymbol) if sym.modTree.isDefined =>
                     sym.modTree.get.definedSymbols.map:
-                      case (nme, sym) => nme -> Ctx.SelElem(baseElem, nme, S(sym))
+                      case (nme, sym) => nme -> Ctx.SelElem(baseElem, sym.nme, S(sym))
                   case _ =>
                     raise(ErrorReport(msg"Wildcard 'open' not supported for this kind of symbol." -> baseId.toLoc :: Nil))
                     Nil

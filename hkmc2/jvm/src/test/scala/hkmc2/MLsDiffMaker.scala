@@ -10,6 +10,10 @@ import hkmc2.semantics.Elaborator
 
 abstract class MLsDiffMaker extends DiffMaker:
   
+  val bbmlOpt: Command[?]
+  
+  val wd = file / os.up
+  
   class DebugTreeCommand(name: Str) extends Command[Product => Str](name)(
     line => if line.contains("loc") then
       (t: Product) => t match
@@ -22,8 +26,9 @@ abstract class MLsDiffMaker extends DiffMaker:
       Function.const("")
   ):
     def post: Product => Str = get.getOrElse(Function.const(""))
-
-  val predefFile: os.Path
+  
+  val preludeFile: os.Path // * Contains declarations of JS builtins
+  val predefFile: os.Path // * Contains MLscript standard library definitions
   
   val dbgElab = NullaryCommand("de")
   val dbgParsing = NullaryCommand("dp")
@@ -59,9 +64,26 @@ abstract class MLsDiffMaker extends DiffMaker:
   
   var curCtx = Elaborator.Ctx.init.nest(N)
   
+  
   override def run(): Unit =
-    if file =/= predefFile then importFile(predefFile, verbose = false)
+    if file =/= preludeFile then importFile(preludeFile, verbose = false)
     super.run()
+  
+  
+  override def init(): Unit =
+    if bbmlOpt.isUnset then
+      import syntax.*
+      import Tree.*
+      import Keyword.*
+      given raise: Raise = d =>
+        output(s"Error: $d")
+        ()
+      processTrees(
+        Modified(`import`, N, StrLit(predefFile.toString))
+        :: Open(Ident("Predef"))
+        :: Nil)
+    super.init()
+  
   
   def importFile(file: os.Path, verbose: Bool): Unit =
     
@@ -86,7 +108,7 @@ abstract class MLsDiffMaker extends DiffMaker:
     val imprtSymbol =
       semantics.TopLevelSymbol("import#"+file.baseName)
     given Elaborator.Ctx = curCtx.nest(S(imprtSymbol))
-    val elab = Elaborator(etl, file / os.up)
+    val elab = Elaborator(etl, wd)
     try
       val resBlk = new syntax.Tree.Block(res)
       val (e, newCtx) = elab.importFrom(resBlk)

@@ -30,11 +30,11 @@ final case class BbCtx(
   def +=(p: Symbol -> GeneralType): Unit = env += p._1.uid -> p._2
   def get(sym: Symbol): Option[GeneralType] = env.get(sym.uid) orElse parent.dlof(_.get(sym))(None)
   def *=(cls: ClassDef): Unit = clsDefs += cls.sym.id.name -> cls
-  def getCls(name: Str): Option[ClassSymbol] =
+  def getCls(name: Str): Option[TypeSymbol] =
     for
       elem <- ctx.get(name)
       sym <- elem.symbol
-      cls <- sym.asCls
+      cls <- sym.asTpe
     yield cls
   def &=(p: (Symbol, Type, InfVar)): Unit =
     env += p._1.uid -> BbCtx.varTy(p._2, p._3)(using this)
@@ -123,12 +123,12 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
       genPolyType(tvs, typeAndSubstType(body, pol))
     case Term.TyApp(cls, targs) =>
       // log(s"Type application: ${cls.nme} with ${targs}")
-      cls.symbol.flatMap(_.asCls) match
-      case S(clsSym) =>
-        if clsSym.nme === "Any" then Top
-        else if clsSym.nme === "Nothing" then Bot
+      cls.symbol.flatMap(_.asTpe) match
+      case S(tpeSym) =>
+        if tpeSym.nme === "Any" then Top
+        else if tpeSym.nme === "Nothing" then Bot
         else
-          val defn = clsSym.defn.get
+          val defn = tpeSym.defn.get
           if targs.length != defn.tparams.length then
             error(msg"Type arguments do not match class definition" -> ty.toLoc :: Nil)
           val ts = defn.tparams.lazyZip(targs).map: (tp, t) =>
@@ -143,7 +143,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
                 case S(false) => Wildcard.in(ta)
                 case S(true) => Wildcard.out(ta)
                 case N => ta
-          ClassLikeType(clsSym, ts)
+          ClassLikeType(tpeSym, ts)
       case N =>
         error(msg"Not a valid class: ${cls.describe}" -> cls.toLoc :: Nil)
     case Neg(rhs) =>
@@ -151,9 +151,9 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
     case CompType(lhs, rhs, pol) =>
       Type.mkComposedType(typeMonoType(lhs), typeMonoType(rhs), pol)
     case _ =>
-      ty.symbol.flatMap(_.asCls) match
-      case S(cls: ClassSymbol) => typeAndSubstType(Term.TyApp(ty, Nil), pol)
-      case _ => error(msg"${ty.toString} is not a valid type" -> ty.toLoc :: Nil) // TODO
+      ty.symbol.flatMap(_.asTpe) match
+      case S(cls: (ClassSymbol | TypeAliasSymbol)) => typeAndSubstType(Term.TyApp(ty, Nil), pol)
+      case _ => error(msg"${ty.symbol.get.getClass.toString()} is not a valid type" -> ty.toLoc :: Nil) // TODO
 
   private def genPolyType(tvs: Ls[QuantVar], body: => GeneralType)(using ctx: BbCtx, cctx: CCtx) =
     val bds = tvs.map:

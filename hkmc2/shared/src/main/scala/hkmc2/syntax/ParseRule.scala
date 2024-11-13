@@ -256,15 +256,17 @@ object ParseRule:
     Kw(`type`):
       ParseRule("type alias declaration"):
         Expr(
-          ParseRule("type alias head"):
+          ParseRule("type alias head")(
             Kw(`=`):
               ParseRule("type alias declaration equals sign"):
                 Expr(
                   ParseRule("type alias declaration right-hand side")(
                     End(())
                   )
-                ) { (rhs, _) => rhs }
-        ) { (lhs, rhs) => TypeDef(Als, lhs, S(rhs), N) },
+                ) { case (rhs, ()) => S(rhs) },
+            End(N),
+          )
+        ) { (lhs, rhs) => TypeDef(Als, lhs, rhs, N) },
     Kw(`class`)(typeDeclBody(Cls)),
     Kw(`trait`)(typeDeclBody(Trt)),
     Kw(`module`)(typeDeclBody(Mod)),

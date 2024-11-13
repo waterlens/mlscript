@@ -44,8 +44,8 @@ abstract class Symbol extends Located:
       mem.alsTree.map(_.symbol.asInstanceOf[TypeAliasSymbol])
     case _ => N
   
-  def asClsLike = asCls orElse asMod
-  def asTpe = asCls orElse asAls
+  def asClsLike: Opt[ClassSymbol | ModuleSymbol] = asCls orElse asMod
+  def asTpe: Opt[TypeSymbol] = asCls orElse asAls
   
   override def equals(x: Any): Bool = x match
     case that: Symbol => uid === that.uid
@@ -162,7 +162,7 @@ class ModuleSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of module here
   override def toString: Str = s"module:${id.name}"
 
-class TypeAliasSymbol(val id: Tree.Ident) extends MemberSymbol:
+class TypeAliasSymbol(val id: Tree.Ident) extends MemberSymbol[TypeDef]:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of type alias here
   override def toString: Str = s"module:${id.name}"

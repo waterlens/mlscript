@@ -212,7 +212,10 @@ sealed abstract class Definition extends Declaration with Statement
 sealed trait Companion extends Definition
 
 
-sealed abstract class ClassLikeDef extends Definition:
+sealed abstract class TypeLikeDef extends Definition:
+  val tparams: Ls[TyParam]
+
+sealed abstract class ClassLikeDef extends TypeLikeDef:
   val owner: Opt[InnerSymbol]
   val sym: MemberSymbol[? <: ClassLikeDef]
   val paramsOpt: Opt[Ls[Param]]
@@ -269,7 +272,7 @@ case class TypeDef(
   tparams: Ls[TyParam],
   rhs: Opt[Term],
   companion: Opt[Companion]
-) extends Definition
+) extends TypeLikeDef
 
 
 // TODO Store optional source locations for the flags instead of booleans

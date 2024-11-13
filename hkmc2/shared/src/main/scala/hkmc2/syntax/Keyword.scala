@@ -30,7 +30,8 @@ class Keyword(
   def assumeLeftPrec: Int = leftPrec.getOrElse(lastWords(s"$this does not have left precedence"))
   def assumeRightPrec: Int = rightPrec.getOrElse(lastWords(s"$this does not have right precedence"))
   def leftPrecOrMin: Int = leftPrec.getOrElse(Int.MinValue)
-  def rightPrecOrMax: Int = rightPrec.getOrElse(Int.MaxValue)
+  def rightPrecOrMin: Int = rightPrec.getOrElse(Int.MinValue)
+  // def rightPrecOrMax: Int = rightPrec.getOrElse(Int.MaxValue)
   override def toString: Str = s"keyword '$name'"
 
 object Keyword:

@@ -10,6 +10,7 @@ final case class QuantVar(sym: VarSymbol, ub: Opt[Term], lb: Opt[Term])
 enum Term extends Statement:
   case Error
   case Lit(lit: Literal)
+  case Builtin(id: Tree.Ident, nme: Str)
   case Ref(sym: Symbol)(val tree: Tree.Ident, val refNum: Int)
   case App(lhs: Term, rhs: Term)(val tree: Tree.App, val resSym: FlowSymbol)
   case TyApp(lhs: Term, targs: Ls[Term])
@@ -77,7 +78,7 @@ sealed trait Statement extends AutoLocated:
     case Blk(stats, res) => stats ::: res :: Nil
     case _ => subTerms
   def subTerms: Ls[Term] = this match
-    case Error | _: Lit | _: Ref => Nil
+    case Error | _: Lit | _: Ref | _: Builtin => Nil
     case App(lhs, rhs) => lhs :: rhs :: Nil
     case FunTy(lhs, rhs, eff) => lhs :: rhs :: eff.toList
     case TyApp(pre, tarsg) => pre :: tarsg

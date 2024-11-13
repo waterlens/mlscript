@@ -24,34 +24,46 @@
 
 :w
 :pe
+:ge
 1
 * 2
 * 3
 //│ ╔══[PARSE ERROR] Expected end of input; found literal instead
-//│ ║  l.28: 	* 2
+//│ ║  l.29: 	* 2
 //│ ╙──      	  ^
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.27: 	1
+//│ ║  l.28: 	1
 //│ ╙──      	^
+//│ ═══[COMPILATION ERROR] Illegal reference to builtin symbol '*'
+//│ ═══[RUNTIME ERROR] Error: Illegal reference to builtin symbol '*'
 
 
 :sjs
+:ge
 +
+//│ ═══[COMPILATION ERROR] Illegal reference to builtin symbol '+'
 //│ JS:
-//│ this["+"]
+//│ (()=>{throw globalThis.Error("Illegal reference to builtin symbol '+'")})()
+//│ ═══[RUNTIME ERROR] Error: Illegal reference to builtin symbol '+'
 
+:ge
 *
+//│ ═══[COMPILATION ERROR] Illegal reference to builtin symbol '*'
+//│ ═══[RUNTIME ERROR] Error: Illegal reference to builtin symbol '*'
 
 :w
 :pt
+:ge
 1
 *
 //│ Parsed tree:
 //│ IntLit of 1
 //│ Ident of "*"
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.47: 	1
+//│ ║  l.57: 	1
 //│ ╙──      	^
+//│ ═══[COMPILATION ERROR] Illegal reference to builtin symbol '*'
+//│ ═══[RUNTIME ERROR] Error: Illegal reference to builtin symbol '*'
 
 
 fun (??) foo(x, y) = x + y
@@ -78,7 +90,7 @@ fun (??) foo(x, y) = x + y
 :pe
 ?? 1
 //│ ╔══[PARSE ERROR] Expected end of input; found literal instead
-//│ ║  l.79: 	?? 1
+//│ ║  l.91: 	?? 1
 //│ ╙──      	   ^
 //│ = [Function: foo]
 
@@ -87,10 +99,10 @@ fun (??) foo(x, y) = x + y
 1
 ?? 2
 //│ ╔══[PARSE ERROR] Expected end of input; found literal instead
-//│ ║  l.88: 	?? 2
-//│ ╙──      	   ^
+//│ ║  l.100: 	?? 2
+//│ ╙──       	   ^
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.87: 	1
+//│ ║  l.99: 	1
 //│ ╙──      	^
 //│ = [Function: foo]
 

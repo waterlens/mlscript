@@ -18,6 +18,24 @@ import Keyword.{`let`, `set`}
 
 object Elaborator:
   
+  val builtinOpsMap: Map[Str, BuiltinSymbol] =
+    val binOps: Ls[Str] = Ls(
+      ",",
+      "+", "-", "*", "/", "%",
+      "==", "!=", "<", "<=", ">", ">=",
+      "===",
+      "&&", "||")
+    val isUnary: Str => Bool = Set("-", "+", "!", "~").contains
+    val baseBuiltins = binOps.map: op =>
+        op -> BuiltinSymbol(op, binary = true, unary = isUnary(op), nullary = false)
+      .toMap
+    baseBuiltins
+      + (";" -> baseBuiltins(","))
+      + ("+." -> baseBuiltins("+"))
+      + ("-." -> baseBuiltins("-"))
+      + ("*." -> baseBuiltins("*"))
+  val reservedNames = builtinOpsMap.keySet + "NaN" + "Infinity"
+  
   case class Ctx(outer: Opt[InnerSymbol], parent: Opt[Ctx], env: Map[Str, Ctx.Elem]):
     def +(local: Str -> Symbol): Ctx = copy(outer, env = env + local.mapSecond(Ctx.RefElem(_)))
     def ++(locals: IterableOnce[Str -> Symbol]): Ctx =
@@ -171,8 +189,11 @@ extends Importer:
       ctx.get(name) match
       case S(sym) => sym.ref(id)
       case N =>
-        raise(ErrorReport(msg"Name not found: $name" -> tree.toLoc :: Nil))
-        Term.Error
+        builtinOpsMap.get(name) match
+        case S(bi) => bi.ref(id)
+        case N =>
+          raise(ErrorReport(msg"Name not found: $name" -> tree.toLoc :: Nil))
+          Term.Error
     case TyApp(lhs, targs) =>
       Term.TyApp(term(lhs), targs.map {
         case Modified(Keyword.`in`, inLoc, arg) => Term.WildcardTy(S(term(arg)), N)

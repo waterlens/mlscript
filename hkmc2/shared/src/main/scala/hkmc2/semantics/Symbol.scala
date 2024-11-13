@@ -82,6 +82,10 @@ class VarSymbol(val id: Ident, uid: Int) extends BlockLocalSymbol(id.name, uid) 
   val name: Str = id.name
   // override def toString: Str = s"$name@$uid"
 
+class BuiltinSymbol(val nme: Str, val binary: Bool, val unary: Bool, val nullary: Bool) extends Symbol:
+  def toLoc: Option[Loc] = N
+  override def toString: Str = s"builtin:$nme"
+
 
 /** This is the outside-facing symbol associated to a possibly-overloaded
   * definition living in a block – e.g., a module or class. */

@@ -58,35 +58,7 @@ class Lowering(using TL, Raise, Elaborator.State):
         args => subTerm(a.value)(r => acc(r :: args))
       )(Nil)
     case st.Ref(sym) =>
-      sym match
-      case sym: BlockMemberSymbol =>
-        // k(subst(Value.Ref(sym.modTree.get.symbol)))
-        k(subst(Value.Ref(sym)))
-      case sym: LocalSymbol =>
-        k(subst(Value.Ref(sym)))
-      case sym: ClassSymbol =>
-        k(subst(Value.Ref(sym)))
-      case sym: ModuleSymbol =>
-        k(subst(Value.Ref(sym)))
-      case sym: TopLevelSymbol =>
-        k(subst(Value.Ref(sym)))
-      /* // * Old logic that auto-lifted `C` ~> `(...) => new C(...)`
-      case sym: ClassSymbol => // TODO rm
-        // k(subst(Value.Ref(sym)))
-        sym.defn match
-        case N => End("error: class has no declaration") // TODO report?
-        case S(clsDefn) =>
-          if clsDefn.kind is syntax.Mod then
-            k(Value.Ref(sym))
-          else
-            val ps = clsDefn.paramsOpt.getOrElse(Nil)
-            val psSyms = ps.map(p => 
-              p.copy(sym = new VarSymbol(p.sym.id, summon[Elaborator.State].nextUid)))
-            k(Value.Lam(psSyms,
-              Return(Instantiate(Value.Ref(sym),
-                psSyms.map(p => Value.Ref(p.sym))), false)))
-      */
-    // * Perhaps this `new` insertion should also be removed...?
+      k(subst(Value.Ref(sym)))
     case st.App(f, arg) =>
       arg match
       case Tup(fs) =>
@@ -104,7 +76,6 @@ class Lowering(using TL, Raise, Elaborator.State):
           rec(as, Nil)
       case _ =>
         TODO("Other argument list forms")
-    
     case st.Blk(Nil, res) => term(res)(k)
     case st.Blk(Lit(Tree.UnitLit(true)) :: stats, res) =>
       subTerm(st.Blk(stats, res))(k)

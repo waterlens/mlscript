@@ -202,13 +202,7 @@ class Desugarer(tl: TraceLogger, elaborator: Elaborator)
       post = (res: Split) => s"termSplit: after op >>> $res"
     ):
       // Resolve the operator.
-      val opRef =
-        ctx.get(opName) match
-        case S(sym) => sym.ref(opIdent)
-        case N =>
-          raise(ErrorReport(msg"Name not found: $opName" -> tree.toLoc :: Nil))
-          Term.Error
-      .withLocOf(opIdent)
+      val opRef = term(opIdent)
       // Elaborate and finish the LHS. Nominate the LHS if necessary.
       nominate(ctx, finish(term(lhs)(using ctx))): lhsSymbol =>
         // Compose a function that takes the RHS and finishes the application.

@@ -98,6 +98,7 @@ abstract class DiffMaker:
   val expectTypeErrors = NullaryCommand("e")
   val expectRuntimeErrors = NullaryCommand("re")
   val expectCodeGenErrors = NullaryCommand("ge")
+  def expectRuntimeOrCodeGenErrors = expectRuntimeErrors.isSet || expectCodeGenErrors.isSet
   val allowRuntimeErrors = NullaryCommand("allowRuntimeErrors")
   val expectWarnings = NullaryCommand("w")
   val showRelativeLineNums = NullaryCommand("showRelativeLineNums")
@@ -174,7 +175,7 @@ abstract class DiffMaker:
             unexpected("runtime error", blockLineNum)
         case Diagnostic.Source.Runtime =>
           runtimeErrors += 1
-          if expectRuntimeErrors.isUnset && !tolerateErrors then
+          if !expectRuntimeOrCodeGenErrors && !tolerateErrors then
             failures += globalStartLineNum
             unexpected("runtime error", blockLineNum)
       case Diagnostic.Kind.Warning =>

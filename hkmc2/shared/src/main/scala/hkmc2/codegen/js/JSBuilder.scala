@@ -15,6 +15,8 @@ import hkmc2.semantics.InnerSymbol
 import hkmc2.semantics.ParamList
 import hkmc2.codegen.Value.Lam
 import hkmc2.semantics.BlockMemberSymbol
+import hkmc2.semantics.BuiltinSymbol
+import hkmc2.Message.MessageContext
 
 
 // TODO factor some logic for other codegen backends
@@ -43,6 +45,11 @@ class JSBuilder extends CodeBuilder:
     case Argument
     case Operand(prec: Int)
   
+  def err(errMsg: Message)(using Raise, Scope): Document =
+    raise(ErrorReport(errMsg -> N :: Nil,
+      source = Diagnostic.Source.Compilation))
+    doc"(()=>{throw globalThis.Error(${result(Value.Lit(syntax.Tree.StrLit(errMsg.show)))})})()"
+  
   def getVar(l: Local)(using Raise, Scope): Document = l match
     case ts: semantics.TermSymbol =>
       ts.owner match
@@ -63,34 +70,25 @@ class JSBuilder extends CodeBuilder:
   
   def result(r: Result)(using Raise, Scope): Document = r match
     case Value.This(sym) => summon[Scope].findThis_!(sym)
-    case Value.Ref(l) => getVar(l)
     case Value.Lit(Tree.StrLit(value)) => JSBuilder.makeStringLiteral(value)
     case Value.Lit(lit) => lit.idStr
+    case Value.Ref(l: BuiltinSymbol) =>
+      if l.nullary then l.nme
+      else err(msg"Illegal reference to builtin symbol '${l.nme}'")
+    case Value.Ref(l) => getVar(l)
     
-    
-    // * FIXME: this should be done in the Elaborator
-    
-    // case Call(Value.Ref(l: semantics.InnerSymbol), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
-    // case Call(Value.Ref(l), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
-    
-    case Call(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident(nme)), lhs :: rhs :: Nil) if builtinOpsMap contains nme =>
-      val op = builtinOpsMap(nme)
-      val res = doc"${result(lhs)} ${op} ${result(rhs)}"
-      if needsParens(op) then doc"(${res})" else res
-    case Call(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident(nme)), lhs :: Nil) if builtinOpsMap contains nme =>
-      val op = builtinOpsMap(nme)
-      val res = doc"${op} ${result(lhs)}"
-      if needsParens(op) then doc"(${res})" else res
-      
-    case Call(Value.Ref(sym: BlockMemberSymbol), lhs :: rhs :: Nil) if builtinOpsMap contains sym.nme =>
-      val op = builtinOpsMap(sym.nme)
-      val res = doc"${result(lhs)} ${op} ${result(rhs)}"
-      if needsParens(op) then doc"(${res})" else res
-    case Call(Value.Ref(sym: BlockMemberSymbol), lhs :: Nil) if builtinOpsMap contains sym.nme =>
-      val op = builtinOpsMap(sym.nme)
-      val res = doc"${op} ${result(lhs)}"
-      if needsParens(op) then doc"(${res})" else res
-    
+    case Call(Value.Ref(l: BuiltinSymbol), lhs :: rhs :: Nil) =>
+      if l.binary then
+        val res = doc"${result(lhs)} ${l.nme} ${result(rhs)}"
+        if needsParens(l.nme) then doc"(${res})" else res
+      else err(msg"Cannot call non-binary builtin symbol '${l.nme}'")
+    case Call(Value.Ref(l: BuiltinSymbol), rhs :: Nil) =>
+      if l.unary then
+        val res = doc"${l.nme} ${result(rhs)}"
+        if needsParens(l.nme) then doc"(${res})" else res
+      else err(msg"Cannot call non-unary builtin symbol '${l.nme}'")
+    case Call(Value.Ref(l: BuiltinSymbol), args) =>
+      err(msg"Illeal arity for builtin symbol '${l.nme}'")
     
     case Call(fun, args) =>
       val base = fun match

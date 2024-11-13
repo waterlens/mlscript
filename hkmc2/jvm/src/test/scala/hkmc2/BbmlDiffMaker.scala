@@ -21,7 +21,7 @@ abstract class BbmlDiffMaker extends JSBackendDiffMaker:
   
   lazy val bbCtx =
     given Elaborator.Ctx = curCtx
-    bbml.BbCtx.init(_ => die, curCtx.allMembers)
+    bbml.BbCtx.init(_ => die)
   
   
   var bbmlTyper: Opt[BBTyper] = None

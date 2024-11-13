@@ -1,14 +1,11 @@
 import "./Predef.mjs";
-class Int {
-  constructor() {
-    
-  }
-  toString() { return "Int"; }
-};
 const Example$class = class Example {
   constructor() {
     
   }
+  funnySlash(f, arg) {
+    return f(arg)
+  } 
   inc(x) {
     return x + 1
   }

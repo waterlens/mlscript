@@ -61,7 +61,7 @@ object BbCtx:
     ClassLikeType(ctx.getCls("Region").get, Wildcard(sk, sk) :: Nil)
   def refTy(ct: Type, sk: Type)(using ctx: BbCtx): Type =
     ClassLikeType(ctx.getCls("Ref").get, Wildcard(ct, ct) :: Wildcard.out(sk) :: Nil)
-  def init(raise: Raise, predefs: Map[Str, Symbol])(using Elaborator.State, Elaborator.Ctx): BbCtx =
+  def init(raise: Raise)(using Elaborator.State, Elaborator.Ctx): BbCtx =
     new BbCtx(raise, summon, None, 1, HashMap.empty, HashMap.empty, HashMap.empty)
 end BbCtx
 

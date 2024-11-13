@@ -8,6 +8,11 @@ const Predef$class = class Predef {
   pipe(x1, f) {
     return f(x1)
   } 
+  call(receiver, f1) {
+    return (arg) => {
+      return f1.call(receiver, arg)
+    }
+  } 
   print(x2) {
     let tmp;
     tmp = String(x2);

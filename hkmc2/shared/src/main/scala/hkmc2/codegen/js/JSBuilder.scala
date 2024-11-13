@@ -153,10 +153,13 @@ class JSBuilder extends CodeBuilder:
                 ctorCode.stripBreaks
               } #}  # }${
                 mtds.map: 
-                  case td @ FunDefn(_, ParamList(_, ps) :: Nil, _) =>
+                  case td @ FunDefn(_, ParamList(_, ps) :: pss, bod) =>
                     val vars = ps.map(p => scope.allocateName(p.sym)).mkDocument(", ")
+                    val result = pss.foldRight(bod):
+                      case (ParamList(_, ps), block) => 
+                        Return(Lam(ps, block), false)
                     doc" # ${td.sym.nme}($vars) { #{  # ${
-                      body(td.body)
+                      body(result)
                     } #}  # }"
                 .mkDocument(" ")
               }${

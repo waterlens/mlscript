@@ -335,7 +335,7 @@ extends Importer:
     block(new Tree.Block(sts))
   
   def block(blk: Tree.Block)(using c: Ctx): (Term.Blk, Ctx) = trace[(Term.Blk, Ctx)](
-    pre = s"Elab block ${blk.toString.truncate(100, "[...]")} ${ctx.outer}", r => s"~> ${r._1}"
+    pre = s"Elab block ${blk.desugStmts.toString.truncate(100, "[...]")} ${ctx.outer}", r => s"~> ${r._1}"
   ):
     
     val members = blk.definedSymbols.toMap

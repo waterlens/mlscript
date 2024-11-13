@@ -14,6 +14,7 @@ import hkmc2.semantics.TopLevelSymbol
 import hkmc2.semantics.InnerSymbol
 import hkmc2.semantics.ParamList
 import hkmc2.codegen.Value.Lam
+import hkmc2.semantics.BlockMemberSymbol
 
 
 // TODO factor some logic for other codegen backends
@@ -66,9 +67,12 @@ class JSBuilder extends CodeBuilder:
     case Value.Lit(Tree.StrLit(value)) => JSBuilder.makeStringLiteral(value)
     case Value.Lit(lit) => lit.idStr
     
+    
     // * FIXME: this should be done in the Elaborator
+    
     // case Call(Value.Ref(l: semantics.InnerSymbol), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
     // case Call(Value.Ref(l), lhs :: rhs :: Nil) if builtinOpsMap contains l.nme =>
+    
     case Call(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident(nme)), lhs :: rhs :: Nil) if builtinOpsMap contains nme =>
       val op = builtinOpsMap(nme)
       val res = doc"${result(lhs)} ${op} ${result(rhs)}"
@@ -77,6 +81,16 @@ class JSBuilder extends CodeBuilder:
       val op = builtinOpsMap(nme)
       val res = doc"${op} ${result(lhs)}"
       if needsParens(op) then doc"(${res})" else res
+      
+    case Call(Value.Ref(sym: BlockMemberSymbol), lhs :: rhs :: Nil) if builtinOpsMap contains sym.nme =>
+      val op = builtinOpsMap(sym.nme)
+      val res = doc"${result(lhs)} ${op} ${result(rhs)}"
+      if needsParens(op) then doc"(${res})" else res
+    case Call(Value.Ref(sym: BlockMemberSymbol), lhs :: Nil) if builtinOpsMap contains sym.nme =>
+      val op = builtinOpsMap(sym.nme)
+      val res = doc"${op} ${result(lhs)}"
+      if needsParens(op) then doc"(${res})" else res
+    
     
     case Call(fun, args) =>
       val base = fun match

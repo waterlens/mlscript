@@ -49,6 +49,7 @@ object Parser:
       "+ -",
       // "* / %",
       "* %",
+      "~",
       "", // Precedence of prefix operators
       "", // Precedence of application
       ".",

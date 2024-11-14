@@ -51,7 +51,7 @@ abstract class DiffMaker:
   
   class Command[A](val name: Str, var isGlobal: Bool = false)(val process: Str => A):
     require(name.nonEmpty)
-    require(name.forall(l => l.isLetterOrDigit || l === '!'))
+    // require(name.forall(l => l.isLetterOrDigit || l === '!'))
     if commands.contains(name) then
       throw new IllegalArgumentException(s"Option '$name' already exists")
     commands += name -> this
@@ -84,6 +84,8 @@ abstract class DiffMaker:
   initCmd.setCurrentValue(()) // * Starts enabled at the top of the file
   val global = NullaryCommand("global")
   global.setCurrentValue(()) // * Starts enabled at the top of the file
+  
+  val consumeEmptyLines = NullaryCommand("...")
   
   val fixme = Command("fixme")(_ => ())
   val breakme = Command("breakme")(_ => ())
@@ -274,7 +276,7 @@ abstract class DiffMaker:
       
       val blockLineNum = allLines.size - lines.size + 1
       
-      val block = (l :: ls.takeWhile(l => l.nonEmpty && !(
+      val block = (l :: ls.takeWhile(l => (l.nonEmpty || consumeEmptyLines.isSet) && !(
         l.startsWith(output.outputMarker)
         || l.startsWith(output.diffBegMarker)
         // || l.startsWith(oldOutputMarker)

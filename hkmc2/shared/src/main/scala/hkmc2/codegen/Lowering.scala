@@ -59,26 +59,30 @@ class Lowering(using TL, Raise, Elaborator.State):
     case st.Asc(lhs, rhs) =>
       term(lhs)(k)
     case st.Tup(fs) =>
-      fs.foldRight[Ls[Path] => Block](args => k(Value.Arr(args.reverse)))((a, acc) =>
-        args => subTerm(a.value)(r => acc(r :: args))
-      )(Nil)
+      fs.foldRight[Ls[Arg] => Block](args => k(Value.Arr(args.reverse))){
+        case (a: Fld, acc) =>
+          args => subTerm(a.term)(r => acc(Arg(false, r) :: args))
+        case (s: Spd, acc) =>
+          args => subTerm(s.term)(r => acc(Arg(true, r) :: args))
+      }(Nil)
     case st.Ref(sym) =>
       k(subst(Value.Ref(sym)))
     case st.App(f, arg) =>
       arg match
       case Tup(fs) =>
         val as = fs.map:
-          case sem.Fld(sem.FldFlags.empty, value, N) => value
-          case sem.Fld(sem.FldFlags(false, false, false, true), value, N) => value
+          case sem.Fld(sem.FldFlags.empty, value, N) => false -> value
+          case sem.Fld(sem.FldFlags(false, false, false, true), value, N) => false -> value
           case sem.Fld(flags, value, asc) =>
             TODO("Other argument forms")
+          case spd: Spd => true -> spd.term
         val l = new TempSymbol(S(t))
         subTerm(f): fr =>
-          def rec(as: Ls[st], asr: Ls[Path]): Block = as match
+          def rec(as: Ls[Bool -> st], asr: Ls[Arg]): Block = as match
             case Nil => k(Call(fr, asr.reverse))
-            case a :: as =>
+            case (spd, a) :: as =>
               subTerm(a): ar =>
-                rec(as, ar :: asr)
+                rec(as, Arg(spd, ar) :: asr)
           rec(as, Nil)
       case _ =>
         TODO("Other argument list forms")

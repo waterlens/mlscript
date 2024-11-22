@@ -264,25 +264,32 @@ extends Importer:
       val args = rt match
         case Term.Tup(fields) => S(fields)
         case _ => N
-      val params = lt.symbol
-        .collect:
-          case sym: BlockMemberSymbol => sym.trmTree
-        .flatten
-        .collect:
-          case td: TermDef => td.paramLists.headOption
-        .flatten
-      for
-        (args, params) <- (args zip params)
-        (arg, param) <- (args zip params.fields)
-      do 
-        val argMod = arg.flags.mod
-        val paramMod = param match
-          case Tree.TypeDef(Mod, _, N, N) => true
-          case _ => false
-        if argMod && !paramMod then raise:
-          ErrorReport:
-            msg"Only module parameters may receive module arguments (values)." -> 
-            arg.toLoc :: Nil
+      if args.exists:
+        _.exists:
+          case spd: Spd => false
+          case fld: Fld => fld.flags.mod
+      then
+        val params = lt.symbol
+          .collect:
+            case sym: BlockMemberSymbol => sym.trmTree
+          .flatten
+          .collect:
+            case td: TermDef => td.paramLists.headOption
+          .flatten
+        for
+          (args, params) <- (args zip params)
+          (arg, param) <- (args zip params.fields)
+        do
+          arg match
+          case spd: Spd =>
+            TODO(spd)
+          case arg: Fld =>
+            val argMod = arg.flags.mod
+            val paramMod = param.isModuleModifier
+            if argMod && !paramMod then raise:
+              ErrorReport:
+                msg"Only module parameters may receive module arguments (values)." -> 
+                arg.toLoc :: Nil
       
       Term.App(lt, rt)(tree, sym)
     case Sel(pre, nme) =>
@@ -375,18 +382,25 @@ extends Importer:
     case Open(body) =>
       raise(ErrorReport(msg"Illegal position for 'open' statement." -> tree.toLoc :: Nil))
       Term.Error
+    case Spread(kw, kwLoc, body) =>
+      raise(ErrorReport(msg"Illegal position for '${kw.name}' spread operator." -> tree.toLoc :: Nil))
+      Term.Error
     // case _ =>
     //   ???
   
-  def fld(tree: Tree): Ctxl[Fld] = tree match
+  def fld(tree: Tree): Ctxl[Elem] = tree match
     case InfixApp(lhs, Keyword.`:`, rhs) =>
       Fld(FldFlags.empty, term(lhs), S(term(rhs)))
+    case Spread(Keyword.`..`, _, S(trm)) =>
+      Spd(false, term(trm))
+    case Spread(Keyword.`...`, _, S(trm)) =>
+      Spd(true, term(trm))
     case _ => 
       val t = term(tree)
-      val flags = FldFlags.empty
-      if ModuleChecker.evalsToModule(t) 
-      then Fld(flags.copy(mod = true), t, N)
-      else Fld(flags, t, N)
+      var flags = FldFlags.empty
+      if ModuleChecker.evalsToModule(t)
+        then flags = flags.copy(mod = true)
+      Fld(flags, t, N)
   
   def unit: Term.Lit = Term.Lit(UnitLit(true))
   
@@ -880,9 +894,10 @@ extends Importer:
         // fields.foreach(f => traverseType(pol)(f.value))
         fields.foreach(traverseType(pol))
       // case _ => ???
-    def traverseType(pol: Pol)(f: Fld): Unit =
-      traverseType(pol)(f.value)
-      f.asc.foreach(traverseType(pol))
+    def traverseType(pol: Pol)(f: Elem): Unit = f match
+      case f: Fld =>
+        traverseType(pol)(f.term)
+        f.asc.foreach(traverseType(pol))
     def traverseType(pol: Pol)(f: Param): Unit =
       f.sign.foreach(traverseType(pol))
 end Elaborator

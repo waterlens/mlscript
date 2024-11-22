@@ -68,6 +68,9 @@ class JSBuilder(using Elaborator.State) extends CodeBuilder:
       summon[Scope].findThis_!(ts)
     case _ => summon[Scope].lookup_!(l)
   
+  def result(a: Arg)(using Raise, Scope): Document =
+    if a.spread then doc"...${result(a.value)}" else result(a.value)
+  
   def result(r: Result)(using Raise, Scope): Document = r match
     case Value.This(sym) => summon[Scope].findThis_!(sym)
     case Value.Lit(Tree.StrLit(value)) => JSBuilder.makeStringLiteral(value)

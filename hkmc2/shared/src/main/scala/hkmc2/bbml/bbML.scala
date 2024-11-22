@@ -211,10 +211,10 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
       (FunType(bds.map(_._1), bodyTy, Bot), res, eff)
     case Term.App(lhs, Term.Tup(rhs)) =>
       val (lhsTy, lhsCtx, lhsEff) = typeCode(lhs)
-      val (rhsTy, rhsCtx, rhsEff) = rhs.foldLeft[(Ls[Type], Type, Type)]((Nil, Bot, Bot))((res, p) =>
-        val (ty, ctx, eff) = typeCode(p.value)
-        (ty :: res._1, res._2 | ctx, res._3 | eff)
-      )
+      val (rhsTy, rhsCtx, rhsEff) = rhs.foldLeft[(Ls[Type], Type, Type)]((Nil, Bot, Bot)):
+        case (res, p: Fld) =>
+          val (ty, ctx, eff) = typeCode(p.term)
+          (ty :: res._1, res._2 | ctx, res._3 | eff)
       val resTy = freshVar
       constrain(lhsTy, FunType(rhsTy.reverse, resTy, Bot)) // TODO: right
       (resTy, lhsCtx | rhsCtx, lhsEff | rhsEff)
@@ -338,7 +338,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
           (rhs, eff)
 
   // TODO: t -> loc when toLoc is implemented
-  private def app(lhs: (GeneralType, Type), rhs: Ls[Fld], t: Term)
+  private def app(lhs: (GeneralType, Type), rhs: Ls[Elem], t: Term)
       (using ctx: BbCtx)(using CCtx)
       : (GeneralType, Type) =
     lhs match
@@ -348,17 +348,19 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
       then (error(msg"Incorrect number of arguments" -> t.toLoc :: Nil), Bot)
       else
         var resEff: Type = lhsEff | eff
-        rhs.lazyZip(params).foreach: (f, t) =>
-          val (ty, ef) = ascribe(f.value, t)
-          resEff |= ef
+        rhs.lazyZip(params).foreach:
+          case (f: Fld, t) =>
+            val (ty, ef) = ascribe(f.term, t)
+            resEff |= ef
         (ret, resEff)
     case (FunType(params, ret, eff), lhsEff) => app((PolyFunType(params, ret, eff), lhsEff), rhs, t)
     case (ty: PolyType, eff) => app((instantiate(ty), eff), rhs, t)
     case (funTy, lhsEff) =>
-      val (argTy, argEff) = rhs.flatMap(f =>
-        val (ty, eff) = typeCheck(f.value)
-        Left(ty) :: Right(eff) :: Nil
-      ).partitionMap(x => x)
+      val (argTy, argEff) = rhs.flatMap:
+          case f: Fld =>
+            val (ty, eff) = typeCheck(f.term)
+            Left(ty) :: Right(eff) :: Nil
+        .partitionMap(x => x)
       val effVar = freshVar
       val retVar = freshVar
       constrain(tryMkMono(funTy, t), FunType(argTy.map((tryMkMono(_, t))), retVar, effVar))

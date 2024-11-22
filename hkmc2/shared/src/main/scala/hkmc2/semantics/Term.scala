@@ -16,7 +16,7 @@ enum Term extends Statement:
   case App(lhs: Term, rhs: Term)(val tree: Tree.App, val resSym: FlowSymbol)
   case TyApp(lhs: Term, targs: Ls[Term])
   case Sel(prefix: Term, nme: Tree.Ident)(val sym: Opt[Symbol])
-  case Tup(fields: Ls[Fld])(val tree: Tree.Tup)
+  case Tup(fields: Ls[Elem])(val tree: Tree.Tup)
   case IfLike(kw: Keyword.`if`.type | Keyword.`while`.type, desugared: Split)(val normalized: Split)
   case Lam(params: Ls[Param], body: Term)
   case FunTy(lhs: Term, rhs: Term, eff: Opt[Term])
@@ -85,7 +85,7 @@ sealed trait Statement extends AutoLocated:
     case FunTy(lhs, rhs, eff) => lhs :: rhs :: eff.toList
     case TyApp(pre, tarsg) => pre :: tarsg
     case Sel(pre, _) => pre :: Nil
-    case Tup(fields) => fields.map(_.value)
+    case Tup(fields) => fields.flatMap(_.subTerms)
     case IfLike(_, body) => body.subTerms
     case Lam(params, body) => body :: Nil
     case Blk(stats, res) => stats.flatMap(_.subTerms) ::: res :: Nil
@@ -305,7 +305,14 @@ final case class FldFlags(mut: Bool, spec: Bool, genGetter: Bool, mod: Bool):
     flags.mkString(" ")
   override def toString: String = "‹" + showDbg + "›"
 
-final case class Fld(flags: FldFlags, value: Term, asc: Opt[Term]) extends FldImpl
+sealed abstract class Elem:
+  def subTerms: Ls[Term] = this match
+    case Fld(_, term, asc) => term :: asc.toList
+    case Spd(_, term) => term :: Nil
+  def showDbg: Str
+final case class Fld(flags: FldFlags, term: Term, asc: Opt[Term]) extends Elem with FldImpl
+final case class Spd(eager: Bool, term: Term) extends Elem:
+  def showDbg: Str = (if eager then "..." else "..") + term.showDbg
 
 final case class TyParam(flags: FldFlags, vce: Opt[Bool], sym: VarSymbol) extends Declaration:
   
@@ -341,11 +348,11 @@ final case class ParamList(flags: ParamListFlags, params: Ls[Param]):
 
 trait FldImpl extends AutoLocated:
   self: Fld =>
-  def children: Ls[Located] = self.value :: self.asc.toList ::: Nil
-  def showDbg: Str = flags.showDbg + self.value.showDbg
+  def children: Ls[Located] = self.term :: self.asc.toList ::: Nil
+  def showDbg: Str = flags.showDbg + self.term.showDbg
   def describe: Str =
     (if self.flags.spec then "specialized " else "") +
     (if self.flags.mut then "mutable " else "") +
-    self.value.describe
+    self.term.describe
 
 

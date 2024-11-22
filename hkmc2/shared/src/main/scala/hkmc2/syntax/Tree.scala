@@ -161,6 +161,10 @@ enum Tree extends AutoLocated:
     case InfixApp(lhs: Ident, Keyword.`:`, rhs) => (lhs, S(rhs)) :: Nil
     case App(Ident(","), Tup(ps)) => ps.flatMap(_.param)
     case TermDef(ImmutVal, inner, _) => inner.param
+  
+  def isModuleModifier: Bool = this match
+    case Tree.TypeDef(Mod, _, N, N) => true
+    case _ => false
 
 object Tree:
   object Block:

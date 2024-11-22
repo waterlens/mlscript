@@ -25,7 +25,7 @@ abstract class CodeBuilder:
   type Context
   
 
-class JSBuilder extends CodeBuilder:
+class JSBuilder(using Elaborator.State) extends CodeBuilder:
   
   val builtinOpsBase: Ls[Str] = Ls(
     "+", "-", "*", "/", "%",
@@ -425,7 +425,9 @@ object JSBuilder:
 end JSBuilder
 
 
-trait JSBuilderSanityChecks(instrument: Bool) extends JSBuilder:
+trait JSBuilderSanityChecks
+    (instrument: Bool)(using Elaborator.State)
+    extends JSBuilder:
   
   val functionParamVarargSymbol = semantics.TempSymbol(N, "args")
   

@@ -76,15 +76,17 @@ object Elaborator:
       def symbol = symOpt
     given Conversion[Symbol, Elem] = RefElem(_)
     val empty: Ctx = Ctx(N, N, Map.empty)
-    // val globalThisSymbol = TermSymbol(ImmutVal, N, Ident("globalThis"))
-    val globalThisSymbol = TopLevelSymbol("globalThis")
-    val seqSymbol = TermSymbol(ImmutVal, N, Ident(";"))
-    def init(using State): Ctx = empty.copy(env = Map(
-      "globalThis" -> globalThisSymbol,
-    ))
   type Ctxl[A] = Ctx ?=> A
   def ctx: Ctxl[Ctx] = summon
-  class State
+  class State:
+    given State = this
+    val suid = new Uid.Symbol.State
+    val globalThisSymbol = TopLevelSymbol("globalThis")
+    val seqSymbol = TermSymbol(ImmutVal, N, Ident(";"))
+    def init(using State): Ctx = Ctx.empty.copy(env = Map(
+      "globalThis" -> globalThisSymbol,
+    ))
+  transparent inline def State(using state: State): State = state
 import Elaborator.*
 
 class Elaborator(val tl: TraceLogger, val wd: os.Path)

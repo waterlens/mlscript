@@ -9,7 +9,6 @@ import hkmc2.syntax.Literal
 import Keyword.{as, and, `else`, is, let, `then`}
 import collection.mutable.HashMap
 import Elaborator.{ctx, Ctxl}
-import hkmc2.semantics.Elaborator.Ctx.globalThisSymbol
 
 object Desugarer:
   extension (op: Keyword.Infix)

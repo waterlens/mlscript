@@ -8,6 +8,7 @@ import hkmc2.Message.MessageContext
 
 import hkmc2.{semantics => sem}
 import hkmc2.semantics.{Term => st}
+import semantics.Elaborator.State
 
 import syntax.{Literal, Tree}
 import semantics.*
@@ -260,7 +261,7 @@ class Lowering(using TL, Raise, Elaborator.State):
                 else End()
               )
         case Split.End =>
-          Throw(Instantiate(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Error")),
+          Throw(Instantiate(Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Error")),
             Value.Lit(syntax.Tree.StrLit("match error")) :: Nil)) // TODO add failed-match scrutinee info
       
       if k.isInstanceOf[TailOp] && isIf then go(iftrm.normalized, topLevel = true)

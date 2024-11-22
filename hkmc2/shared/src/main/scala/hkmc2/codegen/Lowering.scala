@@ -71,7 +71,7 @@ class Lowering(using TL, Raise, Elaborator.State):
           case sem.Fld(sem.FldFlags(false, false, false, true), value, N) => value
           case sem.Fld(flags, value, asc) =>
             TODO("Other argument forms")
-        val l = new TempSymbol(summon[Elaborator.State].nextUid, S(t))
+        val l = new TempSymbol(S(t))
         subTerm(f): fr =>
           def rec(as: Ls[st], asr: Ls[Path]): Block = as match
             case Nil => k(Call(fr, asr.reverse))
@@ -182,7 +182,7 @@ class Lowering(using TL, Raise, Elaborator.State):
             term(els)(k)
           )
       case _ =>
-        val l = new TempSymbol(summon[Elaborator.State].nextUid, S(t))
+        val l = new TempSymbol(S(t))
         subTerm(scrut): sr =>
             Match(sr, Case.Lit(tru) -> subTerm(thn)(r => Assign(l, r, End())) :: Nil,
               elseBranch.map(els => subTerm(els)(r => Assign(l, r, End()))),
@@ -202,10 +202,10 @@ class Lowering(using TL, Raise, Elaborator.State):
       var usesResTmp = false
       lazy val l =
         usesResTmp = true
-        new TempSymbol(summon[Elaborator.State].nextUid, S(t))
+        new TempSymbol(S(t))
       
       lazy val lbl =
-        new TempSymbol(summon[Elaborator.State].nextUid, S(t))
+        new TempSymbol(S(t))
       
       def go(split: Split, topLevel: Bool)(using Subst): Block = split match
         case Split.Let(sym, trm, tl) =>
@@ -234,7 +234,7 @@ class Lowering(using TL, Raise, Elaborator.State):
                       // mkMatch(Case.Cls(cls, st) -> go(tail, topLevel = false))
                       Case.Cls(cls, st) -> go(tail, topLevel = false)
                     case (param, arg) :: args =>
-                      // summon[Subst].+(arg -> Value.Ref(new TempSymbol(summon[Elaborator.State].nextUid, N)))
+                      // summon[Subst].+(arg -> Value.Ref(new TempSymbol(N)))
                       // Assign(arg, Select(sr, Tree.Ident("head")), mkArgs(args))
                       
                       val (cse, blk) = mkArgs(args)
@@ -288,7 +288,7 @@ class Lowering(using TL, Raise, Elaborator.State):
         rec(as, Nil)
     
     case Try(sub, finallyDo) =>
-      val l = new TempSymbol(summon[Elaborator.State].nextUid, S(sub))
+      val l = new TempSymbol(S(sub))
       TryBlock(
         term(sub)(p => Assign(l, p, End())),
         term(finallyDo)(_ => End()),
@@ -305,7 +305,7 @@ class Lowering(using TL, Raise, Elaborator.State):
       case v: Value => k(v)
       case p: Path => k(p)
       case r =>
-        val l = new TempSymbol(summon[Elaborator.State].nextUid, N)
+        val l = new TempSymbol(N)
         Assign(l, r, k(l |> Value.Ref.apply))
   
   

@@ -67,7 +67,6 @@ end BbCtx
 
 
 class BBTyper(using elState: Elaborator.State, tl: TL):
-  import elState.nextUid
   import tl.{trace, log}
   
   private val infVarState = new InfVarUid.State()

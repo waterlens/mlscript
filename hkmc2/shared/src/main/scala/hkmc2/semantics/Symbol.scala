@@ -55,14 +55,16 @@ abstract class Symbol extends Located:
 end Symbol
 
 
-class FlowSymbol(label: Str, uid: Int) extends Symbol:
+class FlowSymbol(label: Str) extends Symbol:
   def nme: Str = label
   def toLoc: Option[Loc] = N // TODO track source trees of flows
   import typing.*
   val outFlows: mutable.Buffer[FlowSymbol] = mutable.Buffer.empty
   val outFlows2: mutable.Buffer[Consumer] = mutable.Buffer.empty
   val inFlows: mutable.Buffer[ConcreteProd] = mutable.Buffer.empty
-  override def toString: Str = s"$label@$uid"
+  override def toString: Str =
+    label
+    // s"$label@$uid"
 
 
 sealed trait LocalSymbol extends Symbol
@@ -70,15 +72,15 @@ sealed trait NamedSymbol extends Symbol:
   def name: Str
   def id: Ident
 
-abstract class BlockLocalSymbol(name: Str, uid: Int) extends FlowSymbol(name, uid) with LocalSymbol:
+abstract class BlockLocalSymbol(name: Str) extends FlowSymbol(name) with LocalSymbol:
   var decl: Opt[Declaration] = N
 
-class TempSymbol(uid: Int, val trm: Opt[Term], dbgNme: Str = "tmp") extends BlockLocalSymbol(dbgNme, uid):
+class TempSymbol(val trm: Opt[Term], dbgNme: Str = "tmp") extends BlockLocalSymbol(dbgNme):
   val nameHints: MutSet[Str] = MutSet.empty
   override def toLoc: Option[Loc] = trm.flatMap(_.toLoc)
   override def toString: Str = s"$$${super.toString}"
 
-class VarSymbol(val id: Ident, uid: Int) extends BlockLocalSymbol(id.name, uid) with NamedSymbol:
+class VarSymbol(val id: Ident) extends BlockLocalSymbol(id.name) with NamedSymbol:
   val name: Str = id.name
   // override def toString: Str = s"$name@$uid"
 

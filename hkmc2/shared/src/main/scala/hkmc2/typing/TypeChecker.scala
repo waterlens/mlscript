@@ -87,7 +87,7 @@ class TypeChecker(using raise: Raise):
       P.Ctor(TupSymbol(S(fields.size)), fields.map(f => typeProd(f.value)))
     case Error =>
       P.Ctor(Extr(false), Nil)
-    case _ => P.Flow(FlowSymbol("TODO", 666)) // TODO
+    case _ => P.Flow(FlowSymbol("TODO")) // TODO
   
   def typeParams(ps: Ls[Param]): Ls[(C, P)] =
     ps.map: p =>

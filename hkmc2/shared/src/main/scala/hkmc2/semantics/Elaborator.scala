@@ -84,20 +84,16 @@ object Elaborator:
     ))
   type Ctxl[A] = Ctx ?=> A
   def ctx: Ctxl[Ctx] = summon
-  class State:
-    private var curUi = 0
-    def nextUid: Int = { curUi += 1; curUi }
+  class State
 import Elaborator.*
 
 class Elaborator(val tl: TraceLogger, val wd: os.Path)
 (using val raise: Raise, val state: State)
 extends Importer:
-  import state.nextUid
   import tl.*
   
   // * Ref allocation skolem UID, preserved
-  private val allocSkolemUID = nextUid
-  private val allocSkolemSym = VarSymbol(Ident("Alloc"), allocSkolemUID)
+  private val allocSkolemSym = VarSymbol(Ident("Alloc"))
   private val allocSkolemDef = TyParam(FldFlags.empty, N, allocSkolemSym)
   allocSkolemSym.decl = S(allocSkolemDef)
 
@@ -160,7 +156,7 @@ extends Importer:
       lhs match
       case id: Ident =>
         val lt = term(lhs)
-        val sym = TempSymbol(nextUid, S(lt), "old")
+        val sym = TempSymbol(S(lt), "old")
         Term.Blk(
         LetDecl(sym) :: DefineVar(sym, lt) :: Nil, Term.Try(Term.Blk(
           Term.Assgn(lt, term(rhs)) :: Nil,
@@ -211,7 +207,7 @@ extends Importer:
     case InfixApp(TyTup(tvs), Keyword.`->`, body) =>
       val boundVars = mutable.HashMap.empty[Str, VarSymbol]
       def genSym(id: Tree.Ident) =
-        val sym = VarSymbol(id, nextUid)
+        val sym = VarSymbol(id)
         sym.decl = S(TyParam(FldFlags.empty, N, sym)) // TODO vce
         boundVars += id.name -> sym
         sym
@@ -258,7 +254,7 @@ extends Importer:
     case App(Ident("~"), Tree.Tup(rhs :: Nil)) =>
       term(rhs)
     case tree @ App(lhs, rhs) =>
-      val sym = FlowSymbol("‹app-res›", nextUid)
+      val sym = FlowSymbol("‹app-res›")
       val lt = term(lhs)
       val rt = term(rhs)
 
@@ -312,7 +308,7 @@ extends Importer:
     case Tree.Quoted(body) => Term.Quoted(term(body))
     case Tree.Unquoted(body) => Term.Unquoted(term(body))
     case Tree.Case(branches) =>
-      val scrut = VarSymbol(Ident("caseScrut"), nextUid)
+      val scrut = VarSymbol(Ident("caseScrut"))
       val desugarer = new Desugarer(tl, this)
       val des = desugarer.patternSplit(branches, scrut)(Split.End)(ctx)
       scoped("ucs:desugared"):
@@ -330,7 +326,7 @@ extends Importer:
     case TypeDef(Mod, head, N, N) =>
       term(head)
     case Tree.Region(id: Tree.Ident, body) =>
-      val sym = VarSymbol(id, nextUid)
+      val sym = VarSymbol(id)
       val nestCtx = ctx + (id.name -> sym)
       Term.Region(sym, term(body)(using nestCtx))
     case Tree.RegRef(reg, value) => Term.RegRef(term(reg), term(value))
@@ -357,13 +353,13 @@ extends Importer:
         // * TODO would be better to keep the fixity of applications part of the Tree repr.
         case (ap @ App(f: Ident, tup @ Tup(lhs :: args))) :: trees if !f.name.head.isLetter =>
           val res = go(acc, lhs :: Nil)
-          val sym = FlowSymbol("‹app-res›", nextUid)
+          val sym = FlowSymbol("‹app-res›")
           val fl = Fld(FldFlags.empty, res, N)
           val app = Term.App(term(f), Term.Tup(
             fl :: args.map(fld))(tup))(ap, sym)
           go(app, trees)
         case (ap @ App(f, tup @ Tup(args))) :: trees =>
-          val sym = FlowSymbol("‹app-res›", nextUid)
+          val sym = FlowSymbol("‹app-res›")
           go(Term.App(term(f),
               Term.Tup(Fld(FldFlags.empty, acc, N) :: args.map(fld))(tup)
             )(ap, sym), trees)
@@ -556,7 +552,7 @@ extends Importer:
               val st = td.annotatedResultType.orElse(newSignatureTrees.get(id.name))
               val s = st.map(term(_)(using newCtx))
               val b = rhs.map(term(_)(using newCtx))
-              val r = FlowSymbol(s"‹result of ${sym}›", nextUid)
+              val r = FlowSymbol(s"‹result of ${sym}›")
               val tdf = TermDefinition(owner, k, sym, pss, s, b, r, 
                 TermDefFlags.empty.copy(isModMember = isModMember))
               sym.defn = S(tdf)
@@ -612,7 +608,7 @@ extends Importer:
                   (id, S(false))
                 case Modified(Keyword.`out`, outLoc, id: Ident) =>
                   (id, S(true))
-              val vs = VarSymbol(id, nextUid)
+              val vs = VarSymbol(id)
               val res = TyParam(FldFlags.empty, vce, vs)
               vs.decl = S(res)
               res :: Nil
@@ -697,7 +693,7 @@ extends Importer:
   
   def fieldOrVarSym(k: TermDefKind, id: Ident)(using Ctx): LocalSymbol & NamedSymbol =
     if ctx.outer.isDefined then TermSymbol(k, ctx.outer, id)
-    else VarSymbol(id, nextUid)
+    else VarSymbol(id)
   
   def param(t: Tree): Ctxl[Ls[Param]] = t match
     case TypeDef(Mod, inner, N, N) =>
@@ -721,7 +717,7 @@ extends Importer:
     case TyTup(ps) =>
       val vs = ps.map:
         case id: Ident =>
-          val sym = VarSymbol(id, nextUid)
+          val sym = VarSymbol(id)
           sym.decl = S(TyParam(FldFlags.empty, N, sym))
           Param(FldFlags.empty, sym, N)
       (vs, ctx ++ vs.map(p => p.sym.name -> p.sym))
@@ -731,7 +727,7 @@ extends Importer:
     val boundVars = mutable.HashMap.empty[Str, VarSymbol]
     def go(t: Tree): Pattern = t match
       case id @ Ident(name) =>
-        val sym = boundVars.getOrElseUpdate(name, VarSymbol(id, nextUid))
+        val sym = boundVars.getOrElseUpdate(name, VarSymbol(id))
         Pattern.Var(sym)
       // case Tup(fields) =>
       //   val pats = fields.map(

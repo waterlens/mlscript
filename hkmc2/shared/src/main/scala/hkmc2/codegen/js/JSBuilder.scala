@@ -188,7 +188,7 @@ class JSBuilder extends CodeBuilder:
                 }; }"""
               } #}  # }"
             if (clsDefn.kind is syntax.Mod) || (clsDefn.kind is syntax.Obj) then
-              val clsTmp = summon[Scope].allocateName(new semantics.TempSymbol(0/*TODO rm this useless param*/, N, sym.nme+"$"+"class"))
+              val clsTmp = summon[Scope].allocateName(new semantics.TempSymbol(N, sym.nme+"$"+"class"))
               clsDefn.owner match
               case S(owner) =>
                 assert(clsDefn.paramsOpt.isEmpty)
@@ -427,7 +427,7 @@ end JSBuilder
 
 trait JSBuilderSanityChecks(instrument: Bool) extends JSBuilder:
   
-  val functionParamVarargSymbol = semantics.TempSymbol(0, N, "args")
+  val functionParamVarargSymbol = semantics.TempSymbol(N, "args")
   
   override def setupFunction(name: Option[Str], params: List[semantics.Param], body: Block)(using Raise, Scope): (Document, Document) =
     if instrument then

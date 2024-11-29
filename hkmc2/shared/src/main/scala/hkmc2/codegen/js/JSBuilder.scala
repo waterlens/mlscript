@@ -25,7 +25,7 @@ abstract class CodeBuilder:
   type Context
   
 
-class JSBuilder(using Elaborator.State) extends CodeBuilder:
+class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
   
   val builtinOpsBase: Ls[Str] = Ls(
     "+", "-", "*", "/", "%",
@@ -238,10 +238,14 @@ class JSBuilder(using Elaborator.State) extends CodeBuilder:
       case N  => doc""
       t :: e :: returningTerm(rest)
     case Match(scrut, Case.Cls(cls, pth) -> trm :: Nil, els, rest) =>
+      val sd = result(scrut)
       val test = cls match
         // case _: semantics.ModuleSymbol => doc"=== ${result(pth)}"
-        case _ => doc"instanceof ${result(pth)}"
-      val t = doc" # if (${ result(scrut) } $test) { #{ ${
+        case Elaborator.ctx.Builtins.Str => doc"typeof $sd === 'string'"
+        case Elaborator.ctx.Builtins.Num => doc"typeof $sd === 'number'"
+        case Elaborator.ctx.Builtins.Int => doc"globalThis.Number.isInteger($sd)"
+        case _ => doc"$sd instanceof ${result(pth)}"
+      val t = doc" # if ($test) { #{ ${
           returningTerm(trm)
         } #}  # }"
       val e = els match

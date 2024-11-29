@@ -82,16 +82,7 @@ case class Define(defn: Defn, rest: Block) extends Block with ProductWithTail
 sealed abstract class Defn:
   val sym: MemberSymbol[?]
 
-// final case class TermDefn(
-//     k: syntax.TermDefKind,
-//     // sym: TermSymbol,
-//     sym: BlockMemberSymbol,
-//     params: Ls[ParamList],
-//     body: Block,
-// ) extends Defn
 final case class FunDefn(
-    // k: syntax.TermDefKind,
-    // sym: TermSymbol,
     sym: BlockMemberSymbol,
     params: Ls[ParamList],
     body: Block,
@@ -101,13 +92,10 @@ final case class ValDefn(
     owner: Opt[InnerSymbol],
     k: syntax.Val,
     sym: BlockMemberSymbol,
-    // params: Ls[ParamList],
     rhs: Path,
 ) extends Defn
 
 final case class ClsLikeDefn(
-  // sym: ClassSymbol,
-  // sym: MemberSymbol[ClassLikeDef],
   sym: MemberSymbol[? <: ClassLikeDef],
   k: syntax.ClsLikeKind,
   methods: Ls[FunDefn],

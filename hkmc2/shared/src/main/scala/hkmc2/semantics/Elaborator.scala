@@ -71,7 +71,7 @@ object Elaborator:
       def ref(id: Tree.Ident): Term =
         // * Note: due to symbolic ops, we may have `id.name =/= nme`;
         // * e.g., we can have `id.name = "|>"` and `nme = "pipe"`.
-        Term.Sel(base.ref(Ident(base.nme)),
+        Term.SynthSel(base.ref(Ident(base.nme)),
           new Tree.Ident(nme).withLocOf(id))(symOpt)
       def symbol = symOpt
     given Conversion[Symbol, Elem] = RefElem(_)
@@ -123,17 +123,17 @@ extends Importer:
         N
     case _ => N
   
-  def cls(tree: Tree): Ctxl[Term] = trace[Term](s"Elab class ${tree.showDbg}", r => s"~> $r"):
-    val trm = term(tree)
+  def cls(tree: Tree, inAppPrefix: Bool): Ctxl[Term] = trace[Term](s"Elab class ${tree.showDbg}", r => s"~> $r"):
+    val trm = term(tree, inAppPrefix)
     trm.symbol match
     case S(cls: ClassSymbol) =>
       trm
     case S(mem: BlockMemberSymbol) =>
       if !mem.hasLiftedClass then trm
-      else Term.Sel(trm, Ident("class"))(mem.clsTree.orElse(mem.modTree).map(_.symbol))
+      else Term.SynthSel(trm, Ident("class"))(mem.clsTree.orElse(mem.modTree).map(_.symbol))
     case _ => trm
   
-  def term(tree: Tree): Ctxl[Term] =
+  def term(tree: Tree, inAppPrefix: Bool = false): Ctxl[Term] =
   trace[Term](s"Elab term ${tree.showDbg}", r => s"~> $r"):
     tree.desugared match
     case Block(s :: Nil) =>
@@ -247,6 +247,10 @@ extends Importer:
       Term.CompType(term(lhs), term(rhs), false)
     case App(Ident(":="), Tree.Tup(lhs :: rhs :: Nil)) =>
       Term.Assgn(term(lhs), term(rhs))
+    case App(Ident("#"), Tree.Tup(SynthSel(pre, idn: Ident) :: (idp: Ident) :: Nil)) =>
+      Term.SelProj(term(pre), term(idn), idp)
+    case App(Ident("#"), Tree.Tup(SynthSel(pre, Ident(name)) :: App(Ident(proj), args) :: Nil)) =>
+      term(App(App(Ident("#"), Tree.Tup(SynthSel(pre, Ident(name)) :: Ident(proj) :: Nil)), args))
     case App(Ident("#"), Tree.Tup(Sel(pre, idn: Ident) :: (idp: Ident) :: Nil)) =>
       Term.SelProj(term(pre), term(idn), idp)
     case App(Ident("#"), Tree.Tup(Sel(pre, Ident(name)) :: App(Ident(proj), args) :: Nil)) =>
@@ -257,7 +261,7 @@ extends Importer:
       term(rhs)
     case tree @ App(lhs, rhs) =>
       val sym = FlowSymbol("‹app-res›")
-      val lt = term(lhs)
+      val lt = term(lhs, inAppPrefix = true)
       val rt = term(rhs)
 
       // Check if module arguments match module parameters
@@ -292,18 +296,24 @@ extends Importer:
                 arg.toLoc :: Nil
       
       Term.App(lt, rt)(tree, sym)
+    case SynthSel(pre, nme) =>
+      val preTrm = term(pre)
+      val sym = resolveField(nme, preTrm.symbol, nme)
+      Term.SynthSel(preTrm, nme)(sym)
     case Sel(pre, nme) =>
       val preTrm = term(pre)
       val sym = resolveField(nme, preTrm.symbol, nme)
-      Term.Sel(preTrm, nme)(sym)
+      if inAppPrefix
+      then Term.SynthSel(preTrm, nme)(sym)
+      else Term.Sel(preTrm, nme)(sym)
     case tree @ Tup(fields) =>
       Term.Tup(fields.map(fld(_)))(tree)
     case New(body) =>
       body match
       case App(c, Tup(params)) =>
-        Term.New(cls(c), params.map(term)).withLocOf(tree)
+        Term.New(cls(c, inAppPrefix = true), params.map(term(_))).withLocOf(tree)
       case c => // * We'll catch bad `new` targets during type checking
-        Term.New(cls(c), Nil).withLocOf(tree)
+        Term.New(cls(c, inAppPrefix = false), Nil).withLocOf(tree)
       // case _ =>
       //   raise(ErrorReport(msg"Illegal new expression." -> tree.toLoc :: Nil))
     case Tree.IfLike(kw, split) =>
@@ -366,12 +376,12 @@ extends Importer:
           val res = go(acc, lhs :: Nil)
           val sym = FlowSymbol("‹app-res›")
           val fl = Fld(FldFlags.empty, res, N)
-          val app = Term.App(term(f), Term.Tup(
+          val app = Term.App(term(f, inAppPrefix = true), Term.Tup(
             fl :: args.map(fld))(tup))(ap, sym)
           go(app, trees)
         case (ap @ App(f, tup @ Tup(args))) :: trees =>
           val sym = FlowSymbol("‹app-res›")
-          go(Term.App(term(f),
+          go(Term.App(term(f, inAppPrefix = true),
               Term.Tup(Fld(FldFlags.empty, acc, N) :: args.map(fld))(tup)
             )(ap, sym), trees)
         case Block(sts) :: trees =>
@@ -657,7 +667,7 @@ extends Importer:
             assert(body.isEmpty)
             val d =
               given Ctx = newCtx
-              semantics.TypeDef(alsSym, tps, extension.map(term), N)
+              semantics.TypeDef(alsSym, tps, extension.map(term(_)), N)
             alsSym.defn = S(d)
             d
         case k: (Mod.type | Obj.type) =>
@@ -725,7 +735,7 @@ extends Importer:
       ps
     case _ =>
       t.asParam.map: (isSpd, p, t) =>
-        isSpd -> Param(FldFlags.empty, fieldOrVarSym(ParamBind, p), t.map(term))
+        isSpd -> Param(FldFlags.empty, fieldOrVarSym(ParamBind, p), t.map(term(_)))
   
   def params(t: Tree): Ctxl[(ParamList, Ctx)] = t match
     case Tup(ps) =>
@@ -906,7 +916,7 @@ extends Importer:
         in.foreach(t => traverseType(pol.!)(t))
         out.foreach(t => traverseType(pol)(t))
       case Term.CompType(lhs, rhs, _) => () // TODO:
-      case Term.Sel(bse, nme) =>
+      case Term.SynthSel(bse, nme) =>
         traverseType(pol)(bse) // FIXME: probably wrong for what we want to do
       case Term.Tup(fields) =>
         // fields.foreach(f => traverseType(pol)(f.value))

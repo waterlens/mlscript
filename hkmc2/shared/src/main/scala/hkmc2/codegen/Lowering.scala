@@ -144,6 +144,10 @@ class Lowering(using TL, Raise, Elaborator.State):
       case Ref(sym: LocalSymbol) =>
         subTerm(rhs): r =>
           Assign(sym, r, k(Value.Lit(syntax.Tree.UnitLit(true))))
+      case SynthSel(prefix, nme) =>
+        subTerm(prefix): p =>
+          subTerm(rhs): r =>
+            AssignField(p, nme, r, k(Value.Lit(syntax.Tree.UnitLit(true))))
       case Sel(prefix, nme) =>
         subTerm(prefix): p =>
           subTerm(rhs): r =>
@@ -279,9 +283,13 @@ class Lowering(using TL, Raise, Elaborator.State):
           else k(Value.Lit(syntax.Tree.UnitLit(true))) // * it seems this currently never happens
         )
       
-    case Sel(prefix, nme) =>
+    case SynthSel(prefix, nme) =>
       subTerm(prefix): p =>
         k(Select(p, nme))
+        
+    case Sel(prefix, nme) =>
+      setupSelection(prefix, nme)(k)
+        
         
     case New(cls, as) =>
       subTerm(cls): sr =>
@@ -329,4 +337,33 @@ class Lowering(using TL, Raise, Elaborator.State):
       case _ => Program(acc.reverse, topLevel(trm))
     go(Nil, main)
 
+
+
+  def setupSelection(prefix: Term, nme: Tree.Ident)(k: Result => Block)(using Subst): Block =
+    subTerm(prefix): p =>
+      k(Select(p, nme))
+  
+trait LoweringSelSanityChecks
+    (instrument: Bool)(using TL, Raise, Elaborator.State)
+    extends Lowering:
+  
+  override def setupSelection(prefix: st, nme: Tree.Ident)(k: Result => Block)(using Subst): Block =
+    if instrument then
+      subTerm(prefix): p =>
+        val selRes = TempSymbol(N, "selRes")
+        val split = Split.Cons(
+            Branch(
+              selRes.ref(),
+              Pattern.Lit(syntax.Tree.UnitLit(true)),
+              Split.Else(
+                Term.Throw(Term.New(SynthSel(State.globalThisSymbol.ref(), Tree.Ident("Error"))(N),
+                  Term.Lit(syntax.Tree.StrLit(s"Access to required field '${nme.name}' yielded 'undefined'")) :: Nil)
+                ))),
+            Split.Else(selRes.ref()))
+        Assign(
+          selRes,
+          Select(p, nme),
+          term(IfLike(syntax.Keyword.`if`, split)(split))(k))
+    else
+      super.setupSelection(prefix, nme)(k)
 

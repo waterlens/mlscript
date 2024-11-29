@@ -8,15 +8,23 @@ fun test(x) =
 //│ function test(...args) {
 //│   globalThis.Predef.checkArgs("test", 1, true, args.length);
 //│   let x = args[0];
+//│   let selRes, tmp;
+//│   selRes = globalThis.a;
+//│   if (selRes === undefined) {
+//│     throw new globalThis.Error("Access to required field 'a' yielded 'undefined'");
+//│   } else {
+//│     tmp = selRes;
+//│   }
 //│   return [
-//│     globalThis.a,
+//│     tmp,
 //│     x
 //│   ];
 //│ }
 //│ undefined
 
+:re
 test(123)
-//│ = [ undefined, 123 ]
+//│ ═══[RUNTIME ERROR] Error: Access to required field 'a' yielded 'undefined'
 
 val a = 1
 //│ a = 1
@@ -39,13 +47,20 @@ module Test with
 //│   test1(...args) {
 //│     globalThis.Predef.checkArgs("test1", 1, true, args.length);
 //│     let x = args[0];
-//│     return globalThis.test(x);
+//│     return globalThis.test(x) ?? null;
 //│   } 
 //│   test2(...args1) {
 //│     globalThis.Predef.checkArgs("test2", 1, true, args1.length);
 //│     let x1 = args1[0];
+//│     let selRes, tmp;
+//│     selRes = this.a;
+//│     if (selRes === undefined) {
+//│       throw new globalThis.Error("Access to required field 'a' yielded 'undefined'");
+//│     } else {
+//│       tmp = selRes;
+//│     }
 //│     return [
-//│       this.a,
+//│       tmp,
 //│       x1
 //│     ];
 //│   }

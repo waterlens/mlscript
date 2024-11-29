@@ -62,6 +62,7 @@ enum Tree extends AutoLocated:
   case TyTup(tys: Ls[Tree])
   case App(lhs: Tree, rhs: Tree)
   case Jux(lhs: Tree, rhs: Tree)
+  case SynthSel(prefix: Tree, name: Ident)
   case Sel(prefix: Tree, name: Ident)
   case InfixApp(lhs: Tree, kw: Keyword.Infix, rhs: Tree)
   case New(body: Tree)
@@ -101,6 +102,7 @@ enum Tree extends AutoLocated:
     case RegRef(reg, value) => reg :: value :: Nil
     case Effectful(eff, body) => eff :: body :: Nil
     case TyTup(tys) => tys
+    case SynthSel(prefix, name) => prefix :: Nil
     case Sel(prefix, name) => prefix :: Nil
     case Open(bod) => bod :: Nil
     case Def(lhs, rhs) => lhs :: rhs :: Nil
@@ -127,6 +129,7 @@ enum Tree extends AutoLocated:
     case TyTup(tys) => "type tuple"
     case App(lhs, rhs) => "application"
     case Jux(lhs, rhs) => "juxtaposition"
+    case SynthSel(prefix, name) => "synthetic selection"
     case Sel(prefix, name) => "selection"
     case InfixApp(lhs, kw, rhs) => "infix application"
     case New(body) => "new"

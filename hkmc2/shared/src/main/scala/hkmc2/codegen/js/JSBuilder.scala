@@ -93,11 +93,12 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
     case Call(Value.Ref(l: BuiltinSymbol), args) =>
       err(msg"Illeal arity for builtin symbol '${l.nme}'")
     
-    case Call(fun, args) =>
+    case c @ Call(fun, args) =>
       val base = fun match
         case _: Value.Lam => doc"(${result(fun)})"
         case _ => result(fun)
-      setupCall(base, args.map(result).mkDocument(", "))
+      val argsDoc = args.map(result).mkDocument(", ")
+      if c.isMlsFun then doc"${base}(${argsDoc})" else doc"${base}(${argsDoc}) ?? null"
     case Value.Lam(ps, bod) => scope.nest givenIn:
       val (params, bodyDoc) = setupFunction(none, ps, bod)
       doc"($params) => { #{  # ${
@@ -346,8 +347,6 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
     (paramsList, this.body(body))
 
 
-  def setupCall(bases: Document, args: Document)(using Raise, Scope): Document =
-    doc"${bases}(${args})"
 
 object JSBuilder:
   import scala.util.matching.Regex
@@ -461,12 +460,3 @@ trait JSBuilderArgNumSanityChecks
     else
       super.setupFunction(name, params, body)
 
-trait JSBuilderSelSanityChecks
-    (instrument: Bool)(using Elaborator.State)
-    extends JSBuilder:
-  
-  override def setupCall(bases: Document, args: Document)(using Raise, Scope): Document =
-    val basic = super.setupCall(bases, args)
-    if instrument
-    then doc"$basic ?? null"
-    else basic

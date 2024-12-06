@@ -144,7 +144,8 @@ extends Importer:
         cls.definedSymbols.get(nme.name) match
         case s @ S(clsSym) => s
         case N =>
-          raise(ErrorReport(msg"Module '${cls.symbol.nme}' does not contain member '${nme.name}'" -> srcTree.toLoc :: Nil))
+          raise(ErrorReport(msg"${cls.k.desc.capitalize} '${cls.symbol.nme
+            }' does not contain member '${nme.name}'" -> srcTree.toLoc :: Nil))
           N
       case N =>
         N

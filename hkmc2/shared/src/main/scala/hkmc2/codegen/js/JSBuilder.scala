@@ -93,6 +93,12 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
     case Call(Value.Ref(l: BuiltinSymbol), args) =>
       err(msg"Illeal arity for builtin symbol '${l.nme}'")
     
+    case Call(s @ Select(_, id), lhs :: rhs :: Nil) =>
+      Elaborator.ctx.Builtins.getBuiltinOp(id.name) match
+        case S(jsOp) =>
+          val res = doc"${result(lhs)} ${jsOp} ${result(rhs)}"
+          if needsParens(jsOp) then doc"(${res})" else res
+        case N => doc"${result(s)}(${(result(lhs) :: result(rhs) :: Nil).mkDocument(", ")})"
     case c @ Call(fun, args) =>
       val base = fun match
         case _: Value.Lam => doc"(${result(fun)})"
@@ -148,7 +154,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
             S(defn.sym).collectFirst{ case s: InnerSymbol => s }):
           defn match
           case FunDefn(sym, Nil, body) =>
-            TODO("getters")
+            doc"function ${sym.nme}() { #{  # ${this.body(body)} #}  # }"
           case FunDefn(sym, ps :: pss, bod) =>
             val result = pss.foldRight(bod):
               case (ps, block) => 
@@ -178,6 +184,10 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                     val (params, bodyDoc) = setupFunction(some(td.sym.nme), ps, result)
                     doc" # ${td.sym.nme}($params) { #{  # ${
                       bodyDoc
+                    } #}  # }"
+                  case td @ FunDefn(_, Nil, bod) =>
+                    doc" # get ${td.sym.nme}() { #{  # ${
+                      this.body(bod)
                     } #}  # }"
                 .mkDocument(" ")
               }${

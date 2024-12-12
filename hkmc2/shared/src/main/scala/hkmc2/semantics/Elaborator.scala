@@ -29,7 +29,10 @@ object Elaborator:
     ";" -> ",",
     "+." -> "+",
     "-." -> "-",
-    "*." -> "*")
+    "*." -> "*",
+    "/." -> "/")
+  private val builtinBinOps = aliasOps ++ (binaryOps.map: op =>
+    op -> op).toMap
 
   val reservedNames = binaryOps.toSet ++ aliasOps.keySet + "NaN" + "Infinity"
   
@@ -43,11 +46,15 @@ object Elaborator:
     
     def withMembers(members: Iterable[Str -> MemberSymbol[?]], out: Opt[Symbol] = N): Ctx =
       copy(env = env ++ members.map:
-        case (nme, sym) => nme -> (
-          out orElse outer match
-          case S(outer) => Ctx.SelElem(outer, sym.nme, S(sym))
-          case N => sym: Ctx.Elem
-        )
+        case (nme, sym) =>
+          val elem = out orElse outer match
+            case S(outer) => Ctx.SelElem(outer, sym.nme, S(sym))
+            case N => sym: Ctx.Elem
+          if sym.isGetter && !(out.exists:
+            case _: ClassSymbol | _: ModuleSymbol => true // * A getter inside class/module can be invoked directly
+            case _: BlockMemberSymbol | _: TermSymbol | _: TypeAliasSymbol | _: PatternSymbol | _: TopLevelSymbol => false)
+          then nme -> Ctx.GetElem(elem)
+          else nme -> elem
       )
     
     def nest(outer: Opt[InnerSymbol]): Ctx = Ctx(outer, Some(this), Map.empty)
@@ -78,25 +85,32 @@ object Elaborator:
       val Num = assumeBuiltinCls("Num")
       val Str = assumeBuiltinCls("Str")
       val Predef = assumeBuiltinMod("Predef")
+      def getBuiltinOp(op: Str): Opt[Str] = if getBuiltin(op).isDefined then builtinBinOps.get(op) else N
   
   object Ctx:
     abstract class Elem:
       def nme: Str
-      def ref(id: Tree.Ident): Term
+      def ref(id: Tree.Ident)(using Elaborator.State): Term
       def symbol: Opt[Symbol]
     final case class RefElem(val sym: Symbol) extends Elem:
       val nme = sym.nme
-      def ref(id: Tree.Ident): Term =
+      def ref(id: Tree.Ident)(using Elaborator.State): Term =
         require(id.name == nme)
         Term.Ref(sym)(id, 666) // TODO 666
       def symbol = S(sym)
     final case class SelElem(val base: Elem, val nme: Str, val symOpt: Opt[FieldSymbol]) extends Elem:
-      def ref(id: Tree.Ident): Term =
+      def ref(id: Tree.Ident)(using Elaborator.State): Term =
         // * Note: due to symbolic ops, we may have `id.name =/= nme`;
         // * e.g., we can have `id.name = "|>"` and `nme = "pipe"`.
         Term.SynthSel(base.ref(Ident(base.nme)),
           new Tree.Ident(nme).withLocOf(id))(symOpt)
       def symbol = symOpt
+    final case class GetElem(val base: Elem) extends Elem:
+      def nme: Str = base.nme
+      def ref(id: Tree.Ident)(using Elaborator.State): Term =
+        val emptyTup: Tree.Tup = Tree.Tup(Nil)
+        Term.App(base.ref(id), Term.Tup(Nil)(emptyTup))(Tree.App(id, emptyTup), FlowSymbol("‹get-res›"))
+      def symbol: Opt[Symbol] = base.symbol
     given Conversion[Symbol, Elem] = RefElem(_)
     val empty: Ctx = Ctx(N, N, Map.empty)
   
@@ -273,7 +287,7 @@ extends Importer:
     case App(Ident("&"), Tree.Tup(lhs :: rhs :: Nil)) =>
       Term.CompType(term(lhs), term(rhs), false)
     case App(Ident(":="), Tree.Tup(lhs :: rhs :: Nil)) =>
-      Term.Assgn(term(lhs), term(rhs))
+      Term.SetRef(term(lhs), term(rhs))
     case App(Ident("#"), Tree.Tup(SynthSel(pre, idn: Ident) :: (idp: Ident) :: Nil)) =>
       Term.SelProj(term(pre), term(idn), idp)
     case App(Ident("#"), Tree.Tup(SynthSel(pre, Ident(name)) :: App(Ident(proj), args) :: Nil)) =>

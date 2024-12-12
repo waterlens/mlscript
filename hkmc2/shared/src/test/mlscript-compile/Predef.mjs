@@ -50,7 +50,7 @@ const Predef$class = class Predef {
           tmp = "| ".repeat(this.indentLvl) ?? null;
           tmp1 = "  ".repeat(this.indentLvl) ?? null;
           tmp2 = "\n" + tmp1;
-          tmp3 = msg.replaceAll("\n", tmp2) ?? null;
+          tmp3 = msg.replaceAll("\n", tmp2);
           tmp4 = tmp + tmp3;
           return console.log(tmp4) ?? null;
         } else {
@@ -88,7 +88,7 @@ const Predef$class = class Predef {
   } 
   call(receiver1, f2) {
     return (...args) => {
-      return f2.call(receiver1, ...args) ?? null;
+      return f2.call(receiver1, ...args);
     };
   } 
   print(x3) {
@@ -102,7 +102,7 @@ const Predef$class = class Predef {
     return globalThis.Array.prototype.slice.call(xs, i, tmp) ?? null;
   } 
   tupleGet(xs1, i1) {
-    return globalThis.Array.prototype.at.call(xs1, i1) ?? null;
+    return globalThis.Array.prototype.at.call(xs1, i1);
   } 
   stringStartsWith(string, prefix) {
     return string.startsWith(prefix) ?? null;

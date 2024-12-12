@@ -1,5 +1,6 @@
 const Predef$class = class Predef {
   constructor() {
+    this.assert = console.assert;
     this.MatchResult = function MatchResult(captures1) { return new MatchResult.class(captures1); };
     this.MatchResult.class = class MatchResult {
       constructor(captures) {

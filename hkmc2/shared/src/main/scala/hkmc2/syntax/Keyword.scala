@@ -31,7 +31,7 @@ class Keyword(
   def assumeRightPrec: Int = rightPrec.getOrElse(lastWords(s"$this does not have right precedence"))
   def leftPrecOrMin: Int = leftPrec.getOrElse(Int.MinValue)
   def rightPrecOrMin: Int = rightPrec.getOrElse(Int.MinValue)
-  // def rightPrecOrMax: Int = rightPrec.getOrElse(Int.MaxValue)
+  def rightPrecOrMax: Int = rightPrec.getOrElse(Int.MaxValue)
   override def toString: Str = s"keyword '$name'"
 
 object Keyword:
@@ -108,8 +108,8 @@ object Keyword:
   val `abstract` = Keyword("abstract", N, N)
   val `constructor` = Keyword("constructor", N, N)
   val `virtual` = Keyword("virtual", N, N)
-  val `true` = Keyword("true", N, curPrec)
-  val `false` = Keyword("false", N, curPrec)
+  val `true` = Keyword("true", N, N)
+  val `false` = Keyword("false", N, N)
   val `public` = Keyword("public", N, N)
   val `private` = Keyword("private", N, N)
   val `return` = Keyword("return", N, curPrec)

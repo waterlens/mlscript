@@ -609,7 +609,7 @@ abstract class Parser(
       cur match // `true | false | Tree`
       case Nil => false
       case (NEWLINE | SPACE, _) :: _ => consume; true
-      case (KEYWORD(kw), loc) :: _ =>
+      case (KEYWORD(kw), loc) :: _ if kw isnt Keyword.__ =>
         consume
         prefixRules.kwAlts.get(kw.name) match
         case S(subRule) =>
@@ -621,7 +621,7 @@ abstract class Parser(
       case false => printDbg(s"! end of split"); acc // break
       case e: Tree => // needs further inspection
         yeetSpaces match
-        case (COMMA | SEMI | NEWLINE, _) :: _ =>
+        case (COMMA | NEWLINE, _) :: _ =>
           consume; splitItem(e :: acc)
         case _ => printDbg(s"! end of split"); e :: acc
   

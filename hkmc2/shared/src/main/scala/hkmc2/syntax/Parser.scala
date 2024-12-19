@@ -577,7 +577,7 @@ abstract class Parser(
       consume
       val bod = yeetSpaces match
         case Nil | (COMMA, _) :: _ => N
-        case _ => S(simpleExprImpl(prec))
+        case _ => S(expr(prec))
       Spread(if dotDotDot then Keyword.`...` else Keyword.`..`, S(loc), bod)
     case (tok, loc) :: _ =>
       TODO(tok)

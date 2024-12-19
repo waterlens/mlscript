@@ -37,21 +37,11 @@ foo(_, _, 3)(1, _)(2)
 
 :todo
 foo(..._)
-//│ ╔══[PARSE ERROR] Unexpected keyword '_' in this position
-//│ ║  l.39: 	foo(..._)
-//│ ╙──      	       ^
-//│ ╔══[PARSE ERROR] Unexpected '_' keyword here
-//│ ║  l.39: 	foo(..._)
-//│ ╙──      	       ^
+//│ ═══[ERROR] Illegal position for '_' placeholder.
 
 :todo
 [..._]
-//│ ╔══[PARSE ERROR] Unexpected keyword '_' in this position
-//│ ║  l.48: 	[..._]
-//│ ╙──      	    ^
-//│ ╔══[PARSE ERROR] Unexpected '_' keyword here
-//│ ║  l.48: 	[..._]
-//│ ╙──      	    ^
+//│ ═══[ERROR] Illegal position for '_' placeholder.
 
 
 let h = _ - 2
@@ -145,17 +135,16 @@ _ - 2 <| 1
 1
 |> _ - 2
 //│ ╔══[PARSE ERROR] Expected end of input; found '_' keyword instead
-//│ ║  l.146: 	|> _ - 2
+//│ ║  l.136: 	|> _ - 2
 //│ ╙──       	   ^
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.145: 	1
+//│ ║  l.135: 	1
 //│ ╙──       	^
 //│ = [Function: pipeInto]
 
-:todo
 1
   |> _ - 2
-//│ /!!!\ Uncaught error: scala.MatchError: OpBlock(List((Ident(|>),App(Ident(-),Tup(List(Under(), IntLit(2))))))) (of class hkmc2.syntax.Tree$OpBlock)
+//│ = -1
 
 :sjs
 1 . _ - 2

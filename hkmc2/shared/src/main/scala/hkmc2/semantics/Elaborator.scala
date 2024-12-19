@@ -85,7 +85,8 @@ object Elaborator:
       val Num = assumeBuiltinCls("Num")
       val Str = assumeBuiltinCls("Str")
       val Predef = assumeBuiltinMod("Predef")
-      def getBuiltinOp(op: Str): Opt[Str] = if getBuiltin(op).isDefined then builtinBinOps.get(op) else N
+      def getBuiltinOp(op: Str): Opt[Str] =
+        if getBuiltin(op).isDefined then builtinBinOps.get(op) else N
   
   object Ctx:
     abstract class Elem:
@@ -319,6 +320,12 @@ extends Importer:
       Term.Deref(term(rhs))
     case App(Ident("~"), Tree.Tup(rhs :: Nil)) =>
       term(rhs)
+    case tree @ App(lhs, OpBlock(ops)) =>
+      ops.foldLeft(term(lhs)):
+        case (acc, (op, arg)) =>
+          val sym = FlowSymbol("‹app-res›")
+          val tup = new Tup(Nil) // TODO
+          Term.App(term(op), Term.Tup(PlainFld(acc) :: PlainFld(term(arg)) :: Nil)(tup))(tree, sym)
     case tree @ App(lhs, rhs) =>
       val sym = FlowSymbol("‹app-res›")
       val lt = term(lhs, inAppPrefix = true)

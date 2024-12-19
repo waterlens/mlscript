@@ -172,6 +172,8 @@ enum Tree extends AutoLocated:
     case id: Ident => S(N, id, N)
     case Spread(Keyword.`..`, _, S(id: Ident)) => S(S(false), id, N)
     case Spread(Keyword.`...`, _, S(id: Ident)) => S(S(true), id, N)
+    case Spread(Keyword.`..`, _, S(und: Under)) => S(S(false), new Ident("_").withLocOf(und), N)
+    case Spread(Keyword.`...`, _, S(und: Under)) => S(S(true), new Ident("_").withLocOf(und), N)
     case InfixApp(lhs: Ident, Keyword.`:`, rhs) => S(N, lhs, S(rhs))
     case TermDef(ImmutVal, inner, _) => inner.asParam
   

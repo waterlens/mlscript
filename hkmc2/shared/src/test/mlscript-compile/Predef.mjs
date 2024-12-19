@@ -62,8 +62,12 @@ const Predef$class = class Predef {
     };
     this.TraceLogger = new TraceLogger$class;
     this.TraceLogger.class = TraceLogger$class;
+    
+    const this$Predef = this;
     this.Test = class Test {
       constructor() {
+        let tmp;
+        tmp = this$Predef.print("Test");
         this.y = 1;
       }
       toString() { return "Test"; }

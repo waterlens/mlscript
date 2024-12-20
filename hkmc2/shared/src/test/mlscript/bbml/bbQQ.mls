@@ -21,7 +21,7 @@
 
 
 x `=> x
-//│ Type: CodeBase[out x3_3 -> x3_3, ⊥, ?]
+//│ Type: CodeBase[out x -> x, ⊥, ?]
 
 x `=> `42
 //│ Type: CodeBase[out ⊤ -> Int, ⊥, ?]
@@ -31,12 +31,12 @@ x `=> 42
 //│ ╔══[ERROR] Type error in unquoted term
 //│ ║  l.30: 	x `=> 42
 //│ ║        	      ^^
-//│ ╙── because: cannot constrain  Int  <:  CodeBase[out α15_3, out α16_3, ?]
+//│ ╙── because: cannot constrain  Int  <:  CodeBase[out cde, out ctx, ?]
 //│ Type: CodeBase[out ⊤ -> ⊥, ⊥, ?]
 
 
 f `=> x `=> f`(x)
-//│ Type: CodeBase[out (x28_3 -> α29_3) -> (x28_3 -> α29_3), ⊥, ?]
+//│ Type: CodeBase[out (x -> app) -> (x -> app), ⊥, ?]
 
 
 
@@ -53,7 +53,7 @@ x `=> y `=> x `+ y
 //│ Type: CodeBase[out (Int, Int, Int) -> Int, ⊥, ?]
 
 f `=> x `=> y `=> f`(x, y)
-//│ Type: CodeBase[out ((x102_3, y104_3) -> α105_3) -> (x102_3 -> (y104_3 -> α105_3)), ⊥, ?]
+//│ Type: CodeBase[out ((x, y) -> app) -> (x -> (y -> app)), ⊥, ?]
 
 `let x = `42 `in x
 //│ Type: CodeBase[out Int, ⊥, ?]
@@ -63,7 +63,7 @@ f `=> x `=> y `=> f`(x, y)
 //│ ╔══[ERROR] Type error in unquoted term
 //│ ║  l.62: 	`let x = 42 `in x
 //│ ║        	         ^^
-//│ ╙── because: cannot constrain  Int  <:  CodeBase[out α130_2, out α131_2, ?]
+//│ ╙── because: cannot constrain  Int  <:  CodeBase[out cde, out ctx, ?]
 //│ Type: CodeBase[⊥, ⊥, ?]
 
 :e
@@ -71,7 +71,7 @@ f `=> x `=> y `=> f`(x, y)
 //│ ╔══[ERROR] Type error in unquoted term
 //│ ║  l.70: 	`let x = `0 `in 1
 //│ ║        	                ^
-//│ ╙── because: cannot constrain  Int  <:  CodeBase[out α139_3, out α140_3, ?]
+//│ ╙── because: cannot constrain  Int  <:  CodeBase[out cde, out ctx, ?]
 //│ Type: CodeBase[⊥, ⊥, ?]
 
 
@@ -82,7 +82,7 @@ f `=> x `=> y `=> f`(x, y)
 
 
 x `=> `if x `== `0.0 then `1.0 else x
-//│ Type: CodeBase[out x148_3 -> (x148_3 ∨ Num), ⊥, ?]
+//│ Type: CodeBase[out x -> (x ∨ Num), ⊥, ?]
 
 run(`1)
 //│ Type: Int
@@ -90,34 +90,34 @@ run(`1)
 
 :e
 run(1)
-//│ ╔══[ERROR] Type error in integer literal with expected type CodeBase[out T166_1, ⊥, ?]
+//│ ╔══[ERROR] Type error in integer literal with expected type CodeBase[out T, ⊥, ?]
 //│ ║  l.92: 	run(1)
 //│ ║        	    ^
-//│ ╙── because: cannot constrain  Int  <:  CodeBase[out T166_1, ⊥, ?]
+//│ ╙── because: cannot constrain  Int  <:  CodeBase[out T, ⊥, ?]
 //│ Type: ⊥
 
 :e
 x `=> run(x)
-//│ ╔══[ERROR] Type error in reference with expected type CodeBase[out T169_3, ⊥, ?]
+//│ ╔══[ERROR] Type error in reference with expected type CodeBase[out T, ⊥, ?]
 //│ ║  l.100: 	x `=> run(x)
 //│ ║         	          ^
-//│ ╟── because: cannot constrain  CodeBase[x167_3, <x>168_3, ⊥]  <:  CodeBase[out T169_3, ⊥, ?]
-//│ ╙── because: cannot constrain  D( <x>168_3 )  <:  ⊥
-//│ Type: CodeBase[out CodeBase[out α170_3, ?, ?] -> α170_3, out α172_2, ?]
+//│ ╟── because: cannot constrain  CodeBase[x, <x>, ⊥]  <:  CodeBase[out T, ⊥, ?]
+//│ ╙── because: cannot constrain  <x>  <:  ⊥
+//│ Type: CodeBase[out CodeBase[out cde, ?, ?] -> cde, out ctx, ?]
 
 :e
 `let x = `42 `in run(x)
-//│ ╔══[ERROR] Type error in reference with expected type CodeBase[out T176_3, ⊥, ?]
+//│ ╔══[ERROR] Type error in reference with expected type CodeBase[out T, ⊥, ?]
 //│ ║  l.109: 	`let x = `42 `in run(x)
 //│ ║         	                     ^
-//│ ╟── because: cannot constrain  CodeBase[α173_2, <x>175_3, ⊥]  <:  CodeBase[out T176_3, ⊥, ?]
-//│ ╙── because: cannot constrain  D( <x>175_3 )  <:  ⊥
+//│ ╟── because: cannot constrain  CodeBase[cde, <x>, ⊥]  <:  CodeBase[out T, ⊥, ?]
+//│ ╙── because: cannot constrain  <x>  <:  ⊥
 //│ ╔══[ERROR] Type error in unquoted term
 //│ ║  l.109: 	`let x = `42 `in run(x)
 //│ ║         	                 ^^^^^^
-//│ ╟── because: cannot constrain  T176_3  <:  CodeBase[out α177_3, out α178_3, ?]
-//│ ╟── because: cannot constrain  T176_3  <:  ¬(~{CodeBase[out α177_3, out α178_3, ?]})
-//│ ╟── because: cannot constrain  α173_2  <:  ¬(~{CodeBase[out α177_3, out α178_3, ?]})
-//│ ╟── because: cannot constrain  α173_2  <:  CodeBase[out α179_2, out α180_2, ?]
-//│ ╙── because: cannot constrain  Int  <:  CodeBase[out α179_2, out α180_2, ?]
+//│ ╟── because: cannot constrain  T  <:  CodeBase[out cde1, out ctx, ?]
+//│ ╟── because: cannot constrain  T  <:  ¬(¬{CodeBase[out cde1, out ctx, ?]})
+//│ ╟── because: cannot constrain  cde  <:  ¬(¬{CodeBase[out cde1, out ctx, ?]})
+//│ ╟── because: cannot constrain  cde  <:  CodeBase[out cde1, out ctx, ?]
+//│ ╙── because: cannot constrain  Int  <:  CodeBase[out cde1, out ctx, ?]
 //│ Type: CodeBase[⊥, ⊥, ?]

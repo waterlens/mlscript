@@ -5,7 +5,6 @@ const Predef$class = class Predef {
     this.MatchResult.class = class MatchResult {
       constructor(captures) {
         this.captures = captures;
-        
       }
       toString() { return "MatchResult(" + this.captures + ")"; }
     };
@@ -13,7 +12,6 @@ const Predef$class = class Predef {
     this.MatchFailure.class = class MatchFailure {
       constructor(errors) {
         this.errors = errors;
-        
       }
       toString() { return "MatchFailure(" + this.errors + ")"; }
     };
@@ -62,7 +60,6 @@ const Predef$class = class Predef {
     };
     this.TraceLogger = new TraceLogger$class;
     this.TraceLogger.class = TraceLogger$class;
-    
     const this$Predef = this;
     this.Test = class Test {
       constructor() {

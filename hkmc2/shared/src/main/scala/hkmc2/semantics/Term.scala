@@ -39,7 +39,7 @@ enum Term extends Statement:
   case Ret(result: Term)
   case Throw(result: Term)
   case Try(body: Term, finallyDo: Term)
-  case Handle(lhs: LocalSymbol, rhs: Term, defs: ObjBody)
+  case Handle(lhs: LocalSymbol, rhs: Term, defs: Ls[HandlerTermDefinition])
   
   lazy val symbol: Opt[Symbol] = this match
     case Ref(sym) => S(sym)
@@ -128,7 +128,7 @@ sealed trait Statement extends AutoLocated with ProductWithExtraInfo:
       pat.paramsOpt.toList.flatMap(_.subTerms) ::: pat.body.blk :: Nil
     case Import(sym, pth) => Nil
     case Try(body, finallyDo) => body :: finallyDo :: Nil
-    case Handle(lhs, rhs, defs) => rhs :: defs._1 :: Nil
+    case Handle(lhs, rhs, defs) => rhs :: defs.flatMap(_.td.subTerms)
     case Neg(e) => e :: Nil
   
   protected def children: Ls[Located] = this match
@@ -225,6 +225,11 @@ final case class TermDefinition(
     resSym: FlowSymbol,
     flags: TermDefFlags,
 ) extends Companion
+
+final case class HandlerTermDefinition(
+  resumeSym: LocalSymbol & NamedSymbol,
+  td: TermDefinition
+)
 
 case class ObjBody(blk: Term.Blk):
   // override def toString: String = statmts.mkString("{ ", "; ", " }")

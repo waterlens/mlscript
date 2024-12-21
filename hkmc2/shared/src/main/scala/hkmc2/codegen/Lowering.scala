@@ -129,7 +129,7 @@ class Lowering(using TL, Raise, Elaborator.State):
           case s => R(s)
         val publicFlds = rest2.collect:
           case td @ TermDefinition(k = (_: syntax.Val)) => td
-        Define(ClsLikeDefn(cls.sym, syntax.Cls,
+        Define(ClsLikeDefn(cls.sym, syntax.Cls, N,
             mtds.flatMap: td =>
               td.body.map: bod =>
                 val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))
@@ -137,6 +137,7 @@ class Lowering(using TL, Raise, Elaborator.State):
             ,
             privateFlds,
             publicFlds,
+            End(),
             term(Blk(rest2, bodBlk.res))(ImplctRet).mapTail:
               case Return(Value.Lit(syntax.Tree.UnitLit(true)), true) => End()
               case t => t
@@ -308,6 +309,13 @@ class Lowering(using TL, Raise, Elaborator.State):
         term(finallyDo)(_ => End()),
         k(Value.Ref(l))
       )
+
+    case Handle(lhs, rhs, defs) =>
+      raise(ErrorReport(
+        msg"Effect handlers are not enabled" ->
+        t.toLoc :: Nil,
+        source = Diagnostic.Source.Compilation))
+      End("error")
     
     // * BbML-specific cases: t.Cls#field and mutable operations
     case SelProj(prefix, _, proj) =>
@@ -470,3 +478,25 @@ trait LoweringTraceLog
     ) |>:
       Ret(Value.Ref(resSym))
     )
+
+
+trait LoweringHandler
+    (instrument: Bool)(using TL, Raise, Elaborator.State)
+    extends Lowering:
+  override def term(t: st)(k: Result => Block)(using Subst): Block =
+    if !instrument then return super.term(t)(k)
+    t match
+    case st.Blk(Handle(lhs, rhs, defs) :: stmts, res) =>
+      val handlers = defs.map {
+        case HandlerTermDefinition(resumeSym, td) => td.body match
+          case None => 
+            raise(ErrorReport(msg"Handler function definitions cannot be empty" -> td.toLoc :: Nil))
+            N
+          case Some(bod) =>
+            val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))      
+            S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
+      }.collect{ case Some(v) => v }
+      val resSym = TempSymbol(S(t))
+      subTerm(rhs): cls =>
+        HandleBlock(lhs, resSym, cls, handlers, term(st.Blk(stmts, res))(HandleBlockReturn(_)), k(Value.Ref(resSym)))
+    case _ => super.term(t)(k)

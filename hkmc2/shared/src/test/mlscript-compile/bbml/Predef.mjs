@@ -1,7 +1,5 @@
 const Predef$class = class Predef {
-  constructor() {
-    
-  }
+  constructor() {}
   checkArgs(functionName, expected, got) {
     let scrut, name, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
     scrut = got != expected;

@@ -63,7 +63,7 @@ object Printer:
       doc"fun ${sym.nme}${docParams} { #{  # ${docBody} #}  # }"
     case ValDefn(owner, k, sym, rhs) =>
       doc"val ${sym.nme} = ${mkDocument(rhs)}"
-    case ClsLikeDefn(sym, k, methods, privateFields, publicFields, ctor) =>
+    case ClsLikeDefn(sym, k, parentSym, methods, privateFields, publicFields, preCtor, ctor) =>
       doc"class ${sym.nme} #{  #} "
 
   def mkDocument(arg: Arg)(using Raise, Scope): Document =

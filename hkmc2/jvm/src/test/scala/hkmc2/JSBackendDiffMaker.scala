@@ -25,6 +25,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   val silent = NullaryCommand("silent")
   val noSanityCheck = NullaryCommand("noSanityCheck")
   val traceJS = NullaryCommand("traceJS")
+  val handler = NullaryCommand("handler")
   val expect = Command("expect"): ln =>
     ln.trim
   
@@ -78,6 +79,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
         new codegen.Lowering
           with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
           with codegen.LoweringTraceLog(traceJS.isSet)
+          with codegen.LoweringHandler(handler.isSet)
       given Elaborator.Ctx = curCtx
       val jsb = new JSBuilder
         with JSBuilderArgNumSanityChecks(noSanityCheck.isUnset)

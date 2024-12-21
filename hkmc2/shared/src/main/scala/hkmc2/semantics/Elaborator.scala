@@ -18,13 +18,15 @@ import Keyword.{`let`, `set`}
 
 object Elaborator:
   
-  private val binaryOps = Ls(
+  private val binaryOps = Set(
     ",",
     "+", "-", "*", "/", "%",
     "==", "!=", "<", "<=", ">", ">=",
     "===",
     "&&", "||")
   private val unaryOps = Set("-", "+", "!", "~")
+  private val anyOps = Set("super")
+  private val builtins = binaryOps ++ unaryOps ++ anyOps
   private val aliasOps = Map(
     ";" -> ",",
     "+." -> "+",
@@ -124,8 +126,8 @@ object Elaborator:
     val suid = new Uid.Symbol.State
     val globalThisSymbol = TopLevelSymbol("globalThis")
     val builtinOpsMap =
-      val baseBuiltins = binaryOps.map: op =>
-          op -> BuiltinSymbol(op, binary = true, unary = unaryOps(op), nullary = false)
+      val baseBuiltins = builtins.map: op =>
+          op -> BuiltinSymbol(op, binary = binaryOps(op), unary = unaryOps(op), nullary = false, functionLike = anyOps(op))
         .toMap
       baseBuiltins ++ aliasOps.map:
         case (alias, base) => alias -> baseBuiltins(base)
@@ -215,10 +217,7 @@ extends Importer:
         msg"Expected a body for handle bindings in expression position" ->
           tree.toLoc :: Nil))
           
-      val sym =
-        fieldOrVarSym(Handler, id)
-      val newCtx = ctx + (id.name -> sym)
-      Term.Handle(sym, term(cls)(using newCtx), ObjBody(block(sts)._1))
+      block(Handle(id, cls, Block(sts), N) :: Nil)._1
       
     case h: Handle =>
       raise(ErrorReport(
@@ -600,10 +599,31 @@ extends Importer:
         raise(ErrorReport(msg"Unsupported let binding shape" -> tree.toLoc :: Nil))
         go(sts, Term.Error :: acc)
       case (hd @ Handle(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
-        val sym =
-          fieldOrVarSym(LetBind, id)
+        val sym = fieldOrVarSym(HandlerBind, id)
         log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
-        val newAcc = Term.Handle(sym, term(cls), ObjBody(block(sts_)._1)) :: acc
+
+        val elabed = block(sts_)._1
+        
+        elabed.res match
+          case Term.Lit(UnitLit(true)) => 
+          case trm => raise(WarningReport(msg"Terms in handler block do nothing" -> trm.toLoc :: Nil))
+
+        val tds = elabed.stats.map {
+          case td @ TermDefinition(owner, Fun, sym, params, sign, body, resSym, flags) =>
+            params.reverse match
+              case ParamList(_, value :: Nil, _) :: newParams =>
+                val newTd = TermDefinition(owner, Fun, sym, newParams.reverse, sign, body, resSym, flags)
+                S(HandlerTermDefinition(value.sym, newTd))
+              case _ => 
+                raise(ErrorReport(msg"Handler function is missing resumption parameter" -> td.toLoc :: Nil))
+                None
+              
+          case st => 
+            raise(ErrorReport(msg"Only function definitions are allowed in handler blocks" -> st.toLoc :: Nil))
+            None
+        }.collect { case Some(x) => x }
+
+        val newAcc = Term.Handle(sym, term(cls), tds) :: acc
         ctx + (id.name -> sym) givenIn:
           go(sts, newAcc)
       case (tree @ Handle(_, _, _, N)) :: sts =>

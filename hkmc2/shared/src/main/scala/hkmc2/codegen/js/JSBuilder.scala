@@ -87,18 +87,21 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
       else err(msg"Illegal reference to builtin symbol '${l.nme}'")
     case Value.Ref(l) => getVar(l)
     
-    case Call(Value.Ref(l: BuiltinSymbol), lhs :: rhs :: Nil) =>
+    case Call(Value.Ref(l: BuiltinSymbol), lhs :: rhs :: Nil) if !l.functionLike =>
       if l.binary then
         val res = doc"${operand(lhs)} ${l.nme} ${operand(rhs)}"
         if needsParens(l.nme) then doc"(${res})" else res
       else err(msg"Cannot call non-binary builtin symbol '${l.nme}'")
-    case Call(Value.Ref(l: BuiltinSymbol), rhs :: Nil) =>
+    case Call(Value.Ref(l: BuiltinSymbol), rhs :: Nil) if !l.functionLike =>
       if l.unary then
         val res = doc"${l.nme} ${operand(rhs)}"
         if needsParens(l.nme) then doc"(${res})" else res
       else err(msg"Cannot call non-unary builtin symbol '${l.nme}'")
     case Call(Value.Ref(l: BuiltinSymbol), args) =>
-      err(msg"Illeal arity for builtin symbol '${l.nme}'")
+      if l.functionLike then
+        val argsDoc = args.map(argument).mkDocument(", ")
+        doc"${l.nme}(${argsDoc})"
+      else err(msg"Illegal arity for builtin symbol '${l.nme}'")
     
     case Call(s @ Select(_, id), lhs :: rhs :: Nil) =>
       Elaborator.ctx.Builtins.getBuiltinOp(id.name) match
@@ -112,9 +115,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
       if c.isMlsFun then doc"${base}(${argsDoc})" else doc"${base}(${argsDoc}) ?? null"
     case Value.Lam(ps, bod) => scope.nest givenIn:
       val (params, bodyDoc) = setupFunction(none, ps, bod)
-      doc"($params) => { #{  # ${
-        bodyDoc
-      } #}  # }"
+      doc"($params) => ${ braced(bodyDoc) }"
     case Select(qual, id) =>
       val name = id.name
       doc"${result(qual)}${
@@ -159,41 +160,36 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
             S(defn.sym).collectFirst{ case s: InnerSymbol => s }):
           defn match
           case FunDefn(sym, Nil, body) =>
-            doc"function ${sym.nme}() { #{  # ${this.body(body)} #}  # }"
+            doc"function ${sym.nme}() ${ braced(this.body(body)) }"
           case FunDefn(sym, ps :: pss, bod) =>
             val result = pss.foldRight(bod):
               case (ps, block) => 
                 Return(Lam(ps, block), false)
             val (params, bodyDoc) = setupFunction(some(sym.nme), ps, result)
-            doc"function ${sym.nme}($params) { #{  # ${bodyDoc} #}  # }"
-          case ClsLikeDefn(sym, syntax.Cls, mtds, privFlds, _pubFlds, ctor) =>
+            doc"function ${sym.nme}($params) ${ braced(bodyDoc) }"
+          case ClsLikeDefn(sym, syntax.Cls, parentSym, mtds, privFlds, _pubFlds, preCtor, ctor) =>
             // * Note: `_pubFlds` is not used because in JS, fields are not declared
             val clsDefn = sym.defn.getOrElse(die)
             val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
             val ctorParams = clsParams.map(p => p -> scope.allocateName(p))
-            val ctorCode = ctorParams.foldRight(body(ctor)):
-              case ((sym, nme), acc) =>
-                doc"this.${sym.name} = $nme; # ${acc}"
-            val clsJS = doc"class ${sym.nme} { #{ ${
+            val preCtorCode = ctorParams.foldLeft(body(preCtor)):
+              case (acc, (sym, nme)) =>
+                doc"$acc # this.${sym.name} = $nme;"
+            val ctorCode = doc"$preCtorCode${body(ctor)}"
+            val clsJS = doc"class ${sym.nme}${parentSym.map(p => s" extends ${result(p)}").getOrElse("")} { #{ ${
                 privFlds.map(f => doc" # #${f.nme};").mkDocument(doc"")
               } # constructor(${
                 ctorParams.unzip._2.mkDocument(", ")
-              }) { #{  # ${
-                ctorCode.stripBreaks
-              } #}  # }${
+              }) ${ braced(ctorCode) }${
                 mtds.map: 
                   case td @ FunDefn(_, ps :: pss, bod) =>
                     val result = pss.foldRight(bod):
                       case (ps, block) => 
                         Return(Lam(ps, block), false)
                     val (params, bodyDoc) = setupFunction(some(td.sym.nme), ps, result)
-                    doc" # ${td.sym.nme}($params) { #{  # ${
-                      bodyDoc
-                    } #}  # }"
+                    doc" # ${td.sym.nme}($params) ${ braced(bodyDoc) }"
                   case td @ FunDefn(_, Nil, bod) =>
-                    doc" # get ${td.sym.nme}() { #{  # ${
-                      this.body(bod)
-                    } #}  # }"
+                    doc" # get ${td.sym.nme}() ${ braced(body(bod)) }"
                 .mkDocument(" ")
               }${
                 if mtds.exists(_.sym.nme == "toString")
@@ -234,65 +230,44 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                   doc"${ths}.${sym.nme} = ${clsJS};"
               case N =>
                 fun match
-                case S(f) => doc"${f}; # ${sym.nme}.class = ${clsJS};"
+                case S(f) => doc"${f} # ${sym.nme}.class = ${clsJS};"
                 case N => clsJS
         thisProxy match
           case S(proxy) if !scope.thisProxyDefined =>
             scope.thisProxyDefined = true
-            doc" # const $proxy = this; # ${res.stripBreaks}${returningTerm(rst)}"
+            doc"const $proxy = this; # $res${returningTerm(rst)}"
           case _ => doc"$res${returningTerm(rst)}"
-      doc" # ${resJS}"
+      doc" # $resJS"
     case Return(res, true) => doc" # ${result(res)}"
     case Return(res, false) => doc" # return ${result(res)};"
     
-    // TODO factor out common logic
-    case Match(scrut, Case.Lit(syntax.Tree.BoolLit(true)) -> trm :: Nil, els, rest) =>
-      val t = doc" # if (${ result(scrut) }) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
+    case Match(scrut, Nil, els, rest) =>
       val e = els match
-      case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Cls(cls, pth) -> trm :: Nil, els, rest) =>
+      case S(el) => returningTerm(el)
+      case N => doc""
+      e :: returningTerm(rest)
+    case Match(scrut, hd :: tl, els, rest) =>
       val sd = result(scrut)
-      val test = cls match
-        // case _: semantics.ModuleSymbol => doc"=== ${result(pth)}"
-        case Elaborator.ctx.Builtins.Str => doc"typeof $sd === 'string'"
-        case Elaborator.ctx.Builtins.Num => doc"typeof $sd === 'number'"
-        case Elaborator.ctx.Builtins.Int => doc"globalThis.Number.isInteger($sd)"
-        case _ => doc"$sd instanceof ${result(pth)}"
-      val t = doc" # if ($test) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
+      def cond(cse: Case) = cse match
+        case Case.Lit(syntax.Tree.BoolLit(true)) => sd
+        case Case.Lit(lit) => doc"$sd === ${lit.idStr}"
+        case Case.Cls(cls, pth) => cls match
+          // case _: semantics.ModuleSymbol => doc"=== ${result(pth)}"
+          case Elaborator.ctx.Builtins.Str => doc"typeof $sd === 'string'"
+          case Elaborator.ctx.Builtins.Num => doc"typeof $sd === 'number'"
+          case Elaborator.ctx.Builtins.Int => doc"globalThis.Number.isInteger($sd)"
+          case _ => doc"$sd instanceof ${result(pth)}"
+        case Case.Tup(len, inf) => doc"globalThis.Array.isArray($sd) && $sd.length ${if inf then ">=" else "==="} ${len}"
+      val h = doc" # if (${ cond(hd._1) }) ${ braced(returningTerm(hd._2)) }"
+      val t = tl.foldLeft(h)((acc, arm) => acc :: doc" else if (${ cond(arm._1) }) ${ braced(returningTerm(arm._2)) }")
       val e = els match
       case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Lit(lit) -> trm :: Nil, els, rest) =>
-      val t = doc" # if (${ result(scrut) } === ${lit.idStr}) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
-      val e = els match
-      case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Tup(len, inf) -> trm :: Nil, els, rest) =>
-      val test = doc"globalThis.Array.isArray(${ result(scrut) }) && ${ result(scrut) }.length ${if inf then ">=" else "==="} ${len}"
-      val t = doc" # if (${ test }) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
-      val e = els match
-      case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
+        doc" else ${ braced(returningTerm(el)) }"
       case N  => doc""
       t :: e :: returningTerm(rest)
     
     case Begin(sub, thn) =>
-      doc"${returningTerm(sub)} # ${returningTerm(thn).stripBreaks}"
+      doc"${returningTerm(sub)}${returningTerm(thn)}"
       
     case End("") => doc""
     case End(msg) =>
@@ -314,8 +289,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
       } # break; #}  # }${returningTerm(rst)}"
       
     case TryBlock(sub, fin, rst) =>
-      doc" # try { #{ ${returningTerm(sub)
-        } #}  # } finally { #{ ${returningTerm(fin)} #}  # } # ${
+      doc" # try ${ braced(returningTerm(sub)) } finally ${ braced(returningTerm(fin)) } # ${
         returningTerm(rst).stripBreaks}"
     
     // case _ => ???
@@ -336,7 +310,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
         val v = doc"this.${getVar(i._1)}"
         doc"""$v = await import("${i._2.toString
           }"); # if ($v.default !== undefined) $v = $v.default;"""
-    imps.mkDocument(doc" # ") :/: block(p.main) :: (
+    imps.mkDocument(doc" # ") :/: block(p.main).stripBreaks :: (
       exprt match
         case S(e) => doc"\nexport default ${e};\n"
         case N => doc""
@@ -345,14 +319,20 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
   def block(t: Block)(using Raise, Scope): Document =
     val vars = t.definedVars.toSeq.filter(scope.lookup(_).isEmpty).sortBy(_.uid).iterator.map(l =>
       l -> scope.allocateName(l))
-    if vars.isEmpty then returningTerm(t).stripBreaks else
-      doc"let " :: vars.map: (_, nme) =>
+    if vars.isEmpty then returningTerm(t) else
+      doc" # let " :: vars.map: (_, nme) =>
         nme
       .toList.mkDocument(", ")
       :: doc";" :: returningTerm(t)
   
   def body(t: Block)(using Raise, Scope): Document = scope.nest givenIn:
     block(t)
+  
+  def braced(t: Document)(using Raise, Scope): Document =
+    if t.isEmpty then
+      doc"{}"
+    else
+      doc"{ #{ ${t} #}  # }"
   
   def setupFunction(name: Option[Str], params: ParamList, body: Block)
       (using Raise, Scope): (Document, Document) =
@@ -366,7 +346,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
 object JSBuilder:
   import scala.util.matching.Regex
   
-  private val identifierPattern: Regex = "^[A-Za-z$][A-Za-z0-9$]*$".r
+  private val identifierPattern: Regex = "^[A-Za-z_$][A-Za-z0-9_$]*$".r
 
   def isValidIdentifier(s: Str): Bool = identifierPattern.matches(s) && !keywords.contains(s)
   
@@ -465,12 +445,12 @@ trait JSBuilderArgNumSanityChecks
       val paramRest = params.restParam.map(p => Scope.scope.allocateName(p.sym))
       val paramsStr = Scope.scope.allocateName(functionParamVarargSymbol)
       val functionName = JSBuilder.makeStringLiteral(name.fold("")(n => s"${JSBuilder.escapeStringCharacters(n)}"))
-      val checkArgsNum = doc"globalThis.Predef.checkArgs($functionName, ${params.paramCountLB}, ${params.paramCountUB.toString}, $paramsStr.length);\n"
+      val checkArgsNum = doc"\nglobalThis.Predef.checkArgs($functionName, ${params.paramCountLB}, ${params.paramCountUB.toString}, $paramsStr.length);"
       val paramsAssign = paramsList.zipWithIndex.map{(nme, i) =>
-        doc"let ${nme} = ${paramsStr}[$i];\n"}.mkDocument("")
+        doc"\nlet ${nme} = ${paramsStr}[$i];"}.mkDocument("")
       val restAssign = paramRest match
         case N => doc""
-        case S(p) => doc"let $p = globalThis.Predef.tupleSlice($paramsStr, ${params.paramCountLB}, 0);\n"
+        case S(p) => doc"\nlet $p = globalThis.Predef.tupleSlice($paramsStr, ${params.paramCountLB}, 0);"
       (doc"...$paramsStr", doc"$checkArgsNum$paramsAssign$restAssign${this.body(body)}")
     else
       super.setupFunction(name, params, body)

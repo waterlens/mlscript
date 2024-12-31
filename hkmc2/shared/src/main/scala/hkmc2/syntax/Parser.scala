@@ -580,7 +580,8 @@ abstract class Parser(
         case _ => S(expr(prec))
       Spread(if dotDotDot then Keyword.`...` else Keyword.`..`, S(loc), bod)
     case (tok, loc) :: _ =>
-      TODO(tok)
+      err((msg"Expected an expression; found new line instead" -> S(loc) :: Nil))
+      errExpr
     case Nil =>
       err((msg"Expected an expression; found end of input instead" -> lastLoc :: Nil))
       errExpr

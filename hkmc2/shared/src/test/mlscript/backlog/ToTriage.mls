@@ -36,6 +36,41 @@ while false or false do print("ok")
 
 // ——— ——— ———
 
+:e
+fun (**) f1(a, b) = "[" + a + " * " + b + "]"
+fun (**) f2(a, b) = "(" + a + " + " + b + ")"
+
+1 ** 2
+//│ = '(1 + 2)'
+
+// FIXME error is duplicated & refers to wrong name
+:e
+fun (**) t() = 0
+fun (++) t() = 1
+//│ ╔══[ERROR] Multiple definitions of symbol '**'
+//│ ╟── defined here
+//│ ║  l.48: 	fun (**) t() = 0
+//│ ║        	     ^^^^^^^^^^^
+//│ ╟── defined here
+//│ ║  l.49: 	fun (++) t() = 1
+//│ ╙──      	     ^^^^^^^^^^^
+//│ ╔══[ERROR] Multiple definitions of symbol '++'
+//│ ╟── defined here
+//│ ║  l.48: 	fun (**) t() = 0
+//│ ║        	     ^^^^^^^^^^^
+//│ ╟── defined here
+//│ ║  l.49: 	fun (++) t() = 1
+//│ ╙──      	     ^^^^^^^^^^^
+//│ ╔══[ERROR] Multiple definitions of symbol 't'
+//│ ╟── defined here
+//│ ║  l.48: 	fun (**) t() = 0
+//│ ║        	     ^^^^^^^^^^^
+//│ ╟── defined here
+//│ ║  l.49: 	fun (++) t() = 1
+//│ ╙──      	     ^^^^^^^^^^^
+
+// ——— ——— ———
+
 let g = [0]
 //│ g = [ 0 ]
 
@@ -107,6 +142,30 @@ module Test with
 
 Test.Infinity
 //│ = 1
+
+// ——— ——— ———
+
+fun f(a)(b) = [a, b]
+fun g(a, b) = [a, b]
+
+// TODO support?
+:pe
+f of
+    g of
+      1
+      2
+  of 3
+//│ ╔══[PARSE ERROR] Expected end of input; found indented block instead
+//│ ║  l.157: 	  of 3
+//│ ╙──       	^^
+//│ = [Function (anonymous)]
+
+(f of
+  g of
+    1
+    2
+) of 3
+//│ = [ [ 1, 2 ], 3 ]
 
 // ——— ——— ———
 

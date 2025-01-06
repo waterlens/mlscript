@@ -130,6 +130,14 @@ const Predef$class = class Predef {
     tmp = xs.map(String) ?? null;
     return console.log(...tmp) ?? null;
   } 
+  notImplemented(msg) {
+    let tmp;
+    tmp = "Not implemented: " + msg;
+    throw Error(tmp);
+  } 
+  get notImplementedError() {
+    throw Error("Not implemented");
+  } 
   tupleSlice(xs1, i, j) {
     let tmp;
     tmp = xs1.length - j;

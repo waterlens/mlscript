@@ -78,6 +78,9 @@ sealed abstract class Block extends Product with AutoLocated:
     case Assign(lhs, rhs, rest) => Set(lhs) ++ rhs.freeVars ++ rest.freeVars
     case AssignField(lhs, nme, rhs, rest) => lhs.freeVars ++ rhs.freeVars ++ rest.freeVars
     case Define(defn, rest) => defn.freeVars ++ rest.freeVars
+    case HandleBlock(lhs, res, cls, handlers, body, rest) =>
+      (body.freeVars - lhs) ++ rest.freeVars ++ handlers.flatMap(_.freeVars)
+    case HandleBlockReturn(res) => res.freeVars
     case End(msg) => Set.empty
 
 end Block
@@ -123,8 +126,10 @@ sealed abstract class Defn:
   lazy val freeVars: Set[Local] = this match
     case FunDefn(sym, params, body) => body.freeVars -- params.flatMap(_.paramSyms) - sym
     case ValDefn(owner, k, sym, rhs) => rhs.freeVars
-    case ClsLikeDefn(sym, k, methods, privateFields, publicFields, ctor) =>
-      ctor.freeVars ++ methods.flatMap(_.freeVars) -- privateFields -- publicFields.map(_.sym)
+    case ClsLikeDefn(sym, k, parentSym, methods, privateFields, publicFields, preCtor, ctor) =>
+      preCtor.freeVars
+        ++ ctor.freeVars ++ methods.flatMap(_.freeVars)
+        -- privateFields -- publicFields.map(_.sym)
   
 final case class FunDefn(
     sym: BlockMemberSymbol,
@@ -155,7 +160,8 @@ final case class Handler(
     resumeSym: LocalSymbol & NamedSymbol,
     params: Ls[ParamList],
     body: Block,
-)
+):
+  lazy val freeVars: Set[Local] = body.freeVars -- params.flatMap(_.paramSyms) - sym - resumeSym
 
 /* Represents either unreachable code (for functions that must return a result)
  * or the end of a non-returning function or a REPL block */

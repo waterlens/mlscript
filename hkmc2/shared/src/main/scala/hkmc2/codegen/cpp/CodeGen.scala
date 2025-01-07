@@ -108,8 +108,8 @@ private class CppCodeGen:
       val init = Expr.Initializer(exprs.map{x => toExpr(x)})
       mlsTupleValue(init)
   
-  def codegenCaseWithIfs(scrut: Name, cases: Ls[(Pat, Node)], default: Opt[Node], storeInto: Str)(using decls: Ls[Decl], stmts: Ls[Stmt])(using ctx: Ctx): (Ls[Decl], Ls[Stmt]) =
-    val scrutName = mapName(scrut)
+  def codegenCaseWithIfs(scrut: TrivialExpr, cases: Ls[(Pat, Node)], default: Opt[Node], storeInto: Str)(using decls: Ls[Decl], stmts: Ls[Stmt])(using ctx: Ctx): (Ls[Decl], Ls[Stmt]) =
+    val scrut2 = toExpr(scrut)
     val init: Stmt = 
       default.fold(mlsThrowNonExhaustiveMatch)(x => {
         val (decls2, stmts2) = codegen(x, storeInto)(using Ls.empty, Ls.empty[Stmt])
@@ -118,11 +118,11 @@ private class CppCodeGen:
     val stmt = cases.foldRight(S(init)) {
       case ((Pat.Class(cls), arm), nextarm) =>
         val (decls2, stmts2) = codegen(arm, storeInto)(using Ls.empty, Ls.empty[Stmt])
-        val stmt = Stmt.If(mlsIsValueOf(cls.name |> mapName, Expr.Var(scrutName)), Stmt.Block(decls2, stmts2), nextarm)
+        val stmt = Stmt.If(mlsIsValueOf(cls.name |> mapName, scrut2), Stmt.Block(decls2, stmts2), nextarm)
         S(stmt)
       case ((Pat.Lit(i @ hkmc2.syntax.Tree.IntLit(_)), arm), nextarm) =>
         val (decls2, stmts2) = codegen(arm, storeInto)(using Ls.empty, Ls.empty[Stmt])
-        val stmt = Stmt.If(mlsIsIntLit(Expr.Var(scrutName), i), Stmt.Block(decls2, stmts2), nextarm)
+        val stmt = Stmt.If(mlsIsIntLit(scrut2, i), Stmt.Block(decls2, stmts2), nextarm)
         S(stmt)
       case _ => ???
     }
@@ -169,6 +169,7 @@ private class CppCodeGen:
       (decls, stmts2)
     case Node.Jump(defn, args) =>
       codegenJumpWithCall(defn, args, S(storeInto))
+    case Node.Panic => (decls, stmts :+ Stmt.Raw("throw std::runtime_error(\"Panic\");"))
     case Node.LetExpr(name, expr, body) =>
       val stmts2 = stmts ++ Ls(Stmt.AutoBind(Ls(name |> mapName), codegen(expr)))
       codegen(body, storeInto)(using decls, stmts2)

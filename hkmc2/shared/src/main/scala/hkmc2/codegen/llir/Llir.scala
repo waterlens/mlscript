@@ -34,7 +34,6 @@ case class Program(
     Sorting.quickSort(t2)
     given Conversion[String, Document] = raw
     stack(
-      "Program:",
       stack_list(t1.filter(x => !hiddenNames.contains(x.name)).map(_.toDocument).toList) |> indent,
       stack_list(t2.map(_.toDocument).toList) |> indent,
       main.toDocument |> indent
@@ -72,6 +71,11 @@ case class Name(str: Str):
   def trySubst(map: Map[Str, Name]) = map.getOrElse(str, this)
   override def toString: String = str
 
+object FuncRef:
+  def fromName(name: Str) = FuncRef(Right(name))
+  def fromName(name: Name) = FuncRef(Right(name.str))
+  def fromFunc(func: Func) = FuncRef(Left(func))
+
 class FuncRef(var func: Either[Func, Str]):
   def name: String = func.fold(_.name, x => x)
   def expectFn: Func = func.fold(identity, x => throw Exception(s"Expected a def, but got $x"))
@@ -80,6 +84,11 @@ class FuncRef(var func: Either[Func, Str]):
     case o: FuncRef => o.name == this.name
     case _ => false
   }
+
+object ClassRef:
+  def fromName(name: Str) = ClassRef(Right(name))
+  def fromName(name: Name) = ClassRef(Right(name.str))
+  def fromClass(cls: ClassInfo) = ClassRef(Left(cls))
 
 class ClassRef(var cls: Either[ClassInfo, Str]):
   def name: String = cls.fold(_.name, x => x) 
@@ -181,7 +190,8 @@ enum Node:
   // Terminal forms:
   case Result(res: Ls[TrivialExpr])
   case Jump(func: FuncRef, args: Ls[TrivialExpr])
-  case Case(scrutinee: Name, cases: Ls[(Pat, Node)], default: Opt[Node])
+  case Case(scrutinee: TrivialExpr, cases: Ls[(Pat, Node)], default: Opt[Node])
+  case Panic
   // Intermediate forms:
   case LetExpr(name: Name, expr: Expr, body: Node)
   case LetMethodCall(names: Ls[Name], cls: ClassRef, method: Name, args: Ls[TrivialExpr], body: Node)
@@ -218,6 +228,7 @@ enum Node:
         case S(dc) =>
           val default = Ls("_" <:> "=>", dc.toDocument |> indent)
           stack(first, (Document.Stacked(other ++ default) |> indent))
+    case Panic => "panic"
     case LetExpr(x, expr, body) => 
       stack(
         "let"

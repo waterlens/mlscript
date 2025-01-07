@@ -43,6 +43,7 @@ private final class RefResolver(defs: Map[Str, Func], classes: Map[Str, ClassInf
         case None =>
           if !allowInlineJp then
             throw LowLevelIRError(f"unknown function ${defnref.name} in ${defs.keySet.mkString(",")}")
+    case Panic =>
   def run(node: Node) = f(node)
   def run(node: Func) = f(node.body)
 

@@ -159,7 +159,7 @@ enum Expr:
       case CtorApp(cls, args) =>
         cls.name <#> "(" <#> (args |> showArguments) <#> ")"
       case Select(s, cls, fld) =>
-        cls.name <#> "." <#> fld <#> "(" <#> s.toString <#> ")"
+        s.toString <#> ".<" <#> cls.name <#> ":" <#> fld <#> ">"
       case BasicOp(name: Str, args) =>
         name <#> "(" <#> (args |> showArguments) <#> ")"
       case AssignField(assignee, clsInfo, fieldName, value) => 
@@ -191,7 +191,7 @@ enum Node:
   case Result(res: Ls[TrivialExpr])
   case Jump(func: FuncRef, args: Ls[TrivialExpr])
   case Case(scrutinee: TrivialExpr, cases: Ls[(Pat, Node)], default: Opt[Node])
-  case Panic
+  case Panic(msg: Str)
   // Intermediate forms:
   case LetExpr(name: Name, expr: Expr, body: Node)
   case LetMethodCall(names: Ls[Name], cls: ClassRef, method: Name, args: Ls[TrivialExpr], body: Node)
@@ -228,7 +228,7 @@ enum Node:
         case S(dc) =>
           val default = Ls("_" <:> "=>", dc.toDocument |> indent)
           stack(first, (Document.Stacked(other ++ default) |> indent))
-    case Panic => "panic"
+    case Panic(msg) => "panic" <:> "\"" <#> msg <#> "\""
     case LetExpr(x, expr, body) => 
       stack(
         "let"

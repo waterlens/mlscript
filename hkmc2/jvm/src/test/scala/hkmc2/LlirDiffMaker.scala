@@ -28,7 +28,8 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
       given Scope = Scope.empty
       val fresh = Fresh()
       val fuid = FreshInt()
-      val llb = LlirBuilder(tl)(fresh, fuid)
+      val cuid = FreshInt()
+      val llb = LlirBuilder(tl)(fresh, fuid, cuid)
       given Ctx = Ctx.empty
       val llirProg = llb.bProg(le)
       output(llirProg.show())

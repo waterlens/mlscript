@@ -1,5 +1,40 @@
 :js
 
+:slot
+:llir
+abstract class Option[out T]: Some[T] | None
+class Some[out T](x: T) extends Option[T]
+object None extends Option
+fun fromSome(s) = if s is Some(x) then x
+//│ Pretty Lowered:
+//│  
+//│ define class Option in
+//│ define class Some in
+//│ define class None in
+//│ define fun fromSome(s) {
+//│   match s
+//│     Some =>
+//│       set param0 = s.x in
+//│       set x = param0 in
+//│       return x
+//│     else
+//│       throw new globalThis.Error("match error")
+//│ } in
+//│ return null
+//│   class Option()
+//│   class Some(x)
+//│   class None()
+//│   def fromSome(s) =
+//│     case s of
+//│       Some =>
+//│         let x$0 = s.<Some:x> in
+//│         x$0
+//│       _ =>
+//│         panic "match error"
+//│   def j$0() =
+//│     null
+//│   undefined
+
 
 :llir
 fun f1() =

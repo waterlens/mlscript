@@ -24,7 +24,7 @@ private final class FuncRefInSet(defs: Set[Func], classes: Set[ClassInfo]):
     case Result(res) => 
     case Jump(func, args) =>
     case Case(x, cases, default) => cases foreach { (_, body) => f(body) }; default foreach f
-    case Panic =>
+    case Panic(_) =>
     case LetExpr(name, expr, body) => f(body)
     case LetMethodCall(names, cls, method, args, body) => f(body)
     case LetCall(res, ref, args, body) =>

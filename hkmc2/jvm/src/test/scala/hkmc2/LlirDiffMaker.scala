@@ -12,7 +12,7 @@ import hkmc2.syntax.Tree.Ident
 import hkmc2.codegen.Path
 import hkmc2.semantics.Term.Blk
 import hkmc2.codegen.llir.Fresh
-import hkmc2.codegen.js.Scope
+import hkmc2.utils.Scope
 import hkmc2.codegen.llir.Ctx
 import hkmc2.codegen.llir._
 

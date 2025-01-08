@@ -11,7 +11,7 @@ import hkmc2.{Raise, raise, Diagnostic, ErrorReport, Message}
 import hkmc2.Message.MessageContext
 import hkmc2.codegen.llir.FuncRef.fromName
 import scala.collection.mutable.ListBuffer
-import hkmc2.codegen.js.Scope
+import hkmc2.utils.Scope
 import hkmc2._
 import hkmc2.document._
 import hkmc2.semantics.Elaborator.State
@@ -131,7 +131,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
 
   private def bClsLikeDef(e: ClsLikeDefn)(using ctx: Ctx)(using Raise, Scope): ClassInfo =
     trace[ClassInfo](s"bClsLikeDef begin", x => s"bClsLikeDef end: ${x.show}"):
-      val ClsLikeDefn(sym, kind, methods, privateFields, publicFields, ctor) = e
+      val ClsLikeDefn(sym, kind, parentSym, methods, privateFields, publicFields, preCtor, ctor) = e
       val clsDefn = sym.defn.getOrElse(die)
       val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
       ClassInfo(
@@ -270,7 +270,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         ctx.def_acc += f
         val new_ctx = ctx.addFuncName(sym, Name(f.name))
         bBlock(rest)(k)(using new_ctx)
-      case Define(cd @ ClsLikeDefn(sym, kind, methods, privateFields, publicFields, ctor), rest) =>
+      case Define(cd @ ClsLikeDefn(sym, kind, parentSym, methods, privateFields, publicFields, preCtor, ctor), rest) =>
         val c = bClsLikeDef(cd)
         ctx.class_acc += c
         val new_ctx = ctx.addClassName(sym, Name(c.name))

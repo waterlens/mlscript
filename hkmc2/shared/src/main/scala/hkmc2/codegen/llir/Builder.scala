@@ -20,6 +20,7 @@ import hkmc2.utils.TraceLogger
 import hkmc2.semantics.TermSymbol
 import hkmc2.semantics.MemberSymbol
 import hkmc2.semantics.FieldSymbol
+import hkmc2.semantics.TopLevelSymbol
 
 
 def err(msg: Message)(using Raise): Unit =
@@ -114,7 +115,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
           case rs: Ls[TrivialExpr] => k(r :: rs)
   
   private def bFunDef(e: FunDefn)(using ctx: Ctx)(using Raise, Scope): Func =
-    trace[Func](s"bFunDef begin", x => s"bFunDef end: ${x.show}"):
+    trace[Func](s"bFunDef begin: ${e.sym}", x => s"bFunDef end: ${x.show}"):
       val FunDefn(sym, params, body) = e
       if params.length != 1 then
         err(msg"Curried function not supported: ${params.length.toString}")
@@ -134,10 +135,11 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
       val ClsLikeDefn(sym, kind, parentSym, methods, privateFields, publicFields, preCtor, ctor) = e
       val clsDefn = sym.defn.getOrElse(die)
       val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
+      val clsFields = publicFields.map(_.sym)
       ClassInfo(
         clsUid.make,
         sym.nme,
-        clsParams.map(_.nme)
+        clsParams.map(_.nme) ++ clsFields.map(_.nme),
       )
 
   private def bValue(v: Value)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
@@ -158,8 +160,12 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
   private def bPath(p: Path)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bPath begin", x => s"bPath end: ${x.show}"):
       p match
+      case Select(Value.Ref(_: TopLevelSymbol), name) if name.name.head.isUpper =>
+        val v = fresh.make
+        Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(name.name), Ls()), k(v |> sr))
+      // field selection
       case s @ Select(qual, name) => 
-        log(s"bPath Select: $qual.$name with ${s.symbol.get}")
+        log(s"bPath Select: $qual.$name with ${s.symbol}")
         bPath(qual):
           case q: Expr.Ref =>
             val v = fresh.make
@@ -179,7 +185,17 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
           case args: Ls[TrivialExpr] =>
             val v = fresh.make
             Node.LetExpr(v, Expr.BasicOp(sym.nme, args), k(v |> sr))
-      case Call(Select(Value.Ref(sym: BuiltinSymbol), name), args) =>
+      case Call(Select(Value.Ref(_: TopLevelSymbol), name), args) if name.name.head.isUpper =>
+        bArgs(args):
+          case args: Ls[TrivialExpr] =>
+            val v = fresh.make
+            Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(name.name), args), k(v |> sr))
+      case Call(Select(Value.Ref(_: TopLevelSymbol), name), args) =>
+        bArgs(args):
+          case args: Ls[TrivialExpr] =>
+            val v = fresh.make
+            Node.LetCall(Ls(v), FuncRef.fromName(name.name), args, k(v |> sr))
+      case Call(Select(Value.Ref(_: BuiltinSymbol), name), args) =>
         bArgs(args):
           case args: Ls[TrivialExpr] =>
             val v = fresh.make

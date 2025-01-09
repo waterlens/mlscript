@@ -8,6 +8,7 @@ fun fromSome(s) = if s is Some(x) then x
 class Lazy[out A](init: () -> A) with
   mut val cache: Option[A] = None
 fun lazy(x) = Lazy(x)
+//│ LLIR:
 //│   class Option()
 //│   class Some(x)
 //│   class None()
@@ -55,6 +56,7 @@ fun main() =
     Some(b1) then bbb()
 main()
 //│ = 404
+//│ LLIR:
 //│   class Option()
 //│   class Some(x)
 //│   class None()
@@ -130,6 +132,7 @@ fun f1() =
   let x = 1
   let x = 2
   x
+//│ LLIR:
 //│ 
 //│   def f1() =
 //│     let x$0 = 1 in
@@ -144,6 +147,7 @@ fun f2() =
   if x == 1 then 2 else 3
 //│ Pretty Lowered:
 //│   define fun f2() { set x = 0 in set scrut = ==(x, 1) in match scrut true => return 2 else return 3 } in return null
+//│ LLIR:
 //│ 
 //│   def f2() =
 //│     let x$0 = 0 in
@@ -176,6 +180,7 @@ fun f3() =
 //│       return x2
 //│ } in
 //│ return null
+//│ LLIR:
 //│ 
 //│   def f3() =
 //│     let x$0 = 0 in
@@ -214,6 +219,7 @@ fun f4() =
 //│     return x1
 //│ } in
 //│ return null
+//│ LLIR:
 //│ 
 //│   def f4() =
 //│     let x$0 = 0 in
@@ -263,6 +269,7 @@ fun f5() =
 //│       return x2
 //│ } in
 //│ return null
+//│ LLIR:
 //│ 
 //│   def f5() =
 //│     let x$0 = 0 in

@@ -18,6 +18,7 @@ import hkmc2.codegen.llir._
 
 abstract class LlirDiffMaker extends BbmlDiffMaker:
   val llir = NullaryCommand("llir")
+  val scpp = NullaryCommand("scpp")
 
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
     super.processTerm(trm, inImport)
@@ -32,5 +33,9 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
       val llb = LlirBuilder(tl)(fresh, fuid, cuid)
       given Ctx = Ctx.empty
       val llirProg = llb.bProg(le)
+      output("LLIR:")
       output(llirProg.show())
-    
+      if scpp.isSet then
+        val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
+        output("\nCpp:")
+        output(cpp.toDocument.print)

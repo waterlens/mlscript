@@ -7,11 +7,7 @@ import scala.collection.mutable.ListBuffer
 import hkmc2.codegen.llir.{Expr => IExpr, _}
 import hkmc2.codegen.cpp._
 
-def codegen(prog: Program): CompilationUnit =
-  val codegen = CppCodeGen()
-  codegen.codegen(prog)
-
-private class CppCodeGen:
+object CppCodeGen:
   def mapName(name: Name): Str = "_mls_" + name.str.replace('$', '_').replace('\'', '_')
   def mapName(name: Str): Str = "_mls_" + name.replace('$', '_').replace('\'', '_')
   val freshName = Fresh(div = '_');
@@ -31,6 +27,7 @@ private class CppCodeGen:
   def mlsCharLit(x: Char) = Expr.Call(Expr.Var("_mlsValue::fromIntLit"), Ls(Expr.CharLit(x)))
   def mlsNewValue(cls: Str, args: Ls[Expr]) = Expr.Call(Expr.Var(s"_mlsValue::create<$cls>"), args)
   def mlsIsValueOf(cls: Str, scrut: Expr) = Expr.Call(Expr.Var(s"_mlsValue::isValueOf<$cls>"), Ls(scrut))
+  def mlsIsBoolLit(scrut: Expr, lit: hkmc2.syntax.Tree.BoolLit) = Expr.Call(Expr.Var("_mlsValue::isIntLit"), Ls(scrut, Expr.IntLit(if lit.value then 1 else 0)))
   def mlsIsIntLit(scrut: Expr, lit: hkmc2.syntax.Tree.IntLit) = Expr.Call(Expr.Var("_mlsValue::isIntLit"), Ls(scrut, Expr.IntLit(lit.value)))
   def mlsDebugPrint(x: Expr) = Expr.Call(Expr.Var("_mlsValue::print"), Ls(x))
   def mlsTupleValue(init: Expr) = Expr.Constructor("_mlsValue::tuple", init)
@@ -124,6 +121,10 @@ private class CppCodeGen:
         val (decls2, stmts2) = codegen(arm, storeInto)(using Ls.empty, Ls.empty[Stmt])
         val stmt = Stmt.If(mlsIsIntLit(scrut2, i), Stmt.Block(decls2, stmts2), nextarm)
         S(stmt)
+      case ((Pat.Lit(i @ hkmc2.syntax.Tree.BoolLit(_)), arm), nextarm) =>
+        val (decls2, stmts2) = codegen(arm, storeInto)(using Ls.empty, Ls.empty[Stmt])
+        val stmt = Stmt.If(mlsIsBoolLit(scrut2, i), Stmt.Block(decls2, stmts2), nextarm)
+        S(stmt)
       case _ => ???
     }
     (decls, stmt.fold(stmts)(x => stmts :+ x))
@@ -169,7 +170,7 @@ private class CppCodeGen:
       (decls, stmts2)
     case Node.Jump(defn, args) =>
       codegenJumpWithCall(defn, args, S(storeInto))
-    case Node.Panic => (decls, stmts :+ Stmt.Raw("throw std::runtime_error(\"Panic\");"))
+    case Node.Panic(msg) => (decls, stmts :+ Stmt.Raw(s"throw std::runtime_error(\"$msg\");"))
     case Node.LetExpr(name, expr, body) =>
       val stmts2 = stmts ++ Ls(Stmt.AutoBind(Ls(name |> mapName), codegen(expr)))
       codegen(body, storeInto)(using decls, stmts2)

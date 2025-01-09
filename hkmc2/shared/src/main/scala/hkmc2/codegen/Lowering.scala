@@ -102,6 +102,7 @@ class Lowering(using TL, Raise, Elaborator.State):
     case st.Blk((d: Declaration) :: stats, res) =>
       d match
       case td: TermDefinition =>
+        reportAnnotations(td, td.annotations)
         td.body match
         case N => // abstract declarations have no lowering
           term(st.Blk(stats, res))(k)
@@ -120,12 +121,15 @@ class Lowering(using TL, Raise, Elaborator.State):
               term(st.Blk(stats, res))(k))
       // case cls: ClassDef =>
       case cls: ClassLikeDef =>
+        reportAnnotations(cls, cls.annotations)
         val bodBlk = cls.body.blk
         val (mtds, rest1) = bodBlk.stats.partitionMap:
           case td: TermDefinition if td.k is syntax.Fun => L(td)
           case s => R(s)
         val (privateFlds, rest2) = rest1.partitionMap:
-          case LetDecl(sym: TermSymbol) => L(sym)
+          case decl @ LetDecl(sym: TermSymbol, annotations) =>
+            reportAnnotations(decl, annotations)
+            L(sym)
           case s => R(s)
         val publicFlds = rest2.collect:
           case td @ TermDefinition(k = (_: syntax.Val)) => td
@@ -148,7 +152,8 @@ class Lowering(using TL, Raise, Elaborator.State):
       case _ =>
         // TODO handle
         term(st.Blk(stats, res))(k)
-    case st.Blk((LetDecl(sym)) :: stats, res) =>
+    case st.Blk((decl @ LetDecl(sym, annotations)) :: stats, res) =>
+      reportAnnotations(decl, annotations)
       term(st.Blk(stats, res))(k)
     case st.Blk((DefineVar(sym, rhs)) :: stats, res) =>
       subTerm(rhs): r =>
@@ -339,6 +344,12 @@ class Lowering(using TL, Raise, Elaborator.State):
         subTerm(rhs): value =>
           AssignField(ref, Tree.Ident("value"), value, k(value))(N)
 
+    case Annotated(prefix, receiver) => 
+      raise(WarningReport(
+        msg"This annotation has no effect." -> prefix.toLoc ::
+        msg"Annotations are not supported on ${receiver.describe} terms." -> receiver.toLoc :: Nil))
+      term(receiver)(k)
+    
     case Error => End("error")
     
     // case _ =>
@@ -374,6 +385,14 @@ class Lowering(using TL, Raise, Elaborator.State):
   
   def setupFunctionDef(paramLists: List[ParamList], bodyTerm: Term, name: Option[Str])(using Subst): (List[ParamList], Block) =
     (paramLists, returnedTerm(bodyTerm))
+  
+  def reportAnnotations(target: Statement, annotations: Ls[Term]): Unit = if annotations.nonEmpty then
+    raise(WarningReport(
+      (msg"This annotation has no effect." -> annotations.foldLeft[Opt[Loc]](N):
+        case (acc, term) => acc match
+          case N => term.toLoc
+          case S(loc) => S(loc ++ term.toLoc)) ::
+      Nil))
 
 
 trait LoweringSelSanityChecks

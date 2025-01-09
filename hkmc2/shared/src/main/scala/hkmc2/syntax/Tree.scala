@@ -76,6 +76,7 @@ enum Tree extends AutoLocated:
   case RegRef(reg: Tree, value: Tree)
   case Effectful(eff: Tree, body: Tree)
   case Spread(kw: Keyword.Ellipsis, kwLoc: Opt[Loc], body: Opt[Tree])
+  case Annotated(annotation: Tree, target: Tree)
 
   def children: Ls[Tree] = this match
     case _: Empty | _: Error | _: Ident | _: Literal | _: Under => Nil
@@ -109,6 +110,7 @@ enum Tree extends AutoLocated:
     case Open(bod) => bod :: Nil
     case Def(lhs, rhs) => lhs :: rhs :: Nil
     case Spread(_, _, body) => body.toList
+    case Annotated(annotation, target) => annotation :: target :: Nil
   
   def describe: Str = this match
     case Empty() => "empty"
@@ -145,6 +147,8 @@ enum Tree extends AutoLocated:
     case Handle(_, _, _, _) => "handle"
     case Def(lhs, rhs) => "defining assignment"
     case Spread(_, _, _) => "spread"
+    case Annotated(_, _) => "annotated"
+    case Open(_) => "open"
   
   def showDbg: Str = toString // TODO
   
@@ -202,6 +206,11 @@ object Apps:
   def unapply(t: Tree): S[(Tree, Ls[Tup])] = t match
     case App(Apps(base, args), arg: Tup) => S(base, args :+ arg)
     case t => S(t, Nil)
+    
+object Annotations:
+  def unapply(t: Tree): Opt[(Ls[Tree], Tree)] = t match
+    case Annotated(q, Annotations(qs, target)) => S(q :: qs, target)
+    case other => S((Nil, other))
 
 /** Matches applications with underscores in some argument and/or prefix positions. */
 object PartialApp:
@@ -230,7 +239,8 @@ case object ParamBind extends ValLike("", "parameter")
 case object Fun extends TermDefKind("fun", "function")
 sealed abstract class TypeDefKind(desc: Str) extends DeclKind(desc)
 sealed trait ObjDefKind
-sealed trait ClsLikeKind extends ObjDefKind
+sealed trait ClsLikeKind extends ObjDefKind:
+  val desc: Str
 case object Cls extends TypeDefKind("class") with ClsLikeKind
 case object Trt extends TypeDefKind("trait") with ObjDefKind
 case object Mxn extends TypeDefKind("mixin")

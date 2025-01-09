@@ -20,7 +20,7 @@ class Lazy[out A](init: () -> A) with
         set cached = Some(v)
         v
 fun lazy(x) = Lazy(x)
-fun force(x) = if x is Lazy then x.get()
+fun force(x) = if x is Lazy then x.Lazy#get()
 
 abstract class List[out T]: Cons[T] | Nil
 class (::) Cons[out T](head: T, tail: List[T]) extends List[T] with

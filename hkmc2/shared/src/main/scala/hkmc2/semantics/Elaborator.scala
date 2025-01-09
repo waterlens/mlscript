@@ -307,12 +307,19 @@ extends Importer:
       Term.CompType(term(lhs), term(rhs), false)
     case App(Ident(":="), Tree.Tup(lhs :: rhs :: Nil)) =>
       Term.SetRef(term(lhs), term(rhs))
-    case App(Ident("#"), Tree.Tup(SynthSel(pre, idn: Ident) :: (idp: Ident) :: Nil)) =>
-      Term.SelProj(term(pre), term(idn), idp)
-    case App(Ident("#"), Tree.Tup(SynthSel(pre, Ident(name)) :: App(Ident(proj), args) :: Nil)) =>
-      term(App(App(Ident("#"), Tree.Tup(SynthSel(pre, Ident(name)) :: Ident(proj) :: Nil)), args))
     case App(Ident("#"), Tree.Tup(Sel(pre, idn: Ident) :: (idp: Ident) :: Nil)) =>
-      Term.SelProj(term(pre), term(idn), idp)
+      val c = cls(idn, inAppPrefix = false)
+      val f = c.symbol.flatMap(_.asCls) match
+        case S(cls: ClassSymbol) =>
+          cls.tree.allSymbols.get(idp.name) match
+          case S(fld: FieldSymbol) => S(fld)
+          case _ =>
+            raise(ErrorReport(msg"Class '${cls.nme}' does not contain member '${idp.name}'." -> idp.toLoc :: Nil))
+            N
+        case _ =>
+          raise(ErrorReport(msg"Identifier `${idn.name}` does not name a known class symbol." -> idn.toLoc :: Nil))
+          N
+      Term.SelProj(term(pre), c, idp)(N)
     case App(Ident("#"), Tree.Tup(Sel(pre, Ident(name)) :: App(Ident(proj), args) :: Nil)) =>
       term(App(App(Ident("#"), Tree.Tup(Sel(pre, Ident(name)) :: Ident(proj) :: Nil)), args))
     case App(Ident("!"), Tree.Tup(rhs :: Nil)) =>
@@ -369,9 +376,7 @@ extends Importer:
     case Sel(pre, nme) =>
       val preTrm = term(pre)
       val sym = resolveField(nme, preTrm.symbol, nme)
-      if inAppPrefix
-      then Term.SynthSel(preTrm, nme)(sym)
-      else Term.Sel(preTrm, nme)(sym)
+      Term.Sel(preTrm, nme)(sym)
     case tree @ Tup(fields) =>
       Term.Tup(fields.map(fld(_)))(tree)
     case New(body) => // TODO handle Under

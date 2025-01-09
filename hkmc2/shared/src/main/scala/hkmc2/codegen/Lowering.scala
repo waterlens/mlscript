@@ -82,13 +82,23 @@ class Lowering(using TL, Raise, Elaborator.State):
             TODO("Other argument forms")
           case spd: Spd => true -> spd.term
         val l = new TempSymbol(S(t))
-        subTerm(f): fr =>
+        def conclude(fr: Path) =
           def rec(as: Ls[Bool -> st], asr: Ls[Arg]): Block = as match
             case Nil => k(Call(fr, asr.reverse)(isMlsFun))
             case (spd, a) :: as =>
               subTerm(a): ar =>
                 rec(as, Arg(spd, ar) :: asr)
           rec(as, Nil)
+        f match
+        // * Due to whacky JS semantics, we need to make sure that selections leading to a call
+        // * are preserved in the call and not moved to a temporary variable.
+        case sel @ Sel(prefix, nme) =>
+          subTerm(prefix): p =>
+            conclude(Select(p, nme)(sel.sym))
+        case sel @ SelProj(prefix, _, nme) =>
+          subTerm(prefix): p =>
+            conclude(Select(p, nme)(sel.sym))
+        case _ => subTerm(f)(conclude)
       case _ =>
         TODO("Other argument list forms")
     case st.Blk(Nil, res) => term(res)(k)
@@ -325,8 +335,8 @@ class Lowering(using TL, Raise, Elaborator.State):
       End("error")
     
     // * BbML-specific cases: t.Cls#field and mutable operations
-    case SelProj(prefix, _, proj) =>
-      setupSelection(prefix, proj, N)(k)
+    case sp @ SelProj(prefix, _, proj) =>
+      setupSelection(prefix, proj, sp.sym)(k)
     case Region(reg, body) =>
       Assign(reg, Instantiate(Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Region"))(N), Nil), term(body)(k))
     case RegRef(reg, value) =>

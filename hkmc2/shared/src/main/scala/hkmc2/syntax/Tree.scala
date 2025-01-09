@@ -340,4 +340,6 @@ trait TypeDefImpl(using semantics.Elaborator.State) extends TypeOrTermDef:
         case (S(spd), id, _) => ??? // spreads are not allowed in class parameters
         case (N, id, _) => semantics.TermSymbol(ParamBind, symbol.asClsLike, id)
       .toList
+    
+  lazy val allSymbols = definedSymbols ++ clsParams.map(s => s.nme -> s).toMap
 

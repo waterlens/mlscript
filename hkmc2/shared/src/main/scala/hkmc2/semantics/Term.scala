@@ -27,7 +27,7 @@ enum Term extends Statement:
   case Quoted(body: Term)
   case Unquoted(body: Term)
   case New(cls: Term, args: Ls[Term])
-  case SelProj(prefix: Term, cls: Term, proj: Tree.Ident)
+  case SelProj(prefix: Term, cls: Term, proj: Tree.Ident)(val sym: Opt[FieldSymbol])
   case Asc(term: Term, ty: Term)
   case CompType(lhs: Term, rhs: Term, pol: Bool)
   case Neg(rhs: Term)
@@ -46,6 +46,7 @@ enum Term extends Statement:
     case Ref(sym) => S(sym)
     case sel: SynthSel => sel.sym
     case sel: Sel => sel.sym
+    case sel: SelProj => sel.sym
     case _ => N
   
   def describe: Str = this match
@@ -84,7 +85,7 @@ import Term.*
 sealed trait Statement extends AutoLocated with ProductWithExtraInfo:
   
   def extraInfo: Str = this match
-    case trm @ (_: Sel | _: SynthSel) => trm.symbol.mkString
+    case trm @ (_: Sel | _: SynthSel | _: SelProj) => trm.symbol.mkString
     case _ => ""
   
   def subStatements: Ls[Statement] = this match
@@ -205,6 +206,7 @@ sealed trait Statement extends AutoLocated with ProductWithExtraInfo:
         cls.paramsOpt.fold("")(_.toString)} ${cls.body}"
     case Import(sym, file) => s"import ${sym} from ${file}"
     case Annotated(annotation, target) => s"@${annotation.showDbg} ${target.showDbg}"
+    case Throw(res) => s"throw ${res.showDbg}"
 
 final case class LetDecl(sym: LocalSymbol, annotations: Ls[Term]) extends Statement
 

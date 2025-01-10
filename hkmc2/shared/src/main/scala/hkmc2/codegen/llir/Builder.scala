@@ -1,38 +1,33 @@
 package hkmc2
-package codegen.llir
+package codegen
+package llir
 
-import hkmc2.codegen._
-import hkmc2.codegen.llir.{ Program => LlirProgram, Node, Func }
-import mlscript.utils._
-import mlscript.utils.shorthands._
-import hkmc2.semantics.BuiltinSymbol
-import hkmc2.syntax.Tree
-import hkmc2.{Raise, raise, Diagnostic, ErrorReport, Message}
-import hkmc2.Message.MessageContext
-import hkmc2.codegen.llir.FuncRef.fromName
 import scala.collection.mutable.ListBuffer
+
+import mlscript.utils.*
+import mlscript.utils.shorthands.*
+import hkmc2.document.*
 import hkmc2.utils.Scope
-import hkmc2._
-import hkmc2.document._
-import hkmc2.semantics.Elaborator.State
-import hkmc2.codegen.Program
 import hkmc2.utils.TraceLogger
-import hkmc2.semantics.TermSymbol
-import hkmc2.semantics.MemberSymbol
-import hkmc2.semantics.FieldSymbol
-import hkmc2.semantics.TopLevelSymbol
+import hkmc2.Message.MessageContext
+
+import hkmc2.syntax.Tree
+import hkmc2.semantics.*
+import hkmc2.codegen.llir.{ Program => LlirProgram, Node, Func }
+import FuncRef.fromName
+import hkmc2.codegen.Program
 
 
 def err(msg: Message)(using Raise): Unit =
   raise(ErrorReport(msg -> N :: Nil,
-  source = Diagnostic.Source.Compilation))
+    source = Diagnostic.Source.Compilation))
 
 final case class Ctx(
   def_acc: ListBuffer[Func],
   class_acc: ListBuffer[ClassInfo],
   symbol_ctx: Map[Str, Name] = Map.empty,
   fn_ctx: Map[Local, Name] = Map.empty, // is a known function
-  closure_ctx: Map[Local, Name] = Map.empty, // closure name
+  closure_ctx: Map[Local, Name] = Map.empty, // closure name // TODO remove – not needed?
   class_ctx: Map[Local, Name] = Map.empty,
   block_ctx: Map[Local, Name] = Map.empty,
 ):

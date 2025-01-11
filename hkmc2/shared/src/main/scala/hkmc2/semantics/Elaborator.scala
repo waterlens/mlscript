@@ -734,7 +734,17 @@ extends Importer:
               val s = st.map(term(_)(using newCtx))
               val b = rhs.map(term(_)(using newCtx))
               val r = FlowSymbol(s"‹result of ${sym}›")
-              val tdf = TermDefinition(owner, k, sym, pss, s, b, r, 
+              val real_pss =
+                // * Local functions (i.e. those without owner) with no parameter lists
+                // * are elaborated into functions with a single empty parameter list.
+                // * This is because JS does not support local "getter" functions.
+                owner match
+                case S(_) => pss
+                case N => pss match
+                  case Nil if k is Fun =>
+                    ParamList(ParamListFlags.empty, Nil, N) :: Nil
+                  case _ => pss
+              val tdf = TermDefinition(owner, k, sym, real_pss, s, b, r, 
                 TermDefFlags.empty.copy(isModMember = isModMember), annotations)
               sym.defn = S(tdf)
               

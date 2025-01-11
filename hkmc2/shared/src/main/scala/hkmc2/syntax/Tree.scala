@@ -66,6 +66,7 @@ enum Tree extends AutoLocated:
   case Jux(lhs: Tree, rhs: Tree)
   case SynthSel(prefix: Tree, name: Ident)
   case Sel(prefix: Tree, name: Ident)
+  case MemberProj(cls: Tree, name: Ident)
   case InfixApp(lhs: Tree, kw: Keyword.Infix, rhs: Tree)
   case New(body: Tree)
   case IfLike(kw: Keyword.`if`.type | Keyword.`while`.type, kwLoc: Opt[Loc], split: Tree)

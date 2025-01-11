@@ -112,7 +112,9 @@ object Elaborator:
       def nme: Str = base.nme
       def ref(id: Tree.Ident)(using Elaborator.State): Term =
         val emptyTup: Tree.Tup = Tree.Tup(Nil)
-        Term.App(base.ref(id), Term.Tup(Nil)(emptyTup))(Tree.App(id, emptyTup), FlowSymbol("‹get-res›"))
+        Term.App(base.ref(id), Term.Tup(Nil)(emptyTup))(
+          Tree.App(id, emptyTup) // FIXME
+          , FlowSymbol("‹get-res›"))
       def symbol: Opt[Symbol] = base.symbol
     given Conversion[Symbol, Elem] = RefElem(_)
     val empty: Ctx = Ctx(N, N, Map.empty)
@@ -319,7 +321,7 @@ extends Importer:
         case _ =>
           raise(ErrorReport(msg"Identifier `${idn.name}` does not name a known class symbol." -> idn.toLoc :: Nil))
           N
-      Term.SelProj(term(pre), c, idp)(N)
+      Term.SelProj(term(pre), c, idp)(f)
     case App(Ident("#"), Tree.Tup(Sel(pre, Ident(name)) :: App(Ident(proj), args) :: Nil)) =>
       term(App(App(Ident("#"), Tree.Tup(Sel(pre, Ident(name)) :: Ident(proj) :: Nil)), args))
     case App(Ident("!"), Tree.Tup(rhs :: Nil)) =>
@@ -377,6 +379,36 @@ extends Importer:
       val preTrm = term(pre)
       val sym = resolveField(nme, preTrm.symbol, nme)
       Term.Sel(preTrm, nme)(sym)
+    case MemberProj(ct, nme) =>
+      val c = cls(ct, inAppPrefix = false)
+      val f = c.symbol.flatMap(_.asCls) match
+        case S(cls: ClassSymbol) =>
+          cls.tree.allSymbols.get(nme.name) match
+          case S(fld: FieldSymbol) => S(fld)
+          case _ =>
+            raise(ErrorReport(msg"Class '${cls.nme}' does not contain member '${nme.name}'." -> nme.toLoc :: Nil))
+            N
+        case _ =>
+          raise:
+            ErrorReport:
+              msg"${ct.describe.capitalize} is not a known class." -> ct.toLoc ::
+              msg"Note: any expression of the form `‹expression›::‹identifier›` is a member projection;" -> N ::
+              msg"  add a space before ‹identifier› to make it an operator application." -> N ::
+              Nil
+          N
+      val self = VarSymbol(Ident("self"))
+      val args = VarSymbol(Ident("args"))
+      val ps = ParamList(ParamListFlags.empty,
+        Param(FldFlags.empty, self, N) :: Nil,
+        S:
+          Param(FldFlags.empty, args, N)
+      )
+      val rs = FlowSymbol("‹app-res›")
+      Term.Lam(ps,
+        Term.App(Term.SelProj(self.ref(), c, nme)(f), args.ref())(
+          Tree.App(nme, Tree.Tup(Nil)) // FIXME
+          , rs)
+      )
     case tree @ Tup(fields) =>
       Term.Tup(fields.map(fld(_)))(tree)
     case New(body) => // TODO handle Under
@@ -631,13 +663,13 @@ extends Importer:
         reportUnusedAnnotations
         val sym = fieldOrVarSym(HandlerBind, id)
         log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
-
+        
         val elabed = block(sts_)._1
         
         elabed.res match
           case Term.Lit(UnitLit(true)) => 
           case trm => raise(WarningReport(msg"Terms in handler block do nothing" -> trm.toLoc :: Nil))
-
+        
         val tds = elabed.stats.map {
           case td @ TermDefinition(owner, Fun, sym, params, sign, body, resSym, flags, annotations) =>
             params.reverse match

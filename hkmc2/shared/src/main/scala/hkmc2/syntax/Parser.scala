@@ -749,6 +749,11 @@ abstract class Parser(
       case (br @ BRACKETS(Indent | Curly, toks @ ((IDENT(opStr, true), _) :: _)), loc) :: _ if opPrec(opStr)._1 > prec =>
         consume
         App(acc, rec(toks, S(loc), "operator block").concludeWith(_.opBlock))
+      
+      case (OP("::"), l0) :: (IDENT(id, false), l1) :: _ =>
+        consume
+        consume
+        exprCont(MemberProj(acc, new Ident(id).withLoc(S(l1))).withLoc(S(l0 ++ l1)), prec, allowNewlines)
       case (OP(opStr), l0) :: _ if /* isInfix(opStr) && */ opPrec(opStr)._1 > prec =>
         consume
         val v = Ident(opStr).withLoc(S(l0))
@@ -780,6 +785,7 @@ abstract class Parser(
                 }
               case _ => App(v, PlainTup(acc, rhs))
             }, prec, allowNewlines)
+        
         /*
       case (KEYWORD(":"), l0) :: _ if prec <= NewParser.prec(':') =>
         consume

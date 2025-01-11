@@ -73,34 +73,36 @@ class Lowering(using TL, Raise, Elaborator.State):
         case sym: sem.BlockMemberSymbol =>
           sym.trmImplTree.fold(sym.clsTree.isDefined)(_.k is syntax.Fun)
         case _ => false
-      arg match
-      case Tup(fs) =>
-        val as = fs.map:
-          case sem.Fld(sem.FldFlags.empty, value, N) => false -> value
-          case sem.Fld(sem.FldFlags(false, false, false, true), value, N) => false -> value
-          case sem.Fld(flags, value, asc) =>
-            TODO("Other argument forms")
-          case spd: Spd => true -> spd.term
-        val l = new TempSymbol(S(t))
-        def conclude(fr: Path) =
-          def rec(as: Ls[Bool -> st], asr: Ls[Arg]): Block = as match
-            case Nil => k(Call(fr, asr.reverse)(isMlsFun))
-            case (spd, a) :: as =>
-              subTerm(a): ar =>
-                rec(as, Arg(spd, ar) :: asr)
-          rec(as, Nil)
-        f match
-        // * Due to whacky JS semantics, we need to make sure that selections leading to a call
-        // * are preserved in the call and not moved to a temporary variable.
-        case sel @ Sel(prefix, nme) =>
-          subTerm(prefix): p =>
-            conclude(Select(p, nme)(sel.sym))
-        case sel @ SelProj(prefix, _, nme) =>
-          subTerm(prefix): p =>
-            conclude(Select(p, nme)(sel.sym))
-        case _ => subTerm(f)(conclude)
-      case _ =>
-        TODO("Other argument list forms")
+      def conclude(fr: Path) =
+        arg match
+        case Tup(fs) =>
+          val as = fs.map:
+            case sem.Fld(sem.FldFlags.empty, value, N) => false -> value
+            case sem.Fld(sem.FldFlags(false, false, false, true), value, N) => false -> value
+            case sem.Fld(flags, value, asc) =>
+              TODO("Other argument forms")
+            case spd: Spd => true -> spd.term
+          val l = new TempSymbol(S(t))
+            def rec(as: Ls[Bool -> st], asr: Ls[Arg]): Block = as match
+              case Nil => k(Call(fr, asr.reverse)(isMlsFun))
+              case (spd, a) :: as =>
+                subTerm(a): ar =>
+                  rec(as, Arg(spd, ar) :: asr)
+            rec(as, Nil)
+        case _ =>
+          // Application arguments that are not tuples represent spreads, as in `f(...arg)`
+          subTerm(arg): ar =>
+            k(Call(fr, Arg(spread = true, ar) :: Nil)(isMlsFun))
+      f match
+      // * Due to whacky JS semantics, we need to make sure that selections leading to a call
+      // * are preserved in the call and not moved to a temporary variable.
+      case sel @ Sel(prefix, nme) =>
+        subTerm(prefix): p =>
+          conclude(Select(p, nme)(sel.sym))
+      case sel @ SelProj(prefix, _, nme) =>
+        subTerm(prefix): p =>
+          conclude(Select(p, nme)(sel.sym))
+      case _ => subTerm(f)(conclude)
     case st.Blk(Nil, res) => term(res)(k)
     case st.Blk(Lit(Tree.UnitLit(true)) :: stats, res) =>
       subTerm(st.Blk(stats, res))(k)

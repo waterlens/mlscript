@@ -183,6 +183,12 @@ extends Importer:
   def term(tree: Tree, inAppPrefix: Bool = false): Ctxl[Term] =
   trace[Term](s"Elab term ${tree.showDbg}", r => s"~> $r"):
     tree.desugared match
+    case Bra(k, e) =>
+      k match
+      case BracketKind.Round =>
+      case _ =>
+        raise(ErrorReport(msg"Unsupported ${k.name} in this position" -> tree.toLoc :: Nil))
+      term(e)
     case Block(s :: Nil) =>
       term(s)
     case Block(sts) =>
@@ -713,6 +719,9 @@ extends Importer:
           go(sts, Nil, Term.Error :: acc)
       case (td @ TermDef(k, nme, rhs)) :: sts =>
         log(s"Processing term definition $nme")
+        td.symbName match
+        case S(L(d)) => raise(d)
+        case _ => ()
         td.name match
           case R(id) =>
             val sym = members.getOrElse(id.name, die)
@@ -759,11 +768,11 @@ extends Importer:
               s match
                 case N if em => raise:
                   ErrorReport:
-                    msg"Function returning module values must have explicit return types." ->
+                    msg"Functions returning module values must have explicit return types." ->
                     td.head.toLoc :: Nil
                 case S(t) if em && ModuleChecker.isTypeParam(t) => raise:
                   ErrorReport:
-                    msg"Function returning module values must have concrete return types." ->
+                    msg"Functions returning module values must have concrete return types." ->
                     td.head.toLoc :: Nil
                 case S(_) if em && !mm => raise:
                   ErrorReport:
@@ -783,6 +792,9 @@ extends Importer:
             go(sts, Nil, acc)
       case (td @ TypeDef(k, head, extension, body)) :: sts =>
         assert((k is Als) || (k is Cls) || (k is Mod) || (k is Obj) || (k is Pat), k)
+        td.symbName match
+        case S(L(d)) => raise(d)
+        case _ => ()
         val nme = td.name match
           case R(id) => id
           case L(d) =>

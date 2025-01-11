@@ -435,6 +435,8 @@ class BBTyper(using elState: Elaborator.State, tl: TL, scope: Scope):
             goStats(stats)
           case Import(sym, pth) :: stats =>
             goStats(stats) // TODO:
+          case stat :: _ =>
+            TODO(stat)
         goStats(stats)
         val (ty, eff) = typeCheck(res)
         (ty, effBuff.foldLeft(eff)((res, e) => res | e))

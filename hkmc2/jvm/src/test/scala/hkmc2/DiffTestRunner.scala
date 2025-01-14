@@ -14,7 +14,6 @@ class MainDiffMaker(val rootPath: Str, val file: os.Path, val preludeFile: os.Pa
 
 
 
-
 class AllTests extends org.scalatest.Suites(
   new CompileTestRunner(DiffTestRunner.State){},
   new DiffTestRunner(DiffTestRunner.State){},

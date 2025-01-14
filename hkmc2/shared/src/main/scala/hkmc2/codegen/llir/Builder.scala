@@ -27,7 +27,6 @@ final case class Ctx(
   class_acc: ListBuffer[ClassInfo],
   symbol_ctx: Map[Str, Name] = Map.empty,
   fn_ctx: Map[Local, Name] = Map.empty, // is a known function
-  closure_ctx: Map[Local, Name] = Map.empty, // closure name // TODO remove – not needed?
   class_ctx: Map[Local, Name] = Map.empty,
   block_ctx: Map[Local, Name] = Map.empty,
 ):

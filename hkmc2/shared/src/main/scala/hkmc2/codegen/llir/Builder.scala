@@ -108,6 +108,14 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         case r: TrivialExpr => bArgs(xs):
           case rs: Ls[TrivialExpr] => k(r :: rs)
   
+  private def bPaths(e: Ls[Path])(k: Ls[TrivialExpr] => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope): Node =
+    trace[Node](s"bArgs begin", x => s"bArgs end: ${x.show}"):
+      e match
+      case Nil => k(Nil)
+      case x :: xs => bPath(x):
+        case r: TrivialExpr => bPaths(xs):
+          case rs: Ls[TrivialExpr] => k(r :: rs)
+  
   private def bFunDef(e: FunDefn)(using ctx: Ctx)(using Raise, Scope): Func =
     trace[Func](s"bFunDef begin: ${e.sym}", x => s"bFunDef end: ${x.show}"):
       val FunDefn(sym, params, body) = e
@@ -207,8 +215,14 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
               case args: Ls[TrivialExpr] =>
                 val v = fresh.make
                 Node.LetMethodCall(Ls(v), ClassRef(R("Callable")), Name("apply" + args.length), f :: args, k(v |> sr))
+      case Instantiate(
+        Select(Select(Value.Ref(_: TopLevelSymbol), name), Tree.Ident("class")), args) =>
+        bPaths(args):
+          case args: Ls[TrivialExpr] =>
+            val v = fresh.make
+            Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(name.name), args), k(v |> sr))
       case Instantiate(cls, args) =>
-        err(msg"Unsupported result: Instantiate")
+        err(msg"Unsupported kind of Instantiate")
         Node.Result(Ls())
       case x: Path => bPath(x)(k)
 
@@ -248,7 +262,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
             summon[Ctx].def_acc += jpdef
             Node.Case(e, casesList, defaultCase)
       case Return(res, implct) => bResult(res)(x => Node.Result(Ls(x)))
-      case Throw(Instantiate(Select(Value.Ref(globalThis), ident), Ls(Value.Lit(Tree.StrLit(e))))) if ident.name == "Error" =>
+      case Throw(Instantiate(Select(Value.Ref(_), ident), Ls(Value.Lit(Tree.StrLit(e))))) if ident.name == "Error" =>
         Node.Panic(e)
       case Label(label, body, rest) => ???
       case Break(label) => TODO("Break not supported")

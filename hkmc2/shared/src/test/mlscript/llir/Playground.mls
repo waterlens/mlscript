@@ -28,6 +28,19 @@ fun lazy(x) = Lazy(x)
 //│   undefined
 
 :llir
+fun testCtor1() = None
+fun testCtor2() = new None
+//│ LLIR:
+//│   
+//│   def testCtor1() =
+//│     let x$0 = None() in
+//│     x$0
+//│   def testCtor2() =
+//│     let x$1 = None() in
+//│     x$1
+//│   undefined
+
+:llir
 abstract class Option[out T]: Some[T] | None
 class Some[out T](x: T) extends Option[T]
 object None extends Option

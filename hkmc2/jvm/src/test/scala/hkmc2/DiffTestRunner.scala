@@ -12,6 +12,9 @@ import mlscript.utils._, shorthands._
 class MainDiffMaker(val rootPath: Str, val file: os.Path, val preludeFile: os.Path, val predefFile: os.Path, val relativeName: Str)
   extends LlirDiffMaker
 
+
+
+
 class AllTests extends org.scalatest.Suites(
   new CompileTestRunner(DiffTestRunner.State){},
   new DiffTestRunner(DiffTestRunner.State){},

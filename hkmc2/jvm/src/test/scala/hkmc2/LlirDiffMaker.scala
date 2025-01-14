@@ -38,4 +38,4 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
       if scpp.isSet then
         val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
         output("\nCpp:")
-        output(cpp.toDocument.print)
+        output(cpp.toDocument.toString)

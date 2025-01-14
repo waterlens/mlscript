@@ -4,42 +4,33 @@ import mlscript._
 import mlscript.utils._
 import mlscript.utils.shorthands._
 
-import hkmc2.utils.legacy_document._
+import hkmc2.Message.MessageContext
+import hkmc2.document._
 
 import scala.language.implicitConversions
 
-given Conversion[String, Document] = raw
+private def raw(x: String): Document = doc"$x"
+given Conversion[String, Document] = x => doc"$x"
 
 enum Specifier:
   case Extern
   case Static
   case Inline
 
-  def toDocument = raw(
+  def toDocument = 
     this match
     case Extern => "extern"
     case Static => "static"
     case Inline => "inline"
-  )
 
-  override def toString: Str = toDocument.print
+  override def toString: Str = toDocument
 
 object Type:
   def toDocuments(args: Ls[Type], sep: Document, extraTypename: Bool = false): Document =
-    args.iterator.zipWithIndex.map {
-      case (x, 0) =>
-        x.toDocument(extraTypename)
-      case (x, _) =>
-        sep <#> x.toDocument(extraTypename)
-    }.fold(raw(""))(_ <#> _)
+    args.map(_.toDocument(extraTypename)).mkDocument(sep)
 
   def toDocuments(args: Ls[(Str, Type)], sep: Document): Document =
-    args.iterator.zipWithIndex.map {
-      case (x, 0) =>
-        x._2.toDocument() <:> raw(x._1)
-      case (x, _) =>
-        sep <#> x._2.toDocument() <:> raw(x._1)
-    }.fold(raw(""))(_ <#> _)
+    args.map(x => doc"${x._2.toDocument()} ${x._1}").mkDocument(sep)
 
 enum Type:
   case Prim(name: Str)
@@ -56,22 +47,25 @@ enum Type:
   def toDocument(extraTypename: Bool = false): Document =
     def aux(x: Type): Document = x match
       case Prim(name) => name
-      case Ptr(inner) => aux(inner) <#> "*" 
-      case Ref(inner) => aux(inner) <#> "&"
-      case Array(inner, size) => aux(inner) <#> "[" <#> size.fold(raw(""))(x => x.toString) <#> "]"
-      case FuncPtr(ret, args) => aux(ret) <#> "(" <#> Type.toDocuments(args, sep = ", ") <#> ")"
-      case Struct(name) => s"struct $name"
-      case Enum(name) => s"enum $name"
-      case Template(name, args) => s"$name" <#> "<" <#> Type.toDocuments(args, sep = ", ") <#> ">"
+      case Ptr(inner) => doc"${aux(inner)}*" 
+      case Ref(inner) => doc"${aux(inner)}&"
+      case Array(inner, size) => 
+        doc"${aux(inner)}[${size.fold("")(x => x.toString)}]"
+      case FuncPtr(ret, args) => 
+        doc"${aux(ret)}(${Type.toDocuments(args, sep = ", ")})"
+      case Struct(name) => doc"struct $name"
+      case Enum(name) => doc"enum $name"
+      case Template(name, args) =>
+        doc"$name<${Type.toDocuments(args, sep = ", ")}>"
       case Var(name) => name
-      case Qualifier(inner, qual) => aux(inner) <:> qual
+      case Qualifier(inner, qual) => doc"${aux(inner)} $qual"
     aux(this)
 
-  override def toString: Str = toDocument().print
+  override def toString: Str = toDocument().toString
 
 object Stmt:
   def toDocuments(decl: Ls[Decl], stmts: Ls[Stmt]): Document =
-    stack_list(decl.map(_.toDocument) ++ stmts.map(_.toDocument))
+    (decl.map(_.toDocument) ++ stmts.map(_.toDocument)).mkDocument(doc" # ")
 
 enum Stmt:
   case AutoBind(lhs: Ls[Str], rhs: Expr)
@@ -92,38 +86,37 @@ enum Stmt:
       case AutoBind(lhs, rhs) =>
         lhs match
           case Nil => rhs.toDocument
-          case x :: Nil => "auto" <:> x <:> "=" <:> rhs.toDocument <#> ";"
-          case _ => "auto" <:> lhs.mkString("[", ",", "]") <:> "=" <:> rhs.toDocument <#> ";"
-      case Assign(lhs, rhs) => lhs <#> " = " <#> rhs.toDocument <#> ";"
-      case Return(expr) => "return " <#> expr.toDocument <#> ";"
+          case x :: Nil =>
+            doc"auto $x = ${rhs.toDocument};"
+          case _ =>
+            doc"auto [${lhs.mkDocument(", ")}] = ${rhs.toDocument};"
+      case Assign(lhs, rhs) =>
+        doc"$lhs = ${rhs.toDocument};"
+      case Return(expr) =>
+        doc"return ${expr.toDocument};"
       case If(cond, thenStmt, elseStmt) =>
-        "if (" <#> cond.toDocument <#> ")" <#> thenStmt.toDocument <:> elseStmt.fold(raw(""))(x => "else" <:> x.toDocument)
+        doc"if (${cond.toDocument}) ${thenStmt.toDocument}${elseStmt.fold(doc" ")(x => doc" else ${x.toDocument}")}"
       case While(cond, body) =>
-        "while (" <#> cond.toDocument <#> ")" <#> body.toDocument
+        doc"while (${cond.toDocument}) ${body.toDocument}"
       case For(init, cond, update, body) =>
-        "for (" <#> init.toDocument <#> "; " <#> cond.toDocument <#> "; " <#> update.toDocument <#> ")" <#> body.toDocument
-      case ExprStmt(expr) => expr.toDocument <#> ";"
+        doc"for (${init.toDocument}; ${cond.toDocument}; ${update.toDocument}) ${body.toDocument}"
+      case ExprStmt(expr) =>
+        doc"${expr.toDocument};"
       case Break => "break;"
       case Continue => "continue;"
       case Block(decl, stmts) => 
-        stack(
-          "{",
-          Stmt.toDocuments(decl, stmts) |> indent,
-          "}")
+        doc"{ #{  # ${Stmt.toDocuments(decl, stmts)} #}  # }"
       case Switch(expr, cases) =>
-        "switch (" <#> expr.toDocument <#> ")" <#> "{" <#> stack_list(cases.map {
-          case (cond, stmt) => "case " <#> cond.toDocument <#> ":" <#> stmt.toDocument
-        }) <#> "}"
+        val docCases = cases.map {
+          case (cond, stmt) => doc"case ${cond.toDocument}: ${stmt.toDocument}"
+        }.mkDocument(doc" # ")
+        doc"switch (${expr.toDocument}) { #{  # ${docCases} #}  # }"
       case Raw(stmt) => stmt
     aux(this)
 
 object Expr:
   def toDocuments(args: Ls[Expr], sep: Document): Document =
-    args.zipWithIndex.map {
-      case (x, i) =>
-        if i == 0 then x.toDocument
-        else sep <#> x.toDocument
-    }.fold(raw(""))(_ <#> _)
+    args.map(_.toDocument).mkDocument(sep)
   
 enum Expr:
   case Var(name: Str)
@@ -146,26 +139,31 @@ enum Expr:
       case DoubleLit(value) => value.toString
       case StrLit(value) => s"\"$value\"" // need more reliable escape utils
       case CharLit(value) => value.toInt.toString
-      case Call(func, args) => aux(func) <#> "(" <#> Expr.toDocuments(args, sep = ", ") <#> ")"
-      case Member(expr, member) => aux(expr) <#> "->" <#> member
-      case Index(expr, index) => aux(expr) <#> "[" <#> aux(index) <#> "]"
-      case Unary(op, expr) => "(" <#> op <#> aux(expr) <#> ")"
-      case Binary(op, lhs, rhs) => "(" <#> aux(lhs) <#> op <#> aux(rhs) <#> ")"
-      case Initializer(exprs) => "{" <#> Expr.toDocuments(exprs, sep = ", ") <#> "}"
-      case Constructor(name, init) => name <#> init.toDocument
+      case Call(func, args) =>
+        doc"${func.toDocument}(${Expr.toDocuments(args, sep = ", ")})"
+      case Member(expr, member) => 
+        doc"${expr.toDocument}->$member"
+      case Index(expr, index) =>
+        doc"${expr.toDocument}[${index.toDocument}]"
+      case Unary(op, expr) => 
+        doc"($op${expr.toDocument})"
+      case Binary(op, lhs, rhs) =>
+        doc"(${lhs.toDocument} $op ${rhs.toDocument})"
+      case Initializer(exprs) => 
+        doc"{${Expr.toDocuments(exprs, sep = ", ")}}"
+      case Constructor(name, init) =>
+        doc"$name(${init.toDocument})"
     aux(this)
 
 case class CompilationUnit(includes: Ls[Str], decls: Ls[Decl], defs: Ls[Def]):
   def toDocument: Document =
-    stack_list(includes.map(x => raw(x)) ++ decls.map(_.toDocument) ++ defs.map(_.toDocument))
+    (includes.map(raw) ++ decls.map(_.toDocument) ++ defs.map(_.toDocument)).mkDocument(doc" # ")
   def toDocumentWithoutHidden: Document =
-    val hiddenNames = Set(
-      "HiddenTheseEntities", "True", "False", "Callable", "List", "Cons", "Nil", "Option", "Some", "None", "Pair", "Tuple2", "Tuple3", "Nat", "S", "O"
-    )
-    stack_list(defs.filterNot { 
+    val hiddenNames: Set[Str] = Set()
+    defs.filterNot { 
       case Def.StructDef(name, _, _, _) => hiddenNames.contains(name.stripPrefix("_mls_"))
       case _ => false
-    }.map(_.toDocument))
+    }.map(_.toDocument).mkDocument(doc" # ")
 
 enum Decl:
   case StructDecl(name: Str)
@@ -175,10 +173,12 @@ enum Decl:
 
   def toDocument: Document =
     def aux(x: Decl): Document = x match
-      case StructDecl(name) => s"struct $name;"
-      case EnumDecl(name) => s"enum $name;"
-      case FuncDecl(ret, name, args) => ret.toDocument() <#> s" $name(" <#> Type.toDocuments(args, sep = ", ")  <#> ");"
-      case VarDecl(name, typ) => typ.toDocument() <#> s" $name;"
+      case StructDecl(name) => doc"struct $name;"
+      case EnumDecl(name) => doc"enum $name;"
+      case FuncDecl(ret, name, args) =>
+        doc"${ret.toDocument()} $name(${Type.toDocuments(args, sep = ", ")});"
+      case VarDecl(name, typ) => 
+        doc"${typ.toDocument()} $name;"
     aux(this)
 
 enum Def:
@@ -191,22 +191,30 @@ enum Def:
   def toDocument: Document =
     def aux(x: Def): Document = x match
       case StructDef(name, fields, inherit, defs) =>
-        stack(
-          s"struct $name" <#> (if inherit.nonEmpty then ": public" <:> inherit.get.mkString(", ") else "" ) <:> "{",
-            stack_list(fields.map {
-                case (name, typ) => typ.toDocument() <#> " " <#> name <#> ";"
-            }) |> indent,
-            stack_list(defs.map(_.toDocument)) |> indent,
-          "};"
-        )
+        val docFirst = doc"struct $name${inherit.fold(doc"")(x => doc": public ${x.mkDocument(doc", ")}")} {"
+        val docFields = fields.map {
+          case (name, typ) => doc"${typ.toDocument()} $name;"
+        }.mkDocument(doc" # ")
+        val docDefs = defs.map(_.toDocument).mkDocument(doc" # ")
+        val docLast = "};"
+        doc"$docFirst #{  # $docFields # $docDefs #}  # $docLast"
       case EnumDef(name, fields) =>
-        s"enum $name" <:> "{" <#> stack_list(fields.map {
+        val docFirst = doc"enum $name {"
+        val docFields = fields.map {
           case (name, value) => value.fold(s"$name")(x => s"$name = $x")
-        }) <#> "};"
+        }.mkDocument(doc" # ")
+        val docLast = "};"
+        doc"$docFirst #{  # $docFields #}  # $docLast"
       case FuncDef(specret, name, args, body, or, virt) =>
-        (if virt then "virtual " else "") 
-        <#> specret.toDocument() <#> s" $name(" <#> Type.toDocuments(args, sep = ", ") <#> ")" <#> (if or then " override" else "") <#> body.toDocument
+        val docVirt = (if virt then doc"virtual " else doc"")
+        val docSpecRet = specret.toDocument()
+        val docArgs = Type.toDocuments(args, sep = ", ")
+        val docOverride = if or then doc" override" else doc""
+        val docBody = body.toDocument
+        doc"$docVirt$docSpecRet $name($docArgs)$docOverride ${body.toDocument}"
       case VarDef(typ, name, init) =>
-        typ.toDocument() <#> s" $name" <#> init.fold(raw(""))(x => " = " <#> x.toDocument) <#> raw(";")
+        val docTyp = typ.toDocument()
+        val docInit = init.fold(raw(""))(x => doc" = ${x.toDocument}")
+        doc"$docTyp $name$docInit;"
       case RawDef(x) => x
     aux(this)

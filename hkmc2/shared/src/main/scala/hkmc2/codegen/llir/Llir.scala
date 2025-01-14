@@ -4,13 +4,16 @@ import mlscript._
 import mlscript.utils._
 import mlscript.utils.shorthands._
 
-import hkmc2.utils.legacy_document._
 import hkmc2.syntax._
+import hkmc2.Message.MessageContext
+import hkmc2.document._
 
 import util.Sorting
 import collection.immutable.SortedSet
 import language.implicitConversions
 import collection.mutable.{Map as MutMap, Set as MutSet, HashMap, ListBuffer}
+
+private def raw(x: String): Document = doc"$x"
 
 final case class LowLevelIRError(message: String) extends Exception(message)
 
@@ -26,18 +29,17 @@ case class Program(
     Sorting.quickSort(t2)
     s"Program({${t1.mkString(",\n")}}, {\n${t2.mkString("\n")}\n},\n$main)"
 
-  def show(hiddenNames: Set[Str] = Set.empty) = toDocument(hiddenNames).print
+  def show(hiddenNames: Set[Str] = Set.empty) = toDocument(hiddenNames).toString
   def toDocument(hiddenNames: Set[Str] = Set.empty) : Document =
     val t1 = classes.toArray
     val t2 = defs.toArray
     Sorting.quickSort(t1)
     Sorting.quickSort(t2)
     given Conversion[String, Document] = raw
-    stack(
-      stack_list(t1.filter(x => !hiddenNames.contains(x.name)).map(_.toDocument).toList) |> indent,
-      stack_list(t2.map(_.toDocument).toList) |> indent,
-      main.toDocument |> indent
-    )
+    val docClasses = t1.filter(x => !hiddenNames.contains(x.name)).map(_.toDocument).toList.mkDocument(doc" # ")
+    val docDefs = t2.map(_.toDocument).toList.mkDocument(doc" # ")
+    val docMain = main.toDocument
+    doc" #{ $docClasses\n$docDefs\n$docMain #} "
 
 implicit object ClassInfoOrdering extends Ordering[ClassInfo] {
   def compare(a: ClassInfo, b: ClassInfo) = a.id.compare(b.id)
@@ -54,18 +56,17 @@ case class ClassInfo(
   override def toString: String =
     s"ClassInfo($id, $name, [${fields mkString ","}], parents: ${parents mkString ","}, methods:\n${methods mkString ",\n"})"
 
-  def show = toDocument.print
+  def show = toDocument.toString
   def toDocument: Document =
     given Conversion[String, Document] = raw
-    val extension = if parents.isEmpty then "" else " extends " + parents.mkString(", ")
+    val ext = if parents.isEmpty then "" else " extends " + parents.mkString(", ")
     if methods.isEmpty then
-      "class" <:> name <#> "(" <#> fields.mkString(",") <#> ")" <#> extension
+      doc"class $name(${fields.mkString(",")})$ext"
     else
-      stack(
-        "class" <:> name <#> "(" <#> fields.mkString(",") <#> ")" <#> extension <:> "{",
-        stack_list( methods.map { (_, func) => func.toDocument |> indent }.toList),
-        "}"
-      )
+      val docFirst = doc"class $name (${fields.mkString(",")})$ext {"
+      val docMethods = methods.map { (_, func) => func.toDocument }.toList.mkDocument(doc" # ")
+      val docLast = doc"}"
+      doc"$docFirst #{  # $docMethods #  #} $docLast"
 
 case class Name(str: Str):
   def trySubst(map: Map[Str, Name]) = map.getOrElse(str, this)
@@ -117,13 +118,12 @@ case class Func(
     val ps = params.map(_.toString).mkString("[", ",", "]")
     s"Def($id, $name, $ps, \n$resultNum, \n$body\n)"
 
-  def show = toDocument.print
+  def show = toDocument
   def toDocument: Document =
     given Conversion[String, Document] = raw
-    stack(
-      "def" <:> name <#> "(" <#> params.map(_.toString).mkString(",")  <#> ")" <:> "=",
-      body.toDocument |> indent
-    )
+    val docFirst = doc"def $name(${params.map(_.toString).mkString(",")}) ="
+    val docBody = body.toDocument
+    doc"$docFirst #{  # $docBody #} "
 
 sealed trait TrivialExpr:
   import Expr._
@@ -144,8 +144,7 @@ enum Expr:
   
   override def toString: String = show
 
-  def show: String =
-    toDocument.print
+  def show: String = toDocument.toString
   
   def toDocument: Document = 
     given Conversion[String, Document] = raw
@@ -157,30 +156,17 @@ enum Expr:
       case Literal(Tree.StrLit(lit)) => s"$lit"
       case Literal(Tree.UnitLit(undefinedOrNull)) => if undefinedOrNull then "undefined" else "null"
       case CtorApp(cls, args) =>
-        cls.name <#> "(" <#> (args |> showArguments) <#> ")"
+        doc"${cls.name}(${args.map(_.toString).mkString(",")})"
       case Select(s, cls, fld) =>
-        s.toString <#> ".<" <#> cls.name <#> ":" <#> fld <#> ">"
+        doc"${s.toString}.<${cls.name}:$fld>"
       case BasicOp(name: Str, args) =>
-        name <#> "(" <#> (args |> showArguments) <#> ")"
+        doc"$name(${args.map(_.toString).mkString(",")})"
       case AssignField(assignee, clsInfo, fieldName, value) => 
-        stack(
-          "assign"
-          <:> (assignee.toString + "." + fieldName)
-          <:> ":="
-          <:> value.toDocument
-        )
+        doc"${assignee.toString}.${fieldName} := ${value.toString}"
 
 enum Pat:
   case Lit(lit: hkmc2.syntax.Literal)
   case Class(cls: ClassRef)
-
-  def isTrue = this match
-    case Class(cls) => cls.name == "True"
-    case _ => false
-  
-  def isFalse = this match
-    case Class(cls) => cls.name == "False"
-    case _ => false
 
   override def toString: String = this match
     case Lit(lit) => s"$lit"
@@ -199,68 +185,30 @@ enum Node:
 
   override def toString: String = show
 
-  def show: String =
-    toDocument.print
+  def show: String = toDocument.toString
 
   def toDocument: Document =
     given Conversion[String, Document] = raw
     this match
     case Result(res) => (res |> showArguments)
     case Jump(jp, args) =>
-      "jump"
-      <:> jp.name
-      <#> "("
-      <#> (args |> showArguments)
-      <#> ")"
-    case Case(x, Ls((true_pat, tru), (false_pat, fls)), N) if true_pat.isTrue && false_pat.isFalse =>
-      val first = "if" <:> x.toString
-      val tru2 = indent(stack("true" <:> "=>", tru.toDocument |> indent))
-      val fls2 = indent(stack("false" <:> "=>", fls.toDocument |> indent))
-      Document.Stacked(Ls(first, tru2, fls2))
+      doc"jump ${jp.name}(${args |> showArguments})"
     case Case(x, cases, default) =>
-      val first = "case" <:> x.toString <:> "of"
-      val other = cases flatMap {
-        case (pat, node) =>
-          Ls(pat.toString <:> "=>", node.toDocument |> indent)
-      }
+      val docFirst = doc"case ${x.toString} of"
+      val docCases = cases.map {
+        case (pat, node) => doc"${pat.toString} => #{  # ${node.toDocument} #} "
+      }.mkDocument(doc" # ")
       default match
-        case N => stack(first, (Document.Stacked(other) |> indent))
+        case N => doc"$docFirst #{  # $docCases #} "
         case S(dc) =>
-          val default = Ls("_" <:> "=>", dc.toDocument |> indent)
-          stack(first, (Document.Stacked(other ++ default) |> indent))
-    case Panic(msg) => "panic" <:> "\"" <#> msg <#> "\""
+          val docDeft = doc"_ => #{  # ${dc.toDocument} #} "
+          doc"$docFirst #{  # $docCases # $docDeft #} "
+    case Panic(msg) =>
+      doc"panic ${s"\"$msg\""}"
     case LetExpr(x, expr, body) => 
-      stack(
-        "let"
-          <:> x.toString
-          <:> "="
-          <:> expr.toDocument
-          <:> "in",
-        body.toDocument)
+      doc"let ${x.toString} = ${expr.toString} in # ${body.toDocument}"
     case LetMethodCall(xs, cls, method, args, body) =>
-      stack(
-        "let"
-          <:> xs.map(_.toString).mkString(",")
-          <:> "="
-          <:> cls.name
-          <#> "."
-          <#> method.toString
-          <#> "("
-          <#> args.map{ x => x.toString }.mkString(",")
-          <#> ")"
-          <:> "in",
-        body.toDocument)
+      doc"let ${xs.map(_.toString).mkString(",")} = ${cls.name}.${method.toString}(${args.map(_.toString).mkString(",")}) in # ${body.toDocument}"
     case LetCall(xs, func, args, body) => 
-      stack(
-        "let*"
-          <:> "("
-          <#> xs.map(_.toString).mkString(",")
-          <#> ")"
-          <:> "="
-          <:> func.name
-          <#> "("
-          <#> args.map{ x => x.toString }.mkString(",")
-          <#> ")"
-          <:> "in",
-        body.toDocument)
+      doc"let* (${xs.map(_.toString).mkString(",")}) = ${func.name}(${args.map(_.toString).mkString(",")}) in # ${body.toDocument}"
 

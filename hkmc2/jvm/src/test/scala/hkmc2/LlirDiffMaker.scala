@@ -21,6 +21,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val cpp = NullaryCommand("cpp")
   val sllir = NullaryCommand("sllir")
   val scpp = NullaryCommand("scpp")
+  val intl = NullaryCommand("intl")
 
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
     super.processTerm(trm, inImport)
@@ -39,11 +40,15 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
         if sllir.isSet then
           output("LLIR:")
           output(llirProg.show())
-        if cpp.isSet then
+        if cpp.isSet || scpp.isSet then
           val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
           if scpp.isSet then
             output("\nCpp:")
             output(cpp.toDocument.toString)
+        if intl.isSet then
+          val intr = codegen.llir.Interpreter(verbose = true)
+          output("\nInterpreted:")
+          output(intr.interpret(llirProg))
       catch
         case e: LowLevelIRError =>
           output("Stopped due to an error during the Llir generation")

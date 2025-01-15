@@ -48,7 +48,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             output("\nCpp:")
             output(cpp.toDocument.toString)
           if rcpp.isSet then
-            val auxPath = os.pwd/os.up/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
+            val auxPath = os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
             val cppHost = CppCompilerHost(auxPath.toString, output.apply)
             if !cppHost.ready then
               output("\nCpp Compilation Failed: Cpp compiler or GNU Make not found")
@@ -62,4 +62,4 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
       catch
         case e: LowLevelIRError =>
           output("Stopped due to an error during the Llir generation")
-      
+

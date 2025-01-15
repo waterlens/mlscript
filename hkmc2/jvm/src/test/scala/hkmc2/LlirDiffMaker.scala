@@ -7,7 +7,8 @@ import utils.*
 
 import document.*
 import codegen.Block
-import codegen.llir.LlirBuilder
+import codegen.llir.*
+import codegen.cpp.*
 import hkmc2.syntax.Tree.Ident
 import hkmc2.codegen.Path
 import hkmc2.semantics.Term.Blk
@@ -21,6 +22,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val cpp = NullaryCommand("cpp")
   val sllir = NullaryCommand("sllir")
   val scpp = NullaryCommand("scpp")
+  val rcpp = NullaryCommand("rcpp")
   val intl = NullaryCommand("intl")
 
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
@@ -40,11 +42,19 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
         if sllir.isSet then
           output("LLIR:")
           output(llirProg.show())
-        if cpp.isSet || scpp.isSet then
+        if cpp.isSet || scpp.isSet || rcpp.isSet then
           val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
           if scpp.isSet then
             output("\nCpp:")
             output(cpp.toDocument.toString)
+          if rcpp.isSet then
+            val auxPath = os.pwd/os.up/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
+            val cppHost = CppCompilerHost(auxPath.toString, output.apply)
+            if !cppHost.ready then
+              output("\nCpp Compilation Failed: Cpp compiler or GNU Make not found")
+            else
+              output("\n")
+              cppHost.compileAndRun(cpp.toDocument.toString)
         if intl.isSet then
           val intr = codegen.llir.Interpreter(verbose = true)
           output("\nInterpreted:")

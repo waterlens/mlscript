@@ -4,7 +4,7 @@ import mlscript._
 import mlscript.utils.shorthands._
 import scala.collection.mutable.ListBuffer
 
-final class CppCompilerHost(val auxPath: Str):
+final class CppCompilerHost(val auxPath: Str, val output: Str => Unit):
   import scala.sys.process._
   private def ifAnyCppCompilerExists(): Boolean =
     Seq("g++", "--version").! == 0 || Seq("clang++", "--version").! == 0
@@ -15,7 +15,7 @@ final class CppCompilerHost(val auxPath: Str):
 
   val ready = ifAnyCppCompilerExists() && isMakeExists()
   
-  def compileAndRun(src: Str, output: Str => Unit): Unit =
+  def compileAndRun(src: Str): Unit =
     if !ready then
       return
     val srcPath = os.temp(contents = src, suffix = ".cpp")

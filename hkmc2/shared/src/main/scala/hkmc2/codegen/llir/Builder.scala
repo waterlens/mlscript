@@ -22,6 +22,10 @@ def err(msg: Message)(using Raise): Unit =
   raise(ErrorReport(msg -> N :: Nil,
     source = Diagnostic.Source.Compilation))
 
+def errStop(msg: Message)(using Raise) =
+  err(msg)
+  throw LowLevelIRError("stopped")
+
 final case class Ctx(
   def_acc: ListBuffer[Func],
   class_acc: ListBuffer[ClassInfo],
@@ -29,6 +33,7 @@ final case class Ctx(
   fn_ctx: Map[Local, Name] = Map.empty, // is a known function
   class_ctx: Map[Local, Name] = Map.empty,
   block_ctx: Map[Local, Name] = Map.empty,
+  is_top_level: Bool = true,
 ):
   def addFuncName(n: Local, m: Name) = copy(fn_ctx = fn_ctx + (n -> m))
   def findFuncName(n: Local)(using Raise) = fn_ctx.get(n) match
@@ -51,6 +56,7 @@ final case class Ctx(
   def reset =
     def_acc.clear()
     class_acc.clear()
+  def nonTopLevel = copy(is_top_level = false)
 
 object Ctx:
   val empty = Ctx(ListBuffer.empty, ListBuffer.empty)
@@ -119,30 +125,37 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
   private def bFunDef(e: FunDefn)(using ctx: Ctx)(using Raise, Scope): Func =
     trace[Func](s"bFunDef begin: ${e.sym}", x => s"bFunDef end: ${x.show}"):
       val FunDefn(sym, params, body) = e
-      if params.length != 1 then
-        err(msg"Curried function not supported: ${params.length.toString}")
-      val paramsList = params.head.params.map(x => x -> summon[Scope].allocateName(x.sym))
-      val new_ctx = paramsList.foldLeft(ctx)((acc, x) => acc.addName(getVar_!(x._1.sym), x._2 |> nme))
-      val pl = paramsList.map(_._2).map(nme)
-      Func(
-        fnUid.make,
-        sym.nme,
-        params = pl,
-        resultNum = 1,
-        body = bBlock(body)(x => Node.Result(Ls(x)))(using new_ctx)
-      )
+      if !ctx.is_top_level then
+        errStop(msg"Non top-level definition ${sym.nme} not supported")
+      else if params.length != 1 then
+        errStop(msg"Curried function or zero arguments function not supported: ${params.length.toString}")
+      else 
+        val paramsList = params.head.params.map(x => x -> summon[Scope].allocateName(x.sym))
+        val ctx2 = paramsList.foldLeft(ctx)((acc, x) => acc.addName(getVar_!(x._1.sym), x._2 |> nme))
+        val ctx3 = ctx2.nonTopLevel
+        val pl = paramsList.map(_._2).map(nme)
+        Func(
+          fnUid.make,
+          sym.nme,
+          params = pl,
+          resultNum = 1,
+          body = bBlock(body)(x => Node.Result(Ls(x)))(using ctx3)
+        )
 
   private def bClsLikeDef(e: ClsLikeDefn)(using ctx: Ctx)(using Raise, Scope): ClassInfo =
     trace[ClassInfo](s"bClsLikeDef begin", x => s"bClsLikeDef end: ${x.show}"):
       val ClsLikeDefn(sym, kind, parentSym, methods, privateFields, publicFields, preCtor, ctor) = e
-      val clsDefn = sym.defn.getOrElse(die)
-      val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
-      val clsFields = publicFields.map(_.sym)
-      ClassInfo(
-        clsUid.make,
-        sym.nme,
-        clsParams.map(_.nme) ++ clsFields.map(_.nme),
-      )
+      if !ctx.is_top_level then
+        errStop(msg"Non top-level definition ${sym.nme} not supported")
+      else
+        val clsDefn = sym.defn.getOrElse(die)
+        val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
+        val clsFields = publicFields.map(_.sym)
+        ClassInfo(
+          clsUid.make,
+          sym.nme,
+          clsParams.map(_.nme) ++ clsFields.map(_.nme),
+        )
 
   private def bValue(v: Value)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bValue begin", x => s"bValue end: ${x.show}"):
@@ -166,17 +179,21 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         val v = fresh.make
         Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(name.name), Ls()), k(v |> sr))
       // field selection
-      case s @ Select(qual, name) => 
+      case s @ Select(qual, name) =>
         log(s"bPath Select: $qual.$name with ${s.symbol}")
-        bPath(qual):
-          case q: Expr.Ref =>
-            val v = fresh.make
-            val cls = ClassRef.fromName(ctx.findClassName(getClassOfMem(s.symbol.get)))
-            val field = name.name
-            Node.LetExpr(v, Expr.Select(q.name, cls, field), k(v |> sr))
-          case q: Expr.Literal =>
-            err(msg"Unsupported select on literal")
-            Node.Result(Ls())
+        s.symbol match
+          case None =>
+            errStop(msg"Unsupported selection by users")
+          case Some(value) =>
+            bPath(qual):
+              case q: Expr.Ref =>
+                val v = fresh.make
+                val cls = ClassRef.fromName(ctx.findClassName(getClassOfMem(s.symbol.get)))
+                val field = name.name
+                Node.LetExpr(v, Expr.Select(q.name, cls, field), k(v |> sr))
+              case q: Expr.Literal =>
+                err(msg"Unsupported select on literal")
+                Node.Result(Ls())
       case x: Value => bValue(x)(k)
 
   private def bResult(r: Result)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =

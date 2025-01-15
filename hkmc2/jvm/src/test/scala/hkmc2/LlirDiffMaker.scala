@@ -32,10 +32,15 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
       val cuid = FreshInt()
       val llb = LlirBuilder(tl)(fresh, fuid, cuid)
       given Ctx = Ctx.empty
-      val llirProg = llb.bProg(le)
-      output("LLIR:")
-      output(llirProg.show())
-      if scpp.isSet then
-        val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
-        output("\nCpp:")
-        output(cpp.toDocument.toString)
+      try
+        val llirProg = llb.bProg(le)
+        output("LLIR:")
+        output(llirProg.show())
+        if scpp.isSet then
+          val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
+          output("\nCpp:")
+          output(cpp.toDocument.toString)
+      catch
+        case e: LowLevelIRError =>
+          output("Stopped due to an error during the Llir generation")
+      

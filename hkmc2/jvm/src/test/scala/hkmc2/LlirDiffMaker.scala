@@ -18,6 +18,8 @@ import hkmc2.codegen.llir._
 
 abstract class LlirDiffMaker extends BbmlDiffMaker:
   val llir = NullaryCommand("llir")
+  val cpp = NullaryCommand("cpp")
+  val sllir = NullaryCommand("sllir")
   val scpp = NullaryCommand("scpp")
 
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
@@ -34,12 +36,14 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
       given Ctx = Ctx.empty
       try
         val llirProg = llb.bProg(le)
-        output("LLIR:")
-        output(llirProg.show())
-        if scpp.isSet then
+        if sllir.isSet then
+          output("LLIR:")
+          output(llirProg.show())
+        if cpp.isSet then
           val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
-          output("\nCpp:")
-          output(cpp.toDocument.toString)
+          if scpp.isSet then
+            output("\nCpp:")
+            output(cpp.toDocument.toString)
       catch
         case e: LowLevelIRError =>
           output("Stopped due to an error during the Llir generation")

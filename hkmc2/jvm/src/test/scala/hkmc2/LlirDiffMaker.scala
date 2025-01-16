@@ -26,10 +26,9 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val intl = NullaryCommand("intl")
   val wcpp = Command[Str]("wcpp", false)(x => x.stripLeading())
 
-  def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) = {
+  def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) =
     val p = new java.io.PrintWriter(f)
     try { op(p) } finally { p.close() }
-  }
 
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
     super.processTerm(trm, inImport)
@@ -53,12 +52,11 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
           if scpp.isSet then
             output("\nCpp:")
             output(cpp.toDocument.toString)
+          val auxPath =  os.Path(rootPath) / "hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
           if wcpp.isSet then
-            printToFile(java.io.File(s"hkmc2/shared/src/test/mlscript-compile/cpp/${wcpp.get.get}.cpp")) { p =>
-              p.println(cpp.toDocument.toString)
-            }
+            printToFile(java.io.File((auxPath / s"${wcpp.get.get}.cpp").toString)):
+               p => p.println(cpp.toDocument.toString)
           if rcpp.isSet then
-            val auxPath = os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
             val cppHost = CppCompilerHost(auxPath.toString, output.apply)
             if !cppHost.ready then
               output("\nCpp Compilation Failed: Cpp compiler or GNU Make not found")

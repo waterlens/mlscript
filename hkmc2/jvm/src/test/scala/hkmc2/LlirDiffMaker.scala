@@ -24,6 +24,12 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val scpp = NullaryCommand("scpp")
   val rcpp = NullaryCommand("rcpp")
   val intl = NullaryCommand("intl")
+  val wcpp = Command[Str]("wcpp", false)(x => x.stripLeading())
+
+  def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) = {
+    val p = new java.io.PrintWriter(f)
+    try { op(p) } finally { p.close() }
+  }
 
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
     super.processTerm(trm, inImport)
@@ -42,11 +48,15 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
         if sllir.isSet then
           output("LLIR:")
           output(llirProg.show())
-        if cpp.isSet || scpp.isSet || rcpp.isSet then
+        if cpp.isSet || scpp.isSet || rcpp.isSet || wcpp.isSet then
           val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
           if scpp.isSet then
             output("\nCpp:")
             output(cpp.toDocument.toString)
+          if wcpp.isSet then
+            printToFile(java.io.File(s"hkmc2/shared/src/test/mlscript-compile/cpp/${wcpp.get.get}.cpp")) { p =>
+              p.println(cpp.toDocument.toString)
+            }
           if rcpp.isSet then
             val auxPath = os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
             val cppHost = CppCompilerHost(auxPath.toString, output.apply)

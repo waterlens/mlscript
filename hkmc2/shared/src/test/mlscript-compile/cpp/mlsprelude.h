@@ -67,9 +67,6 @@ struct _mlsObject {
   virtual void destroy() = 0;
 };
 
-struct _mls_True;
-struct _mls_False;
-
 class _mlsValue {
   using uintptr_t = std::uintptr_t;
   using uint64_t = std::uint64_t;
@@ -123,23 +120,19 @@ class _mlsValue {
   }
 
   _mlsValue gtInt63(const _mlsValue &other) const {
-    return asInt63() > other.asInt63() ? _mlsValue::create<_mls_True>()
-                                       : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(asInt63() > other.asInt63());
   }
 
   _mlsValue ltInt63(const _mlsValue &other) const {
-    return asInt63() < other.asInt63() ? _mlsValue::create<_mls_True>()
-                                       : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(asInt63() < other.asInt63());
   }
 
   _mlsValue geInt63(const _mlsValue &other) const {
-    return asInt63() >= other.asInt63() ? _mlsValue::create<_mls_True>()
-                                        : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(asInt63() >= other.asInt63());
   }
 
   _mlsValue leInt63(const _mlsValue &other) const {
-    return asInt63() <= other.asInt63() ? _mlsValue::create<_mls_True>()
-                                        : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(asInt63() <= other.asInt63());
   }
 
 public:
@@ -174,6 +167,8 @@ public:
 
   static _mlsValue fromIntLit(uint64_t i) { return fromInt63(i); }
 
+  static _mlsValue fromBoolLit(bool b) { return fromInt63(b); }
+
   template <unsigned N> static tuple_type<_mlsValue, N> never() {
     __builtin_unreachable();
   }
@@ -207,8 +202,7 @@ public:
 
   _mlsValue operator==(const _mlsValue &other) const {
     if (isInt63() && other.isInt63())
-      return eqInt63(other) ? _mlsValue::create<_mls_True>()
-                            : _mlsValue::create<_mls_False>();
+      return _mlsValue::fromBoolLit(eqInt63(other));
     assert(false);
   }
 
@@ -355,34 +349,6 @@ struct _mls_Unit final : public _mlsObject {
   virtual void destroy() override {}
 };
 
-struct _mls_Boolean : public _mlsObject {};
-
-struct _mls_True final : public _mls_Boolean {
-  constexpr static inline const char *typeName = "True";
-  constexpr static inline uint32_t typeTag = nextTypeTag();
-  virtual void print() const override { std::printf(typeName); }
-  static _mlsValue create() {
-    static _mls_True mlsTrue alignas(_mlsAlignment);
-    mlsTrue.refCount = stickyRefCount;
-    mlsTrue.tag = typeTag;
-    return _mlsValue(&mlsTrue);
-  }
-  virtual void destroy() override {}
-};
-
-struct _mls_False final : public _mls_Boolean {
-  constexpr static inline const char *typeName = "False";
-  constexpr static inline uint32_t typeTag = nextTypeTag();
-  virtual void print() const override { std::printf(typeName); }
-  static _mlsValue create() {
-    static _mls_False mlsFalse alignas(_mlsAlignment);
-    mlsFalse.refCount = stickyRefCount;
-    mlsFalse.tag = typeTag;
-    return _mlsValue(&mlsFalse);
-  }
-  virtual void destroy() override {}
-};
-
 #include <boost/multiprecision/gmp.hpp>
 
 struct _mls_ZInt final : public _mlsObject {
@@ -402,7 +368,7 @@ struct _mls_ZInt final : public _mlsObject {
   static _mlsValue create() {
     auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_ZInt;
     _mlsVal->refCount = 1;
-    _mlsVal->tag = typeTag;
+    _mlsVal->tag = typeTag; 
     return _mlsValue(_mlsVal);
   }
   static _mlsValue create(_mlsValue z) {
@@ -443,28 +409,23 @@ struct _mls_ZInt final : public _mlsObject {
   }
 
   _mlsValue operator==(const _mls_ZInt &other) const {
-    return z == other.z ? _mlsValue::create<_mls_True>()
-                        : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(z == other.z);
   }
 
   _mlsValue operator>(const _mls_ZInt &other) const {
-    return z > other.z ? _mlsValue::create<_mls_True>()
-                       : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(z > other.z);
   }
 
   _mlsValue operator<(const _mls_ZInt &other) const {
-    return z < other.z ? _mlsValue::create<_mls_True>()
-                       : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(z < other.z);
   }
 
   _mlsValue operator>=(const _mls_ZInt &other) const {
-    return z >= other.z ? _mlsValue::create<_mls_True>()
-                        : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(z >= other.z);
   }
 
   _mlsValue operator<=(const _mls_ZInt &other) const {
-    return z <= other.z ? _mlsValue::create<_mls_True>()
-                        : _mlsValue::create<_mls_False>();
+    return _mlsValue::fromBoolLit(z <= other.z);
   }
 
   _mlsValue toInt() const {

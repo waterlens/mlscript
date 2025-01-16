@@ -38,19 +38,19 @@ final case class Ctx(
   def addFuncName(n: Local, m: Name) = copy(fn_ctx = fn_ctx + (n -> m))
   def findFuncName(n: Local)(using Raise) = fn_ctx.get(n) match
     case None =>
-      err(msg"Function name not found: ${n.toString()}")
+      errStop(msg"Function name not found: ${n.toString()}")
       Name("error")
     case Some(value) => value
   def addClassName(n: Local, m: Name) = copy(class_ctx = class_ctx + (n -> m))
   def findClassName(n: Local)(using Raise) = class_ctx.get(n) match
     case None =>
-      err(msg"Class name not found: ${n.toString()}")
+      errStop(msg"Class name not found: ${n.toString()}")
       Name("error")
     case Some(value) => value
   def addName(n: Str, m: Name) = copy(symbol_ctx = symbol_ctx + (n -> m))
   def findName(n: Str)(using Raise): Name = symbol_ctx.get(n) match
     case None =>
-      err(msg"Name not found: $n")
+      errStop(msg"Name not found: $n")
       Name("error")
     case Some(value) => value
   def reset =
@@ -88,7 +88,6 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
           ts.id.name
       case ts: semantics.BlockMemberSymbol => // this means it's a locally-defined member
         ts.nme
-        // ts.trmTree
       case ts: semantics.InnerSymbol =>
         summon[Scope].findThis_!(ts)
       case _ => summon[Scope].lookup_!(l)
@@ -161,10 +160,10 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
     trace[Node](s"bValue begin", x => s"bValue end: ${x.show}"):
       v match
       case Value.Ref(l) => k(ctx.findName(getVar_!(l)) |> sr)
-      case Value.This(sym) => err(msg"Unsupported value: This"); Node.Result(Ls())
+      case Value.This(sym) => errStop(msg"Unsupported value: This"); Node.Result(Ls())
       case Value.Lit(lit) => k(Expr.Literal(lit))
-      case Value.Lam(params, body) => err(msg"Unsupported value: Lam"); Node.Result(Ls())
-      case Value.Arr(elems) => err(msg"Unsupported value: Arr"); Node.Result(Ls())
+      case Value.Lam(params, body) => errStop(msg"Unsupported value: Lam"); Node.Result(Ls())
+      case Value.Arr(elems) => errStop(msg"Unsupported value: Arr"); Node.Result(Ls())
   
   private def getClassOfMem(p: FieldSymbol)(using ctx: Ctx)(using Raise, Scope): Local =
     trace[Local](s"bMemSym begin", x => s"bMemSym end: $x"):
@@ -192,7 +191,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
                 val field = name.name
                 Node.LetExpr(v, Expr.Select(q.name, cls, field), k(v |> sr))
               case q: Expr.Literal =>
-                err(msg"Unsupported select on literal")
+                errStop(msg"Unsupported select on literal")
                 Node.Result(Ls())
       case x: Value => bValue(x)(k)
 
@@ -239,7 +238,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
             val v = fresh.make
             Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(name.name), args), k(v |> sr))
       case Instantiate(cls, args) =>
-        err(msg"Unsupported kind of Instantiate")
+        errStop(msg"Unsupported kind of Instantiate")
         Node.Result(Ls())
       case x: Path => bPath(x)(k)
 
@@ -250,31 +249,28 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         bPath(scrut):
           case e: TrivialExpr =>
             val jp = fresh.make("j")
-            // guess: the value of Match itself in Block is useless
-            // val res = fresh.make
             val fvset = (rest.freeVars -- rest.definedVars).map(allocIfNew)
             val fvs1 = fvset.toList
             val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, fresh.make))
             val fvs = fvs1.map(new_ctx.findName(_))
-            def cont(x: TrivialExpr)(using Ctx) = Node.Jump(
+            def cont(x: TrivialExpr)(using ctx: Ctx) = Node.Jump(
               FuncRef.fromName(jp),
-              /* x :: */ fvs1.map(x => summon[Ctx].findName(x)).map(sr)
+              fvs1.map(x => ctx.findName(x)).map(sr)
             )
-            given Ctx = new_ctx
             val casesList: Ls[(Pat, Node)] = arms.map:
               case (Case.Lit(lit), body) =>
-                (Pat.Lit(lit), bBlock(body)(cont))
+                (Pat.Lit(lit), bBlock(body)(cont)(using ctx))
               case (Case.Cls(cls, _), body) =>
-                (Pat.Class(ClassRef.fromName(cls.nme)), bBlock(body)(cont))
+                (Pat.Class(ClassRef.fromName(cls.nme)), bBlock(body)(cont)(using ctx))
               case (Case.Tup(len, inf), body) =>
-                (Pat.Class(ClassRef.fromName("Tuple" + len.toString())), bBlock(body)(cont))
+                (Pat.Class(ClassRef.fromName("Tuple" + len.toString())), bBlock(body)(cont)(using ctx))
             val defaultCase = dflt.map(bBlock(_)(cont))
             val jpdef = Func(
               fnUid.make,    
               jp.str,
-              params = /* res :: */ fvs,
+              params = fvs,
               resultNum = 1,
-              bBlock(rest)(k),
+              bBlock(rest)(k)(using new_ctx),
             )
             summon[Ctx].def_acc += jpdef
             Node.Case(e, casesList, defaultCase)
@@ -319,7 +315,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
       case End(msg) => k(Expr.Literal(Tree.UnitLit(false)))
       case _: Block =>
         val docBlock = blk.showAsTree
-        err(msg"Unsupported block: $docBlock")
+        errStop(msg"Unsupported block: $docBlock")
         Node.Result(Ls())
 
   def bProg(e: Program)(using Raise, Scope): LlirProgram =

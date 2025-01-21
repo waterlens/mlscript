@@ -156,7 +156,7 @@ const Predef$class = class Predef {
     return string2.slice(n) ?? null;
   } 
   checkArgs(functionName, expected, isUB, got) {
-    let scrut, name, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
+    let scrut, name, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11;
     tmp = got < expected;
     tmp1 = got > expected;
     tmp2 = isUB && tmp1;
@@ -172,10 +172,16 @@ const Predef$class = class Predef {
       name = tmp4;
       tmp5 = "Function" + name;
       tmp6 = tmp5 + " expected ";
-      tmp7 = tmp6 + expected;
-      tmp8 = tmp7 + " arguments but got ";
-      tmp9 = tmp8 + got;
-      throw globalThis.Error(tmp9) ?? null;
+      if (isUB) {
+        tmp7 = "";
+      } else {
+        tmp7 = "at least ";
+      }
+      tmp8 = tmp6 + tmp7;
+      tmp9 = tmp8 + expected;
+      tmp10 = " argument(s) but got " + got;
+      tmp11 = tmp9 + tmp10;
+      throw globalThis.Error(tmp11) ?? null;
     } else {
       return null;
     }

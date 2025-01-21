@@ -383,7 +383,14 @@ class Lexer(origin: Origin, dbg: Bool)(using raise: Raise):
         case (CLOSE_BRACKET(k1), l1) :: rest =>
           stack match
             case ((Indent, loc), oldAcc) :: _ if k1 =/= Indent =>
-              go(CLOSE_BRACKET(Indent) -> l1.left :: toks, false, stack, acc)
+              // * Sometimes, open/close parentheses are interleaved with indent/deindent; eg in
+              // *   module P with
+              // *     (
+              // *       2)
+              // *     1
+              // * which results in token stream `|module| |P| |with|→|(|→|2|)|←|↵|1|`.
+              // * So this code commutes the indent/deindent with the open/close parentheses.
+              go(CLOSE_BRACKET(Indent) -> l1.left :: (CLOSE_BRACKET(k1), l1) :: OPEN_BRACKET(Indent) -> l1.right :: rest, false, stack, acc)
             case ((Indent, loc), oldAcc) :: stack
             if k1 === Indent && acc.forall { case (SPACE | NEWLINE, _) => true; case _ => false } =>
               // * Ignore empty indented blocks:

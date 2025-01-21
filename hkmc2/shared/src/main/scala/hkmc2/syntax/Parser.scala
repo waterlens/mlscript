@@ -126,7 +126,19 @@ abstract class Parser(
     doPrintDbg("│ " * this.indent + msg)
   
   protected var indent = 0
-  private var _cur: Ls[TokLoc] = tokens
+  private var _cur: Ls[TokLoc] = expandSuspensions(tokens)
+  
+  // * Expands end-of-line suspensions that introduce implied indentation.
+  private def expandSuspensions(tokens: Ls[TokLoc]): Ls[TokLoc] = tokens match
+    case (SUSPENSION(true), l0) :: (NEWLINE, l1) :: rest =>
+      val outerLoc = l0.left ++ rest.lastOption.map(_._2.right)
+      val innerLoc = l1.right ++ rest.lastOption.map(_._2.left)
+      BRACKETS(Indent, expandSuspensions(rest))(innerLoc) -> outerLoc :: Nil
+    case tl :: rest =>
+      val rest2 = expandSuspensions(rest)
+      if rest2 is rest then tokens
+      else tl :: rest2
+    case Nil => tokens
   
   private def wrap[R](args: => Any)(using l: Line, n: Name)(mkRes: => R): R =
     printDbg(s"@ ${n.value}${args match {

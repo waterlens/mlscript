@@ -373,13 +373,17 @@ class Lowering(using TL, Raise, Elaborator.State):
       subTerm(lhs): ref =>
         subTerm(rhs): value =>
           AssignField(ref, Tree.Ident("value"), value, k(value))(N)
-
+    case Neg(_) =>
+      raise(ErrorReport(
+        msg"Unexpected type annotations ${t.show}" ->
+        t.toLoc :: Nil,
+        source = Diagnostic.Source.Compilation))
+      End("error")
     case Annotated(prefix, receiver) => 
       raise(WarningReport(
         msg"This annotation has no effect." -> prefix.toLoc ::
         msg"Annotations are not supported on ${receiver.describe} terms." -> receiver.toLoc :: Nil))
       term(receiver)(k)
-    
     case Error => End("error")
     
     // case _ =>

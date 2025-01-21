@@ -365,6 +365,8 @@ sealed abstract class Elem:
     case Fld(_, term, asc) => term :: asc.toList
     case Spd(_, term) => term :: Nil
   def showDbg: Str
+object Elem:
+  given Conversion[Term, Elem] = PlainFld(_)
 final case class Fld(flags: FldFlags, term: Term, asc: Opt[Term]) extends Elem with FldImpl
 object PlainFld:
   def apply(term: Term) = Fld(FldFlags.empty, term, N)

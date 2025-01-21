@@ -117,7 +117,11 @@ object Elaborator:
     val globalThisSymbol = TopLevelSymbol("globalThis")
     val builtinOpsMap =
       val baseBuiltins = builtins.map: op =>
-          op -> BuiltinSymbol(op, binary = binaryOps(op), unary = unaryOps(op), nullary = false, functionLike = anyOps(op))
+          op -> BuiltinSymbol(op,
+            binary = binaryOps(op),
+            unary = unaryOps(op),
+            nullary = false,
+            functionLike = anyOps(op))
         .toMap
       baseBuiltins ++ aliasOps.map:
         case (alias, base) => alias -> baseBuiltins(base)

@@ -177,7 +177,8 @@ type FieldSymbol = TermSymbol | MemberSymbol[?]
 sealed trait InnerSymbol extends Symbol
 
 class ClassSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
-    extends MemberSymbol[ClassDef] with CtorSymbol with InnerSymbol:
+    extends MemberSymbol[ClassDef] with CtorSymbol with InnerSymbol with NamedSymbol:
+  def name: Str = nme
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of classe here
   override def toString: Str = s"class:$nme${State.dbgUid(uid)}"
@@ -185,7 +186,8 @@ class ClassSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
   def arity: Int = tree.paramLists.headOption.fold(0)(_.fields.length)
 
 class ModuleSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
-    extends MemberSymbol[ModuleDef] with CtorSymbol with InnerSymbol:
+    extends MemberSymbol[ModuleDef] with CtorSymbol with InnerSymbol with NamedSymbol:
+  def name: Str = nme
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of module here
   override def toString: Str = s"module:${id.name}${State.dbgUid(uid)}"
@@ -195,11 +197,20 @@ class TypeAliasSymbol(val id: Tree.Ident)(using State) extends MemberSymbol[Type
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of type alias here
   override def toString: Str = s"module:${id.name}${State.dbgUid(uid)}"
 
-class PatternSymbol(val id: Tree.Ident)(using State)
+class PatternSymbol(val id: Tree.Ident, val params: Opt[Tree.Tup], val body: Tree)(using State)
     extends MemberSymbol[PatternDef] with CtorSymbol with InnerSymbol:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of pattern here
   override def toString: Str = s"pattern:${id.name}"
+  /** The desugared nameless split. */
+  private var _split: Opt[ucs.DeBrujinSplit] = N
+  def split_=(split: ucs.DeBrujinSplit): Unit = _split = S(split)
+  def split: ucs.DeBrujinSplit = _split.getOrElse:
+    lastWords(s"found unelaborated pattern: $nme")
+  /** The list of pattern parameters, for example,
+    * `T` in `pattern Nullable(pattern T) = null | T`.
+    */
+  var patternParams: Ls[Param] = Nil
 
 class TopLevelSymbol(blockNme: Str)(using State)
     extends MemberSymbol[ModuleDef] with InnerSymbol:

@@ -24,7 +24,7 @@ const Predef$class = class Predef {
       indent() {
         let scrut, prev, tmp;
         scrut = this.enabled;
-        if (scrut) {
+        if (scrut === true) {
           prev = this.indentLvl;
           tmp = prev + 1;
           this.indentLvl = tmp;
@@ -36,7 +36,7 @@ const Predef$class = class Predef {
       resetIndent(n) {
         let scrut;
         scrut = this.enabled;
-        if (scrut) {
+        if (scrut === true) {
           this.indentLvl = n;
           return null;
         } else {
@@ -46,7 +46,7 @@ const Predef$class = class Predef {
       log(msg) {
         let scrut, tmp, tmp1, tmp2, tmp3, tmp4;
         scrut = this.enabled;
-        if (scrut) {
+        if (scrut === true) {
           tmp = "| ".repeat(this.indentLvl) ?? null;
           tmp1 = "  ".repeat(this.indentLvl) ?? null;
           tmp2 = "\n" + tmp1;
@@ -157,7 +157,7 @@ const Predef$class = class Predef {
       len = rest.length;
       tmp4: while (true) {
         scrut = i2 < len;
-        if (scrut) {
+        if (scrut === true) {
           tmp = rest.at(i2) ?? null;
           tmp1 = f9(init, tmp) ?? null;
           init = tmp1;
@@ -178,7 +178,7 @@ const Predef$class = class Predef {
       let len, i2, init, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
       len = rest.length;
       scrut1 = len == 0;
-      if (scrut1) {
+      if (scrut1 === true) {
         return first;
       } else {
         tmp = len - 1;
@@ -187,7 +187,7 @@ const Predef$class = class Predef {
         init = tmp1;
         tmp6: while (true) {
           scrut = i2 > 0;
-          if (scrut) {
+          if (scrut === true) {
             tmp2 = i2 - 1;
             i2 = tmp2;
             tmp3 = rest.at(i2) ?? null;
@@ -219,9 +219,9 @@ const Predef$class = class Predef {
     tmp1 = got > expected;
     tmp2 = isUB && tmp1;
     scrut = tmp || tmp2;
-    if (scrut) {
+    if (scrut === true) {
       scrut1 = functionName.length > 0;
-      if (scrut1) {
+      if (scrut1 === true) {
         tmp3 = " '" + functionName;
         tmp4 = tmp3 + "'";
       } else {
@@ -231,13 +231,13 @@ const Predef$class = class Predef {
       tmp5 = this.fold((arg1, arg2) => {
         return arg1 + arg2;
       });
-      if (isUB) {
+      if (isUB === true) {
         tmp6 = "";
       } else {
         tmp6 = "at least ";
       }
       scrut2 = expected === 1;
-      if (scrut2) {
+      if (scrut2 === true) {
         tmp7 = "";
       } else {
         tmp7 = "s";

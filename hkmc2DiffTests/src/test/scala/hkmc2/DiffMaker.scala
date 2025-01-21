@@ -120,12 +120,13 @@ abstract class DiffMaker:
   
   val tests = Command("tests"):
     case "" =>
-      new DiffTestRunner(
-        // * I don't understand why when I use `new` here
-        // * the test framework seems to reinstantiate `State` for every test
-        // new DiffTestRunner.State
-        DiffTestRunner.State
-      ){}.execute()
+      // * Note that making `DiffTestRunnerBase` extend `ParallelTestExecution`,
+      // * as we used to do, is quite dangerous, because of the way ScalaTest works (which is pretty dumb):
+      // * it would try to re-instantiate the test classes haphazardly without passing it any arguments,
+      // * which either crashes (as it would here) or recomputes the state every time
+      // * (as would be the case if we created an anonymous subclass here),
+      // * even when the tests, when run with `execute()`, are not run in parallel (also for dumb reasons).
+      DiffTestRunnerBase(new DiffTestRunner.StateWithGit).execute()
   
   
   val fileName = file.last
@@ -198,7 +199,8 @@ abstract class DiffMaker:
           failures += globalStartLineNum
           unexpected("warning", blockLineNum, d.mkExtraInfo)
       case Diagnostic.Kind.Internal =>
-        failures += globalStartLineNum
+        if !tolerateErrors then
+          failures += globalStartLineNum
         // unexpected("internal error", blockLineNum)
         throw d
       report(blockLineNum, d :: Nil, showRelativeLineNums.isSet)

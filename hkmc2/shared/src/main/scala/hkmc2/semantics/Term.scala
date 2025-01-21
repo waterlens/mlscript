@@ -352,7 +352,12 @@ final case class FldFlags(mut: Bool, spec: Bool, genGetter: Bool, mod: Bool):
     flags.mkString(" ")
   override def toString: String = "‹" + showDbg + "›"
 
-object FldFlags { val empty: FldFlags = FldFlags(false, false, false, false) }
+object FldFlags:
+  val empty: FldFlags = FldFlags(false, false, false, false)
+  object benign:
+    // * Some flags like `mut` and `module` are "benign" in the sense that they don't affect code-gen
+    def unapply(flags: FldFlags): Bool =
+      !flags.spec && !flags.genGetter
 
 
 sealed abstract class Elem:

@@ -1,0 +1,72 @@
+:js
+:handler
+import "../../mlscript-compile/Stack.mls"
+open Stack
+
+class Generator with
+  fun produce(result: Stack[Int]): ()
+
+fun (++) concat(l1, l2) =
+  if l1 is 
+    Nil then l2
+    Cons(h, t) then Cons(h, t ++ l2)
+
+fun (:+) append(l, e) =
+  if l is 
+    Nil then e :: Nil
+    Cons(h, t) then h :: t :+ e
+
+fun length(l) =
+  if l is
+    Nil then 0
+    Cons(_, t) then 1 + length(t)
+
+fun permutations_impl(gen, l1, l2) =
+  if l2 is
+    Nil and
+      l1 is Nil then gen.produce(Nil)
+      else ()
+    Cons(f, t) then
+      handle gen2 = Generator with
+        fun produce(result)(resume) =
+          gen.produce(f :: result)
+          resume(())
+      permutations_impl(gen2, Nil, l1 ++ t)
+      permutations_impl(gen, l1 :+ f, t)
+
+fun permutations(gen, l) =
+  permutations_impl(gen, Nil, l)
+
+let result =
+  handle gen = Generator with
+    fun produce(result)(resume) =
+      print(result)
+      let r = resume(())
+      result :: r
+  permutations(gen, 1 :: 2 :: 3 :: 4 :: Nil), Nil
+in length(result)
+//│ > Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+//│ > Cons(1, Cons(2, Cons(4, Cons(3, Nil))))
+//│ > Cons(1, Cons(3, Cons(2, Cons(4, Nil))))
+//│ > Cons(1, Cons(3, Cons(4, Cons(2, Nil))))
+//│ > Cons(1, Cons(4, Cons(2, Cons(3, Nil))))
+//│ > Cons(1, Cons(4, Cons(3, Cons(2, Nil))))
+//│ > Cons(2, Cons(1, Cons(3, Cons(4, Nil))))
+//│ > Cons(2, Cons(1, Cons(4, Cons(3, Nil))))
+//│ > Cons(2, Cons(3, Cons(1, Cons(4, Nil))))
+//│ > Cons(2, Cons(3, Cons(4, Cons(1, Nil))))
+//│ > Cons(2, Cons(4, Cons(1, Cons(3, Nil))))
+//│ > Cons(2, Cons(4, Cons(3, Cons(1, Nil))))
+//│ > Cons(3, Cons(1, Cons(2, Cons(4, Nil))))
+//│ > Cons(3, Cons(1, Cons(4, Cons(2, Nil))))
+//│ > Cons(3, Cons(2, Cons(1, Cons(4, Nil))))
+//│ > Cons(3, Cons(2, Cons(4, Cons(1, Nil))))
+//│ > Cons(3, Cons(4, Cons(1, Cons(2, Nil))))
+//│ > Cons(3, Cons(4, Cons(2, Cons(1, Nil))))
+//│ > Cons(4, Cons(1, Cons(2, Cons(3, Nil))))
+//│ > Cons(4, Cons(1, Cons(3, Cons(2, Nil))))
+//│ > Cons(4, Cons(2, Cons(1, Cons(3, Nil))))
+//│ > Cons(4, Cons(2, Cons(3, Cons(1, Nil))))
+//│ > Cons(4, Cons(3, Cons(1, Cons(2, Nil))))
+//│ > Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+//│ = 24

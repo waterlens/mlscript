@@ -52,7 +52,7 @@ enum Tree extends AutoLocated:
   case Block(stmts: Ls[Tree])(using State) extends Tree with semantics.BlockImpl
   case OpBlock(items: Ls[Tree -> Tree])
   case LetLike(kw: Keyword.letLike, lhs: Tree, rhs: Opt[Tree], body: Opt[Tree])
-  case Handle(lhs: Tree, cls: Tree, defs: Tree, body: Opt[Tree])
+  case Hndl(lhs: Tree, cls: Tree, defs: Tree, body: Opt[Tree])
   case Def(lhs: Tree, rhs: Tree)
   case TermDef(k: TermDefKind, head: Tree, rhs: Opt[Tree]) extends Tree with TermDefImpl
   case TypeDef(k: TypeDefKind, head: Tree, extension: Opt[Tree], body: Opt[Tree])(using State) extends Tree with TypeDefImpl
@@ -88,7 +88,7 @@ enum Tree extends AutoLocated:
     case OpBlock(items) => items.flatMap:
       case (op, body) => op :: body :: Nil
     case LetLike(kw, lhs, rhs, body) => lhs :: Nil ++ rhs ++ body
-    case Handle(lhs, rhs, defs, body) => body match
+    case Hndl(lhs, rhs, defs, body) => body match
       case Some(value) => lhs :: rhs :: defs :: value :: Nil
       case None => lhs :: rhs :: defs :: Nil
     case TypeDef(k, head, extension, body) =>
@@ -151,7 +151,7 @@ enum Tree extends AutoLocated:
     case RegRef(reg, value) => "region reference"
     case Effectful(eff, body) => "effectful"
     case Outer(_) => "outer binding"
-    case Handle(_, _, _, _) => "handle"
+    case Hndl(_, _, _, _) => "handle"
     case Def(lhs, rhs) => "defining assignment"
     case Spread(_, _, _) => "spread"
     case Annotated(_, _) => "annotated"

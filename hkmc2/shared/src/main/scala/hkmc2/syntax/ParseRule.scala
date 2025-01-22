@@ -227,7 +227,7 @@ class ParseRules(using State):
                       End(None)
                     )
                 ) { case (rhs, (S(defs), body)) => (rhs, defs, body) }
-        ) { case (lhs, (rhs, defs, body))=> Handle(lhs, rhs, defs, body) }
+        ) { case (lhs, (rhs, defs, body))=> Hndl(lhs, rhs, defs, body) }
     ,
     Kw(`new`):
       ParseRule("`new` keyword")(

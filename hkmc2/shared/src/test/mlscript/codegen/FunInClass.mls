@@ -146,4 +146,33 @@ Foo(123)
 //│ this.Foo(123)
 //│ = Foo { a: 123 }
 
-
+:sjs
+class Bar(x) with
+  fun foo()() =
+    fun bar() =
+      x
+    bar()
+  foo()()
+Bar(1)
+//│ JS (unsanitized):
+//│ this.Bar = function Bar(x1) { return new Bar.class(x1); };
+//│ this.Bar.class = class Bar {
+//│   constructor(x) {
+//│     this.x = x;
+//│     let tmp;
+//│     tmp = this.foo();
+//│     tmp() ?? null
+//│   }
+//│   foo() {
+//│     return () => {
+//│       const this$Bar = this;
+//│       function bar() {
+//│         return this$Bar.x;
+//│       }
+//│       return bar();
+//│     };
+//│   }
+//│   toString() { return "Bar(" + this.x + ")"; }
+//│ };
+//│ this.Bar(1)
+//│ = Bar { x: 1 }

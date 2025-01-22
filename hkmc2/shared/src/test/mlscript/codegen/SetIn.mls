@@ -33,12 +33,13 @@ x
 :sjs
 set x += 1 in log(x)
 //│ JS (unsanitized):
-//│ let old, tmp, tmp1;
+//│ let old, tmp, tmp1, tmp2;
 //│ old = this.x;
 //│ try {
 //│   tmp1 = this.x + 1;
 //│   this.x = tmp1;
-//│   tmp = this.log(this.x);
+//│   tmp2 = this.log(this.x);
+//│   tmp = tmp2;
 //│ } finally {
 //│   this.x = old;
 //│ }
@@ -79,7 +80,7 @@ fun example() =
 example()
 //│ JS (unsanitized):
 //│ function example() {
-//│   let x, get_x, old, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+//│   let x, get_x, old, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
 //│   x = 0;
 //│   get_x = () => {
 //│     return x;
@@ -91,13 +92,14 @@ example()
 //│     tmp2 = globalThis.log(x);
 //│     tmp3 = (tmp2 , globalThis.log);
 //│     tmp4 = get_x() ?? null;
-//│     tmp = tmp3(tmp4) ?? null;
+//│     tmp5 = tmp3(tmp4) ?? null;
+//│     tmp = tmp5;
 //│   } finally {
 //│     x = old;
 //│   }
-//│   tmp5 = globalThis.log(x);
-//│   tmp6 = get_x() ?? null;
-//│   return globalThis.log(tmp6);
+//│   tmp6 = globalThis.log(x);
+//│   tmp7 = get_x() ?? null;
+//│   return globalThis.log(tmp7);
 //│ }
 //│ this.example()
 //│ > 1
@@ -117,7 +119,7 @@ fun example() =
 example()
 //│ JS (unsanitized):
 //│ function example() {
-//│   let x, get_x, y, old, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+//│   let x, get_x, y, old, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
 //│   x = 0;
 //│   get_x = () => {
 //│     return x;
@@ -127,14 +129,15 @@ example()
 //│     tmp1 = x + 1;
 //│     x = tmp1;
 //│     tmp2 = globalThis.log(x);
-//│     tmp = (tmp2 , x);
+//│     tmp3 = (tmp2 , x);
+//│     tmp = tmp3;
 //│   } finally {
 //│     x = old;
 //│   }
 //│   y = tmp;
-//│   tmp3 = globalThis.log(x);
-//│   tmp4 = get_x() ?? null;
-//│   tmp5 = globalThis.log(tmp4);
+//│   tmp4 = globalThis.log(x);
+//│   tmp5 = get_x() ?? null;
+//│   tmp6 = globalThis.log(tmp5);
 //│   return y;
 //│ }
 //│ this.example()

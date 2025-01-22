@@ -1,0 +1,69 @@
+:js
+:handler
+
+
+abstract class Effect[A] with
+  fun perform(arg: A): A
+
+
+:re
+let
+  xs = []
+  count = 0
+fun main() =
+  handle g = Effect with
+    fun perform(arg1)(k1) =
+      print("B " + arg1)
+      xs.push(k1)
+  print(g.perform("a"))
+  print("—")
+  print(g.perform("b"))
+  print("—")
+  print(g.perform("c"))
+main()
+while xs.pop() is
+  null then "Done."
+  f then
+    set count += 1
+    f(count)
+    print("?")
+//│ > B a
+//│ > 1
+//│ > —
+//│ ═══[RUNTIME ERROR] Error: Unhandled effects
+//│ count = 1
+//│ xs = []
+
+
+:re
+handle h = Effect with
+  fun perform(arg)(k) =
+    print("A " + arg)
+    let
+      xs = []
+      count = 0
+    handle g = Effect with
+      fun perform(arg1)(k1) =
+        print("B " + arg + " " + arg1)
+        xs.push(k1)
+    k(g)
+    while xs.pop() is
+      null then "Done."
+      f then
+        set count += 1
+        f(count)
+let g = h.perform("hi")
+print(g.perform("a"))
+print("—")
+print(g.perform("b"))
+print("—")
+print(g.perform("c"))
+// set g = h.perform("hola")
+// g.perform("adios")
+//│ > A hi
+//│ > B hi a
+//│ > 1
+//│ > —
+//│ ═══[RUNTIME ERROR] Error: Unhandled effects
+
+

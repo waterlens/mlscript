@@ -113,4 +113,139 @@ class Test with
   print("Test")
   val y = 1
 
+// Private definitions for algebraic effects
 
+abstract class __Cont(next) with
+  fun resume(value)
+
+class __List(next)
+
+class __ListWithTail(next, tail) with
+  fun append(elem) =
+    set tail.next = elem
+    set tail = elem
+fun __mkListWithTail() =
+  let res = new __ListWithTail(null, null)
+  set res.tail = res
+  res
+
+class __HandleBlock(contHead, lastHandlerCont, next, handler)
+
+class __EffectSig(next, tail, handleBlockList, resumed, handler, handlerFun)
+class __Return(value)
+
+fun __mkEffect(handler, handlerFun) =
+  let res = new __EffectSig(null, null, __mkListWithTail(), false, handler, handlerFun)
+  set res.tail = res
+  res
+
+fun __handleBlockImpl(cur, handler) =
+  let handleBlock = new __HandleBlock(__List(null), null, null, handler)
+  cur.handleBlockList.append(handleBlock)
+  while cur is
+    __EffectSig then
+      let nxt = __handleEffect(cur)
+      if cur === nxt then
+        // handler not found, begin unwinding
+        if handleBlock.lastHandlerCont === null then
+          set cur.tail = handleBlock.contHead
+        else
+          set cur.tail = handleBlock.lastHandlerCont
+        return cur
+      else
+        set cur = nxt
+    else
+      return cur
+
+// return either new effect, final result or the same continuation if there is no handler
+fun __handleEffect(cur) =
+  // find the handle block corresponding to the current effect
+  let prevBlock = cur.handleBlockList
+  while prevBlock.next is __HandleBlock and prevBlock.next.handler !== cur.handler do
+    set prevBlock = prevBlock.next
+
+  // no matching handle block
+  if prevBlock.next === null do
+    return cur
+
+  // the matching handle block
+  let handleBlock = prevBlock.next
+
+  // unlink the unrelated handle blocks, which is never null
+  let origTailBlock = cur.handleBlockList.tail
+  set
+    prevBlock.next = null
+    cur.handleBlockList.tail = prevBlock
+
+  // handle the effect, where the handler continuation will be appended to handleBlock.contHead.next
+  let savedNext = handleBlock.contHead.next
+  set cur = cur.handlerFun(__resume(cur, handleBlock.contHead))
+  if savedNext !== handleBlock.contHead.next do
+    set handleBlock.contHead.next.next = savedNext
+    // for the handle block at the bottom of the stack, this is used for unwinding
+    // otherwise it is unused and it is fine to set it here as well
+    if handleBlock.lastHandlerCont === null do
+      set handleBlock.lastHandlerCont = handleBlock.contHead.next
+
+  if cur is __EffectSig then
+    // relink the unlinked handle blocks
+    set
+      cur.handleBlockList.tail.next = handleBlock
+      cur.handleBlockList.tail = origTailBlock
+    cur
+  else
+    // resume the unlinked handle blocks
+    __resumeHandleBlocks(handleBlock, origTailBlock, cur)
+
+fun __resume(cur, tail)(value) =
+  if cur.resumed do
+    throw Error("Multiple resumption")
+  set cur.resumed = true
+
+  let cont = cur.next
+  while
+    cont is __Cont do
+      set value = cont.resume(value)
+      if value is __EffectSig then
+        // we are returning to handler, which performs unwinding so tail is needed
+        set value.tail = tail
+        if cur.handleBlockList.next !== null do
+          set
+            value.handleBlockList.tail.next = cur.handleBlockList.next
+            value.handleBlockList.tail = cur.handleBlockList.tail
+        return value
+      else
+        set cont = cont.next
+
+  // We're done with the head, now resume the handle blocks
+  if cur.handleBlockList.next === null then
+    value
+  else
+    set cur = __resumeHandleBlocks(cur.handleBlockList.next, cur.handleBlockList.tail, value)
+    if cur is __EffectSig do
+      set cur.tail = tail
+    cur
+
+// this does not set the tail when effect is raised during resumption
+fun __resumeHandleBlocks(handleBlock, tailHandleBlock, value) =
+  while
+    handleBlock.contHead.next is __Cont then
+      // resuming tailHandlerList or post handler continuations
+      set value = handleBlock.contHead.next.resume(value)
+      if value is __EffectSig then
+        // this checks when continuation resume results in tail call to effectful func
+        if handleBlock.contHead.next !== value.tail.next do
+          // if this is a tail call that results in effect, the continuation is already completed
+          // and should be removed
+          set handleBlock.contHead.next = handleBlock.contHead.next.next
+        set
+          value.tail.next = null
+          value.handleBlockList.tail.next = handleBlock
+          value.handleBlockList.tail = tailHandleBlock
+        return value
+      else
+        set handleBlock.contHead.next = handleBlock.contHead.next.next
+    handleBlock.next is __HandleBlock then
+      set handleBlock = handleBlock.next
+    else
+      return value

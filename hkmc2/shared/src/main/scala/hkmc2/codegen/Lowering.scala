@@ -2,19 +2,20 @@ package hkmc2
 package codegen
 
 import scala.language.implicitConversions
+import scala.annotation.tailrec
 
 import mlscript.utils.*, shorthands.*
 import utils.*
 
 import hkmc2.Message.MessageContext
 
+import semantics.*
 import hkmc2.{semantics => sem}
-import hkmc2.semantics.{Term => st}
-import semantics.Elaborator.State
+import semantics.{Term => st}
+import semantics.Term.{Throw => _, *}
+import semantics.Elaborator.{State, Ctx}
 
 import syntax.{Literal, Tree}
-import semantics.*
-import semantics.Term.{Throw => _, *}
 
 
 abstract class TailOp extends (Result => Block)
@@ -48,11 +49,16 @@ end Subst
 import Subst.subst
 
 
-class Lowering(using TL, Raise, Elaborator.State):
+class Lowering(lowerHandlers: Bool)(using TL, Raise, State, Ctx):
   
   def returnedTerm(t: st)(using Subst): Block = term(t)(Ret)
   
-  def term(t: st, inStmtPos: Bool = false)(k: Result => Block)(using Subst): Block =
+  // * Used to work around Scala's @tailrec annotation for those few calls that are not in tail position.
+  final def term_nonTail(t: st, inStmtPos: Bool = false)(k: Result => Block)(using Subst): Block =
+    term(t: st, inStmtPos: Bool)(k)
+  
+  @tailrec
+  final def term(t: st, inStmtPos: Bool = false)(k: Result => Block)(using Subst): Block =
     tl.log(s"Lowering.term ${t.showDbg.truncate(100, "[...]")}${
       if inStmtPos then " (in stmt)" else ""}${
       t.symbol.fold("")(" " + _)}")
@@ -72,9 +78,9 @@ class Lowering(using TL, Raise, Elaborator.State):
     case st.Tup(fs) =>
       fs.foldRight[Ls[Arg] => Block](args => k(Value.Arr(args.reverse))){
         case (a: Fld, acc) =>
-          args => subTerm(a.term)(r => acc(Arg(false, r) :: args))
+          args => subTerm_nonTail(a.term)(r => acc(Arg(false, r) :: args))
         case (s: Spd, acc) =>
-          args => subTerm(s.term)(r => acc(Arg(true, r) :: args))
+          args => subTerm_nonTail(s.term)(r => acc(Arg(true, r) :: args))
       }(Nil)
     case st.Ref(sym) =>
       sym match
@@ -145,7 +151,7 @@ class Lowering(using TL, Raise, Elaborator.State):
             msg"Expected two arguments for ${sym.nme}" -> t.toLoc :: Nil, S(arg),
             source = Diagnostic.Source.Compilation)
         subTerm(arg1): ar1 =>
-          subTerm(arg2): ar2 =>
+          subTerm_nonTail(arg2): ar2 =>
             k(Call(Value.Ref(sym), Arg(false, ar1) :: Arg(false, ar2) :: Nil)(true))
       case _ =>
         raise:
@@ -171,7 +177,7 @@ class Lowering(using TL, Raise, Elaborator.State):
             def rec(as: Ls[Bool -> st], asr: Ls[Arg]): Block = as match
               case Nil => k(Call(fr, asr.reverse)(isMlsFun))
               case (spd, a) :: as =>
-                subTerm(a): ar =>
+                subTerm_nonTail(a): ar =>
                   rec(as, Arg(spd, ar) :: asr)
             rec(as, Nil)
         case _ =>
@@ -188,9 +194,32 @@ class Lowering(using TL, Raise, Elaborator.State):
         subTerm(prefix): p =>
           conclude(Select(p, nme)(sel.sym))
       case _ => subTerm(f)(conclude)
+      
+    case st.Blk((h @ Handle(lhs, rhs, cls, defs)) :: stmts, res) =>
+      if !lowerHandlers then
+        raise(ErrorReport(
+          msg"Effect handlers are not enabled" ->
+          h.toLoc :: Nil,
+          source = Diagnostic.Source.Compilation))
+        return End("error")
+      val handlers = defs.map {
+        case HandlerTermDefinition(resumeSym, td) => td.body match
+          case None => 
+            raise(ErrorReport(msg"Handler function definitions cannot be empty" -> td.toLoc :: Nil))
+            N
+          case Some(bod) =>
+            val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))      
+            S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
+      }.collect{ case Some(v) => v }
+      val resSym = TempSymbol(S(t))
+      subTerm(rhs): par =>
+        HandleBlock(lhs, resSym, par, cls, handlers,
+          term_nonTail(st.Blk(stmts, res))(HandleBlockReturn(_)),
+          k(Value.Ref(resSym)))
+      
     case st.Blk(Nil, res) => term(res)(k)
     case st.Blk((t: sem.Term) :: stats, res) =>
-      subTerm(t, inStmtPos = true)(r => term(st.Blk(stats, res))(k))
+      subTerm(t, inStmtPos = true)(r => term_nonTail(st.Blk(stats, res))(k))
     case st.Blk((d: Declaration) :: stats, res) =>
       d match
       case td: TermDefinition =>
@@ -202,15 +231,15 @@ class Lowering(using TL, Raise, Elaborator.State):
           td.k match
           case knd: syntax.Val =>
             assert(td.params.isEmpty)
-            subTerm(bod)(r =>
+            subTerm_nonTail(bod)(r =>
               // Assign(td.sym, r,
               //   term(st.Blk(stats, res))(k)))
               Define(ValDefn(td.owner, knd, td.sym, r),
-                term(st.Blk(stats, res))(k)))
+                term_nonTail(st.Blk(stats, res))(k)))
           case syntax.Fun =>
             val (paramLists, bodyBlock) = setupFunctionOrByNameDef(td.params, bod, S(td.sym.nme))
             Define(FunDefn(td.sym, paramLists, bodyBlock),
-              term(st.Blk(stats, res))(k))
+              term_nonTail(st.Blk(stats, res))(k))
       case cls: ClassLikeDef =>
         reportAnnotations(cls, cls.annotations)
         val bodBlk = cls.body.blk
@@ -233,13 +262,13 @@ class Lowering(using TL, Raise, Elaborator.State):
             privateFlds,
             publicFlds,
             End(),
-            term(Blk(rest2, bodBlk.res))(ImplctRet)
+            term_nonTail(Blk(rest2, bodBlk.res))(ImplctRet)
               // * This is just a minor improvement to get `constructor() {}` instead of `constructor() { null }`
               .mapTail:
                 case Return(Value.Lit(syntax.Tree.UnitLit(true)), true) => End()
                 case t => t
           ),
-        term(st.Blk(stats, res))(k))
+        term_nonTail(st.Blk(stats, res))(k))
       case _ =>
         // TODO handle
         term(st.Blk(stats, res))(k)
@@ -248,7 +277,7 @@ class Lowering(using TL, Raise, Elaborator.State):
       term(st.Blk(stats, res))(k)
     case st.Blk((DefineVar(sym, rhs)) :: stats, res) =>
       subTerm(rhs): r =>
-        Assign(sym, r, term(st.Blk(stats, res))(k))
+        Assign(sym, r, term_nonTail(st.Blk(stats, res))(k))
     case Assgn(lhs, rhs) =>
       lhs match
       case Ref(sym: LocalSymbol) =>
@@ -256,11 +285,11 @@ class Lowering(using TL, Raise, Elaborator.State):
           Assign(sym, r, k(Value.Lit(syntax.Tree.UnitLit(true))))
       case sel @ SynthSel(prefix, nme) =>
         subTerm(prefix): p =>
-          subTerm(rhs): r =>
+          subTerm_nonTail(rhs): r =>
             AssignField(p, nme, r, k(Value.Lit(syntax.Tree.UnitLit(true))))(sel.sym)
       case sel @ Sel(prefix, nme) =>
         subTerm(prefix): p =>
-          subTerm(rhs): r =>
+          subTerm_nonTail(rhs): r =>
             AssignField(p, nme, r, k(Value.Lit(syntax.Tree.UnitLit(true))))(sel.sym)
       
     case st.Blk((imp @ Import(sym, path)) :: stats, res) =>
@@ -334,7 +363,7 @@ class Lowering(using TL, Raise, Elaborator.State):
       
       def go(split: Split, topLevel: Bool)(using Subst): Block = split match
         case Split.Let(sym, trm, tl) =>
-          term(trm): r =>
+          term_nonTail(trm): r =>
             Assign(sym, r, go(tl, topLevel))
         case Split.Cons(Branch(scrut, pat, tail), restSplit) =>
           subTerm(scrut): sr =>
@@ -347,7 +376,7 @@ class Lowering(using TL, Raise, Elaborator.State):
             pat match
               case Pattern.Lit(lit) => mkMatch(Case.Lit(lit) -> go(tail, topLevel = false))
               case Pattern.ClassLike(cls, trm, args0, _refined) =>
-                subTerm(trm): st =>
+                subTerm_nonTail(trm): st =>
                   val args = args0.getOrElse(Nil)
                   val clsParams = cls match
                     case cls: ClassSymbol => cls.tree.clsParams
@@ -362,9 +391,9 @@ class Lowering(using TL, Raise, Elaborator.State):
                   mkMatch(mkArgs(clsParams.zip(args)))
               case Pattern.Tuple(len, inf) => mkMatch(Case.Tup(len, inf) -> go(tail, topLevel = false))
         case Split.Else(els) =>
-          if k.isInstanceOf[TailOp] && isIf then term(els)(k)
+          if k.isInstanceOf[TailOp] && isIf then term_nonTail(els)(k)
           else
-            term(els): r =>
+            term_nonTail(els): r =>
               Assign(l, r,
                 if isWhile && !topLevel then Continue(lbl)
                 else End()
@@ -397,35 +426,29 @@ class Lowering(using TL, Raise, Elaborator.State):
         def rec(as: Ls[st], asr: Ls[Path]): Block = as match
           case Nil => k(Instantiate(sr, asr.reverse))
           case a :: as =>
-            subTerm(a): ar =>
+            subTerm_nonTail(a): ar =>
               rec(as, ar :: asr)
         rec(as, Nil)
     
     case Try(sub, finallyDo) =>
       val l = new TempSymbol(S(sub))
       TryBlock(
-        term(sub)(p => Assign(l, p, End())),
-        term(finallyDo)(_ => End()),
+        subTerm_nonTail(sub)(p => Assign(l, p, End())),
+        subTerm_nonTail(finallyDo)(_ => End()),
         k(Value.Ref(l))
       )
-
-    case Handle(lhs, rhs, defs) =>
-      raise(ErrorReport(
-        msg"Effect handlers are not enabled" ->
-        t.toLoc :: Nil,
-        source = Diagnostic.Source.Compilation))
-      End("error")
     
     // * BbML-specific cases: t.Cls#field and mutable operations
     case sp @ SelProj(prefix, _, proj) =>
       setupSelection(prefix, proj, sp.sym)(k)
     case Region(reg, body) =>
-      Assign(reg, Instantiate(Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Region"))(N), Nil), term(body)(k))
+      Assign(reg, Instantiate(Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Region"))(N), Nil),
+        term_nonTail(body)(k))
     case RegRef(reg, value) =>
       def rec(as: Ls[st], asr: Ls[Path]): Block = as match
         case Nil => k(Instantiate(Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Ref"))(N), asr.reverse))
         case a :: as =>
-          subTerm(a): ar =>
+          subTerm_nonTail(a): ar =>
             rec(as, ar :: asr)
       rec(reg :: value :: Nil, Nil)
     case Deref(ref) =>
@@ -433,7 +456,7 @@ class Lowering(using TL, Raise, Elaborator.State):
         k(Select(r, Tree.Ident("value"))(N))
     case SetRef(lhs, rhs) =>
       subTerm(lhs): ref =>
-        subTerm(rhs): value =>
+        subTerm_nonTail(rhs): value =>
           AssignField(ref, Tree.Ident("value"), value, k(value))(N)
     case Neg(_) =>
       raise(ErrorReport(
@@ -451,7 +474,10 @@ class Lowering(using TL, Raise, Elaborator.State):
     // case _ =>
     //   subTerm(t)(k)
   
-  def subTerm(t: st, inStmtPos: Bool = false)(k: Path => Block)(using Subst): Block =
+  def subTerm_nonTail(t: st, inStmtPos: Bool = false)(k: Path => Block)(using Subst): Block =
+    subTerm(t: st, inStmtPos: Bool)(k)
+  
+  inline def subTerm(t: st, inStmtPos: Bool = false)(k: Path => Block)(using Subst): Block =
     term(t, inStmtPos = inStmtPos):
       case v: Value => k(v)
       case p: Path => k(p)
@@ -465,7 +491,9 @@ class Lowering(using TL, Raise, Elaborator.State):
   //   subTerm(t)(r => codegen.Assign(resSym, r, codegen.End()))(using Subst.empty)
   
   def topLevel(t: st): Block =
-    term(t)(ImplctRet)(using Subst.empty)
+    val res = term(t)(ImplctRet)(using Subst.empty)
+    if lowerHandlers then HandlerLowering().translateTopLevel(res)
+    else res
   
   def program(main: st): Program =
     def go(acc: Ls[Local -> Str], trm: st): Program =
@@ -500,7 +528,7 @@ class Lowering(using TL, Raise, Elaborator.State):
 
 
 trait LoweringSelSanityChecks
-    (instrument: Bool)(using TL, Raise, Elaborator.State)
+        (instrument: Bool)(using TL, Raise, State)
     extends Lowering:
   
   override def setupSelection(prefix: st, nme: Tree.Ident, sym: Opt[FieldSymbol])(k: Result => Block)(using Subst): Block =
@@ -526,7 +554,7 @@ trait LoweringSelSanityChecks
 
 
 trait LoweringTraceLog
-    (instrument: Bool)(using TL, Raise, Elaborator.State)
+        (instrument: Bool)(using TL, Raise, State)
     extends Lowering:
       
   private def selFromGlobalThis(path: Str*): Path =
@@ -606,23 +634,3 @@ trait LoweringTraceLog
     )
 
 
-trait LoweringHandler
-    (instrument: Bool)(using TL, Raise, Elaborator.State)
-    extends Lowering:
-  override def term(t: st, inStmtPos: Bool)(k: Result => Block)(using Subst): Block =
-    if !instrument then return super.term(t, inStmtPos = inStmtPos)(k)
-    t match
-    case st.Blk(Handle(lhs, rhs, defs) :: stmts, res) =>
-      val handlers = defs.map {
-        case HandlerTermDefinition(resumeSym, td) => td.body match
-          case None => 
-            raise(ErrorReport(msg"Handler function definitions cannot be empty" -> td.toLoc :: Nil))
-            N
-          case Some(bod) =>
-            val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))      
-            S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
-      }.collect{ case Some(v) => v }
-      val resSym = TempSymbol(S(t))
-      subTerm(rhs): cls =>
-        HandleBlock(lhs, resSym, cls, handlers, term(st.Blk(stmts, res))(HandleBlockReturn(_)), k(Value.Ref(resSym)))
-    case _ => super.term(t, inStmtPos = inStmtPos)(k)

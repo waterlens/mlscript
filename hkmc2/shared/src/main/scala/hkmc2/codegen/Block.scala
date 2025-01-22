@@ -12,6 +12,7 @@ import hkmc2.semantics.{Term => st}
 import syntax.{Literal, Tree}
 import semantics.*
 import semantics.Term.*
+import sem.Elaborator.State
 
 
 case class Program(
@@ -36,13 +37,13 @@ sealed abstract class Block extends Product with AutoLocated:
     case Break(_) => Set.empty
     case Continue(_) => Set.empty
     case Define(defn, rst) => rst.definedVars
-    case HandleBlock(lhs, res, cls, hdr, bod, rst) => bod.definedVars ++ rst.definedVars + lhs
+    case HandleBlock(lhs, res, par, cls, hdr, bod, rst) => bod.definedVars ++ rst.definedVars + lhs
     case HandleBlockReturn(_) => Set.empty
     case TryBlock(sub, fin, rst) => sub.definedVars ++ fin.definedVars ++ rst.definedVars
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
   
   lazy val size: Int = this match
-    case _: Return | _: Throw | _: End | _: Break | _: Continue => 1
+    case _: Return | _: Throw | _: End | _: Break | _: Continue | _: HandleBlockReturn => 1
     case Begin(sub, rst) => sub.size + rst.size
     case Assign(_, _, rst) => 1 + rst.size
     case AssignField(_, _, _, rst) => 1 + rst.size
@@ -51,6 +52,7 @@ sealed abstract class Block extends Product with AutoLocated:
     case Define(_, rst) => 1 + rst.size
     case TryBlock(sub, fin, rst) => 1 + sub.size + fin.size + rst.size
     case Label(_, bod, rst) => 1 + bod.size + rst.size
+    case HandleBlock(lhs, res, par, cls, handlers, bdy, rst) => 1 + handlers.map(_.body.size).sum + bdy.size + rst.size
   
   // TODO conserve if no changes
   def mapTail(f: BlockTail => BlockTail): Block = this match
@@ -58,8 +60,8 @@ sealed abstract class Block extends Product with AutoLocated:
     case Begin(sub, rst) => Begin(sub, rst.mapTail(f))
     case Assign(lhs, rhs, rst) => Assign(lhs, rhs, rst.mapTail(f))
     case Define(defn, rst) => Define(defn, rst.mapTail(f))
-    case HandleBlock(lhs, res, cls, handlers, body, rest) =>
-      HandleBlock(lhs, res, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, h.body.mapTail(f))), body.mapTail(f), rest.mapTail(f))
+    case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
+      HandleBlock(lhs, res, par, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, h.body)), body, rest.mapTail(f))
     case Match(scrut, arms, dflt, rst: End) =>
       Match(scrut, arms.map(_ -> _.mapTail(f)), dflt.map(_.mapTail(f)), rst)
     case Match(scrut, arms, dflt, rst) =>
@@ -80,10 +82,67 @@ sealed abstract class Block extends Product with AutoLocated:
     case Assign(lhs, rhs, rest) => Set(lhs) ++ rhs.freeVars ++ rest.freeVars
     case AssignField(lhs, nme, rhs, rest) => lhs.freeVars ++ rhs.freeVars ++ rest.freeVars
     case Define(defn, rest) => defn.freeVars ++ rest.freeVars
-    case HandleBlock(lhs, res, cls, handlers, body, rest) =>
-      (body.freeVars - lhs) ++ rest.freeVars ++ handlers.flatMap(_.freeVars)
+    case HandleBlock(lhs, res, par, cls, hdr, bod, rst) =>
+      (bod.freeVars - lhs) ++ rst.freeVars ++ hdr.flatMap(_.freeVars)
     case HandleBlockReturn(res) => res.freeVars
     case End(msg) => Set.empty
+
+  def floatOutDefns =
+    def rec(b: Block, acc: List[Defn]): (Block, List[Defn]) = b match
+      case Match(scrut, arms, dflt, rest) =>
+        val (armsRes, armsDefns) = arms.foldLeft[(List[(Case, Block)], List[Defn])](Nil, acc)(
+          (accc, d) =>
+            val (accCases, accDefns) = accc
+            val (cse, blk) = d
+            val (resBlk, resDefns) = rec(blk, accDefns)
+            ((cse, resBlk) :: accCases, resDefns)
+        )
+        dflt match
+        case None =>
+          val (rstRes, rstDefns) = rec(rest, armsDefns)
+          (Match(scrut, armsRes, None, rstRes), rstDefns)
+
+        case Some(dflt) =>
+          val (dfltRes, dfltDefns) = rec(dflt, armsDefns)
+          val (rstRes, rstDefns) = rec(rest, dfltDefns)
+          (Match(scrut, armsRes, S(dfltRes), rstRes), rstDefns)
+        
+      case Return(res, implct) => (b, acc)
+      case Throw(exc) => (b, acc)
+      case Label(label, body, rest) =>
+        val (bodyRes, bodyDefns) = rec(body, acc)
+        val (rstRes, rstDefns) = rec(rest, bodyDefns)
+        (Label(label, bodyRes, rstRes), rstDefns)
+      case Break(label) => (b, acc)
+      case Continue(label) => (b, acc)
+      case Begin(sub, rest) => 
+        val (subRes, subDefns) = rec(sub, acc)
+        val (rstRes, rstDefns) = rec(rest, subDefns)
+        (Begin(subRes, rstRes), rstDefns)
+      case TryBlock(sub, finallyDo, rest) =>
+        val (subRes, subDefns) = rec(sub, acc)
+        val (finallyRes, finallyDefns) = rec(rest, subDefns)
+        val (rstRes, rstDefns) = rec(rest, finallyDefns)
+        (TryBlock(subRes, finallyRes, rstRes), rstDefns)
+      case Assign(lhs, rhs, rest) => 
+        val (rstRes, rstDefns) = rec(rest, acc)
+        (Assign(lhs, rhs, rstRes), rstDefns)
+      case a @ AssignField(path, nme, result, rest) =>
+        val (rstRes, rstDefns) = rec(rest, acc)
+        (AssignField(path, nme, result, rstRes)(a.symbol), rstDefns)
+      case Define(defn, rest) => defn match
+        case ValDefn(owner, k, sym, rhs) => 
+          val (rstRes, rstDefns) = rec(rest, acc)
+          (Define(defn, rstRes), rstDefns)
+        case _ =>
+          val (rstRes, rstDefns) = rec(rest, defn :: acc)
+          (rstRes, rstDefns)
+      case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
+        val (rstRes, rstDefns) = rec(rest, acc)
+        (HandleBlock(lhs, res, par, cls, handlers, body, rstRes), rstDefns)
+      case HandleBlockReturn(res) => (b, acc)
+      case End(msg) => (b, acc)
+    rec(this, Nil)
 
 end Block
 
@@ -119,7 +178,7 @@ case class AssignField(lhs: Path, nme: Tree.Ident, rhs: Result, rest: Block)(val
 
 case class Define(defn: Defn, rest: Block) extends Block with ProductWithTail
 
-case class HandleBlock(lhs: Local, res: Local, cls: Path, handlers: Ls[Handler], body: Block, rest: Block) extends Block with ProductWithTail
+case class HandleBlock(lhs: Local, res: Local, par: Path, cls: ClassSymbol, handlers: Ls[Handler], body: Block, rest: Block) extends Block with ProductWithTail
 case class HandleBlockReturn(res: Result) extends BlockTail
 
 sealed abstract class Defn:
@@ -149,7 +208,7 @@ final case class ValDefn(
 final case class ClsLikeDefn(
   sym: MemberSymbol[? <: ClassLikeDef],
   k: syntax.ClsLikeKind,
-  parentSym: Opt[Path],
+  parentPath: Opt[Path],
   methods: Ls[FunDefn],
   privateFields: Ls[TermSymbol],
   publicFields: Ls[TermDefinition],
@@ -171,7 +230,7 @@ case class End(msg: Str = "") extends BlockTail with ProductWithTail
 
 enum Case:
   case Lit(lit: Literal)
-  case Cls(cls: ClassSymbol | ModuleSymbol, path: Path)
+  case Cls(cls: ClassLikeSymbol, path: Path)
   case Tup(len: Int, inf: Bool)
 
   lazy val freeVars: Set[Local] = this match
@@ -198,7 +257,9 @@ case class Call(fun: Path, args: Ls[Arg])(val isMlsFun: Bool) extends Result
 
 case class Instantiate(cls: Path, args: Ls[Path]) extends Result
 
-sealed abstract class Path extends Result
+sealed abstract class Path extends Result:
+  def selN(id: Tree.Ident) = Select(this, id)(N)
+  def asArg = Arg(false, this)
 
 case class Select(qual: Path, name: Tree.Ident)(val symbol: Opt[FieldSymbol]) extends Path with ProductWithExtraInfo:
   def extraInfo: Str = symbol.mkString
@@ -212,3 +273,24 @@ enum Value extends Path:
 
 case class Arg(spread: Bool, value: Path)
 
+extension (k: Block => Block)
+  
+  def chain(other: Block => Block): Block => Block = b => k(other(b))
+  def rest(b: Block): Block = k(b)
+  def transform(f: (Block => Block) => (Block => Block)) = f(k)
+  
+  def assign(l: Local, r: Result) = k.chain(Assign(l, r, _))
+  def assignFieldN(lhs: Path, nme: Tree.Ident, rhs: Result) = k.chain(AssignField(lhs, nme, rhs, _)(N))
+  def break(l: Local): Block = k.rest(Break(l))
+  def continue(l: Local): Block = k.rest(Continue(l))
+  def define(defn: Defn) = k.chain(Define(defn, _))
+  def end = k.rest(End())
+  def ifthen(scrut: Path, cse: Case, trm: Block): Block => Block = k.chain(Match(scrut, cse -> trm :: Nil, N, _))
+  def label(label: Local, body: Block) = k.chain(Label(label, body, _))
+  def ret(r: Result) = k.rest(Return(r, false))
+  def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
+
+def blockBuilder: Block => Block = identity
+
+extension (l: Local)
+  def asPath: Path = Value.Ref(l)

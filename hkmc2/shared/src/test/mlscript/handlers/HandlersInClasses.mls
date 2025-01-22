@@ -1,0 +1,36 @@
+:js
+:handler
+
+// TODO we should probably forbid handlers in constructors
+
+
+abstract class Effect with
+  fun perform(arg: Str): Str
+
+
+object Lol with
+  handle h = Effect with
+    fun perform(arg)(k) =
+      print(arg)
+      "b"
+  print(h.perform("k"))
+//│ > k
+
+// x may be uninitialized
+class Lol() with
+  handle h = Effect with
+    fun perform(arg)(k) =
+      print(arg)
+      "b"
+  print(h.perform("k"))
+  val x = 123
+
+let oops = Lol()
+//│ > k
+//│ oops = Lol {}
+
+:re
+oops.x
+//│ ═══[RUNTIME ERROR] Error: Access to required field 'x' yielded 'undefined'
+
+

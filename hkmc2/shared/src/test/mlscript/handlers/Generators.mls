@@ -1,0 +1,56 @@
+:js
+:handler
+
+abstract class Generator with
+  fun produce(result): ()
+
+fun permutations_impl(gen, l1, l2) =
+  if l2 is
+    [f, ...t] do
+      handle genWithPrefix = Generator with
+        fun produce(result)(resume) =
+          result.unshift(f)
+          gen.produce(result)
+          resume(())
+      permutations_impl(genWithPrefix, [], l1.concat(t))
+      l1.push(f)
+      permutations_impl(gen, l1, t)
+    [] and l1 is [] do
+      gen.produce([])
+fun permutations(gen, l) =
+  permutations_impl(gen, [], l)
+
+let res = []
+handle gen = Generator with
+  fun produce(result)(resume) =
+    res.push(result)
+    resume(())
+in permutations(gen, [1, 2, 3, 4])
+//│ > [
+//│ >   [ 1, 2, 3, 4 ], [ 1, 2, 4, 3 ],
+//│ >   [ 1, 3, 2, 4 ], [ 1, 3, 4, 2 ],
+//│ >   [ 1, 4, 2, 3 ], [ 1, 4, 3, 2 ],
+//│ >   [ 2, 1, 3, 4 ], [ 2, 1, 4, 3 ],
+//│ >   [ 2, 3, 1, 4 ], [ 2, 3, 4, 1 ],
+//│ >   [ 2, 4, 1, 3 ], [ 2, 4, 3, 1 ],
+//│ >   [ 3, 1, 2, 4 ], [ 3, 1, 4, 2 ],
+//│ >   [ 3, 2, 1, 4 ], [ 3, 2, 4, 1 ],
+//│ >   [ 3, 4, 1, 2 ], [ 3, 4, 2, 1 ],
+//│ >   [ 4, 1, 2, 3 ], [ 4, 1, 3, 2 ],
+//│ >   [ 4, 2, 1, 3 ], [ 4, 2, 3, 1 ],
+//│ >   [ 4, 3, 1, 2 ], [ 4, 3, 2, 1 ]
+//│ res = ]
+
+fun permutations_foreach(l, f) =
+  handle gen = Generator with
+    fun produce(result)(resume) =
+      f(result)
+      resume(())
+  permutations(gen, l)
+permutations_foreach([1, 2, 3], print)
+//│ > 1,2,3
+//│ > 1,3,2
+//│ > 2,1,3
+//│ > 2,3,1
+//│ > 3,1,2
+//│ > 3,2,1

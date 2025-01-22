@@ -70,6 +70,62 @@ const Predef$class = class Predef {
       }
       toString() { return "Test"; }
     };
+    this.__Cont = function __Cont(next1) { return new __Cont.class(next1); };
+    this.__Cont.class = class __Cont {
+      constructor(next) {
+        this.next = next;
+      }
+      toString() { return "__Cont(" + this.next + ")"; }
+    };
+    this.__List = function __List(next1) { return new __List.class(next1); };
+    this.__List.class = class __List {
+      constructor(next) {
+        this.next = next;
+      }
+      toString() { return "__List(" + this.next + ")"; }
+    };
+    this.__ListWithTail = function __ListWithTail(next1, tail1) { return new __ListWithTail.class(next1, tail1); };
+    this.__ListWithTail.class = class __ListWithTail {
+      constructor(next, tail) {
+        this.next = next;
+        this.tail = tail;
+      }
+      append(elem) {
+        this.tail.next = elem;
+        this.tail = elem;
+        return null;
+      }
+      toString() { return "__ListWithTail(" + this.next + ", " + this.tail + ")"; }
+    };
+    this.__HandleBlock = function __HandleBlock(contHead1, lastHandlerCont1, next1, handler1) { return new __HandleBlock.class(contHead1, lastHandlerCont1, next1, handler1); };
+    this.__HandleBlock.class = class __HandleBlock {
+      constructor(contHead, lastHandlerCont, next, handler) {
+        this.contHead = contHead;
+        this.lastHandlerCont = lastHandlerCont;
+        this.next = next;
+        this.handler = handler;
+      }
+      toString() { return "__HandleBlock(" + this.contHead + ", " + this.lastHandlerCont + ", " + this.next + ", " + this.handler + ")"; }
+    };
+    this.__EffectSig = function __EffectSig(next1, tail1, handleBlockList1, resumed1, handler1, handlerFun1) { return new __EffectSig.class(next1, tail1, handleBlockList1, resumed1, handler1, handlerFun1); };
+    this.__EffectSig.class = class __EffectSig {
+      constructor(next, tail, handleBlockList, resumed, handler, handlerFun) {
+        this.next = next;
+        this.tail = tail;
+        this.handleBlockList = handleBlockList;
+        this.resumed = resumed;
+        this.handler = handler;
+        this.handlerFun = handlerFun;
+      }
+      toString() { return "__EffectSig(" + this.next + ", " + this.tail + ", " + this.handleBlockList + ", " + this.resumed + ", " + this.handler + ", " + this.handlerFun + ")"; }
+    };
+    this.__Return = function __Return(value1) { return new __Return.class(value1); };
+    this.__Return.class = class __Return {
+      constructor(value) {
+        this.value = value;
+      }
+      toString() { return "__Return(" + this.value + ")"; }
+    };
   }
   id(x) {
     return x;
@@ -247,6 +303,202 @@ const Predef$class = class Predef {
     } else {
       return null;
     }
+  } 
+  __mkListWithTail() {
+    let res, tmp;
+    tmp = new this.__ListWithTail.class(null, null);
+    res = tmp;
+    res.tail = res;
+    return res;
+  } 
+  __mkEffect(handler, handlerFun) {
+    let res, tmp, tmp1;
+    tmp = this.__mkListWithTail();
+    tmp1 = new this.__EffectSig.class(null, null, tmp, false, handler, handlerFun);
+    res = tmp1;
+    res.tail = res;
+    return res;
+  } 
+  __handleBlockImpl(cur, handler1) {
+    let handleBlock, nxt, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+    tmp = this.__List(null);
+    tmp1 = new this.__HandleBlock.class(tmp, null, null, handler1);
+    handleBlock = tmp1;
+    tmp2 = cur.handleBlockList.append(handleBlock) ?? null;
+    tmp7: while (true) {
+      if (cur instanceof this.__EffectSig.class) {
+        tmp3 = this.__handleEffect(cur);
+        nxt = tmp3;
+        scrut = cur === nxt;
+        if (scrut === true) {
+          scrut1 = handleBlock.lastHandlerCont === null;
+          if (scrut1 === true) {
+            cur.tail = handleBlock.contHead;
+            tmp4 = null;
+          } else {
+            cur.tail = handleBlock.lastHandlerCont;
+            tmp4 = null;
+          }
+          return cur;
+        } else {
+          cur = nxt;
+          tmp5 = null;
+        }
+        tmp6 = tmp5;
+        continue tmp7;
+      } else {
+        return cur;
+      }
+      break;
+    }
+    return tmp6;
+  } 
+  __handleEffect(cur1) {
+    let prevBlock, scrut, scrut1, scrut2, handleBlock, origTailBlock, savedNext, scrut3, scrut4, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+    prevBlock = cur1.handleBlockList;
+    tmp6: while (true) {
+      scrut = prevBlock.next;
+      if (scrut instanceof this.__HandleBlock.class) {
+        scrut1 = prevBlock.next.handler !== cur1.handler;
+        if (scrut1 === true) {
+          prevBlock = prevBlock.next;
+          tmp = null;
+          continue tmp6;
+        } else {
+          tmp = null;
+        }
+      } else {
+        tmp = null;
+      }
+      break;
+    }
+    scrut2 = prevBlock.next === null;
+    if (scrut2 === true) {
+      return cur1;
+    } else {
+      tmp1 = null;
+    }
+    handleBlock = prevBlock.next;
+    origTailBlock = cur1.handleBlockList.tail;
+    prevBlock.next = null;
+    cur1.handleBlockList.tail = prevBlock;
+    savedNext = handleBlock.contHead.next;
+    tmp2 = this.__resume(cur1, handleBlock.contHead);
+    tmp3 = cur1.handlerFun(tmp2) ?? null;
+    cur1 = tmp3;
+    scrut3 = savedNext !== handleBlock.contHead.next;
+    if (scrut3 === true) {
+      handleBlock.contHead.next.next = savedNext;
+      scrut4 = handleBlock.lastHandlerCont === null;
+      if (scrut4 === true) {
+        handleBlock.lastHandlerCont = handleBlock.contHead.next;
+        tmp4 = null;
+      } else {
+        tmp4 = null;
+      }
+      tmp5 = tmp4;
+    } else {
+      tmp5 = null;
+    }
+    if (cur1 instanceof this.__EffectSig.class) {
+      cur1.handleBlockList.tail.next = handleBlock;
+      cur1.handleBlockList.tail = origTailBlock;
+      return cur1;
+    } else {
+      return this.__resumeHandleBlocks(handleBlock, origTailBlock, cur1);
+    }
+  } 
+  __resume(cur2, tail) {
+    return (value) => {
+      let scrut, cont, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+      scrut = cur2.resumed;
+      if (scrut === true) {
+        throw Error("Multiple resumption");
+      } else {
+        tmp = null;
+      }
+      cur2.resumed = true;
+      cont = cur2.next;
+      tmp7: while (true) {
+        if (cont instanceof this.__Cont.class) {
+          tmp1 = cont.resume(value) ?? null;
+          value = tmp1;
+          if (value instanceof this.__EffectSig.class) {
+            value.tail = tail;
+            scrut1 = cur2.handleBlockList.next !== null;
+            if (scrut1 === true) {
+              value.handleBlockList.tail.next = cur2.handleBlockList.next;
+              value.handleBlockList.tail = cur2.handleBlockList.tail;
+              tmp2 = null;
+            } else {
+              tmp2 = null;
+            }
+            return value;
+          } else {
+            cont = cont.next;
+            tmp3 = null;
+          }
+          tmp4 = tmp3;
+          continue tmp7;
+        } else {
+          tmp4 = null;
+        }
+        break;
+      }
+      scrut2 = cur2.handleBlockList.next === null;
+      if (scrut2 === true) {
+        return value;
+      } else {
+        tmp5 = this.__resumeHandleBlocks(cur2.handleBlockList.next, cur2.handleBlockList.tail, value);
+        cur2 = tmp5;
+        if (cur2 instanceof this.__EffectSig.class) {
+          cur2.tail = tail;
+          tmp6 = null;
+        } else {
+          tmp6 = null;
+        }
+        return cur2;
+      }
+    };
+  } 
+  __resumeHandleBlocks(handleBlock, tailHandleBlock, value) {
+    let scrut, scrut1, scrut2, tmp, tmp1, tmp2, tmp3;
+    tmp4: while (true) {
+      scrut1 = handleBlock.contHead.next;
+      if (scrut1 instanceof this.__Cont.class) {
+        tmp = handleBlock.contHead.next.resume(value) ?? null;
+        value = tmp;
+        if (value instanceof this.__EffectSig.class) {
+          scrut2 = handleBlock.contHead.next !== value.tail.next;
+          if (scrut2 === true) {
+            handleBlock.contHead.next = handleBlock.contHead.next.next;
+            tmp1 = null;
+          } else {
+            tmp1 = null;
+          }
+          value.tail.next = null;
+          value.handleBlockList.tail.next = handleBlock;
+          value.handleBlockList.tail = tailHandleBlock;
+          return value;
+        } else {
+          handleBlock.contHead.next = handleBlock.contHead.next.next;
+          tmp2 = null;
+        }
+        tmp3 = tmp2;
+        continue tmp4;
+      } else {
+        scrut = handleBlock.next;
+        if (scrut instanceof this.__HandleBlock.class) {
+          handleBlock = handleBlock.next;
+          tmp3 = null;
+          continue tmp4;
+        } else {
+          return value;
+        }
+      }
+      break;
+    }
+    return tmp3;
   }
   toString() { return "Predef"; }
 }; const Predef = new Predef$class;

@@ -67,8 +67,9 @@ class Scope
   
   def nest: Scope = Scope(Some(this), N, MutMap.empty)
   
-  def getOuterThisScope: Opt[Scope] =
-    curThis.fold(parent)(thisSym => parent.flatMap(_.getOuterThisScope))
+  def getThisScope: Opt[Scope] = curThis.fold(parent.flatMap(_.getThisScope))(_ => S(this))
+  
+  def getOuterThisScope: Opt[Scope] = parent.flatMap(_.getThisScope)
   
   def nestRebindThis[R](thisSym: Opt[InnerSymbol])(k: Scope ?=> R): (Opt[Str], R) =
     val nested = Scope(Some(this), S(thisSym), MutMap.empty)

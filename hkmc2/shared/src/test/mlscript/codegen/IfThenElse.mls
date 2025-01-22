@@ -42,25 +42,6 @@ let f = x => log((if x then "ok" else "ko") + "!")
 
 :sjs
 let f = x => log((if x and x then "ok" else "ko") + "!")
-//│ JS (unsanitized):
-//│ let tmp;
-//│ tmp = (x) => {
-//│   let tmp1, tmp2;
-//│   if (x === true) {
-//│     if (x === true) {
-//│       tmp1 = "ok";
-//│     } else {
-//│       tmp1 = "ko";
-//│     }
-//│   } else {
-//│     tmp1 = "ko";
-//│   }
-//│   tmp2 = tmp1 + "!";
-//│   return this.log(tmp2);
-//│ };
-//│ this.f = tmp;
-//│ null
-//│ f = [Function: tmp]
 // --- TODO: What we want ---
 // this.f = (x) => {
 //   let tmp, tmp1, flag;
@@ -81,6 +62,25 @@ let f = x => log((if x and x then "ok" else "ko") + "!")
 // };
 // undefined
 // f = [Function (anonymous)]
+//│ JS (unsanitized):
+//│ let tmp;
+//│ tmp = (x) => {
+//│   let tmp1, tmp2;
+//│   if (x === true) {
+//│     if (x === true) {
+//│       tmp1 = "ok";
+//│     } else {
+//│       tmp1 = "ko";
+//│     }
+//│   } else {
+//│     tmp1 = "ko";
+//│   }
+//│   tmp2 = tmp1 + "!";
+//│   return this.log(tmp2);
+//│ };
+//│ this.f = tmp;
+//│ null
+//│ f = [Function: tmp]
 
 f(true)
 //│ > ok!

@@ -168,7 +168,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                 Return(Lam(ps, block), false)
             val (params, bodyDoc) = setupFunction(some(sym.nme), ps, result)
             doc"function ${sym.nme}($params) ${ braced(bodyDoc) }"
-          case ClsLikeDefn(sym, syntax.Cls, parentSym, mtds, privFlds, _pubFlds, preCtor, ctor) =>
+          case ClsLikeDefn(sym, syntax.Cls, par, mtds, privFlds, _pubFlds, preCtor, ctor) =>
             // * Note: `_pubFlds` is not used because in JS, fields are not declared
             val clsDefn = sym.defn.getOrElse(die)
             val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
@@ -177,7 +177,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
               case (acc, (sym, nme)) =>
                 doc"$acc # this.${sym.name} = $nme;"
             val ctorCode = doc"$preCtorCode${body(ctor)}"
-            val clsJS = doc"class ${sym.nme}${parentSym.map(p => s" extends ${result(p)}").getOrElse("")} { #{ ${
+            val clsJS = doc"class ${sym.nme}${par.map(p => s" extends ${result(p)}").getOrElse("")} { #{ ${
                 privFlds.map(f => doc" # #${f.nme};").mkDocument(doc"")
               } # constructor(${
                 ctorParams.unzip._2.mkDocument(", ")
@@ -198,10 +198,10 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                 else doc""" # toString() { return "${sym.nme}${
                   if clsDefn.paramsOpt.isEmpty then doc"""""""
                   else doc"""(" + ${
-                      ctorParams.headOption.fold("")("this." + _._2)
+                      ctorParams.headOption.fold("")("this." + _._1.name)
                     }${
                       ctorParams.tailOption.fold("")(_.map(
-                        """ + ", " + this.""" + _._2).mkString)
+                        """ + ", " + this.""" + _._1.name).mkString)
                     } + ")""""
                 }; }"""
               } #}  # }"

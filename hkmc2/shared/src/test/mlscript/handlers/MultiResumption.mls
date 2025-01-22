@@ -1,0 +1,24 @@
+:js
+:handler
+
+class Logger with
+  fun info(s: Str): ()
+
+:re
+handle h = Logger with
+  fun info(s)(k) =
+    print(s)
+    k()
+    k()
+h.info("a")
+//│ > a
+//│ ═══[RUNTIME ERROR] Error: Multiple resumption
+
+
+handle h = Logger with
+  fun info(s)(k) =
+    print(s)
+    k()
+    k()
+123
+//│ = 123

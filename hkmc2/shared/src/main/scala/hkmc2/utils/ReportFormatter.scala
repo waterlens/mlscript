@@ -1,9 +1,13 @@
 package hkmc2
 
+import collection.mutable
+
 import mlscript.utils.*, shorthands.*
 
 
 class ReportFormatter(output: Str => Unit):
+  
+  val badLines = mutable.Buffer.empty[Int]
   
   // report errors and warnings
   def apply(blockLineNum: Int, diags: Ls[Diagnostic], showRelativeLineNums: Bool): Unit =
@@ -41,6 +45,7 @@ class ReportFormatter(output: Str => Unit):
         loco.foreach { loc =>
           val (startLineNum, startLineStr, startLineCol) =
             loc.origin.fph.getLineColAt(loc.spanStart)
+          badLines += startLineNum
           if globalLineNum =:= 0 then globalLineNum += startLineNum - 1
           val (endLineNum, endLineStr, endLineCol) =
             loc.origin.fph.getLineColAt(loc.spanEnd)

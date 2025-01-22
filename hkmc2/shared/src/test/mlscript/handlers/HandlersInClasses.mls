@@ -16,6 +16,10 @@ object Lol with
   print(h.perform("k"))
 //│ > k
 
+// TODO: `handle` statements should be rejected when followed by further object initialization code
+//       like `val` bindings or `let` bindings that are captured by class members
+:todo
+:e
 // x may be uninitialized
 class Lol() with
   handle h = Effect with
@@ -25,6 +29,7 @@ class Lol() with
   print(h.perform("k"))
   val x = 123
 
+// FIXME: should NOT return a partially initialized object
 let oops = Lol()
 //│ > k
 //│ oops = Lol {}

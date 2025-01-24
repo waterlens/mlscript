@@ -49,7 +49,7 @@ end Subst
 import Subst.subst
 
 
-class Lowering(lowerHandlers: Bool)(using TL, Raise, State, Ctx):
+class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, State, Ctx):
   
   def returnedTerm(t: st)(using Subst): Block = term(t)(Ret)
   
@@ -503,8 +503,12 @@ class Lowering(lowerHandlers: Bool)(using TL, Raise, State, Ctx):
   
   def topLevel(t: st): Block =
     val res = term(t)(ImplctRet)(using Subst.empty)
-    if lowerHandlers then HandlerLowering().translateTopLevel(res)
-    else res
+    val stackSafe = stackLimit match
+      case None => res
+      case Some(lim) => StackSafeTransform(lim).transformTopLevel(res)
+    
+    if lowerHandlers then HandlerLowering().translateTopLevel(stackSafe)
+    else stackSafe
   
   def program(main: st): Program =
     def go(acc: Ls[Local -> Str], trm: st): Program =

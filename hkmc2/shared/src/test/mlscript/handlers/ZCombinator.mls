@@ -1,0 +1,114 @@
+:js
+:handler
+:stackSafe 1000
+
+fun selfApp(f) = f(f)
+
+fun mkrec(g) =
+  selfApp of self =>
+    g of y => self(self)(y)
+
+let fact = mkrec of self => x =>
+  if x == 0 then 1 else self(x - 1) * x
+//│ fact = [Function (anonymous)]
+
+fact(3)
+//│ = 6
+
+fact(10)
+//│ = 3628800
+
+:re
+:stackSafe off
+fact(10000)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+
+
+fun mkrec(g) =
+  selfApp of self =>
+    g of y => selfApp(self)(y)
+
+let fact = mkrec of self => x =>
+  if x == 0 then 1 
+  else self(x - 1) * x
+//│ fact = [Function (anonymous)]
+
+:stackSafe 1000
+fact(10000)
+//│ = Infinity
+
+// * Without `:stackSafe`, gives `RangeError: Maximum call stack size exceeded`
+:re
+:stackSafe off
+fact(10000)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+
+:stackSafe 1000
+fact(10000)
+//│ = Infinity
+
+:re
+:stackSafe off
+fact(10000)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+
+
+:stackSafe 5
+set selfApp = f => f(f)
+
+:expect 3628800
+fact(10)
+//│ = 3628800
+
+
+:stackSafe 10
+set selfApp = f => f(f)
+
+fact(1000)
+//│ = Infinity
+
+// simplified version without lambdas for easier debugging
+:stackSafe 5
+fun mkrec(g) =
+  fun a(self) =
+    fun b(y) = selfApp(self)(y)
+    g(b)
+  selfApp(a)
+
+:stackSafe 5
+let fact = 
+  fun a(self) =
+    fun b(x) =
+      if x == 0 then 1 else 
+        console.log(__stackDepth, __stackOffset)
+        let prev = self(x - 1)
+        console.log("resumed:", x)
+        x * prev
+    b
+  mkrec(a)
+//│ fact = [Function: b]
+
+:expect 3628800
+:stackSafe 5
+fact(10)
+//│ > 2 0
+//│ > 4 0
+//│ > 6 5
+//│ > 8 5
+//│ > 10 10
+//│ > 12 10
+//│ > 14 10
+//│ > 16 15
+//│ > 18 15
+//│ > 20 20
+//│ > resumed: 1
+//│ > resumed: 2
+//│ > resumed: 3
+//│ > resumed: 4
+//│ > resumed: 5
+//│ > resumed: 6
+//│ > resumed: 7
+//│ > resumed: 8
+//│ > resumed: 9
+//│ > resumed: 10
+//│ = 3628800

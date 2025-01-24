@@ -27,6 +27,15 @@ object HandlerLowering:
   
   private case class LinkState(res: Path, cls: Path, uid: StateId)
   
+  // isHandleFree: whether the current block is inside a function or top level directly free of any handler in scope
+  // isTopLevel:
+  // whether the current block is the top level block, as we do not emit code for continuation class on the top level
+  // since we cannot return an effect signature on the top level (we are not in a function so return statement are invalid)
+  // and we do not have any `return` statement in the top level block so we do not need the `ReturnCont` workarounds.
+  // ctorThis: the path to `this` in the constructor, this is used to insert `return this;` at the end of constructor.
+  // linkAndHandle:
+  // a function that takes a LinkState and returns a block that links the continuation class and handles the effect
+  // this is a convenience function which initializes the continuation class in function context or throw an error in top level
   private case class HandlerCtx(
     isHandleFree: Bool,
     isTopLevel: Bool,
@@ -277,7 +286,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
    */
   
   private def translateBlock(b: Block, h: HandlerCtx): Block =
-    given HandlerCtx = h  
+    given HandlerCtx = h
     val stage1 = firstPass(b)
     val stage2 = secondPass(stage1)
     if h.isTopLevel then stage2 else thirdPass(stage2)
@@ -288,25 +297,29 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
         case b: HandleBlock =>
           val rest = applyBlock(b.rest)
           translateHandleBlock(b.copy(rest = rest))
-        case Return(c: Call, implct) if handlerCtx.isHandleFree =>
-          val fun2 = applyPath(c.fun)
-          val args2 = c.args.map(applyArg)
-          val c2 = if (fun2 is c.fun) && (args2 zip c.args).forall(_ is _) then c else Call(fun2, args2)(c.isMlsFun)
-          if c2 is c then b else Return(c2, implct)
+        // This block optimizes tail-calls in the handler transformation. We do not optimize implicit returns.
+        // Implicit returns are used in top level and constructor:
+        // For top level, this correspond to the last statement which should also be checked for effect.
+        // For constructor, we will append `return this;` after the implicit return so it is not a tail call.
+        case Return(c @ Call(fun, args), false) if handlerCtx.isHandleFree =>
+          val fun2 = applyPath(fun)
+          val args2 = args.mapConserve(applyArg)
+          val c2 = if (fun2 is fun) && (args2 is args) then c else Call(fun2, args2)(c.isMlsFun)
+          if c2 is c then b else Return(c2, false)
         case _ => super.applyBlock(b)
       override def applyResult2(r: Result)(k: Result => Block): Block = r match
         case r @ Call(Value.Ref(_: BuiltinSymbol), _) => super.applyResult2(r)(k)
         case c @ Call(fun, args) =>
           val res = freshTmp("res")
           val fun2 = applyPath(fun)
-          val args2 = c.args.map(applyArg)
-          val c2 = if (fun2 is fun) && (args2 zip args).forall(_ is _) then c else Call(fun2, args2)(c.isMlsFun)
+          val args2 = args.mapConserve(applyArg)
+          val c2 = if (fun2 is fun) && (args2 is args) then c else Call(fun2, args2)(c.isMlsFun)
           ResultPlaceholder(res, freshId(), false, c2, k(Value.Ref(res)))
         case c @ Instantiate(cls, args) =>
           val res = freshTmp("res")
           val cls2 = applyPath(cls)
-          val args2 = c.args.map(applyPath)
-          val c2 = if (cls2 is cls) && (args2 zip args).forall(_ is _) then c else Instantiate(cls2, args2)
+          val args2 = args.mapConserve(applyPath)
+          val c2 = if (cls2 is cls) && (args2 is args) then c else Instantiate(cls2, args2)
           ResultPlaceholder(res, freshId(), false, c2, k(Value.Ref(res)))
         case r => super.applyResult2(r)(k)
       override def applyLam(lam: Value.Lam): Value.Lam = Value.Lam(lam.params, translateBlock(lam.body, functionHandlerCtx))
@@ -327,89 +340,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     // to ensure the fun and class references in the continuation class are properly scoped,
     // we move all function defns to the top level of the handler block
     val (blk, defns) = b.floatOutDefns
-    val clsDefns = defns.collect:
-      case ClsLikeDefn(own, isym, sym, k, paramsOpt, parentPath, methods, privateFields, publicFields, preCtor, ctor) => sym
-    
-    val funDefns = defns.collect:
-      case FunDefn(own, sym, params, body) => sym
-    
-    def getBms =
-      var l: List[BlockMemberSymbol] = Nil
-      val subst = new SymbolSubst:
-        override def mapBlockMemberSym(b: BlockMemberSymbol) =
-          l = b :: l
-          b
-      BlockTransformer(subst).applyBlock(b)
-      l
-    
-    val toConvert = getBms
-      .map: b =>
-        val clsDefn = b.asCls
-        val modDefn = b.asMod
-        // check if this BlockMemberSymbol belongs to a definition in this block
-        val isThisBlock = clsDefn match
-          case None => modDefn match
-            case None => false
-            case Some(value) => clsDefns.contains(value)
-          case Some(value) => clsDefns.contains(value)
-        if isThisBlock then Some(b)
-        else None
-      .collect:
-        case Some(b) => b
-    
-    val fnBmsMap = funDefns
-      .map: b =>
-        b -> BlockMemberSymbol(b.nme, b.trees)
-      .toMap
-    
-    val clsBmsMap = toConvert
-      .map: b =>
-        b -> BlockMemberSymbol(b.nme, b.trees)  
-      .toMap
-    
-    val bmsMap = (fnBmsMap ++ clsBmsMap).toMap
-    
-    val clsMap = clsBmsMap
-      .map:
-        case b1 -> b2 => b1.asCls match
-          case Some(value) => 
-            val newSym = ClassSymbol(value.tree, Tree.Ident(b2.nme))
-            newSym.defn = value.defn
-            S(value -> newSym)
-          case None => None
-      .collect:
-        case Some(x) => x
-      .toMap 
-
-    val modMap = clsBmsMap
-      .map:
-        case b1 -> b2 => b1.asMod match
-          case Some(value) => 
-            val newSym = ModuleSymbol(value.tree, Tree.Ident(b2.nme))
-            newSym.defn = value.defn
-            S(value -> newSym)
-          case None => None
-      .collect:
-        case Some(x) => x
-      .toMap
-    
-    val newBlk = defns.foldLeft(blk)((acc, defn) => Define(defn, acc))
-    
-    val subst = new SymbolSubst:
-      override def mapBlockMemberSym(b: BlockMemberSymbol) = bmsMap.get(b) match
-        case None => b.asCls match
-          case None => b
-          case Some(cls) => 
-            clsMap.get(cls) match
-              case None => b
-              case Some(sym) => 
-                BlockMemberSymbol(sym.nme, b.trees) // TODO: properly map trees
-        case Some(value) => value
-      override def mapClsSym(s: ClassSymbol): ClassSymbol = clsMap.get(s).getOrElse(s)
-      override def mapModuleSym(s: ModuleSymbol): ModuleSymbol = modMap.get(s).getOrElse(s)
-      override def mapTermSym(s: TermSymbol): TermSymbol = TermSymbol(s.k, s.owner.map(_.subst(using this)), s.id)
-    
-    BlockTransformer(subst).applyBlock(newBlk)
+    defns.foldLeft(blk)((acc, defn) => Define(defn, acc))
   
   private def translateFun(f: FunDefn): FunDefn =
     FunDefn(f.owner, f.sym, f.params, translateBlock(f.body, functionHandlerCtx))
@@ -455,7 +386,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       h.cls,
       BlockMemberSymbol(h.cls.id.name, Nil),
       syntax.Cls,
-      h.cls.defn.get.paramsOpt,
+      N,
       S(h.par), handlers, Nil, Nil,
       Assign(freshTmp(), SimpleCall(Value.Ref(State.builtinOpsMap("super")), Nil), End()), End())
     
@@ -478,15 +409,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     )
     
     val pcVar = VarSymbol(Tree.Ident("pc"))
-    clsSym.defn = S(ClassDef(
-      N,
-      syntax.Cls,
-      clsSym,
-      BlockMemberSymbol(clsSym.nme, Nil),
-      Nil,
-      S(PlainParamList(Param(FldFlags.empty, pcVar, N) :: Nil)),
-      ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true)))),
-      List()))
     
     var trivial = true
     def prepareBlock(b: Block): Block =
@@ -582,7 +504,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       clsSym,
       BlockMemberSymbol(clsSym.nme, Nil),
       syntax.Cls,
-      clsSym.defn.get.paramsOpt,
+      S(PlainParamList(Param(FldFlags.empty, pcVar, N) :: Nil)),
       S(contClsPath),
       resumeFnDef :: Nil,
       Nil,

@@ -27,6 +27,8 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   val handler = NullaryCommand("handler")
   val expect = Command("expect"): ln =>
     ln.trim
+  val stackSafe = Command("stackSafe"): ln =>
+    ln.trim
   
   private val baseScp: utils.Scope =
     utils.Scope.empty
@@ -48,11 +50,25 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   private var hostCreated = false
   override def run(): Unit =
     try super.run() finally if hostCreated then host.terminate()
+
+  private val DEFAULT_STACK_LIMT = 500
   
   override def processTerm(blk: semantics.Term.Blk, inImport: Bool)(using Raise): Unit =
     super.processTerm(blk, inImport)
     val outerRaise: Raise = summon
     var showingJSYieldedCompileError = false
+    val stackLimit = stackSafe.get match
+      case None => None
+      case Some("off") => None
+      case Some(value) => value.toIntOption match
+        case None => Some(DEFAULT_STACK_LIMT)
+        case Some(value) =>
+          if value < 0 then
+            failures += 1
+            output("/!\\ Stack limit must be positive, but the stack limit here is set to " + value)
+            Some(DEFAULT_STACK_LIMT)
+          else
+            Some(value)
     if showJS.isSet then
       given Raise =
         case d @ ErrorReport(source = Source.Compilation) =>
@@ -61,7 +77,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
         case d => outerRaise(d)
       given Elaborator.Ctx = curCtx
       val low = ltl.givenIn:
-        new codegen.Lowering(lowerHandlers = handler.isSet)
+        new codegen.Lowering(lowerHandlers = handler.isSet, stackLimit = stackLimit)
           with codegen.LoweringSelSanityChecks(instrument = false)
           with codegen.LoweringTraceLog(instrument = false)
       val jsb = new JSBuilder
@@ -76,7 +92,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
     if js.isSet && !showingJSYieldedCompileError then
       given Elaborator.Ctx = curCtx
       val low = ltl.givenIn:
-        new codegen.Lowering(lowerHandlers = handler.isSet)
+        new codegen.Lowering(lowerHandlers = handler.isSet, stackLimit = stackLimit)
           with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
           with codegen.LoweringTraceLog(traceJS.isSet)
       val jsb = new JSBuilder

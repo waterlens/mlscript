@@ -14,7 +14,6 @@ import semantics.*
 import semantics.Term.*
 import sem.Elaborator.State
 
-
 case class Program(
   imports: Ls[Local -> Str],
   main: Block,
@@ -99,62 +98,25 @@ sealed abstract class Block extends Product with AutoLocated:
     case HandleBlock(_, _, _, _, handlers, body, rest) => handlers.map(_.body) :+ body :+ rest
     case _: Return | _: Throw | _: Label | _: Break | _: Continue | _: End | _: HandleBlockReturn => Nil
   
+  // Moves definitions in a block to the top. Only scans the top-level definitions of the block;
+  // i.e, definitions inside other definitions are not moved out. Definitions inside `match`/`if`
+  // and `while` statements are moved out.
+  //
+  // Note that this returns the definitions in reverse order, with the bottommost definiton appearing
+  // last. This is so that using defns.foldLeft later to add the definitions to the front of a block, 
+  // we don't need to reverse the list again to preserve the order of the definitions.
   def floatOutDefns =
-    def rec(b: Block, acc: List[Defn]): (Block, List[Defn]) = b match
-      case Match(scrut, arms, dflt, rest) =>
-        val (armsRes, armsDefns) = arms.foldLeft[(List[(Case, Block)], List[Defn])](Nil, acc)(
-          (accc, d) =>
-            val (accCases, accDefns) = accc
-            val (cse, blk) = d
-            val (resBlk, resDefns) = rec(blk, accDefns)
-            ((cse, resBlk) :: accCases, resDefns)
-        )
-        dflt match
-        case None =>
-          val (rstRes, rstDefns) = rec(rest, armsDefns)
-          (Match(scrut, armsRes, None, rstRes), rstDefns)
-
-        case Some(dflt) =>
-          val (dfltRes, dfltDefns) = rec(dflt, armsDefns)
-          val (rstRes, rstDefns) = rec(rest, dfltDefns)
-          (Match(scrut, armsRes, S(dfltRes), rstRes), rstDefns)
-        
-      case Return(res, implct) => (b, acc)
-      case Throw(exc) => (b, acc)
-      case Label(label, body, rest) =>
-        val (bodyRes, bodyDefns) = rec(body, acc)
-        val (rstRes, rstDefns) = rec(rest, bodyDefns)
-        (Label(label, bodyRes, rstRes), rstDefns)
-      case Break(label) => (b, acc)
-      case Continue(label) => (b, acc)
-      case Begin(sub, rest) => 
-        val (subRes, subDefns) = rec(sub, acc)
-        val (rstRes, rstDefns) = rec(rest, subDefns)
-        (Begin(subRes, rstRes), rstDefns)
-      case TryBlock(sub, finallyDo, rest) =>
-        val (subRes, subDefns) = rec(sub, acc)
-        val (finallyRes, finallyDefns) = rec(rest, subDefns)
-        val (rstRes, rstDefns) = rec(rest, finallyDefns)
-        (TryBlock(subRes, finallyRes, rstRes), rstDefns)
-      case Assign(lhs, rhs, rest) => 
-        val (rstRes, rstDefns) = rec(rest, acc)
-        (Assign(lhs, rhs, rstRes), rstDefns)
-      case a @ AssignField(path, nme, result, rest) =>
-        val (rstRes, rstDefns) = rec(rest, acc)
-        (AssignField(path, nme, result, rstRes)(a.symbol), rstDefns)
-      case Define(defn, rest) => defn match
-        case ValDefn(owner, k, sym, rhs) => 
-          val (rstRes, rstDefns) = rec(rest, acc)
-          (Define(defn, rstRes), rstDefns)
-        case _ =>
-          val (rstRes, rstDefns) = rec(rest, defn :: acc)
-          (rstRes, rstDefns)
-      case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
-        val (rstRes, rstDefns) = rec(rest, acc)
-        (HandleBlock(lhs, res, par, cls, handlers, body, rstRes), rstDefns)
-      case HandleBlockReturn(res) => (b, acc)
-      case End(msg) => (b, acc)
-    rec(this, Nil)
+    var defns: List[Defn] = Nil
+    val transformer = new BlockTransformerShallow(SymbolSubst()):
+      override def applyBlock(b: Block): Block = b match
+        case Define(defn, rest) => defn match
+          case v: ValDefn => super.applyBlock(b)
+          case _ =>
+            defns ::= defn
+            applyBlock(rest)
+        case _ => super.applyBlock(b)
+    
+    (transformer.applyBlock(this), defns)
   
 end Block
 
@@ -325,3 +287,5 @@ def blockBuilder: Block => Block = identity
 
 extension (l: Local)
   def asPath: Path = Value.Ref(l)
+
+

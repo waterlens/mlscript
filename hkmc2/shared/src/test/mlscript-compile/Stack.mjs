@@ -8,7 +8,7 @@ Stack1 = class Stack {
         this.head = head;
         this.tail = tail;
       }
-      toString() { return "Cons(" + this.head + ", " + this.tail + ")"; }
+      toString() { return "Cons(" + globalThis.Predef.render(this.head) + ", " + globalThis.Predef.render(this.tail) + ")"; }
     };
     const Nil$class = class Nil {
       constructor() {}

@@ -7,7 +7,7 @@ Option1 = class Option {
       constructor(value) {
         this.value = value;
       }
-      toString() { return "Some(" + this.value + ")"; }
+      toString() { return "Some(" + globalThis.Predef.render(this.value) + ")"; }
     };
     const None$class = class None {
       constructor() {}
@@ -21,7 +21,7 @@ Option1 = class Option {
         this.fst = fst;
         this.snd = snd;
       }
-      toString() { return "Both(" + this.fst + ", " + this.snd + ")"; }
+      toString() { return "Both(" + globalThis.Predef.render(this.fst) + ", " + globalThis.Predef.render(this.snd) + ")"; }
     };
   }
   static isDefined(x) {

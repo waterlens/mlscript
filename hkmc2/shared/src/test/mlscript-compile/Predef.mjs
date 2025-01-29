@@ -8,14 +8,14 @@ Predef1 = class Predef {
       constructor(captures) {
         this.captures = captures;
       }
-      toString() { return "MatchResult(" + this.captures + ")"; }
+      toString() { return "MatchResult(" + globalThis.Predef.render(this.captures) + ")"; }
     };
     this.MatchFailure = function MatchFailure(errors1) { return new MatchFailure.class(errors1); };
     this.MatchFailure.class = class MatchFailure {
       constructor(errors) {
         this.errors = errors;
       }
-      toString() { return "MatchFailure(" + this.errors + ")"; }
+      toString() { return "MatchFailure(" + globalThis.Predef.render(this.errors) + ")"; }
     };
     this.TraceLogger = class TraceLogger {
       static {
@@ -73,14 +73,14 @@ Predef1 = class Predef {
       constructor(next) {
         this.next = next;
       }
-      toString() { return "__Cont(" + this.next + ")"; }
+      toString() { return "__Cont(" + globalThis.Predef.render(this.next) + ")"; }
     };
     this.__TailList = function __TailList(next1) { return new __TailList.class(next1); };
     this.__TailList.class = class __TailList {
       constructor(next) {
         this.next = next;
       }
-      toString() { return "__TailList(" + this.next + ")"; }
+      toString() { return "__TailList(" + globalThis.Predef.render(this.next) + ")"; }
     };
     this.__ListWithTail = function __ListWithTail(next1, tail1) { return new __ListWithTail.class(next1, tail1); };
     this.__ListWithTail.class = class __ListWithTail {
@@ -93,7 +93,7 @@ Predef1 = class Predef {
         this.tail = elem;
         return null;
       }
-      toString() { return "__ListWithTail(" + this.next + ", " + this.tail + ")"; }
+      toString() { return "__ListWithTail(" + globalThis.Predef.render(this.next) + ", " + globalThis.Predef.render(this.tail) + ")"; }
     };
     this.__HandleBlock = function __HandleBlock(contHead1, lastHandlerCont1, next1, handler1) { return new __HandleBlock.class(contHead1, lastHandlerCont1, next1, handler1); };
     this.__HandleBlock.class = class __HandleBlock {
@@ -103,7 +103,7 @@ Predef1 = class Predef {
         this.next = next;
         this.handler = handler;
       }
-      toString() { return "__HandleBlock(" + this.contHead + ", " + this.lastHandlerCont + ", " + this.next + ", " + this.handler + ")"; }
+      toString() { return "__HandleBlock(" + globalThis.Predef.render(this.contHead) + ", " + globalThis.Predef.render(this.lastHandlerCont) + ", " + globalThis.Predef.render(this.next) + ", " + globalThis.Predef.render(this.handler) + ")"; }
     };
     this.__EffectSig = function __EffectSig(next1, tail1, handleBlockList1, resumed1, handler1, handlerFun1) { return new __EffectSig.class(next1, tail1, handleBlockList1, resumed1, handler1, handlerFun1); };
     this.__EffectSig.class = class __EffectSig {
@@ -115,14 +115,14 @@ Predef1 = class Predef {
         this.handler = handler;
         this.handlerFun = handlerFun;
       }
-      toString() { return "__EffectSig(" + this.next + ", " + this.tail + ", " + this.handleBlockList + ", " + this.resumed + ", " + this.handler + ", " + this.handlerFun + ")"; }
+      toString() { return "__EffectSig(" + globalThis.Predef.render(this.next) + ", " + globalThis.Predef.render(this.tail) + ", " + globalThis.Predef.render(this.handleBlockList) + ", " + globalThis.Predef.render(this.resumed) + ", " + globalThis.Predef.render(this.handler) + ", " + globalThis.Predef.render(this.handlerFun) + ")"; }
     };
     this.__Return = function __Return(value1) { return new __Return.class(value1); };
     this.__Return.class = class __Return {
       constructor(value) {
         this.value = value;
       }
-      toString() { return "__Return(" + this.value + ")"; }
+      toString() { return "__Return(" + globalThis.Predef.render(this.value) + ")"; }
     };
     this.__stackLimit = 0;
     this.__stackDepth = 0;
@@ -131,7 +131,7 @@ Predef1 = class Predef {
     this.__StackDelay = function __StackDelay() { return new __StackDelay.class(); };
     this.__StackDelay.class = class __StackDelay {
       constructor() {}
-      toString() { return "__StackDelay(" +  + ")"; }
+      toString() { return "__StackDelay(" + "" + ")"; }
     };
   }
   static id(x) {
@@ -190,9 +190,76 @@ Predef1 = class Predef {
     };
   } 
   static print(...xs) {
-    let tmp;
-    tmp = xs.map(globalThis.String) ?? null;
-    return globalThis.console.log(...tmp) ?? null;
+    let tmp, tmp1;
+    tmp = Predef.map(Predef.renderAsStr);
+    tmp1 = tmp(...xs) ?? null;
+    return globalThis.console.log(...tmp1) ?? null;
+  } 
+  static interleave(sep) {
+    return (...args) => {
+      let res, len, i, scrut, idx, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+      scrut2 = args.length === 0;
+      if (scrut2 === true) {
+        return [];
+      } else {
+        tmp = args.length * 2;
+        tmp1 = tmp - 1;
+        tmp2 = globalThis.Array(tmp1);
+        res = tmp2;
+        len = args.length;
+        i = 0;
+        tmp8: while (true) {
+          scrut = i < len;
+          if (scrut === true) {
+            tmp3 = i * 2;
+            idx = tmp3;
+            res[idx] = args[i];
+            tmp4 = i + 1;
+            i = tmp4;
+            scrut1 = i < len;
+            if (scrut1 === true) {
+              tmp5 = idx + 1;
+              res[tmp5] = sep;
+              tmp6 = null;
+            } else {
+              tmp6 = null;
+            }
+            tmp7 = tmp6;
+            continue tmp8;
+          } else {
+            tmp7 = null;
+          }
+          break;
+        }
+        return res;
+      }
+    };
+  } 
+  static renderAsStr(arg) {
+    if (typeof arg === 'string') {
+      return arg;
+    } else {
+      return Predef.render(arg);
+    }
+  } 
+  static render(arg1) {
+    let tmp, tmp1, tmp2, tmp3, tmp4;
+    if (arg1 instanceof globalThis.Array) {
+      tmp = Predef.fold((arg11, arg2) => {
+        return arg11 + arg2;
+      });
+      tmp1 = Predef.interleave(", ");
+      tmp2 = Predef.map(Predef.render);
+      tmp3 = tmp2(...arg1) ?? null;
+      tmp4 = tmp1(...tmp3) ?? null;
+      return tmp("[", ...tmp4, "]") ?? null;
+    } else {
+      if (typeof arg1 === 'string') {
+        return globalThis.JSON.stringify(arg1) ?? null;
+      } else {
+        return globalThis.String(arg1);
+      }
+    }
   } 
   static notImplemented(msg) {
     let tmp;
@@ -213,7 +280,14 @@ Predef1 = class Predef {
   static tupleGet(xs3, i1) {
     return globalThis.Array.prototype.at.call(xs3, i1);
   } 
-  static fold(f9) {
+  static map(f9) {
+    return (...xs4) => {
+      let tmp;
+      tmp = Predef.pass1(f9);
+      return xs4.map(tmp) ?? null;
+    };
+  } 
+  static fold(f10) {
     return (init, ...rest) => {
       let i2, len, scrut, tmp, tmp1, tmp2, tmp3;
       i2 = 0;
@@ -222,7 +296,7 @@ Predef1 = class Predef {
         scrut = i2 < len;
         if (scrut === true) {
           tmp = rest.at(i2) ?? null;
-          tmp1 = f9(init, tmp) ?? null;
+          tmp1 = f10(init, tmp) ?? null;
           init = tmp1;
           tmp2 = i2 + 1;
           i2 = tmp2;
@@ -236,7 +310,7 @@ Predef1 = class Predef {
       return init;
     };
   } 
-  static foldr(f10) {
+  static foldr(f11) {
     return (first, ...rest) => {
       let len, i2, init, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
       len = rest.length;
@@ -254,7 +328,7 @@ Predef1 = class Predef {
             tmp2 = i2 - 1;
             i2 = tmp2;
             tmp3 = rest.at(i2) ?? null;
-            tmp4 = f10(tmp3, init) ?? null;
+            tmp4 = f11(tmp3, init) ?? null;
             init = tmp4;
             tmp5 = null;
             continue tmp6;
@@ -263,7 +337,7 @@ Predef1 = class Predef {
           }
           break;
         }
-        return f10(first, init) ?? null;
+        return f11(first, init) ?? null;
       }
     };
   } 
@@ -291,8 +365,8 @@ Predef1 = class Predef {
         tmp4 = "";
       }
       name = tmp4;
-      tmp5 = Predef.fold((arg1, arg2) => {
-        return arg1 + arg2;
+      tmp5 = Predef.fold((arg11, arg2) => {
+        return arg11 + arg2;
       });
       if (isUB === true) {
         tmp6 = "";

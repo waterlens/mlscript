@@ -239,7 +239,7 @@ object Cls(x) with
 //│   get huh() {
 //│     return this.x;
 //│   }
-//│   toString() { return "Cls(" + this.x + ")"; }
+//│   toString() { return "Cls(" + globalThis.Predef.render(this.x) + ")"; }
 //│ }; Cls1 = new Cls$class;
 //│ Cls1.class = Cls$class;
 //│ null
@@ -263,19 +263,27 @@ c.x
 
 // ——— ——— ———
 
+class Foo' with
+  class Bar'
+//│ > let Foo$_1;try { Foo$_1 = class Foo$_ {   constructor() {     this.Bar' = class Bar$_ {       constructor() {}       toString() { return "Bar'"; }     };   }   toString() { return "Foo'"; } }; null } catch (e) { console.log('\u200B' + e + '\u200B'); }
+//│ >                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected string
+
+// ——— ——— ———
+
 module Example with
 // whoops
   val a = this
 //│ ╔══[PARSE ERROR] Expected block after type declaration body; found newline instead
-//│ ║  l.266: 	module Example with
+//│ ║  l.274: 	module Example with
 //│ ║         	                   ^
-//│ ║  l.267: 	// whoops
+//│ ║  l.275: 	// whoops
 //│ ╙──       	
 //│ ╔══[PARSE ERROR] Expected an expression; found block instead
-//│ ║  l.268: 	  val a = this
+//│ ║  l.276: 	  val a = this
 //│ ╙──       	  ^
 //│ ╔══[PARSE ERROR] Expected end of input; found indented block instead
-//│ ║  l.268: 	  val a = this
+//│ ║  l.276: 	  val a = this
 //│ ╙──       	^^
 
 // ——— ——— ———

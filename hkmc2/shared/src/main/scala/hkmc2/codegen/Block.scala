@@ -30,6 +30,7 @@ sealed abstract class Block extends Product with AutoLocated:
     case Assign(l: TermSymbol, r, rst) => rst.definedVars
     case Assign(l, r, rst) => rst.definedVars + l
     case AssignField(l, n, r, rst) => rst.definedVars
+    case AssignDynField(l, n, ai, r, rst) => rst.definedVars
     case Match(scrut, arms, dflt, rst) =>
       arms.flatMap(_._2.definedVars).toSet ++ dflt.toList.flatMap(_.definedVars) ++ rst.definedVars
     case End(_) => Set.empty
@@ -94,6 +95,7 @@ sealed abstract class Block extends Product with AutoLocated:
     case TryBlock(sub, finallyDo, rest) => sub :: finallyDo :: rest :: Nil
     case Assign(_, rhs, rest) => rhs.subBlocks ::: rest :: Nil
     case AssignField(_, _, rhs, rest) => rhs.subBlocks ::: rest :: Nil
+    case AssignDynField(_, _, _, rhs, rest) => rhs.subBlocks ::: rest :: Nil
     case Define(d, rest) => d.subBlocks ::: rest :: Nil
     case HandleBlock(_, _, par, _, handlers, body, rest) => par.subBlocks ++ handlers.map(_.body) :+ body :+ rest
     
@@ -155,6 +157,8 @@ case class Assign(lhs: Local, rhs: Result, rest: Block) extends Block with Produ
 // case class Assign(lhs: Path, rhs: Result, rest: Block) extends Block with ProductWithTail
 
 case class AssignField(lhs: Path, nme: Tree.Ident, rhs: Result, rest: Block)(val symbol: Opt[FieldSymbol]) extends Block with ProductWithTail
+
+case class AssignDynField(lhs: Path, fld: Path, arrayIdx: Bool, rhs: Result, rest: Block) extends Block with ProductWithTail
 
 case class Define(defn: Defn, rest: Block) extends Block with ProductWithTail
 
@@ -277,6 +281,8 @@ sealed abstract class Path extends Result:
 
 case class Select(qual: Path, name: Tree.Ident)(val symbol: Opt[FieldSymbol]) extends Path with ProductWithExtraInfo:
   def extraInfo: Str = symbol.mkString
+
+case class DynSelect(qual: Path, fld: Path, arrayIdx: Bool) extends Path
 
 enum Value extends Path:
   case Ref(l: Local)

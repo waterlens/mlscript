@@ -549,6 +549,8 @@ extends Importer:
       Term.Error
     case OpenIn(op, body) =>
       term(Block(Open(op) :: body :: Nil), inAppPrefix)
+    case DynAccess(obj, fld, ai) =>
+      Term.DynSel(term(obj), term(fld), ai)
     case Spread(kw, kwLoc, body) =>
       raise(ErrorReport(msg"Illegal position for '${kw.name}' spread operator." -> tree.toLoc :: Nil))
       Term.Error

@@ -56,7 +56,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   override def processTerm(blk: semantics.Term.Blk, inImport: Bool)(using Raise): Unit =
     super.processTerm(blk, inImport)
     val outerRaise: Raise = summon
-    var showingJSYieldedCompileError = false
+    val reportedMessages = mutable.Set.empty[Str]
     val stackLimit = stackSafe.get match
       case None => None
       case Some("off") => None
@@ -72,7 +72,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
     if showJS.isSet then
       given Raise =
         case d @ ErrorReport(source = Source.Compilation) =>
-          showingJSYieldedCompileError = true
+          reportedMessages += d.mainMsg
           outerRaise(d)
         case d => outerRaise(d)
       given Elaborator.Ctx = curCtx
@@ -90,8 +90,13 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
       val jsStr = je.stripBreaks.mkString(100)
       output(s"JS (unsanitized):")
       output(jsStr)
-    if js.isSet && !showingJSYieldedCompileError then
+    if js.isSet then
       given Elaborator.Ctx = curCtx
+      given Raise =
+        case e: ErrorReport if reportedMessages.contains(e.mainMsg) =>
+          if verbose.isSet then
+            output(s"Skipping already reported diagnostic: ${e.mainMsg}")
+        case d => outerRaise(d)
       val low = ltl.givenIn:
         new codegen.Lowering(lowerHandlers = handler.isSet, stackLimit = stackLimit)
           with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)

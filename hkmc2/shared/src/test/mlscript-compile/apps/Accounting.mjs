@@ -10,7 +10,7 @@ Accounting1 = class Accounting {
       constructor(num) {
         this.num = num;
       }
-      toString() { return "Project(" + this.num + ")"; }
+      toString() { return "Project(" + globalThis.Predef.render(this.num) + ")"; }
     };
     const this$Accounting = this;
     this.Line = function Line(name1, proj1, starting_balance1, isMatchable1) { return new Line.class(name1, proj1, starting_balance1, isMatchable1); };
@@ -42,7 +42,7 @@ Accounting1 = class Accounting {
           return null;
         }
       }
-      toString() { return "Line(" + this.name + ", " + this.proj + ", " + this.starting_balance + ", " + this.isMatchable + ")"; }
+      toString() { return "Line(" + globalThis.Predef.render(this.name) + ", " + globalThis.Predef.render(this.proj) + ", " + globalThis.Predef.render(this.starting_balance) + ", " + globalThis.Predef.render(this.isMatchable) + ")"; }
     };
     this.lines = [];
     this.Report = function Report(fileName1) { return new Report.class(fileName1); };
@@ -142,7 +142,7 @@ Accounting1 = class Accounting {
         tmp26 = Str.concat2(tmp25, "|");
         return this.wln(tmp26);
       }
-      toString() { return "Report(" + this.fileName + ")"; }
+      toString() { return "Report(" + globalThis.Predef.render(this.fileName) + ")"; }
     };
   }
   display(amt) {

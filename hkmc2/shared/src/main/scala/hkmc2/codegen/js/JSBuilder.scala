@@ -129,6 +129,8 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
           case S(index) => s"[$index]"
           case N => s"[${JSBuilder.makeStringLiteral(name)}]"
       }"
+    case DynSelect(qual, fld, ai) =>
+      doc"${result(qual)}[${result(fld)}]"
     case Instantiate(cls, as) =>
       doc"new ${result(cls)}(${as.map(result).mkDocument(", ")})"
     case Value.Arr(es) if es.isEmpty => doc"[]"
@@ -141,6 +143,8 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
       doc" # ${getVar(l)} = ${result(r)};${returningTerm(rst)}"
     case AssignField(p, n, r, rst) =>
       doc" # ${result(p)}.${n.name} = ${result(r)};${returningTerm(rst)}"
+    case AssignDynField(p, f, ai, r, rst) =>
+      doc" # ${result(p)}[${result(f)}] = ${result(r)};${returningTerm(rst)}"
     case Define(defn, rst) =>
       def mkThis(sym: InnerSymbol): Document =
         result(Value.This(sym))
@@ -207,10 +211,10 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
                 else doc""" # ${mtdPrefix}toString() { return "${sym.nme}${
                   if paramsOpt.isEmpty then doc"""""""
                   else doc"""(" + ${
-                      ctorParams.headOption.fold("")("this." + _._1.name)
+                      ctorParams.headOption.fold("\"\"")("globalThis.Predef.render(this." + _._1.name + ")")
                     }${
                       ctorParams.tailOption.fold("")(_.map(
-                        """ + ", " + this.""" + _._1.name).mkString)
+                        """ + ", " + globalThis.Predef.render(this.""" + _._1.name + ")").mkString)
                     } + ")""""
                 }; }"""
               } #}  # }"

@@ -13,7 +13,7 @@ class Foo()
 //│ Foo1 = function Foo() { return new Foo.class(); };
 //│ Foo1.class = class Foo {
 //│   constructor() {}
-//│   toString() { return "Foo(" +  + ")"; }
+//│   toString() { return "Foo(" + "" + ")"; }
 //│ };
 //│ null
 
@@ -41,7 +41,7 @@ class Foo(a)
 //│   constructor(a) {
 //│     this.a = a;
 //│   }
-//│   toString() { return "Foo(" + this.a + ")"; }
+//│   toString() { return "Foo(" + globalThis.Predef.render(this.a) + ")"; }
 //│ };
 //│ null
 
@@ -76,7 +76,7 @@ class Foo(a, b)
 //│     this.a = a;
 //│     this.b = b;
 //│   }
-//│   toString() { return "Foo(" + this.a + ", " + this.b + ")"; }
+//│   toString() { return "Foo(" + globalThis.Predef.render(this.a) + ", " + globalThis.Predef.render(this.b) + ")"; }
 //│ };
 //│ null
 
@@ -142,7 +142,7 @@ class Inner(c) with
 //│   i1(d) {
 //│     return this.c + d;
 //│   }
-//│   toString() { return "Inner(" + this.c + ")"; }
+//│   toString() { return "Inner(" + globalThis.Predef.render(this.c) + ")"; }
 //│ };
 //│ null
 

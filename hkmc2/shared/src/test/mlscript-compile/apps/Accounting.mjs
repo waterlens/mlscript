@@ -13,12 +13,12 @@ Accounting1 = class Accounting {
       toString() { return "Project(" + this.num + ")"; }
     };
     const this$Accounting = this;
-    this.Line = function Line(name1, proj1, starting$_balance1, isMatchable1) { return new Line.class(name1, proj1, starting$_balance1, isMatchable1); };
+    this.Line = function Line(name1, proj1, starting_balance1, isMatchable1) { return new Line.class(name1, proj1, starting_balance1, isMatchable1); };
     this.Line.class = class Line {
-      constructor(name, proj, starting$_balance, isMatchable) {
+      constructor(name, proj, starting_balance, isMatchable) {
         this.name = name;
         this.proj = proj;
-        this.starting_balance = starting$_balance;
+        this.starting_balance = starting_balance;
         this.isMatchable = isMatchable;
         this.balance = this.starting_balance;
       }
@@ -150,9 +150,9 @@ Accounting1 = class Accounting {
     tmp = amt / 1000;
     return tmp.toFixed(1) ?? null;
   } 
-  mkLine(nme, proj, starting$_balance, matchable) {
+  mkLine(nme, proj, starting_balance, matchable) {
     let line, tmp, tmp1;
-    tmp = this.Line(nme, proj, starting$_balance, matchable);
+    tmp = this.Line(nme, proj, starting_balance, matchable);
     line = tmp;
     tmp1 = this.lines.push(line) ?? null;
     return line;

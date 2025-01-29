@@ -1,7 +1,7 @@
 import Predef from "./Predef.mjs";
 let Option1;
-const Option$class = class Option {
-  constructor() {
+Option1 = class Option {
+  static {
     this.Some = function Some(value1) { return new Some.class(value1); };
     this.Some.class = class Some {
       constructor(value) {
@@ -24,22 +24,21 @@ const Option$class = class Option {
       toString() { return "Both(" + this.fst + ", " + this.snd + ")"; }
     };
   }
-  isDefined(x) {
-    if (x instanceof this.Some.class) {
+  static isDefined(x) {
+    if (x instanceof Option.Some.class) {
       return true;
     } else {
-      if (x instanceof this.None.class) {
+      if (x instanceof Option.None.class) {
         return false;
       } else {
         throw new globalThis.Error("match error");
       }
     }
   } 
-  test() {
+  static test() {
     return Predef.pipeInto(2134, Predef.print);
   }
-  toString() { return "Option"; }
-}; Option1 = new Option$class;
-Option1.class = Option$class;
+  static toString() { return "Option"; }
+};
 null
 let Option = Option1; export default Option;

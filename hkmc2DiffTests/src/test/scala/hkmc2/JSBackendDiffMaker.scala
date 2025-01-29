@@ -80,8 +80,9 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
         new codegen.Lowering(lowerHandlers = handler.isSet, stackLimit = stackLimit)
           with codegen.LoweringSelSanityChecks(instrument = false)
           with codegen.LoweringTraceLog(instrument = false)
-      val jsb = new JSBuilder
-        with JSBuilderArgNumSanityChecks(instrument = false)
+      val jsb = ltl.givenIn:
+        new JSBuilder
+          with JSBuilderArgNumSanityChecks(instrument = false)
       val le = low.program(blk)
       val nestedScp = baseScp.nest
       val je = nestedScp.givenIn:
@@ -95,8 +96,9 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
         new codegen.Lowering(lowerHandlers = handler.isSet, stackLimit = stackLimit)
           with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
           with codegen.LoweringTraceLog(traceJS.isSet)
-      val jsb = new JSBuilder
-        with JSBuilderArgNumSanityChecks(noSanityCheck.isUnset)
+      val jsb = ltl.givenIn:
+          new JSBuilder
+            with JSBuilderArgNumSanityChecks(noSanityCheck.isUnset)
       val le = low.program(blk)
       if showLoweredTree.isSet then
         output(s"Lowered:")

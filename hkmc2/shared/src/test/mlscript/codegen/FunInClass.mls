@@ -22,15 +22,15 @@ fun test(a) =
       h(d)
   Inner(42)
 //│ JS (unsanitized):
-//│ let test3;
-//│ test3 = function test(a) {
-//│   let Inner;
-//│   Inner = function Inner(b1) { return new Inner.class(b1); };
-//│   Inner.class = class Inner {
+//│ let test1;
+//│ test1 = function test(a) {
+//│   let Inner1;
+//│   Inner1 = function Inner(b1) { return new Inner.class(b1); };
+//│   Inner1.class = class Inner {
 //│     constructor(b) {
 //│       this.b = b;
 //│       let tmp;
-//│       tmp = log1(a);
+//│       tmp = log(a);
 //│     }
 //│     f(c) {
 //│       return [
@@ -54,7 +54,7 @@ fun test(a) =
 //│     }
 //│     toString() { return "Inner(" + this.b + ")"; }
 //│   };
-//│   return Inner(42);
+//│   return Inner1(42);
 //│ };
 //│ null
 
@@ -77,11 +77,11 @@ fun test(a) =
     print of [a, b]
   [C1(1), C2(2)]
 //│ JS (unsanitized):
-//│ let test5;
-//│ test5 = function test(a) {
-//│   let C1, C2, tmp1, tmp2;
-//│   C1 = function C1(b1) { return new C1.class(b1); };
-//│   C1.class = class C1 {
+//│ let test2;
+//│ test2 = function test(a) {
+//│   let C11, C21, tmp1, tmp2;
+//│   C11 = function C1(b1) { return new C1.class(b1); };
+//│   C11.class = class C1 {
 //│     constructor(b) {
 //│       this.b = b;
 //│       Predef.print([
@@ -91,8 +91,8 @@ fun test(a) =
 //│     }
 //│     toString() { return "C1(" + this.b + ")"; }
 //│   };
-//│   C2 = function C2(b1) { return new C2.class(b1); };
-//│   C2.class = class C2 {
+//│   C21 = function C2(b1) { return new C2.class(b1); };
+//│   C21.class = class C2 {
 //│     constructor(b) {
 //│       this.b = b;
 //│       Predef.print([
@@ -102,8 +102,8 @@ fun test(a) =
 //│     }
 //│     toString() { return "C2(" + this.b + ")"; }
 //│   };
-//│   tmp1 = C1(1);
-//│   tmp2 = C2(2);
+//│   tmp1 = C11(1);
+//│   tmp2 = C21(2);
 //│   return [
 //│     tmp1,
 //│     tmp2

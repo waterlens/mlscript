@@ -224,6 +224,8 @@ sealed trait Statement extends AutoLocated with ProductWithExtraInfo:
     case Import(sym, file) => s"import ${sym} from ${file}"
     case Annotated(ann, target) => s"@${ann} ${target.showDbg}"
     case Throw(res) => s"throw ${res.showDbg}"
+    case Try(body, finallyDo) => s"try ${body.showDbg} finally ${finallyDo.showDbg}"
+    case Ret(res) => s"return ${res.showDbg}"
 
 final case class LetDecl(sym: LocalSymbol, annotations: Ls[Annot]) extends Statement
 

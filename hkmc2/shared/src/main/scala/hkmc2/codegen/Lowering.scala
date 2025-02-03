@@ -184,7 +184,7 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
             rec(as, Nil)
         case _ =>
           // Application arguments that are not tuples represent spreads, as in `f(...arg)`
-          subTerm(arg): ar =>
+          subTerm_nonTail(arg): ar =>
             k(Call(fr, Arg(spread = true, ar) :: Nil)(isMlsFun, true))
       f match
       // * Due to whacky JS semantics, we need to make sure that selections leading to a call
@@ -289,8 +289,16 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
       reportAnnotations(decl, annotations)
       term(st.Blk(DefineVar(sym, Term.Lit(Tree.UnitLit(false))) :: stats, res))(k)
     case st.Blk(DefineVar(sym, rhs) :: stats, res) =>
-      subTerm(rhs): r =>
-        Assign(sym, r, term_nonTail(st.Blk(stats, res))(k))
+      val oldSubst = subst
+      rhs match
+      // * This is currently wrong because if `r` is mutable, we can't substitute `sym` with `r`
+      // * TODO: Distinguish mutable from immutable local variables
+      // case Ref(r) =>
+      //   given Subst = oldSubst + (sym -> Value.Ref(r))
+      //   term(st.Blk(stats, res))(k)
+      case _ =>
+        subTerm(rhs): r =>
+          Assign(sym, r, term_nonTail(st.Blk(stats, res))(k))
     case Assgn(lhs, rhs) =>
       lhs match
       case Ref(sym) =>
@@ -384,8 +392,8 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
           term_nonTail(trm): r =>
             Assign(sym, r, go(tl, topLevel))
         case Split.Cons(Branch(scrut, pat, tail), restSplit) =>
-          subTerm(scrut): sr =>
-            tl.log(s"Binding scrut $scrut to $sr ${summon[Subst].map}")
+          subTerm_nonTail(scrut): sr =>
+            tl.log(s"Binding scrut $scrut to $sr (${summon[Subst].map})")
             // val cse = 
             def mkMatch(cse: Case -> Block) = Match(sr, cse :: Nil,
                 S(go(restSplit, topLevel = true)),

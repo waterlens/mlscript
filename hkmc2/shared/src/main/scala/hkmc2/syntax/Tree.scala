@@ -229,7 +229,7 @@ object Apps:
     case t => S(t, Nil)
     
 object PossiblyAnnotated:
-  def apply(t: Tree, anns: Ls[Tree]): Tree = anns.foldRight(t)(Annotated(_, _))
+  def apply(anns: Ls[Tree], t: Tree): Tree = anns.foldRight(t)(Annotated(_, _))
   def unapply(t: Tree): Opt[(Ls[Tree], Tree)] = t match
     case Annotated(q, PossiblyAnnotated(qs, target)) => S(q :: qs, target)
     case other => S((Nil, other))

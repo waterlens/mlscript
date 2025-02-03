@@ -224,10 +224,10 @@ class ParseRules(using State):
                         ParseRule(s"'handle' binding `in` clause")(
                           exprOrBlk(ParseRule(s"'handle' binding body")(End(())))((body, _: Unit) => S(body))*
                         ),
-                      End(None)
+                      End(N)
                     )
                 ) { case (rhs, (S(defs), body)) => (rhs, defs, body) }
-        ) { case (lhs, (rhs, defs, body))=> Hndl(lhs, rhs, defs, body) }
+        ) { case (lhs, (rhs, defs, body)) => Hndl(lhs, rhs, defs, body) }
     ,
     Kw(`new`):
       ParseRule("`new` keyword")(

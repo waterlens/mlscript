@@ -61,6 +61,8 @@ enum Term extends Statement:
   case Throw(result: Term)
   case Try(body: Term, finallyDo: Term)
   case Annotated(annot: Annot, target: Term)
+  case Handle(lhs: LocalSymbol, rhs: Term, args: List[Term],
+    derivedClsSym: ClassSymbol, defs: Ls[HandlerTermDefinition])
   
   lazy val symbol: Opt[Symbol] = this match
     case Ref(sym) => S(sym)
@@ -284,9 +286,6 @@ case class ObjBody(blk: Term.Blk):
 
 
 case class Import(sym: MemberSymbol[?], file: Str) extends Statement
-
-case class Handle(lhs: LocalSymbol, rhs: Term, args: List[Term], derivedClsSym: ClassSymbol, defs: Ls[HandlerTermDefinition])
-  extends Statement
 
 
 sealed abstract class Declaration:

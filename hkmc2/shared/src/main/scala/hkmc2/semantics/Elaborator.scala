@@ -87,11 +87,15 @@ object Elaborator:
       val Int = assumeBuiltinCls("Int")
       val Num = assumeBuiltinCls("Num")
       val Str = assumeBuiltinCls("Str")
+      val Bool = assumeBuiltinCls("Bool")
+      val Object = assumeBuiltinCls("Object")
       val untyped = assumeBuiltinTpe("untyped")
       // println(s"Builtins: $Int, $Num, $Str, $untyped")
       val Predef = assumeBuiltinMod("Predef")
       def getBuiltinOp(op: Str): Opt[Str] =
         if getBuiltin(op).isDefined then builtinBinOps.get(op) else N
+      /** Classes that do not use `instanceof` in pattern matching. */
+      val virtualClasses = Set(Int, Num, Str, Bool)
   
   object Ctx:
     abstract class Elem:
@@ -1017,25 +1021,6 @@ extends Importer:
           sym.decl = S(TyParam(FldFlags.empty, N, sym))
           Param(FldFlags.empty, sym, N)
       (vs, ctx ++ vs.map(p => p.sym.name -> p.sym))
-  
-  
-  def pattern(t: Tree): Ctxl[(Pattern, Ls[Str -> VarSymbol])] =
-    val boundVars = mutable.HashMap.empty[Str, VarSymbol]
-    def go(t: Tree): Pattern = t match
-      case id @ Ident(name) =>
-        val sym = boundVars.getOrElseUpdate(name, VarSymbol(id))
-        Pattern.Var(sym)
-      // case Tup(fields) =>
-      //   val pats = fields.map(
-      //     f => pattern(f) match
-      //       case (pat, vars) =>
-      //         boundVars ++= vars
-      //         pat
-      //   )
-      //   Pattern.Tuple(pats)
-      case _ =>
-        ???
-    (go(t), boundVars.toList)
   
   def importFrom(sts: Tree.Block)(using c: Ctx): (Term.Blk, Ctx) =
     val (res, newCtx) = block(sts)

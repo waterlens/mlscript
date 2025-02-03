@@ -51,6 +51,9 @@ import Subst.subst
 
 class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, State, Ctx):
   
+  private lazy val unreachableFn =
+    Select(Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Predef"))(N), Tree.Ident("unreachable"))(N)
+  
   def returnedTerm(t: st)(using Subst): Block = term(t)(Ret)
   
   // * Used to work around Scala's @tailrec annotation for those few calls that are not in tail position.
@@ -401,6 +404,15 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
               )
             pat match
               case Pattern.Lit(lit) => mkMatch(Case.Lit(lit) -> go(tail, topLevel = false))
+              case Pattern.ClassLike(cls: ClassSymbol, _trm, _args0, _refined)
+                  // Do not elaborate `_trm` when the `cls` is virtual.
+                  if Elaborator.ctx.Builtins.virtualClasses contains cls =>
+                // [invariant:0] Some classes (e.g., `Int`) from `Prelude` do
+                // not exist at runtime. If we do lowering on `trm`, backends
+                // (e.g., `JSBuilder`) will not be able to handle the corresponding selections.
+                // In this case the second parameter of `Case.Cls` will not be used.
+                // So we make it `Predef.unreachable` here.
+                mkMatch(Case.Cls(cls, unreachableFn) -> go(tail, topLevel = false))
               case Pattern.ClassLike(cls, trm, args0, _refined) =>
                 subTerm_nonTail(trm): st =>
                   val args = args0.getOrElse(Nil)

@@ -126,7 +126,7 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
           // * (non-local functions are compiled into getter methods selected on some prefix)
           if td.params.isEmpty then
             val l = new TempSymbol(S(t))
-            return Assign(l, Call(Value.Ref(bs), Nil)(true), k(Value.Ref(l)))
+            return Assign(l, Call(Value.Ref(bs), Nil)(true, true), k(Value.Ref(l)))
         case S(_) => ()
         case N => () // TODO panic here; can only lower refs to elab'd symbols
       case _ => ()
@@ -146,7 +146,7 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
             msg"Expected a single argument for ${sym.nme}" -> t.toLoc :: Nil, S(arg),
             source = Diagnostic.Source.Compilation)
         subTerm(arg): ar =>
-          k(Call(Value.Ref(sym), Arg(false, ar) :: Nil)(true))
+          k(Call(Value.Ref(sym), Arg(false, ar) :: Nil)(true, false))
       case st.Tup(Fld(FldFlags.benign(), arg1, N) :: Fld(FldFlags.benign(), arg2, N) :: Nil) =>
         if !sym.binary then raise:
           ErrorReport(
@@ -154,7 +154,7 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
             source = Diagnostic.Source.Compilation)
         subTerm(arg1): ar1 =>
           subTerm_nonTail(arg2): ar2 =>
-            k(Call(Value.Ref(sym), Arg(false, ar1) :: Arg(false, ar2) :: Nil)(true))
+            k(Call(Value.Ref(sym), Arg(false, ar1) :: Arg(false, ar2) :: Nil)(true, false))
       case _ =>
         raise:
           ErrorReport(
@@ -177,7 +177,7 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
             case spd: Spd => true -> spd.term
           val l = new TempSymbol(S(t))
             def rec(as: Ls[Bool -> st], asr: Ls[Arg]): Block = as match
-              case Nil => k(Call(fr, asr.reverse)(isMlsFun))
+              case Nil => k(Call(fr, asr.reverse)(isMlsFun, true))
               case (spd, a) :: as =>
                 subTerm_nonTail(a): ar =>
                   rec(as, Arg(spd, ar) :: asr)
@@ -185,7 +185,7 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
         case _ =>
           // Application arguments that are not tuples represent spreads, as in `f(...arg)`
           subTerm(arg): ar =>
-            k(Call(fr, Arg(spread = true, ar) :: Nil)(isMlsFun))
+            k(Call(fr, Arg(spread = true, ar) :: Nil)(isMlsFun, true))
       f match
       // * Due to whacky JS semantics, we need to make sure that selections leading to a call
       // * are preserved in the call and not moved to a temporary variable.
@@ -197,7 +197,7 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
           conclude(Select(p, nme)(sel.sym))
       case _ => subTerm(f)(conclude)
       
-    case st.Blk((h @ Handle(lhs, rhs, cls, defs)) :: stmts, res) =>
+    case st.Blk((h @ Handle(lhs, rhs, args, cls, defs)) :: stmts, res) =>
       if !lowerHandlers then
         raise(ErrorReport(
           msg"Effect handlers are not enabled" ->
@@ -215,9 +215,14 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
       }.collect{ case Some(v) => v }
       val resSym = TempSymbol(S(t))
       subTerm(rhs): par =>
-        HandleBlock(lhs, resSym, par, cls, handlers,
-          term_nonTail(st.Blk(stmts, res))(HandleBlockReturn(_)),
-          k(Value.Ref(resSym)))
+        def rec(as: Ls[st], asr: Ls[Path]): Block = as match
+          case Nil => HandleBlock(lhs, resSym, par, asr.reverse, cls, handlers,
+            term_nonTail(st.Blk(stmts, res))(HandleBlockReturn(_)),
+            k(Value.Ref(resSym)))
+          case a :: as =>
+            subTerm_nonTail(a): ar =>
+              rec(as, ar :: asr)
+        rec(args, Nil)
       
     case st.Blk(Nil, res) => term(res)(k)
     case st.Blk((t: sem.Term) :: stats, res) =>
@@ -590,8 +595,8 @@ trait LoweringTraceLog
     stmts.foldRight(rest):
       case ((sym, res), acc) => Assign(sym, res, acc)
   
-  private def call(fn: Path, args: Ls[Arg]): Call =
-    Call(fn, args)(true)
+  private def pureCall(fn: Path, args: Ls[Arg]): Call =
+    Call(fn, args)(true, false)
   
   extension (k: Block => Block)
     def |>: (b: Block): Block = k(b)
@@ -634,26 +639,26 @@ trait LoweringTraceLog
         else Arg(false, Value.Ref(s)) :: Arg(false, Value.Lit(Tree.StrLit(", "))) :: acc
     
     assignStmts(psInspectedSyms.map: (pInspectedSym, pSym) =>
-      pInspectedSym -> call(inspectFn, Arg(false, Value.Ref(pSym)) :: Nil)
+      pInspectedSym -> pureCall(inspectFn, Arg(false, Value.Ref(pSym)) :: Nil)
     *) |>:
     assignStmts(
-      enterMsgSym -> call(
+      enterMsgSym -> pureCall(
         strConcatFn,
         Arg(false, Value.Lit(Tree.StrLit(s"CALL ${name.getOrElse("[arrow function]")}("))) :: psSymArgs
       ),
-      TempSymbol(N) -> call(traceLogFn, Arg(false, Value.Ref(enterMsgSym)) :: Nil),
-      prevIndentLvlSym -> call(traceLogIndentFn, Nil)
+      TempSymbol(N) -> pureCall(traceLogFn, Arg(false, Value.Ref(enterMsgSym)) :: Nil),
+      prevIndentLvlSym -> pureCall(traceLogIndentFn, Nil)
     ) |>: 
     term(bod)(r =>
     assignStmts(
       resSym -> r,
-      resInspectedSym -> call(inspectFn, Arg(false, Value.Ref(resSym)) :: Nil),
-      retMsgSym -> call(
+      resInspectedSym -> pureCall(inspectFn, Arg(false, Value.Ref(resSym)) :: Nil),
+      retMsgSym -> pureCall(
         strConcatFn,
         Arg(false, Value.Lit(Tree.StrLit("=> "))) :: Arg(false, Value.Ref(resInspectedSym)) :: Nil
       ),
-      TempSymbol(N) -> call(traceLogResetFn, Arg(false, Value.Ref(prevIndentLvlSym)) :: Nil),
-      TempSymbol(N) -> call(traceLogFn, Arg(false, Value.Ref(retMsgSym)) :: Nil)
+      TempSymbol(N) -> pureCall(traceLogResetFn, Arg(false, Value.Ref(prevIndentLvlSym)) :: Nil),
+      TempSymbol(N) -> pureCall(traceLogFn, Arg(false, Value.Ref(retMsgSym)) :: Nil)
     ) |>:
       Ret(Value.Ref(resSym))
     )

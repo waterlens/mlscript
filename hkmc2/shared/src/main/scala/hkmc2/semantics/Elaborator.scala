@@ -241,14 +241,14 @@ extends Importer:
           term(bod),
         ), Term.Assgn(lt, sym.ref(id))))
       case _ => ??? // TODO error
-    case Hndl(id, cls, blk, S(bod)) =>
-      term(Block(Hndl(id, cls, blk, N) :: bod :: Nil))
-    case Hndl(id: Ident, cls: Ident, Block(sts), N) =>
+    case Hndl(id, c, blk, S(bod)) =>
+      term(Block(Hndl(id, c, blk, N) :: bod :: Nil))
+    case Hndl(id: Ident, c, Block(sts), N) =>
       raise(ErrorReport(
         msg"Expected a body for handle bindings in expression position" ->
           tree.toLoc :: Nil))
           
-      block(Hndl(id, cls, Block(sts), N) :: Nil)._1
+      block(Hndl(id, c, Block(sts), N) :: Nil)._1
       
     case h: Hndl =>
       raise(ErrorReport(
@@ -716,13 +716,13 @@ extends Importer:
       case (tree @ LetLike(`let`, lhs, S(rhs), N)) :: sts =>
         raise(ErrorReport(msg"Unsupported let binding shape" -> tree.toLoc :: Nil))
         go(sts, funs, Nil, Term.Error :: acc)
-      case (hd @ Hndl(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
+      case (hd @ Hndl(id: Ident, c, Block(sts_), N)) :: sts =>
         reportUnusedAnnotations
         val res: Term.Blk = ctx.nest(N).givenIn:
           val sym = fieldOrVarSym(HandlerBind, id)
           log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
           
-          val derivedClsSym = ClassSymbol(Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), Tree.Ident(s"${cls.name}$$${id.name}$$"))
+          val derivedClsSym = ClassSymbol(Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), Tree.Ident(s"Handler$$${id.name}$$"))
           derivedClsSym.defn = S(ClassDef(
             N, syntax.Cls, derivedClsSym,
             BlockMemberSymbol(derivedClsSym.name, Nil),
@@ -749,8 +749,12 @@ extends Importer:
               raise(ErrorReport(msg"Only function definitions are allowed in handler blocks" -> st.toLoc :: Nil))
               None
           }.collect { case Some(x) => x }
-          
-          val newAcc = funs ::: Handle(sym, term(cls), derivedClsSym, tds) :: acc
+          val (cp, p) = c match
+            case App(c, Tup(params)) =>
+              (cls(c, inAppPrefix = true), params.map(term(_)))
+            case c =>
+              (cls(c, inAppPrefix = false), Nil)
+          val newAcc = funs ::: Handle(sym, cp, p, derivedClsSym, tds) :: acc
           val newCtx = ctx + (id.name -> sym)
           val body = block(sts)(using newCtx)._1
           Term.Blk(newAcc.reverse, body) // <<<<<<<<<<<<<<<<<<<<<<<<<<< FIXME scope problem (not calling `go`)

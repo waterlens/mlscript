@@ -128,10 +128,9 @@ Predef1 = class Predef {
     this.__stackDepth = 0;
     this.__stackOffset = 0;
     this.__stackHandler = null;
-    this.__StackDelay = function __StackDelay() { return new __StackDelay.class(); };
-    this.__StackDelay.class = class __StackDelay {
+    this.__StackDelay = class __StackDelay {
       constructor() {}
-      toString() { return "__StackDelay(" + "" + ")"; }
+      toString() { return "__StackDelay"; }
     };
   }
   static id(x) {
@@ -713,6 +712,30 @@ Predef1 = class Predef {
       break;
     }
     return tmp4;
+  } 
+  static checkDepth() {
+    let scrut, tmp, tmp1, tmp2;
+    tmp = Predef.__stackDepth - Predef.__stackOffset;
+    tmp1 = tmp >= Predef.__stackLimit;
+    tmp2 = Predef.__stackHandler !== null;
+    scrut = tmp1 && tmp2;
+    if (scrut === true) {
+      return Predef.__stackHandler.perform() ?? null;
+    } else {
+      return null;
+    }
+  } 
+  static resetDepth(tmp, curDepth) {
+    let scrut, tmp1;
+    Predef.__stackDepth = curDepth;
+    scrut = curDepth < Predef.__stackOffset;
+    if (scrut === true) {
+      Predef.__stackOffset = curDepth;
+      tmp1 = null;
+    } else {
+      tmp1 = null;
+    }
+    return tmp;
   }
   static toString() { return "Predef"; }
 };

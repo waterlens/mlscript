@@ -34,6 +34,8 @@ final case class Ctx(
   class_ctx: Map[Local, Name] = Map.empty,
   block_ctx: Map[Local, Name] = Map.empty,
   is_top_level: Bool = true,
+  method_class: Opt[Symbol] = None,
+  this_name: Opt[Name] = None,
 ):
   def addFuncName(n: Local, m: Name) = copy(fn_ctx = fn_ctx + (n -> m))
   def findFuncName(n: Local)(using Raise) = fn_ctx.get(n) match
@@ -53,6 +55,8 @@ final case class Ctx(
       errStop(msg"Name not found: $n")
       Name("error")
     case Some(value) => value
+  def setClass(c: Symbol) = copy(method_class = Some(c))
+  def setThis(n: Name) = copy(this_name = Some(n))
   def reset =
     def_acc.clear()
     class_acc.clear()
@@ -141,6 +145,26 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
           body = bBlock(body)(x => Node.Result(Ls(x)))(using ctx3)
         )
 
+  private def bMethodDef(e: FunDefn)(using ctx: Ctx)(using Raise, Scope): Func =
+    trace[Func](s"bFunDef begin: ${e.sym}", x => s"bFunDef end: ${x.show}"):
+      val FunDefn(sym, params, body) = e
+      if !ctx.is_top_level then
+        errStop(msg"Non top-level definition ${sym.nme} not supported")
+      else if params.length != 1 then
+        errStop(msg"Curried function or zero arguments function not supported: ${params.length.toString}")
+      else 
+        val paramsList = params.head.params.map(x => x -> summon[Scope].allocateName(x.sym))
+        val ctx2 = paramsList.foldLeft(ctx)((acc, x) => acc.addName(getVar_!(x._1.sym), x._2 |> nme))
+        val ctx3 = ctx2.nonTopLevel
+        val pl = ctx.this_name.getOrElse(errStop(msg"Not in a class")) :: paramsList.map(_._2).map(nme)
+        Func(
+          fnUid.make,
+          sym.nme,
+          params = pl,
+          resultNum = 1,
+          body = bBlock(body)(x => Node.Result(Ls(x)))(using ctx3)
+        )
+
   private def bClsLikeDef(e: ClsLikeDefn)(using ctx: Ctx)(using Raise, Scope): ClassInfo =
     trace[ClassInfo](s"bClsLikeDef begin", x => s"bClsLikeDef end: ${x.show}"):
       val ClsLikeDefn(sym, kind, parentSym, methods, privateFields, publicFields, preCtor, ctor) = e
@@ -150,6 +174,9 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         val clsDefn = sym.defn.getOrElse(die)
         val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
         val clsFields = publicFields.map(_.sym)
+        given Ctx = ctx.setClass(sym).setThis(fresh.make("this"))
+        val funcs = methods.map(bMethodDef)
+        ctx.def_acc ++= funcs
         ClassInfo(
           clsUid.make,
           sym.nme,
@@ -159,6 +186,10 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
   private def bValue(v: Value)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bValue begin", x => s"bValue end: ${x.show}"):
       v match
+      case Value.Ref(l: TermSymbol) if l.owner.nonEmpty =>
+        val v = fresh.make
+        Node.LetExpr(v, 
+          Expr.Select(ctx.this_name.getOrElse(errStop(msg"Not in a class")), ClassRef.fromName(l.owner.get.nme), l.name), k(v |> sr))
       case Value.Ref(l) => k(ctx.findName(getVar_!(l)) |> sr)
       case Value.This(sym) => errStop(msg"Unsupported value: This"); Node.Result(Ls())
       case Value.Lit(lit) => k(Expr.Literal(lit))
@@ -178,6 +209,10 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         val v = fresh.make
         Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(name.name), Ls()), k(v |> sr))
       // field selection
+      case Select(Value.Ref(cls: ClassSymbol), name) if ctx.method_class.contains(cls) =>
+        val v = fresh.make
+        val _ = Node.LetExpr(v, Expr.Select(ctx.this_name.getOrElse(errStop(msg"Not in a class")), ClassRef.fromName(cls.nme), name.name), k(v |> sr))
+        errStop(msg"Unsupported field in the class")
       case s @ Select(qual, name) =>
         log(s"bPath Select: $qual.$name with ${s.symbol}")
         s.symbol match
@@ -249,7 +284,10 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         bPath(scrut):
           case e: TrivialExpr =>
             val jp = fresh.make("j")
-            val fvset = (rest.freeVars -- rest.definedVars).map(allocIfNew)
+            val fvset = (rest.freeVars -- rest.definedVars).filter{
+              case s: BuiltinSymbol => false
+              case _ => true
+            }.map(allocIfNew)
             val fvs1 = fvset.toList
             val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, fresh.make))
             val fvs = fvs1.map(new_ctx.findName(_))

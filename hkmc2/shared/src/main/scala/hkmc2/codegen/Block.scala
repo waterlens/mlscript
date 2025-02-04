@@ -182,8 +182,8 @@ enum Case:
 sealed abstract class Result:
 
   lazy val freeVars: Set[Local] = this match
-    case Call(fun, args) => args.flatMap(_.value.freeVars).toSet
-    case Instantiate(cls, args) => args.flatMap(_.freeVars).toSet
+    case Call(fun, args) => fun.freeVars ++ args.flatMap(_.value.freeVars).toSet
+    case Instantiate(cls, args) => cls.freeVars ++ args.flatMap(_.freeVars).toSet
     case Select(qual, name) => qual.freeVars 
     case Value.Ref(l) => Set(l)
     case Value.This(sym) => Set.empty

@@ -1,17 +1,27 @@
 
 
 declare type Any
+declare type Anything
 declare type Nothing
 
+declare type untyped
+
 declare class Object
+declare class Array
+declare class JSON
+declare class Number
+declare class Function
+declare class Set
+declare class Map
+declare class Error(msg)
+
+// MLscript-specific types
 declare class Bool
 declare class Int
 declare class Num
 declare class Str with
   fun length: Int
   fun concat: Str -> Str
-declare class Set
-declare class Error(msg)
 
 declare class String
 declare class RegExp
@@ -24,12 +34,19 @@ declare val process
 declare val fs
 declare val Infinity
 
+// declare fun typeof: (Any) -> Str
+
 
 declare module Predef with
   class Test with
     val x = 0
   class MatchResult(captures)
   class MatchFailure(errors)
+  class __EffectSig(next, tail, handleBlockList, resumed, handler, handlerFun)
+  class __Return(value)
+  // This declaration is not used currently except for experimentation
+  abstract class __StackDelay with
+    fun perform()
 
 
 // TODO: rm

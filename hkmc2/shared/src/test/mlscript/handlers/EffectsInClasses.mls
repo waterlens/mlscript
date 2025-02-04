@@ -1,0 +1,131 @@
+:js
+:handler
+
+
+abstract class Effect with
+  fun perform(arg: Str): Str
+
+
+:sjs
+class Lol(h) with
+  print(h.perform("k"))
+//│ JS (unsanitized):
+//│ let Lol1;
+//│ Lol1 = function Lol(h1) { return new Lol.class(h1); };
+//│ Lol1.class = class Lol {
+//│   constructor(h) {
+//│     this.h = h;
+//│     let tmp, res, Cont$1;
+//│     const this$Lol = this;
+//│     Cont$1 = function Cont$(pc1) { return new Cont$.class(pc1); };
+//│     Cont$1.class = class Cont$ extends globalThis.Predef.__Cont.class {
+//│       constructor(pc) {
+//│         let tmp1;
+//│         tmp1 = super(null, null);
+//│         this.pc = pc;
+//│       }
+//│       resume(value$) {
+//│         if (this.pc === 0) {
+//│           tmp = value$;
+//│         } else if (this.pc === 1) {
+//│           res = value$;
+//│         }
+//│         contLoop: while (true) {
+//│           if (this.pc === 2) {
+//│             return this$Lol
+//│           } else if (this.pc === 0) {
+//│             res = Predef.print(tmp);
+//│             if (res instanceof globalThis.Predef.__EffectSig.class) {
+//│               this.pc = 1;
+//│               return globalThis.Predef.__appendInCont(res, this)
+//│             }
+//│             this.pc = 1;
+//│             continue contLoop;
+//│           } else if (this.pc === 1) {
+//│             this.pc = 2;
+//│             continue contLoop;
+//│           }
+//│           break;
+//│         }
+//│       }
+//│       toString() { return "Cont$(" + globalThis.Predef.render(this.pc) + ")"; }
+//│     };
+//│     tmp = this.h.perform("k") ?? null;
+//│     if (tmp instanceof globalThis.Predef.__EffectSig.class) {
+//│       tmp.tail.next = new Cont$1.class(0);
+//│       tmp.tail = tmp.tail.next;
+//│       return tmp
+//│     }
+//│     res = Predef.print(tmp);
+//│     if (res instanceof globalThis.Predef.__EffectSig.class) {
+//│       res.tail.next = new Cont$1.class(1);
+//│       res.tail = res.tail.next;
+//│       return res
+//│     }
+//│     res
+//│   }
+//│   toString() { return "Lol(" + globalThis.Predef.render(this.h) + ")"; }
+//│ };
+//│ null
+
+
+// * This is a weird use of effect handlers where an effect is raised during the construction of a handler.
+// * The most natural semantics (following what normal constructors currently do)
+// *  is for the handler to not yet be constructed but to be constructed and executed normally after resumption.
+// * See full discussion at: https://github.com/hkust-taco/mlscript/pull/268#discussion_r1938523085
+:fixme
+handle h = Effect with
+  fun perform(arg)(k) =
+    print(arg)
+    k()
+abstract class Eff with
+  fun test()
+  h.perform("x")
+handle k = Eff with
+  fun test()(k) = k()
+k.test()
+print("test")
+//│ ═══[RUNTIME ERROR] TypeError: k.test is not a function
+
+
+let oops = 
+  handle h = Effect with
+    fun perform(arg)(k) =
+      print(arg)
+      "b"
+  Lol(h)
+//│ > k
+//│ oops = "b"
+
+:expect "b"
+oops
+//│ = "b"
+
+let oops = 
+  handle h = Effect with
+    fun perform(arg)(k) =
+      print(arg)
+      "b"
+  new Lol(h)
+//│ > k
+//│ oops = "b"
+
+:expect "b"
+oops
+//│ = "b"
+
+
+let oops = 
+  handle h = Effect with
+    fun perform(arg)(k) =
+      print(arg)
+      k("b")
+  Lol(h)
+//│ > k
+//│ > b
+//│ oops = Lol(Handler$h$)
+
+oops.h
+//│ = Handler$h$
+
+

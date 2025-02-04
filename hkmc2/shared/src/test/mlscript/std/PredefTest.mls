@@ -2,7 +2,7 @@
 
 
 Predef.Test
-//│ = [class Test]
+//│ = class Test {      constructor() {        let tmp;        tmp = Predef.print("Test");        this.y = 1;      }      toString() { return "Test"; }    }
 
 Test === Predef.Test
 //│ = true
@@ -15,7 +15,7 @@ Predef.Test === globalThis.Predef.Test
 
 :fixme
 new Predef.Test is Predef.Test
-//│ ═══[RUNTIME ERROR] TypeError: tmp2 is not a constructor
+//│ ═══[RUNTIME ERROR] TypeError: tmp7 is not a constructor
 
 (new Predef.Test) is Predef.Test
 //│ > Test
@@ -23,7 +23,7 @@ new Predef.Test is Predef.Test
 
 new Predef.Test
 //│ > Test
-//│ = Test { y: 1 }
+//│ = Test
 
 (new Predef.Test).y
 //│ > Test
@@ -44,10 +44,18 @@ print(1, 2, 3)
 1 . print()
 //│ > 1
 
+1 . (print(_))()
+//│ > 1
+
+:e
+1 . print(_)()
+//│ ═══[ERROR] Illegal position for '_' placeholder.
+
 // FIXME: should have the same semantics...
 1
   . print()
-//│ = [Function (anonymous)]
+//│ > 
+//│ = [function]
 
 
 :re
@@ -75,11 +83,11 @@ print(1, 2, 3)
 let
   f = ((_ + 1) >> (_ * 2)) >> (_ - 1)
   g = (_ + 1) >> ((_ * 2) >> (_ - 1))
-//│ f = [Function (anonymous)]
-//│ g = [Function (anonymous)]
+//│ f = [function]
+//│ g = [function]
 
 [f(123), g(123)]
-//│ = [ 247, 247 ]
+//│ = [247, 247]
 
 
 // *** Folding ***
@@ -97,7 +105,7 @@ fold(print)(0, 1, 2, 3)
 //│ > null 3
 
 fold(tuple)(0, 1, 2, 3)
-//│ = [ [ [ 0, 1 ], 2 ], 3 ]
+//│ = [[[0, 1], 2], 3]
 
 fold(+) of
   0
@@ -114,7 +122,7 @@ fold(tuple) of
   "A" +
   "B"
   "C"
-//│ = [ 'AB', 'C' ]
+//│ = ["AB", "C"]
 
 
 foldr(+)(0, 1, 2, 3)
@@ -124,7 +132,7 @@ foldr(-)(0, 1, 2, 3)
 //│ = -2
 
 foldr(tuple)(0, 1, 2, 3)
-//│ = [ 0, [ 1, [ 2, 3 ] ] ]
+//│ = [0, [1, [2, 3]]]
 
 :todo
 :re

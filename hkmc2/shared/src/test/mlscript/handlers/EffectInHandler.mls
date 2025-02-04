@@ -1,0 +1,45 @@
+:js
+:handler
+
+class PrintEffect with
+  fun p(s: String): ()
+  fun aux(s: String): ()
+
+:e
+// :sjs
+handle h = PrintEffect with
+  fun p(x)(k) =
+    print(x)
+    k(())
+  fun aux(x)(k) =
+    h.p(x)
+    k(())
+    h.p(x)
+h.aux(3)
+//│ ╔══[ERROR] Name not found: h
+//│ ║  l.15: 	    h.p(x)
+//│ ╙──      	    ^
+//│ ╔══[ERROR] Name not found: h
+//│ ║  l.17: 	    h.p(x)
+//│ ╙──      	    ^
+
+handle h1 = PrintEffect with
+  fun p(x)(k) =
+    print(x)
+    k(())
+  fun aux(x)(k) = k(())
+handle h2 = PrintEffect with
+  fun p(x)(k) =
+    print(x)
+    k(())
+  fun aux(x)(k) =
+    h1.p(x)
+    k(())
+    h1.p(x)
+h1.p(4)
+h2.aux(3)
+h1.p(4)
+//│ > 4
+//│ > 3
+//│ > 4
+//│ > 3

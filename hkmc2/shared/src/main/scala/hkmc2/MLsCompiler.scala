@@ -38,9 +38,8 @@ class ParserSetup(file: os.Path, dbgParsing: Bool)(using Elaborator.State, Raise
 class MLsCompiler(preludeFile: os.Path):
   
   
-  given raise: Raise = d =>
-    System.err.println(s"Error: $d")
-    ()
+  val report = ReportFormatter: str =>
+    System.out.println(fansi.Color.Red(str))
   
   
   // TODO adapt logic
@@ -53,12 +52,17 @@ class MLsCompiler(preludeFile: os.Path):
   
   def compileModule(file: os.Path): Unit =
     
+    val wd = file / os.up
+    
+    given raise: Raise = d =>
+      System.out.println(fansi.Color.LightRed(s"/!!!\\ Error in ${file.relativeTo(wd/os.up)} /!!!\\"))
+      report(0, d :: Nil, showRelativeLineNums = false)
+    
     given Elaborator.State = new Elaborator.State
     
     val preludeParse = ParserSetup(preludeFile, dbgParsing)
     val mainParse = ParserSetup(file, dbgParsing)
     
-    val wd = file / os.up
     val elab = Elaborator(etl, wd)
     
     val initState = State.init.nest(N)
@@ -67,16 +71,20 @@ class MLsCompiler(preludeFile: os.Path):
     
     newCtx.nest(N).givenIn:
       
-      val (blk, newCtx) = elab.importFrom(mainParse.resultBlk)
+      val parsed = mainParse.resultBlk
+      val (blk, newCtx) = elab.importFrom(parsed)
       val low = ltl.givenIn:
-        codegen.Lowering()
-      val jsb = codegen.js.JSBuilder()
+        codegen.Lowering(lowerHandlers = false, stackLimit = None) // TODO: properly hook up stack limit
+      val jsb = ltl.givenIn:
+        codegen.js.JSBuilder()
       val le = low.program(blk)
       val baseScp: utils.Scope =
         utils.Scope.empty
       val nestedScp = baseScp.nest
+      val nme = file.baseName
+      val exportedSymbol = parsed.definedSymbols.find(_._1 === nme).map(_._2)
       val je = nestedScp.givenIn:
-        jsb.program(le, S(file.baseName), wd)
+        jsb.program(le, exportedSymbol, wd)
       val jsStr = je.stripBreaks.mkString(100)
       val out = file / os.up / (file.baseName + ".mjs")
       os.write.over(out, jsStr)

@@ -9,18 +9,19 @@ object Example with
   fun f(x) = [x, a]
 
 Example.f(2)
-//│ = [ 2, 1 ]
+//│ = [2, 1]
 
 let oops = Example.f
-//│ oops = [Function: f]
+//│ oops = [function f]
 
 
 // * JavaScript nonsense
+:re
 oops(2)
-//│ = [ 2, undefined ]
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'a')
 
 oops.call(Example, 2)
-//│ = [ 2, 1 ]
+//│ = [2, 1]
 
 
 // * We could use that syntax as a shorthand:
@@ -42,24 +43,24 @@ Example . oops(2)
 //│   rhs = Tup of Ls of 
 //│     IntLit of 2
 //│ JS (unsanitized):
-//│ let tmp; tmp = this.call(this.Example, this.oops); tmp(2) ?? null
-//│ = [ 2, 1 ]
+//│ let tmp1; tmp1 = call(Example1, oops); tmp1(2) ?? null
+//│ = [2, 1]
 
 Example. oops(2)
-//│ = [ 2, 1 ]
+//│ = [2, 1]
 
 // * This one is a normal method call; there is no `oops` in `Example`
 :e
 :re
 Example .oops(2)
 //│ ╔══[ERROR] Object 'Example' does not contain member 'oops'
-//│ ║  l.54: 	Example .oops(2)
+//│ ║  l.55: 	Example .oops(2)
 //│ ╙──      	        ^^^^^
-//│ ═══[RUNTIME ERROR] TypeError: this.Example.oops is not a function
+//│ ═══[RUNTIME ERROR] TypeError: Example1.oops is not a function
 
 
 id(Example) . oops(2)
-//│ = [ 2, 1 ]
+//│ = [2, 1]
 
 
 class Example2(val a) with
@@ -67,24 +68,27 @@ class Example2(val a) with
   fun f(inc) = Example2(a + inc)
 
 let oops2 = Example2(0).f
-//│ oops2 = [Function: f]
+//│ oops2 = [function f]
 
 Example2(1) . oops2(2) . oops2(2)
-//│ = Example2 { a: 1 }
+//│ = Example2(1)
 
 Example2(1). oops2(2). oops2(2)
-//│ = Example2 { a: 1 }
+//│ = Example2(1)
+
+(new Example2(1)) . oops2(2)
+//│ = Example2(1)
 
 :todo
 new Example2(1)
   . oops2(2)
-//│ ═══[RUNTIME ERROR] TypeError: tmp2 is not a constructor
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'a')
 
 :todo
 new Example2(1)
   . oops2(2)
   . oops2(2)
-//│ ═══[RUNTIME ERROR] TypeError: tmp4 is not a constructor
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'a')
 
 
 // * Alternative syntax – precedence is now inappropriate
@@ -92,6 +96,7 @@ fun (.>) call(receiver, f)(arg) = f.call(receiver, arg)
 
 :pt
 :sjs
+:re
 Example .> oops(2)
 //│ Parsed tree:
 //│ App:
@@ -103,24 +108,33 @@ Example .> oops(2)
 //│       rhs = Tup of Ls of 
 //│         IntLit of 2
 //│ JS (unsanitized):
-//│ let tmp; tmp = this.oops(2) ?? null; this.call(this.Example, tmp)
-//│ = [Function (anonymous)]
+//│ let tmp25; tmp25 = oops(2) ?? null; call1(Example1, tmp25)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'a')
+
+// * Note:
+:re
+oops(2)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'a')
+
+// * Note:
+(Example .> oops)(2)
+//│ = [2, 1]
 
 
 // * Another alternative syntax – currently adopted in Predef
 fun (|>.) call(receiver, f)(arg) = f.call(receiver, arg)
 
 Example |>. oops(2)
-//│ = [ 2, 1 ]
+//│ = [2, 1]
 
 Example2(1) |>. oops2(2) |>. oops2(2)
-//│ = Example2 { a: 1 }
+//│ = Example2(1)
 
 :fixme
 (Example2(1)
   |>. oops2(2)
   |>. oops2(2)
 ).a
-//│ ═══[RUNTIME ERROR] Error: Access to required field 'a' yielded 'undefined'
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'a')
 
 

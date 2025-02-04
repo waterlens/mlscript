@@ -6,9 +6,11 @@ import scala.collection.mutable.{Set => MutSet}
 
 import mlscript.utils.*, shorthands.*
 import syntax.*
+import hkmc2.utils.*
 
 import Elaborator.State
 import Tree.Ident
+import hkmc2.utils.SymbolSubst
 
 
 abstract class Symbol(using State) extends Located:
@@ -30,10 +32,12 @@ abstract class Symbol(using State) extends Located:
     case cls: ClassSymbol => S(cls)
     case mem: BlockMemberSymbol => mem.clsTree.flatMap(_.symbol.asCls)
     case _ => N
-  def asMod: Opt[ModuleSymbol] = this match
+  def asModOrObj: Opt[ModuleSymbol] = this match
     case mod: ModuleSymbol => S(mod)
-    case mem: BlockMemberSymbol => mem.modTree.flatMap(_.symbol.asMod)
+    case mem: BlockMemberSymbol => mem.modOrObjTree.flatMap(_.symbol.asModOrObj)
     case _ => N
+  def asMod: Opt[ModuleSymbol] = asModOrObj.filter(_.tree.k is Mod)
+  def asObj: Opt[ModuleSymbol] = asModOrObj.filter(_.tree.k is Obj)
   /* 
   def asTrm: Opt[TermSymbol] = this match
     case trm: TermSymbol => S(trm)
@@ -50,13 +54,15 @@ abstract class Symbol(using State) extends Located:
     case _ => N
   
   def asClsLike: Opt[ClassSymbol | ModuleSymbol | PatternSymbol] =
-    (asCls: Opt[ClassSymbol | ModuleSymbol | PatternSymbol]) orElse asMod orElse asPat
+    (asCls: Opt[ClassSymbol | ModuleSymbol | PatternSymbol]) orElse asModOrObj orElse asPat
   def asTpe: Opt[TypeSymbol] = asCls orElse asAls
   
   override def equals(x: Any): Bool = x match
     case that: Symbol => uid === that.uid
     case _ => false
   override def hashCode: Int = uid.hashCode
+
+  def subst(using SymbolSubst): Symbol
 
 end Symbol
 
@@ -71,19 +77,25 @@ class FlowSymbol(label: Str)(using State) extends Symbol:
   override def toString: Str =
     label + State.dbgUid(uid)
 
+  def subst(using s: SymbolSubst): FlowSymbol = s.mapFlowSym(this)
 
-sealed trait LocalSymbol extends Symbol
+
+sealed trait LocalSymbol extends Symbol:
+  def subst(using s: SymbolSubst): LocalSymbol
 sealed trait NamedSymbol extends Symbol:
   def name: Str
   def id: Ident
+  def subst(using s: SymbolSubst): NamedSymbol
 
-abstract class BlockLocalSymbol(name: Str)(using State) extends FlowSymbol(name) with LocalSymbol:
+abstract class BlockLocalSymbol(name: Str)(using State) extends FlowSymbol(name):
+  self: LocalSymbol => // * using `with LocalSymbol` in the `extends` clause makes Scala think there's a bad override
   var decl: Opt[Declaration] = N
 
-class TempSymbol(val trm: Opt[Term], dbgNme: Str = "tmp")(using State) extends BlockLocalSymbol(dbgNme):
+class TempSymbol(val trm: Opt[Term], dbgNme: Str = "tmp")(using State) extends BlockLocalSymbol(dbgNme) with LocalSymbol:
   val nameHints: MutSet[Str] = MutSet.empty
   override def toLoc: Option[Loc] = trm.flatMap(_.toLoc)
   override def toString: Str = s"$$${super.toString}"
+  override def subst(using s: SymbolSubst): TempSymbol = s.mapTempSym(this)
 
 
 // * When instantiating forall-qualified TVs, we need to duplicate the information
@@ -94,16 +106,21 @@ class InstSymbol(val origin: Symbol)(using State) extends LocalSymbol:
   override def toLoc: Option[Loc] = origin.toLoc
   override def toString: Str = origin.toString
 
+  def subst(using sub: SymbolSubst): InstSymbol = sub.mapInstSym(this)
 
-class VarSymbol(val id: Ident)(using State) extends BlockLocalSymbol(id.name) with NamedSymbol:
+
+class VarSymbol(val id: Ident)(using State) extends BlockLocalSymbol(id.name) with NamedSymbol with LocalSymbol:
   val name: Str = id.name
   // override def toString: Str = s"$name@$uid"
+  override def subst(using s: SymbolSubst): VarSymbol = s.mapVarSym(this)
 
 class BuiltinSymbol
     (val nme: Str, val binary: Bool, val unary: Bool, val nullary: Bool, val functionLike: Bool)(using State)
     extends Symbol:
   def toLoc: Option[Loc] = N
   override def toString: Str = s"builtin:$nme${State.dbgUid(uid)}"
+
+  def subst(using sub: SymbolSubst): BuiltinSymbol = sub.mapBuiltInSym(this)
 
 
 /** This is the outside-facing symbol associated to a possibly-overloaded
@@ -115,8 +132,11 @@ class BlockMemberSymbol(val nme: Str, val trees: Ls[Tree])(using State)
   
   def clsTree: Opt[Tree.TypeDef] = trees.collectFirst:
     case t: Tree.TypeDef if t.k is Cls => t
+  def modOrObjTree: Opt[Tree.TypeDef] = modTree orElse objTree
+  def objTree: Opt[Tree.TypeDef] = trees.collectFirst:
+    case t: Tree.TypeDef if (t.k is Obj) => t
   def modTree: Opt[Tree.TypeDef] = trees.collectFirst:
-    case t: Tree.TypeDef if (t.k is Mod) || (t.k is Obj) => t
+    case t: Tree.TypeDef if (t.k is Mod) => t
   def alsTree: Opt[Tree.TypeDef] = trees.collectFirst:
     case t: Tree.TypeDef if t.k is Als => t
   def patTree: Opt[Tree.TypeDef] = trees.collectFirst:
@@ -127,10 +147,12 @@ class BlockMemberSymbol(val nme: Str, val trees: Ls[Tree])(using State)
     case t: Tree.TermDef if t.rhs.isDefined => t
   
   lazy val hasLiftedClass: Bool =
-    modTree.isDefined || trmTree.isDefined || clsTree.exists(_.paramLists.nonEmpty)
+    objTree.isDefined || trmTree.isDefined || clsTree.exists(_.paramLists.nonEmpty)
   
   override def toString: Str =
     s"member:$nme${State.dbgUid(uid)}"
+  
+  def subst(using sub: SymbolSubst): BlockMemberSymbol = sub.mapBlockMemberSym(this)
   
 end BlockMemberSymbol
 
@@ -138,7 +160,7 @@ end BlockMemberSymbol
 sealed abstract class MemberSymbol[Defn <: Definition](using State) extends Symbol:
   def nme: Str
   var defn: Opt[Defn] = N
-  val isGetter: Bool = false
+  def subst(using SymbolSubst): MemberSymbol[Defn]
 
 
 class TermSymbol(val k: TermDefKind, val owner: Opt[InnerSymbol], val id: Tree.Ident)(using State)
@@ -147,9 +169,12 @@ class TermSymbol(val k: TermDefKind, val owner: Opt[InnerSymbol], val id: Tree.I
   def name: Str = nme
   def toLoc: Option[Loc] = id.toLoc
   override def toString: Str = s"${owner.getOrElse("")}.${id.name}"
+  
+  def subst(using sub: SymbolSubst): TermSymbol = sub.mapTermSym(this)
 
 
-sealed trait CtorSymbol extends Symbol
+sealed trait CtorSymbol extends Symbol:
+  def subst(using sub: SymbolSubst): CtorSymbol = sub.mapCtorSym(this)
 
 case class Extr(isTop: Bool)(using State) extends CtorSymbol:
   def nme: Str = if isTop then "Top" else "Bot"
@@ -170,41 +195,71 @@ type TypeSymbol = ClassSymbol | TypeAliasSymbol
 
 type FieldSymbol = TermSymbol | MemberSymbol[?]
 
+sealed trait ClassLikeSymbol extends Symbol:
+  self: MemberSymbol[? <: ClassDef | ModuleDef] =>
+  def subst(using sub: SymbolSubst): ClassLikeSymbol
+
 
 /** This is the symbol associated to specific definitions.
   * One overloaded `BlockMemberSymbol` may correspond to multiple `InnerSymbol`s
   * A `Ref(_: InnerSymbol)` represents a `this`-like reference to the current object. */
-sealed trait InnerSymbol extends Symbol
+  // TODO prevent from appearing in Ref
+sealed trait InnerSymbol(using State) extends Symbol:
+  val privatesScope: Scope = Scope.empty // * Scope for private members of this symbol
+  val thisProxy: TempSymbol = TempSymbol(N, s"this$$$nme")
+  def subst(using SymbolSubst): InnerSymbol
 
 class ClassSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
-    extends MemberSymbol[ClassDef] with CtorSymbol with InnerSymbol:
+    extends MemberSymbol[ClassDef] with ClassLikeSymbol with CtorSymbol with InnerSymbol with NamedSymbol:
+  def name: Str = nme
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of classe here
   override def toString: Str = s"class:$nme${State.dbgUid(uid)}"
   /** Compute the arity. */
   def arity: Int = tree.paramLists.headOption.fold(0)(_.fields.length)
+  
+  override def subst(using sub: SymbolSubst): ClassSymbol = sub.mapClsSym(this)
 
 class ModuleSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
-    extends MemberSymbol[ModuleDef] with CtorSymbol with InnerSymbol:
+    extends MemberSymbol[ModuleDef] with ClassLikeSymbol with CtorSymbol with InnerSymbol with NamedSymbol:
+  def name: Str = nme
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of module here
-  override def toString: Str = s"module:${id.name}${State.dbgUid(uid)}"
+  override def toString: Str =
+    if tree.k is Obj then s"object:$nme${State.dbgUid(uid)}"
+    else s"module:${id.name}${State.dbgUid(uid)}"
+  
+  override def subst(using sub: SymbolSubst): ModuleSymbol = sub.mapModuleSym(this)
 
 class TypeAliasSymbol(val id: Tree.Ident)(using State) extends MemberSymbol[TypeDef]:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of type alias here
-  override def toString: Str = s"module:${id.name}${State.dbgUid(uid)}"
+  override def toString: Str = s"type:${id.name}${State.dbgUid(uid)}"
+  
+  def subst(using sub: SymbolSubst): TypeAliasSymbol = sub.mapTypeAliasSym(this)
 
-class PatternSymbol(val id: Tree.Ident)(using State)
+class PatternSymbol(val id: Tree.Ident, val params: Opt[Tree.Tup], val body: Tree)(using State)
     extends MemberSymbol[PatternDef] with CtorSymbol with InnerSymbol:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of pattern here
   override def toString: Str = s"pattern:${id.name}"
+  /** The desugared nameless split. */
+  private var _split: Opt[ucs.DeBrujinSplit] = N
+  def split_=(split: ucs.DeBrujinSplit): Unit = _split = S(split)
+  def split: ucs.DeBrujinSplit = _split.getOrElse:
+    lastWords(s"found unelaborated pattern: $nme")
+  /** The list of pattern parameters, for example,
+    * `T` in `pattern Nullable(pattern T) = null | T`.
+    */
+  var patternParams: Ls[Param] = Nil
+  
+  override def subst(using sub: SymbolSubst): PatternSymbol = sub.mapPatSym(this)
 
 class TopLevelSymbol(blockNme: Str)(using State)
     extends MemberSymbol[ModuleDef] with InnerSymbol:
   def nme = blockNme
   def toLoc: Option[Loc] = N
   override def toString: Str = s"globalThis:$blockNme${State.dbgUid(uid)}"
-
+  
+  def subst(using sub: SymbolSubst): TopLevelSymbol = sub.mapTopLevelSym(this)
 

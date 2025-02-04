@@ -9,44 +9,53 @@ fun test(a) =
   class C with { val x = a }
   new C
 //│ JS (unsanitized):
-//│ function test(a) {
-//│   class C {
+//│ let test;
+//│ test = function test(a) {
+//│   let C1;
+//│   C1 = class C {
 //│     constructor() {
 //│       this.x = a;
 //│     }
 //│     toString() { return "C"; }
-//│   }
-//│   return new C();
-//│ }
+//│   };
+//│   return new C1()
+//│ };
 //│ null
 
 test(12)
-//│ = C { x: 12 }
+//│ = C
 
+fun test(x) =
+  class Foo(x)
+  Foo(x).toString()
+
+test(3)
+//│ = "Foo(3)"
 
 :sjs
 fun test(x) =
   class Foo(a, b)
   Foo(x, x + 1)
 //│ JS (unsanitized):
-//│ function test(x) {
-//│   let tmp;
-//│   function Foo(a1, b1) { return new Foo.class(a1, b1); }
-//│   Foo.class = class Foo {
+//│ let test2;
+//│ test2 = function test(x) {
+//│   let Foo2, tmp;
+//│   Foo2 = function Foo(a1, b1) { return new Foo.class(a1, b1); };
+//│   Foo2.class = class Foo1 {
 //│     constructor(a, b) {
 //│       this.a = a;
 //│       this.b = b;
 //│     }
-//│     toString() { return "Foo(" + this.a + ", " + this.b + ")"; }
+//│     toString() { return "Foo(" + globalThis.Predef.render(this.a) + ", " + globalThis.Predef.render(this.b) + ")"; }
 //│   };
 //│   tmp = x + 1;
-//│   return Foo(x, tmp);
-//│ }
+//│   return Foo2(x, tmp)
+//│ };
 //│ null
 
 
 test(123)
-//│ = Foo { a: 123, b: 124 }
+//│ = Foo(123, 124)
 
 
 // * Forgot to pass the arg:

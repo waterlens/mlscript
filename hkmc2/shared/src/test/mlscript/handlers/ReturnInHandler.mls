@@ -1,0 +1,52 @@
+:js
+:handler
+
+abstract class Effect with
+  fun f(): ()
+
+fun f() =
+  handle h = Effect with
+    fun foo()(r) =
+      let m = r(())
+      print("Bye!") // This never executes because `r` returns from `f`
+      m
+  h.foo()
+  return 3 // Note: changing this to just `3` leads to `print("Bye!")` executing
+f()
+//│ = 3
+
+fun f() =
+  handle h = Effect with
+    fun foo()(r) =
+      let m = r()
+      print("Bye!")
+      m
+  in
+    h.foo()
+    return 3
+  10
+
+:expect 3
+f()
+//│ = 3
+
+let l = () =>
+  handle h = Effect with
+    fun foo()(r) = r(())
+  return 3
+  4
+//│ l = [function l]
+
+l()
+//│ = 3
+
+handle h1 = Effect with
+  fun foo()(r) = r(())
+let l = () =>
+  handle h2 = Effect with
+    fun bar()(r) = r(())
+  h1.foo()
+  return 3
+  4
+l()
+//│ = 3

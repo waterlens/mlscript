@@ -1,13 +1,14 @@
 import Predef from "./Predef.mjs";
-const Stack$class = class Stack {
-  constructor() {
+let Stack1;
+Stack1 = class Stack {
+  static {
     this.Cons = function Cons(head1, tail1) { return new Cons.class(head1, tail1); };
     this.Cons.class = class Cons {
       constructor(head, tail) {
         this.head = head;
         this.tail = tail;
       }
-      toString() { return "Cons(" + this.head + ", " + this.tail + ")"; }
+      toString() { return "Cons(" + globalThis.Predef.render(this.head) + ", " + globalThis.Predef.render(this.tail) + ")"; }
     };
     const Nil$class = class Nil {
       constructor() {}
@@ -16,43 +17,43 @@ const Stack$class = class Stack {
     this.Nil = new Nil$class;
     this.Nil.class = Nil$class;
   }
-  isEmpty(xs) {
-    if (xs instanceof this.Nil.class) {
-      return true;
+  static isEmpty(xs) {
+    if (xs instanceof Stack.Nil.class) {
+      return true
     } else {
-      return false;
+      return false
     }
   } 
-  reverseAndAppend(xs1, tail) {
+  static reverseAndAppend(xs1, tail) {
     let param0, param1, h, t, tmp;
-    if (xs1 instanceof this.Cons.class) {
+    if (xs1 instanceof Stack.Cons.class) {
       param0 = xs1.head;
       param1 = xs1.tail;
       h = param0;
       t = param1;
-      tmp = this.Cons(h, tail);
-      return this.reverseAndAppend(t, tmp);
+      tmp = Stack.Cons(h, tail);
+      return Stack.reverseAndAppend(t, tmp)
     } else {
-      if (xs1 instanceof this.Nil.class) {
-        return tail;
+      if (xs1 instanceof Stack.Nil.class) {
+        return tail
       } else {
         throw new globalThis.Error("match error");
       }
     }
   } 
-  reverse(xs2) {
-    return this.reverseAndAppend(xs2, this.Nil);
+  static reverse(xs2) {
+    return Stack.reverseAndAppend(xs2, Stack.Nil)
   } 
-  fromArray(arr) {
+  static fromArray(arr) {
     let ls, i, len, scrut, tmp, tmp1, tmp2, tmp3;
-    ls = this.Nil;
+    ls = Stack.Nil;
     i = 0;
     len = arr.length;
     tmp4: while (true) {
       scrut = i < len;
-      if (scrut) {
+      if (scrut === true) {
         tmp = arr.at(i) ?? null;
-        tmp1 = this.Cons(tmp, ls);
+        tmp1 = Stack.Cons(tmp, ls);
         ls = tmp1;
         tmp2 = i + 1;
         i = tmp2;
@@ -63,14 +64,14 @@ const Stack$class = class Stack {
       }
       break;
     }
-    return ls;
+    return ls
   } 
-  toReverseArray(xs3) {
+  static toReverseArray(xs3) {
     let arr1, i, param0, param1, h, t, tmp, tmp1;
     arr1 = [];
     i = 0;
     tmp2: while (true) {
-      if (xs3 instanceof this.Cons.class) {
+      if (xs3 instanceof Stack.Cons.class) {
         param0 = xs3.head;
         param1 = xs3.tail;
         h = param0;
@@ -84,65 +85,63 @@ const Stack$class = class Stack {
       }
       break;
     }
-    return arr1;
+    return arr1
   } 
-  zip(...xss) {
-    let tmp, tmp1;
-    const this$Stack = this;
-    function go(heads, tails) {
+  static zip(...xss) {
+    let go, tmp, tmp1;
+    go = function go(heads, tails) {
       return (caseScrut) => {
         let param0, param1, h, t, param01, param11, h2, t2, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11;
-        if (caseScrut instanceof this$Stack.Cons.class) {
+        if (caseScrut instanceof Stack.Cons.class) {
           param0 = caseScrut.head;
           param1 = caseScrut.tail;
           h = param0;
           t = param1;
-          if (h instanceof this$Stack.Cons.class) {
+          if (h instanceof Stack.Cons.class) {
             param01 = h.head;
             param11 = h.tail;
             h2 = param01;
             t2 = param11;
-            tmp2 = this$Stack.Cons(h2, heads);
-            tmp3 = this$Stack.Cons(t2, tails);
+            tmp2 = Stack.Cons(h2, heads);
+            tmp3 = Stack.Cons(t2, tails);
             tmp4 = go(tmp2, tmp3);
-            return tmp4(t) ?? null;
+            return tmp4(t) ?? null
           } else {
-            if (h instanceof this$Stack.Nil.class) {
+            if (h instanceof Stack.Nil.class) {
               tmp5 = go(heads, tails);
-              return tmp5(t) ?? null;
+              return tmp5(t) ?? null
             } else {
               throw new globalThis.Error("match error");
             }
           }
         } else {
-          if (caseScrut instanceof this$Stack.Nil.class) {
-            if (heads instanceof this$Stack.Nil.class) {
-              if (tails instanceof this$Stack.Nil.class) {
+          if (caseScrut instanceof Stack.Nil.class) {
+            if (heads instanceof Stack.Nil.class) {
+              if (tails instanceof Stack.Nil.class) {
                 tmp6 = true;
               } else {
                 tmp6 = false;
               }
               tmp7 = Predef.assert(tmp6) ?? null;
-              return (tmp7 , this$Stack.Nil);
+              return (tmp7 , Stack.Nil)
             } else {
-              tmp8 = this$Stack.toReverseArray(heads);
-              tmp9 = go(this$Stack.Nil, this$Stack.Nil);
-              tmp10 = this$Stack.reverse(tails);
+              tmp8 = Stack.toReverseArray(heads);
+              tmp9 = go(Stack.Nil, Stack.Nil);
+              tmp10 = Stack.reverse(tails);
               tmp11 = tmp9(tmp10) ?? null;
-              return this$Stack.Cons(tmp8, tmp11);
+              return Stack.Cons(tmp8, tmp11)
             }
           } else {
             throw new globalThis.Error("match error");
           }
         }
-      };
-    }
-    tmp = go(this.Nil, this.Nil);
-    tmp1 = this.fromArray(xss);
-    return tmp(tmp1) ?? null;
+      }
+    };
+    tmp = go(Stack.Nil, Stack.Nil);
+    tmp1 = Stack.fromArray(xss);
+    return tmp(tmp1) ?? null
   }
-  toString() { return "Stack"; }
-}; const Stack = new Stack$class;
-Stack.class = Stack$class;
+  static toString() { return "Stack"; }
+};
 null
-export default Stack;
+let Stack = Stack1; export default Stack;

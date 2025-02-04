@@ -41,23 +41,27 @@ sealed trait Literal extends AutoLocated:
 enum Tree extends AutoLocated:
   case Empty()
   case Error()
+  case Dummy // TODO change the places where this is used
   case Under()
   case Ident(name: Str)
+  case Keywrd(kw: Keyword)
   case IntLit(value: BigInt)          extends Tree with Literal
   case DecLit(value: BigDecimal)      extends Tree with Literal
   case StrLit(value: Str)             extends Tree with Literal
-  case UnitLit(undefinedOrNull: Bool) extends Tree with Literal
+  case UnitLit(isNullNotUndefined: Bool) extends Tree with Literal
   case BoolLit(value: Bool)           extends Tree with Literal
   case Bra(k: BracketKind, inner: Tree)
   case Block(stmts: Ls[Tree])(using State) extends Tree with semantics.BlockImpl
   case OpBlock(items: Ls[Tree -> Tree])
   case LetLike(kw: Keyword.letLike, lhs: Tree, rhs: Opt[Tree], body: Opt[Tree])
-  case Handle(lhs: Tree, cls: Tree, defs: Tree, body: Opt[Tree])
+  case Hndl(lhs: Tree, cls: Tree, defs: Tree, body: Opt[Tree])
   case Def(lhs: Tree, rhs: Tree)
   case TermDef(k: TermDefKind, head: Tree, rhs: Opt[Tree]) extends Tree with TermDefImpl
-  case TypeDef(k: TypeDefKind, head: Tree, extension: Opt[Tree], body: Opt[Tree])(using State) extends Tree with TypeDefImpl
+  case TypeDef(k: TypeDefKind, head: Tree, rhs: Opt[Tree], body: Opt[Tree])(using State)
+    extends Tree with TypeDefImpl
   case Open(opened: Tree)
   case OpenIn(opened: Tree, body: Tree)
+  case DynAccess(obj: Tree, fld: Tree, arrayIdx: Bool)
   case Modified(modifier: Keyword, modLoc: Opt[Loc], body: Tree)
   case Quoted(body: Tree)
   case Unquoted(body: Tree)
@@ -69,7 +73,7 @@ enum Tree extends AutoLocated:
   case Sel(prefix: Tree, name: Ident)
   case MemberProj(cls: Tree, name: Ident)
   case InfixApp(lhs: Tree, kw: Keyword.Infix, rhs: Tree)
-  case New(body: Tree)
+  case New(body: Opt[Tree], rft: Opt[Block])
   case IfLike(kw: Keyword.`if`.type | Keyword.`while`.type, kwLoc: Opt[Loc], split: Tree)
   @deprecated("Use If instead", "hkmc2-ucs")
   case IfElse(cond: Tree, alt: Tree)
@@ -88,7 +92,7 @@ enum Tree extends AutoLocated:
     case OpBlock(items) => items.flatMap:
       case (op, body) => op :: body :: Nil
     case LetLike(kw, lhs, rhs, body) => lhs :: Nil ++ rhs ++ body
-    case Handle(lhs, rhs, defs, body) => body match
+    case Hndl(lhs, rhs, defs, body) => body match
       case Some(value) => lhs :: rhs :: defs :: value :: Nil
       case None => lhs :: rhs :: defs :: Nil
     case TypeDef(k, head, extension, body) =>
@@ -101,7 +105,7 @@ enum Tree extends AutoLocated:
     case Jux(lhs, rhs) => Ls(lhs, rhs)
     case InfixApp(lhs, _, rhs) => Ls(lhs, rhs)
     case TermDef(k, head, rhs) => head :: rhs.toList
-    case New(body) => body :: Nil
+    case New(body, rft) => body.toList ::: rft.toList
     case IfLike(_, _, split) => split :: Nil
     case IfElse(cond, alt) => cond :: alt :: Nil
     case Case(_, bs) => Ls(bs)
@@ -110,12 +114,15 @@ enum Tree extends AutoLocated:
     case Effectful(eff, body) => eff :: body :: Nil
     case Outer(name) => name.toList
     case TyTup(tys) => tys
-    case SynthSel(prefix, name) => prefix :: Nil
     case Sel(prefix, name) => prefix :: Nil
+    case SynthSel(prefix, name) => prefix :: Nil
+    case DynAccess(prefix, fld, ai) => prefix :: fld :: Nil
     case Open(bod) => bod :: Nil
     case Def(lhs, rhs) => lhs :: rhs :: Nil
     case Spread(_, _, body) => body.toList
     case Annotated(annotation, target) => annotation :: target :: Nil
+    case MemberProj(cls, name) => cls :: Nil
+    case Keywrd(kw) => Nil
   
   def describe: Str = this match
     case Empty() => "empty"
@@ -140,10 +147,12 @@ enum Tree extends AutoLocated:
     case TyTup(tys) => "type tuple"
     case App(lhs, rhs) => "application"
     case Jux(lhs, rhs) => "juxtaposition"
-    case SynthSel(prefix, name) => "synthetic selection"
     case Sel(prefix, name) => "selection"
+    case SynthSel(prefix, name) => "synthetic selection"
+    case DynAccess(prefix, name, true) => "dynamic index access"
+    case DynAccess(prefix, name, false) => "dynamic field access"
     case InfixApp(lhs, kw, rhs) => "infix operation"
-    case New(body) => "new"
+    case New(body, _) => "new"
     case IfLike(Keyword.`if`, _, split) => "if expression"
     case IfLike(Keyword.`while`, _, split) => "while expression"
     case Case(_, branches) => "case"
@@ -151,11 +160,13 @@ enum Tree extends AutoLocated:
     case RegRef(reg, value) => "region reference"
     case Effectful(eff, body) => "effectful"
     case Outer(_) => "outer binding"
-    case Handle(_, _, _, _) => "handle"
+    case Hndl(_, _, _, _) => "handle"
     case Def(lhs, rhs) => "defining assignment"
     case Spread(_, _, _) => "spread"
     case Annotated(_, _) => "annotated"
     case Open(_) => "open"
+    case MemberProj(_, _) => "member projection"
+    case Keywrd(kw) => s"'${kw.name}' keyword"
     
   def deparenthesized: Tree = this match
     case Bra(BracketKind.Round, inner) => inner.deparenthesized
@@ -170,18 +181,16 @@ enum Tree extends AutoLocated:
       LetLike(kw, Ident("_").withLocOf(und), r, b)
     
     case Modified(Keyword.`declare`, modLoc, s) =>
-      // TODO handle `declare` modifier!
-      s
+      Annotated(Keywrd(Keyword.`declare`), s) // TODO properly attach location
     case Modified(Keyword.`abstract`, modLoc, s) =>
-      // TODO handle `declare` modifier!
-      s
+      Annotated(Keywrd(Keyword.`abstract`), s) // TODO properly attach location
     case Modified(Keyword.`mut`, modLoc, TermDef(ImmutVal, anme, rhs)) =>
-      TermDef(MutVal, anme, rhs).desugared
+      TermDef(MutVal, anme, rhs).withLocOf(this).desugared
     case LetLike(letLike, App(f @ Ident(nme), Tup((id: Ident) :: r :: Nil)), N, bodo)
     if nme.endsWith("=") =>
-      LetLike(letLike, id, S(App(Ident(nme.init), Tup(id :: r :: Nil))), bodo).desugared
+      LetLike(letLike, id, S(App(Ident(nme.init), Tup(id :: r :: Nil))), bodo).withLocOf(this).desugared
     case _ => this
-
+  
   /** S(true) means eager spread, S(false) means lazy spread, N means no spread. */
   def asParam: Opt[(Opt[Bool], Ident, Opt[Tree])] = this match
     case und: Under => S(N, new Ident("_").withLocOf(und), N)
@@ -198,6 +207,10 @@ enum Tree extends AutoLocated:
     case _ => false
 
 object Tree:
+  val DummyApp: App = App(Dummy, Dummy)
+  val DummyTup: Tup = Tup(Dummy :: Nil)
+  def DummyTypeDef(k: TypeDefKind)(using State): TypeDef =
+    Tree.TypeDef(syntax.Cls, Tree.Dummy, N, N)
   object Block:
     def mk(stmts: Ls[Tree])(using State): Tree = stmts match
       case Nil => UnitLit(true)
@@ -219,6 +232,7 @@ object Apps:
     case t => S(t, Nil)
     
 object PossiblyAnnotated:
+  def apply(anns: Ls[Tree], t: Tree): Tree = anns.foldRight(t)(Annotated(_, _))
   def unapply(t: Tree): Opt[(Ls[Tree], Tree)] = t match
     case Annotated(q, PossiblyAnnotated(qs, target)) => S(q :: qs, target)
     case other => S((Nil, other))
@@ -288,10 +302,6 @@ trait TypeOrTermDef:
       case InfixApp(tree, Keyword.`:`, ann) =>
         rec(tree, symbName, S(ann))
       
-      case InfixApp(derived, Keyword.`extends`, base) =>
-        // TODO handle `extends`!
-        rec(derived, symbName, annot)
-      
       // fun f
       // fun f(n1: Int)
       // fun f(n1: Int)(nn: Int)
@@ -330,19 +340,29 @@ trait TypeOrTermDef:
           msg"Expected a valid ${k.desc} definition head; found ${t.describe} instead" -> t.toLoc :: Nil)),
           Nil, N, annot)
       
-    rec(head, N, N)
+    rec(baseHead, N, N)
+  
+  val (baseHead, extension) =
+    head match
+    case InfixApp(base, Keyword.`extends`, ext) =>
+      (base, S(ext))
+    case h => 
+      (h, N)
   
 end TypeOrTermDef
 
 
-trait TypeDefImpl(using semantics.Elaborator.State) extends TypeOrTermDef:
+trait TypeDefImpl(using State) extends TypeOrTermDef:
   this: TypeDef =>
   
   lazy val symbol = k match
     case Cls => semantics.ClassSymbol(this, name.getOrElse(Ident("<error>")))
     case Mod | Obj => semantics.ModuleSymbol(this, name.getOrElse(Ident("<error>")))
     case Als => semantics.TypeAliasSymbol(name.getOrElse(Ident("<error>")))
-    case Pat => semantics.PatternSymbol(name.getOrElse(Ident("<error>")))
+    case Pat => semantics.PatternSymbol(
+      name.getOrElse(Ident("<error>")),
+      paramLists.headOption,
+      rhs.getOrElse(die))
     case Trt | Mxn => ???
   
   lazy val definedSymbols: Map[Str, semantics.BlockMemberSymbol] =

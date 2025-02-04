@@ -1,27 +1,394 @@
 :js
+:handler
+
 
 abstract class Effect with
   fun perform(arg: Str): Str
 
-:ge
-let r = handle h = Effect with
-  fun perform(arg)(k) = k(arg)
-in
-  h.perform("k")
-r
-//│ ╔══[COMPILATION ERROR] Effect handlers are not enabled
-//│ ║  l.7: 	let r = handle h = Effect with
-//│ ║       	                   ^^^^^^^^^^^
-//│ ║  l.8: 	  fun perform(arg)(k) = k(arg)
-//│ ╙──     	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:global
-:handler
+handle h = Effect with
+  fun perform()(k) = "b"
 
-:fixme
-let r = handle h = Effect with
+:expect 42
+handle h = Effect with
+  fun perform()(k) = k(42)
+h.perform()
+//│ = 42
+
+:expect "b"
+handle h = Effect with
+  fun perform(arg)(k) = "b"
+h.perform("k")
+//│ = "b"
+
+:expect "k"
+handle h = Effect with
+  fun perform(arg)(k) = arg
+h.perform("k")
+//│ = "k"
+
+:expect "k"
+handle h = Effect with
   fun perform(arg)(k) = k(arg)
+h.perform("k")
+//│ = "k"
+
+:expect "hi"
+fun foo(e) = e.perform("hi")
+handle h = Effect with
+  fun perform(arg)(k) =
+    print(arg)
+    k(arg)
+foo(h)
+//│ > hi
+//│ = "hi"
+
+fun foo(e) = e.perform("hi")
+
+:expect "Hello World!"
+handle h = Effect with
+  fun perform(arg)(k) =
+    print(arg)
+    k(arg)
+(() => h.perform("Hello") + " World!")()
+//│ > Hello
+//│ = "Hello World!"
+
+:expect "54321"
+let result = ""
+handle h = Effect with
+  fun perform(arg)(k) =
+    let v = k(arg)
+    result = result + arg
+    v
 in
-  h.perform("k")
-r
-//│ /!!!\ Uncaught error: scala.MatchError: HandleBlock(globalThis:block#3.h,$tmp,Select(Ref(globalThis:block#1),Ident(Effect)),List(Handler(member:perform,k,List(ParamList(‹›,List(Param(‹›,arg,None)),None)),Return(Call(Ref(k),List(Arg(false,Ref(arg)))),false))),HandleBlockReturn(Call(Select(Ref(globalThis:block#3.h),Ident(perform)),List(Arg(false,Lit(StrLit(k)))))),Assign(globalThis:block#3.r,Ref($tmp),Return(Ref(globalThis:block#3.r),true))) (of class hkmc2.codegen.HandleBlock)
+  h.perform("1")
+  h.perform("2")
+  h.perform("3")
+  h.perform("4")
+  h.perform("5")
+result
+//│ = "54321"
+//│ result = "54321"
+
+:expect "b"
+handle h = Effect with
+  fun perform(arg)(k) =
+    print(arg)
+    "b"
+h.perform("t")
+//│ > t
+//│ = "b"
+
+:expect "Hello World!"
+fun foo(h) =
+  print("Entering foo")
+  let result = h.perform("Hello")
+  h.perform("?")
+  print("Exiting foo")
+  result
+handle h = Effect with
+  fun perform(arg)(k) =
+    print("handler called")
+    let result = k(arg)
+    print("handler finished")
+    result
+print("mainbody start")
+let result = foo(h) + " World!"
+print("mainbody end")
+result
+//│ > mainbody start
+//│ > Entering foo
+//│ > handler called
+//│ > handler called
+//│ > Exiting foo
+//│ > mainbody end
+//│ > handler finished
+//│ > handler finished
+//│ = "Hello World!"
+
+:expect "Hello World!"
+fun foo(h) =
+  print("Entering foo")
+  let result = h.perform("Hello")
+  h.perform("Oops!")
+  print("Exiting foo")
+  result
+fun bar(h) =
+  print("Entering bar")
+  let result = foo(h) + " World"
+  print("Exiting bar")
+  result
+fun foobar(h) =
+  print("Entering foobar")
+  let result = bar(h) + "!"
+  print("Exiting foobar")
+  result
+handle h = Effect with
+  fun perform(arg)(k) =
+    print("handler called")
+    let result = k(arg)
+    print("handler finished")
+    result
+print("mainbody start")
+let result = foobar(h)
+print("mainbody end")
+result
+//│ > mainbody start
+//│ > Entering foobar
+//│ > Entering bar
+//│ > Entering foo
+//│ > handler called
+//│ > handler called
+//│ > Exiting foo
+//│ > Exiting bar
+//│ > Exiting foobar
+//│ > mainbody end
+//│ > handler finished
+//│ > handler finished
+//│ = "Hello World!"
+
+// Float out definitions
+:sjs
+handle h = Effect with
+  fun perform(arg)(k) = arg
+if true do
+  fun f() = 3
+  f()
+//│ JS (unsanitized):
+//│ let tmp11, handleBlock$11;
+//│ handleBlock$11 = function handleBlock$() {
+//│   let f, h, scrut, tmp12, Cont$24, Handler$h$12;
+//│   Handler$h$12 = class Handler$h$11 extends Effect1 {
+//│     constructor() {
+//│       let tmp13;
+//│       tmp13 = super();
+//│     }
+//│     perform(arg) {
+//│       return globalThis.Predef.__mkEffect(h, (k) => {
+//│         return arg
+//│       })
+//│     }
+//│     toString() { return "Handler$h$"; }
+//│   };
+//│   h = new Handler$h$12();
+//│   Cont$24 = function Cont$(pc1) { return new Cont$.class(pc1); };
+//│   Cont$24.class = class Cont$23 extends globalThis.Predef.__Cont.class {
+//│     constructor(pc) {
+//│       let tmp13;
+//│       tmp13 = super(null, null);
+//│       this.pc = pc;
+//│     }
+//│     resume(value$) {
+//│       if (this.pc === 0) {
+//│         tmp12 = value$;
+//│       }
+//│       contLoop: while (true) {
+//│         if (this.pc === 1) {
+//│           return tmp12
+//│         } else if (this.pc === 0) {
+//│           if (tmp12 instanceof globalThis.Predef.__Return.class) {
+//│             return tmp12
+//│           }
+//│           this.pc = 1;
+//│           continue contLoop;
+//│         }
+//│         break;
+//│       }
+//│     }
+//│     toString() { return "Cont$(" + globalThis.Predef.render(this.pc) + ")"; }
+//│   };
+//│   f = function f() {
+//│     return 3
+//│   };
+//│   scrut = true;
+//│   if (scrut === true) {
+//│     tmp12 = f();
+//│     if (tmp12 instanceof globalThis.Predef.__EffectSig.class) {
+//│       tmp12.tail.next = new Cont$24(0);
+//│       return globalThis.Predef.__handleBlockImpl(tmp12, h)
+//│     }
+//│     if (tmp12 instanceof globalThis.Predef.__Return.class) {
+//│       return tmp12
+//│     }
+//│   } else {
+//│     tmp12 = null;
+//│   }
+//│   return tmp12
+//│ };
+//│ tmp11 = handleBlock$11();
+//│ if (tmp11 instanceof this.Predef.__EffectSig.class) {
+//│   throw new this.Error("Unhandled effects");
+//│ }
+//│ tmp11
+//│ = 3
+
+module A with
+  class Effect(x) with
+    fun test() = x
+    fun perform(arg)
+handle h = A.Effect(3) with
+  fun perform()(k) =
+    this.test()
+h.perform()
+//│ = 3
+
+fun f(perform) =
+  handle h = Effect with
+    fun perform(arg)(k) = arg
+  perform()
+f(() => 3)
+//│ = 3
+
+abstract class Cell with
+  fun getVal(): Int
+  fun setVal(Int): ()
+
+let x = 0
+handle h = Cell with
+  fun getVal()(k) = k(x)
+  fun setVal(value)(k) =
+    x = value
+    k(())
+print(h.getVal())
+h.setVal(1)
+print(h.getVal())
+//│ > 0
+//│ > 1
+//│ x = 1
+
+
+abstract class Eff with
+  fun get(): Int
+
+:expect 120
+fun fact(e, factvalue) = 
+  if factvalue != 0 then
+    factvalue * fact(e, factvalue-1)
+  else e.get()
+handle h = Eff with
+  fun get()(k) = k(1)
+fact(h, 5)
+//│ = 120
+
+abstract class StackDelay with
+  fun raise(): ()
+
+// stack safe recursion
+:expect 5050
+handle h = StackDelay with
+  fun raise()(k) =
+    // console.trace("Stack unwinded!")
+    k(10)
+fun sum(depth, x) =
+  let new_depth = if depth > 70 then
+    // console.trace("Too deep, heapifying the stack")
+    h.raise()
+  else
+    depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+sum(0, 100)
+//│ = 5050
+
+// stack safe recursion
+:expect 450015000
+handle h = StackDelay with
+  fun raise()(k) =
+    k(10)
+fun sum(depth, x) =
+  let new_depth = if depth > 1000 then h.raise() else depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+sum(0, 30000)
+//│ = 450015000
+
+:re
+fun sum(x) =
+  if x != 0 then
+    x + sum(x - 1)
+  else 0
+sum(10000)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+
+:expect 2
+fun foo(h) =
+  h.perform()
+  if true then
+    fun g() = 2
+    g()
+  else
+    fun g() = 3
+    g()
+handle h = Eff with
+  fun perform()(k) = k(())
+foo(h)
+//│ = 2
+
+:expect 3
+fun foo(h) =
+  h.perform()
+  if false then
+    fun g() = 2
+    g()
+  else
+    fun g() = 3
+    g()
+handle h = Eff with
+  fun perform()(k) = k(())
+foo(h)
+//│ = 3
+
+:expect 123
+fun foo(h) =
+  h.perform()
+  fun A() = 1
+  let a = if true then
+    class A() with
+      fun f() = 2
+    A().f()
+  else
+    class A() with
+      fun f() = 3
+    A().f()
+  let b = if false then
+    class A() with
+      fun f() = 2
+    A().f()
+  else
+    class A() with
+      fun f() = 3
+    A().f()
+  A() * 100 + a * 10 + b
+handle h = Eff with
+  fun perform()(k) = k(())
+foo(h) 
+//│ = 123
+
+:expect 123
+fun foo(h) =
+  h.perform()
+  fun A() = 1
+  let a = if true then
+    module A with
+      fun f() = 2
+    A.f()
+  else
+    module A with
+      fun f() = 3
+    A.f()
+  let b = if false then
+    module A with
+      fun f() = 2
+    A.f()
+  else
+    module A with
+      fun f() = 3
+    A.f()
+  A() * 100 + a * 10 + b
+handle h = Eff with
+  fun perform()(k) = k(())
+foo(h)
+//│ = 123

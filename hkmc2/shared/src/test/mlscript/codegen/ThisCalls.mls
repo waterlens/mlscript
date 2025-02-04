@@ -6,20 +6,52 @@ class Example with
   fun f(x) = [x, a]
 
 val ex = new Example
-//│ ex = Example { a: 456 }
+//│ ex = Example
 
 let s = ex.f
-//│ s = [Function: f]
+//│ s = [function f]
 
 :todo
 :e
 s(123)
-//│ = [ 123, undefined ]
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'a')
 
 :sjs
 ex |>. s(123)
 //│ JS (unsanitized):
-//│ let tmp; tmp = Predef.call(this.ex, this.s); tmp(123) ?? null
-//│ = [ 123, 456 ]
+//│ let tmp2; tmp2 = Predef.call(ex, s); tmp2(123) ?? null
+//│ = [123, 456]
+
+
+// * Modules on the other hand, do not suffer from method debinding,
+// * because they use static references and avoid `this` altogether.
+
+module Example with
+  val a = 456
+  fun f(x) = [x, a]
+  fun g(x) = [x, a, f(x)]
+
+let
+  f = Example.f
+  g = Example.g
+//│ f = [function f]
+//│ g = [function g]
+
+f(123)
+//│ = [123, 456]
+
+g(123)
+//│ = [123, 456, [123, 456]]
+
+:e
+Example |>. g(123)
+//│ ╔══[ERROR] Only module parameters may receive module arguments (values).
+//│ ║  l.47: 	Example |>. g(123)
+//│ ╙──      	^^^^^^^
+//│ = [123, 456, [123, 456]]
+
+// * Passing `ex` as `this` has no effect
+ex |>. g(123)
+//│ = [123, 456, [123, 456]]
 
 

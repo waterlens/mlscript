@@ -1,0 +1,217 @@
+:js
+:handler
+
+let id = 0
+//│ id = 0
+
+
+class MaybeStop with
+  fun f(x: Bool): ()
+fun handleEffects(g) =
+  handle h1 = MaybeStop with
+    fun f(x)(k) =
+      if x then
+        print("h1 stop")
+      else
+        set id += 1
+        let cur = id
+        print("h1 start " + String(cur))
+        let result = k(x)
+        print("h1 end " + String(cur))
+        result
+  handle h2 = MaybeStop with
+    fun f(x)(k) =
+      if x then
+        print("h2 stop")
+      else
+        set id += 1
+        let cur = id
+        print("h2 start " + String(cur))
+        let result = k(x)
+        print("h2 end " + String(cur))
+        result
+  g(h1, h2)
+
+
+fun f(h1, h2) =
+  h1.f(false)
+  h2.f(false)
+  h1.f(false)
+  h2.f(false)
+  h1.f(false)
+  h2.f(false)
+handleEffects(f)
+//│ > h1 start 1
+//│ > h2 start 2
+//│ > h1 start 3
+//│ > h2 start 4
+//│ > h1 start 5
+//│ > h2 start 6
+//│ > h2 end 6
+//│ > h2 end 4
+//│ > h2 end 2
+//│ > h1 end 5
+//│ > h1 end 3
+//│ > h1 end 1
+//│ = false
+
+
+fun f(h1, h2) =
+  h1.f(false)
+  h2.f(false)
+  h1.f(false)
+  h2.f(true)
+  h1.f(false)
+  h2.f(false)
+handleEffects(f)
+//│ > h1 start 7
+//│ > h2 start 8
+//│ > h1 start 9
+//│ > h2 stop
+//│ > h2 end 8
+//│ > h1 end 9
+//│ > h1 end 7
+
+
+fun f(h1, h2) =
+  h1.f(false)
+  h2.f(false)
+  h1.f(true)
+  h2.f(false)
+  h1.f(false)
+  h2.f(false)
+handleEffects(f)
+//│ > h1 start 10
+//│ > h2 start 11
+//│ > h1 stop
+//│ > h1 end 10
+
+
+class Eff with
+  fun perform(): ()
+class Box(n)
+let box = Box(0)
+//│ box = Box(0)
+
+
+:expect 5120
+fun f(h, box, n) =
+  if n <= 1 then
+    h.perform()
+  else
+    handle h2 = Eff with
+      fun perform()(k) =
+        set box.n = box.n + 1
+        h.perform()
+        k()
+    f(h2, box, n - 1)
+    f(h2, box, n - 1)
+handle h = Eff with
+  fun perform()(k) =
+    set box.n = box.n + 1
+    k()
+f(h, box, 10)
+box.n
+//│ = 5120
+
+handle h1 = Eff with
+  fun perform()(k) =
+    print("h1")
+    let x = k()
+    print("h1 end")
+    x
+handle h2 = Eff with
+  fun perform()(k) =
+    print("h2")
+    h1.perform()
+    let x = k()
+    print("h2 end")
+    x
+h2.perform()
+h2.perform()
+h2.perform()
+//│ > h2
+//│ > h1
+//│ > h2
+//│ > h1
+//│ > h2
+//│ > h1
+//│ > h2 end
+//│ > h2 end
+//│ > h2 end
+//│ > h1 end
+//│ > h1 end
+//│ > h1 end
+
+
+handle h1 = Eff with
+  fun perform()(k) =
+    print("h1")
+    k()
+handle h2 = Eff with
+  fun perform()(k) =
+    print("h2")
+    h1.perform()
+    k()
+handle h3 = Eff with
+  fun perform()(k) =
+    print("h3")
+    h2.perform()
+    k()
+h1.perform()
+h3.perform()
+//│ > h1
+//│ > h3
+//│ > h2
+//│ > h1
+
+
+let d = 0
+//│ d = 0
+
+
+:expect 11
+handle h1 = Eff with
+  fun perform()(k) =
+    set d = d + 1
+    k()
+let i = 0
+h1.perform()
+while i < 10 do 
+  handle h2 = Eff with
+    fun perform()(k) =
+      set d = d + 1
+      k()
+  h2.perform()
+  set i = i + 1
+d
+//│ = 11
+
+abstract class Eff2 with
+  fun f1(): ()
+  fun f2(): ()
+
+
+// Effect performed at end of handler, which trigger a special branch to handle
+handle h1 = Eff2 with
+  fun f1()(k) =
+    print("h1.f1 pre")
+    k()
+    print("h1.f1 post")
+  fun f2()(k) = k()
+handle h2 = Eff2 with
+  fun f1()(k) =
+    print("h2.f1")
+    k()
+  fun f2()(k) =
+    print("h2.f2 pre")
+    k()
+    print("h2.f2 post")
+    h1.f1()
+h2.f2()
+h2.f1()
+//│ > h2.f2 pre
+//│ > h2.f1
+//│ > h2.f2 post
+//│ > h1.f1 pre
+//│ > h1.f1 post

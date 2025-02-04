@@ -10,7 +10,7 @@ let x = 0
 :sjs
 let x += 1
 //│ JS (unsanitized):
-//│ let tmp; tmp = this.x + 1; this.x = tmp; null
+//│ let x1, tmp; tmp = x + 1; x1 = tmp; null
 //│ x = 1
 
 x
@@ -19,12 +19,12 @@ x
 :sjs
 set x = 0
 //│ JS (unsanitized):
-//│ this.x = 0; null
+//│ x1 = 0; null
 
 :sjs
 set x += 1
 //│ JS (unsanitized):
-//│ let tmp; tmp = this.x + 1; this.x = tmp; null
+//│ let tmp1; tmp1 = x1 + 1; x1 = tmp1; null
 
 x
 //│ = 1
@@ -33,16 +33,17 @@ x
 :sjs
 set x += 1 in log(x)
 //│ JS (unsanitized):
-//│ let old, tmp, tmp1;
-//│ old = this.x;
+//│ let old, tmp2, tmp3, tmp4;
+//│ old = x1;
 //│ try {
-//│   tmp1 = this.x + 1;
-//│   this.x = tmp1;
-//│   tmp = this.log(this.x);
+//│   tmp3 = x1 + 1;
+//│   x1 = tmp3;
+//│   tmp4 = log(x1);
+//│   tmp2 = tmp4;
 //│ } finally {
-//│   this.x = old;
+//│   x1 = old;
 //│ }
-//│ tmp
+//│ tmp2
 //│ > 2
 
 x
@@ -78,28 +79,30 @@ fun example() =
   log(get_x())
 example()
 //│ JS (unsanitized):
-//│ function example() {
-//│   let x, get_x, old, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-//│   x = 0;
+//│ let example2;
+//│ example2 = function example() {
+//│   let x2, get_x, old1, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12;
+//│   x2 = 0;
 //│   get_x = () => {
-//│     return x;
+//│     return x2
 //│   };
-//│   old = x;
+//│   old1 = x2;
 //│   try {
-//│     tmp1 = x + 1;
-//│     x = tmp1;
-//│     tmp2 = globalThis.log(x);
-//│     tmp3 = (tmp2 , globalThis.log);
-//│     tmp4 = get_x() ?? null;
-//│     tmp = tmp3(tmp4) ?? null;
+//│     tmp6 = x2 + 1;
+//│     x2 = tmp6;
+//│     tmp7 = log(x2);
+//│     tmp8 = get_x() ?? null;
+//│     tmp9 = log(tmp8);
+//│     tmp10 = (tmp7 , tmp9);
+//│     tmp5 = tmp10;
 //│   } finally {
-//│     x = old;
+//│     x2 = old1;
 //│   }
-//│   tmp5 = globalThis.log(x);
-//│   tmp6 = get_x() ?? null;
-//│   return globalThis.log(tmp6);
-//│ }
-//│ this.example()
+//│   tmp11 = log(x2);
+//│   tmp12 = get_x() ?? null;
+//│   return log(tmp12)
+//│ };
+//│ example2()
 //│ > 1
 //│ > 1
 //│ > 0
@@ -116,28 +119,30 @@ fun example() =
   y
 example()
 //│ JS (unsanitized):
-//│ function example() {
-//│   let x, get_x, y, old, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
-//│   x = 0;
+//│ let example3;
+//│ example3 = function example() {
+//│   let x2, get_x, y, old1, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11;
+//│   x2 = 0;
 //│   get_x = () => {
-//│     return x;
+//│     return x2
 //│   };
-//│   old = x;
+//│   old1 = x2;
 //│   try {
-//│     tmp1 = x + 1;
-//│     x = tmp1;
-//│     tmp2 = globalThis.log(x);
-//│     tmp = (tmp2 , x);
+//│     tmp6 = x2 + 1;
+//│     x2 = tmp6;
+//│     tmp7 = log(x2);
+//│     tmp8 = (tmp7 , x2);
+//│     tmp5 = tmp8;
 //│   } finally {
-//│     x = old;
+//│     x2 = old1;
 //│   }
-//│   y = tmp;
-//│   tmp3 = globalThis.log(x);
-//│   tmp4 = get_x() ?? null;
-//│   tmp5 = globalThis.log(tmp4);
-//│   return y;
-//│ }
-//│ this.example()
+//│   y = tmp5;
+//│   tmp9 = log(x2);
+//│   tmp10 = get_x() ?? null;
+//│   tmp11 = log(tmp10);
+//│   return y
+//│ };
+//│ example3()
 //│ > 1
 //│ > 0
 //│ > 0

@@ -2,32 +2,32 @@
 
 
 case x then x
-//│ = [Function (anonymous)]
+//│ = [function block$res1]
 
 :sjs
 case { x then x }
 //│ JS (unsanitized):
-//│ (caseScrut) => { let x; x = caseScrut; return x; }
-//│ = [Function (anonymous)]
+//│ (caseScrut) => { let x; x = caseScrut; return x }
+//│ = [function block$res2]
 
 :sjs
 x => if x is
   0 then true
 //│ JS (unsanitized):
-//│ (x) => { if (x === 0) { return true; } else { throw new this.Error("match error"); } }
-//│ = [Function (anonymous)]
+//│ (x) => { if (x === 0) { return true } else { throw new this.Error("match error"); } }
+//│ = [function block$res3]
 
 :sjs
 case 0 then true
 //│ JS (unsanitized):
 //│ (caseScrut) => {
 //│   if (caseScrut === 0) {
-//│     return true;
+//│     return true
 //│   } else {
 //│     throw new this.Error("match error");
 //│   }
 //│ }
-//│ = [Function (anonymous)]
+//│ = [function block$res4]
 
 (case x then x) of 1
 //│ = 1
@@ -42,7 +42,7 @@ case 0 then true
 //│ = 1
 
 1 |> (2 |> case x then case y then [x, y]) |> case [a, b] then [b, a]
-//│ = [ 1, 2 ]
+//│ = [1, 2]
 
 :todo
 case [x] then x, [] then 0
@@ -53,8 +53,8 @@ case
   0 then true
   _ then false
 //│ JS (unsanitized):
-//│ (caseScrut) => { if (caseScrut === 0) { return true; } else { return false; } }
-//│ = [Function (anonymous)]
+//│ (caseScrut) => { if (caseScrut === 0) { return true } else { return false } }
+//│ = [function block$res10]
 
 class Some(value)
 module None
@@ -64,19 +64,19 @@ val isDefined = case
   Some then true
   None then false
 //│ JS (unsanitized):
-//│ let tmp;
-//│ tmp = (caseScrut) => {
-//│   if (caseScrut instanceof this.Some.class) {
-//│     return true;
+//│ let isDefined, tmp5;
+//│ tmp5 = (caseScrut) => {
+//│   if (caseScrut instanceof Some1.class) {
+//│     return true
 //│   } else {
-//│     if (caseScrut instanceof this.None.class) {
-//│       return false;
+//│     if (caseScrut instanceof None1) {
+//│       return false
 //│     } else {
 //│       throw new this.Error("match error");
 //│     }
 //│   }
 //│ };
-//│ this.isDefined = tmp;
+//│ isDefined = tmp5;
 //│ null
-//│ isDefined = [Function: tmp]
+//│ isDefined = [function tmp5]
 

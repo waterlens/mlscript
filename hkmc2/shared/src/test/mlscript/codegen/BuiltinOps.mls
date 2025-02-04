@@ -20,7 +20,7 @@
 //│ = 2
 
 +
-//│ = [Function (anonymous)]
+//│ = [function block$res4]
 
 // * A bit confusing... but at least there's a warning!
 :w
@@ -42,7 +42,7 @@
 //│ ═══[RUNTIME ERROR] Error: Cannot call non-unary builtin symbol '*'
 
 (+)
-//│ = [Function (anonymous)]
+//│ = [function block$res8]
 
 (+)(2, 3)
 //│ = 5
@@ -59,7 +59,7 @@
 //│ ═══[RUNTIME ERROR] Error: Cannot call non-unary builtin symbol '*'
 
 id(+)
-//│ = [Function (anonymous)]
+//│ = [function]
 
 id(+)(1, 2)
 //│ = 3
@@ -74,7 +74,7 @@ id(+)(1, 2)
 :re
 id(+)(1)
 //│ JS (unsanitized):
-//│ let tmp; tmp = Predef.id((arg1, arg2) => { return arg1 + arg2; }); tmp(1) ?? null
+//│ let tmp1; tmp1 = Predef.id((arg1, arg2) => { return arg1 + arg2 }); tmp1(1) ?? null
 //│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
 
 
@@ -83,17 +83,27 @@ fun (+) lol(a, b) = [a, b]
 :sjs
 1 + 2
 //│ JS (unsanitized):
-//│ this.lol(1, 2)
-//│ = [ 1, 2 ]
+//│ lol(1, 2)
+//│ = [1, 2]
 
 
 :sjs
 id(~)(2)
 //│ JS (unsanitized):
-//│ let tmp; tmp = Predef.id((arg) => { return ~ arg; }); tmp(2) ?? null
+//│ let tmp2; tmp2 = Predef.id((arg) => { return ~ arg }); tmp2(2) ?? null
 //│ = -3
 
 2 |> ~
 //│ = -3
+
+
+typeof
+//│ = [function block$res21]
+
+typeof(1)
+//│ = "number"
+
+typeof("a")
+//│ = "string"
 
 

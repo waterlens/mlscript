@@ -44,8 +44,14 @@ class CompileTestRunner
       
       val preludePath = dir/"mlscript"/"decls"/"Prelude.mls"
       
-      MLsCompiler(preludePath).compileModule(file)
-  
+      val compiler = MLsCompiler(preludePath)
+      compiler.compileModule(file)
+      
+      if compiler.report.badLines.nonEmpty then
+        fail(s"Unexpected diagnostic at: " +
+          compiler.report.badLines.distinct.sorted
+            .map("\n\t"+relativeName+"."+file.ext+":"+_).mkString(", "))
+      
 end CompileTestRunner
 
 

@@ -2,7 +2,7 @@
 
 // Drop the first and last elements.
 tupleSlice([1, 2, 3, 4], 1, -1)
-//│ = [ 2, 3, 4 ]
+//│ = [2, 3, 4]
 
 // Get the first element.
 tupleGet([1, 2, 3, 4], 0)
@@ -17,30 +17,32 @@ fun nonsense(xs) = if xs is
   [..ys] then ys
   [] then "empty"
 //│ JS (unsanitized):
-//│ function nonsense(xs) {
+//│ let nonsense;
+//│ nonsense = function nonsense(xs) {
 //│   let rest, ys;
 //│   if (globalThis.Array.isArray(xs) && xs.length >= 0) {
 //│     rest = globalThis.Predef.tupleSlice(xs, 0, 0) ?? null;
 //│     ys = rest;
-//│     return ys;
+//│     return ys
 //│   } else {
 //│     throw new globalThis.Error("match error");
 //│   }
-//│ }
+//│ };
 //│ null
 
 nonsense([])
 //│ = []
 
 nonsense([1, 2, 3, 4])
-//│ = [ 1, 2, 3, 4 ]
+//│ = [1, 2, 3, 4]
 
 :sjs
 fun lead_and_last(xs) = if xs is
   [x, ..ys, y] then x + y
   [] then 0
 //│ JS (unsanitized):
-//│ function lead_and_last(xs) {
+//│ let lead_and_last;
+//│ lead_and_last = function lead_and_last(xs) {
 //│   let last0, rest, first0, x, ys, y;
 //│   if (globalThis.Array.isArray(xs) && xs.length >= 2) {
 //│     first0 = xs[0];
@@ -49,19 +51,19 @@ fun lead_and_last(xs) = if xs is
 //│     x = first0;
 //│     ys = rest;
 //│     y = last0;
-//│     return x + y;
+//│     return x + y
 //│   } else {
 //│     if (globalThis.Array.isArray(xs) && xs.length === 0) {
-//│       return 0;
+//│       return 0
 //│     } else {
 //│       throw new globalThis.Error("match error");
 //│     }
 //│   }
-//│ }
+//│ };
 //│ null
 
 lead_and_last(["foo", "bar"])
-//│ = 'foobar'
+//│ = "foobar"
 
 lead_and_last([1, 2, 3, 4])
 //│ = 5
@@ -78,8 +80,9 @@ fun nested_tuple_patterns(xs) = if xs is
   [x, ..[y, z], w] then x + y + z + w
   [] then 0
 //│ JS (unsanitized):
-//│ function nested_tuple_patterns(xs) {
-//│   let last0, rest, first0, x, first1, first01, y, z, w, tmp, tmp1;
+//│ let nested_tuple_patterns;
+//│ nested_tuple_patterns = function nested_tuple_patterns(xs) {
+//│   let last0, rest, first0, x, first1, first01, y, z, w, tmp2, tmp3;
 //│   if (globalThis.Array.isArray(xs) && xs.length >= 2) {
 //│     first0 = xs[0];
 //│     rest = globalThis.Predef.tupleSlice(xs, 1, 1) ?? null;
@@ -91,20 +94,20 @@ fun nested_tuple_patterns(xs) = if xs is
 //│       y = first01;
 //│       z = first1;
 //│       w = last0;
-//│       tmp = x + y;
-//│       tmp1 = tmp + z;
-//│       return tmp1 + w;
+//│       tmp2 = x + y;
+//│       tmp3 = tmp2 + z;
+//│       return tmp3 + w
 //│     } else {
 //│       throw new globalThis.Error("match error");
 //│     }
 //│   } else {
 //│     if (globalThis.Array.isArray(xs) && xs.length === 0) {
-//│       return 0;
+//│       return 0
 //│     } else {
 //│       throw new globalThis.Error("match error");
 //│     }
 //│   }
-//│ }
+//│ };
 //│ null
 
 fun hack(tupleSlice) = if tupleSlice is

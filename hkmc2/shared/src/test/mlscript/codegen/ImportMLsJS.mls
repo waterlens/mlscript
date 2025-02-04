@@ -2,12 +2,7 @@
 
 
 import "../../mlscript-compile/Option.mjs"
-//│ > Option {
-//│ >   Some: [Function: Some] { class: [class Some] },
-//│ >   None: None { class: [class None] },
-//│ >   Both: [Function: Both] { class: [class Both] },
-//│ >   class: [class Option]
-//│ Option = }
+//│ Option = Option
 
 
 Option.isDefined(new Option.Some(1))
@@ -32,17 +27,17 @@ Option.test()
 
 
 String(Option.None)
-//│ = 'None'
+//│ = "None"
 
 String(new Option.Some(1))
-//│ = 'Some(1)'
+//│ = "Some(1)"
 
 String(new Option.Both(1, 2))
-//│ = 'Both(1, 2)'
+//│ = "Both(1, 2)"
 
 
 Option.None String()
-//│ = 'None'
+//│ = "None"
 
 // * Not sure this should be fixed.
 // * The weird precedence of `new` is always a pain
@@ -50,16 +45,18 @@ Option.None String()
 :fixme
 new Option.Some(1) String()
 //│ Parsed tree:
-//│ New of Jux:
-//│   lhs = App:
-//│     lhs = Sel:
-//│       prefix = Ident of "Option"
-//│       name = Ident of "Some"
-//│     rhs = Tup of Ls of 
-//│       IntLit of 1
-//│   rhs = App:
-//│     lhs = Ident of "String"
-//│     rhs = Tup of Nil
-//│ ═══[RUNTIME ERROR] TypeError: tmp1 is not a constructor
+//│ New:
+//│   body = S of Jux:
+//│     lhs = App:
+//│       lhs = Sel:
+//│         prefix = Ident of "Option"
+//│         name = Ident of "Some"
+//│       rhs = Tup of Ls of 
+//│         IntLit of 1
+//│     rhs = App:
+//│       lhs = Ident of "String"
+//│       rhs = Tup of Nil
+//│   rft = N
+//│ ═══[RUNTIME ERROR] TypeError: tmp18 is not a constructor
 
 

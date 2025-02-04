@@ -1,82 +1,198 @@
 :js
 
 
+// * Note how we avoid the name clash between the internal name `Test` of the class
+// * and the external name `Test1` of its singleton instance.
 :sjs
-module Test with
+object Test with
   val x = 12
-  fun foo() = Test.x
+  fun foo() =
+    print(Test)
+    Test.x
 //│ JS (unsanitized):
+//│ let Test1;
 //│ const Test$class = class Test {
 //│   constructor() {
 //│     this.x = 12;
 //│   }
 //│   foo() {
-//│     return globalThis.Test.x;
+//│     let tmp;
+//│     tmp = Predef.print(Test1);
+//│     return Test1.x
 //│   }
 //│   toString() { return "Test"; }
-//│ };
-//│ this.Test = new Test$class;
-//│ this.Test.class = Test$class;
+//│ }; Test1 = new Test$class;
+//│ Test1.class = Test$class;
 //│ null
+
+Test
+//│ = Test
+
+print(Test)
+//│ > Test
 
 :sjs
 Test.foo()
 //│ JS (unsanitized):
-//│ this.Test.foo()
+//│ Test1.foo()
+//│ > Test
 //│ = 12
 
 :sjs
 val Test = "oops"
 //│ JS (unsanitized):
-//│ this.Test = "oops"; null
-//│ Test = 'oops'
+//│ let Test2; Test2 = "oops"; null
+//│ Test = "oops"
 
-:fixme
+:re
 Test.foo()
-//│ ═══[RUNTIME ERROR] TypeError: this.Test.foo is not a function
+//│ ═══[RUNTIME ERROR] TypeError: Test2.foo is not a function
 
 
-// FIXME
 :sjs
 let x = 1
 let f = () => x
 let x = 2
 f()
 //│ JS (unsanitized):
-//│ this.x = 1; this.f = () => { return this.x; }; this.x = 2; this.f() ?? null
-//│ = 2
-//│ f = [Function (anonymous)]
+//│ let x, f, x1; x = 1; f = () => { return x }; x1 = 2; f() ?? null
+//│ = 1
+//│ f = [function f]
 //│ x = 2
 
 
-:sjs
+:ssjs
+:e
 module Test with
   val x = 1
   let x = 2
-//│ JS (unsanitized):
-//│ const Test$class = class Test {
-//│   #x;
-//│   constructor() {
+//│ ╔══[ERROR] Name 'x' is already used
+//│ ║  l.68: 	  let x = 2
+//│ ║        	      ^^^^^
+//│ ╟── by a member declared in the same block
+//│ ║  l.67: 	  val x = 1
+//│ ╙──      	      ^^^^^
+//│ JS:
+//│ Test4 = class Test3 {
+//│   static #x;
+//│   static {
 //│     this.x = 1;
 //│     this.#x = 2;
 //│   }
-//│   toString() { return "Test"; }
+//│   static toString() { return "Test"; }
 //│ };
-//│ this.Test = new Test$class;
-//│ this.Test.class = Test$class;
-//│ null
+//│ block$res8 = null;
+//│ undefined
 
 Test.x
 //│ = 1
 
-:fixme
+
 module Test with
   let x = 1
   let f = () => x
   let x = 2
-  log(f())
-//│ > try { const Test$class = class Test {   #x;   #f;   #x;   constructor() {     let tmp;     this.#x = 1;     this.#f = (...args) => {       globalThis.Predef.checkArgs("", 0, true, args.length);       return this.#x;     };     this.#x = 2;     tmp = this.#f() ?? null;     globalThis.log(tmp) ?? null   }   toString() { return "Test"; } }; this.Test = new Test$class; this.Test.class = Test$class; null } catch (e) { console.log('\u200B' + e + '\u200B'); }
-//│ >                                                       ^
-//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Identifier '#x' has already been declared
+  print(f())
+//│ > 1
+
+
+:sjs
+class Cls(x) with
+  let x += 1
+  fun foo = x
+  let x *= 2
+  fun bar = x
+  print(this.x, x)
+//│ JS (unsanitized):
+//│ let Cls1;
+//│ Cls1 = function Cls(x3) { return new Cls.class(x3); };
+//│ Cls1.class = class Cls {
+//│   #x;
+//│   #x1;
+//│   constructor(x2) {
+//│     this.x = x2;
+//│     let tmp, tmp1;
+//│     tmp = this.x + 1;
+//│     this.#x = tmp;
+//│     tmp1 = this.#x * 2;
+//│     this.#x1 = tmp1;
+//│     Predef.print(this.x, this.#x1)
+//│   }
+//│   get foo() {
+//│     return this.#x;
+//│   } 
+//│   get bar() {
+//│     return this.#x1;
+//│   }
+//│   toString() { return "Cls(" + globalThis.Predef.render(this.x) + ")"; }
+//│ };
+//│ null
+
+let cls = Cls(10)
+//│ > 10 22
+//│ cls = Cls(10)
+
+:expect 10
+cls.x
+//│ = 10
+
+:expect 11
+cls.foo
+//│ = 11
+
+:expect 22
+cls.bar
+//│ = 22
+
+
+fun foo() =
+  if false then
+    module A
+    A
+  else
+    module A
+    A
+
+foo()
+//│ = A
+
+
+:sjs
+module Whoops with
+  val v = this
+  fun f() = "Hello"
+  module Whoops with
+    val w = this
+    fun g() = f()
+//│ JS (unsanitized):
+//│ let Whoops2;
+//│ Whoops2 = class Whoops {
+//│   static {
+//│     this.v = Whoops;
+//│     this.Whoops = class Whoops1 {
+//│       static {
+//│         this.w = Whoops1;
+//│       }
+//│       static g() {
+//│         return Whoops.f()
+//│       }
+//│       static toString() { return "Whoops"; }
+//│     };
+//│   }
+//│   static f() {
+//│     return "Hello"
+//│   }
+//│   static toString() { return "Whoops"; }
+//│ };
+//│ null
+
+Whoops.f()
+//│ = "Hello"
+
+Whoops.Whoops
+//│ = Whoops
+
+Whoops.Whoops.g()
+//│ = "Hello"
 
 

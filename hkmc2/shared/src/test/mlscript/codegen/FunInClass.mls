@@ -22,48 +22,51 @@ fun test(a) =
       h(d)
   Inner(42)
 //│ JS (unsanitized):
-//│ function test(a) {
-//│   function Inner(b1) { return new Inner.class(b1); }
-//│   Inner.class = class Inner {
+//│ let test1;
+//│ test1 = function test(a) {
+//│   let Inner1;
+//│   Inner1 = function Inner(b1) { return new Inner.class(b1); };
+//│   Inner1.class = class Inner {
 //│     constructor(b) {
 //│       this.b = b;
 //│       let tmp;
-//│       tmp = globalThis.log(a);
+//│       tmp = log(a);
 //│     }
 //│     f(c) {
 //│       return [
 //│         a,
 //│         this.b,
 //│         c
-//│       ];
+//│       ]
 //│     } 
 //│     g(d) {
+//│       let h;
 //│       const this$Inner = this;
-//│       function h(e) {
+//│       h = function h(e) {
 //│         return [
 //│           a,
 //│           this$Inner.b,
 //│           d,
 //│           e
-//│         ];
-//│       }
-//│       return h(d);
+//│         ]
+//│       };
+//│       return h(d)
 //│     }
-//│     toString() { return "Inner(" + this.b + ")"; }
+//│     toString() { return "Inner(" + globalThis.Predef.render(this.b) + ")"; }
 //│   };
-//│   return Inner(42);
-//│ }
+//│   return Inner1(42)
+//│ };
 //│ null
 
 let i = test(100)
 //│ > 100
-//│ i = Inner { b: 42 }
+//│ i = Inner(42)
 
 i.f(200)
-//│ = [ 100, 42, 200 ]
+//│ = [100, 42, 200]
 
 i.g(200)
-//│ = [ 100, 42, 200, 200 ]
+//│ = [100, 42, 200, 200]
 
 
 :sjs
@@ -74,10 +77,11 @@ fun test(a) =
     print of [a, b]
   [C1(1), C2(2)]
 //│ JS (unsanitized):
-//│ function test(a) {
-//│   let tmp, tmp1;
-//│   function C1(b1) { return new C1.class(b1); }
-//│   C1.class = class C1 {
+//│ let test2;
+//│ test2 = function test(a) {
+//│   let C11, C21, tmp1, tmp2;
+//│   C11 = function C1(b1) { return new C1.class(b1); };
+//│   C11.class = class C1 {
 //│     constructor(b) {
 //│       this.b = b;
 //│       Predef.print([
@@ -85,10 +89,10 @@ fun test(a) =
 //│         this.b
 //│       ])
 //│     }
-//│     toString() { return "C1(" + this.b + ")"; }
+//│     toString() { return "C1(" + globalThis.Predef.render(this.b) + ")"; }
 //│   };
-//│   function C2(b1) { return new C2.class(b1); }
-//│   C2.class = class C2 {
+//│   C21 = function C2(b1) { return new C2.class(b1); };
+//│   C21.class = class C2 {
 //│     constructor(b) {
 //│       this.b = b;
 //│       Predef.print([
@@ -96,21 +100,21 @@ fun test(a) =
 //│         this.b
 //│       ])
 //│     }
-//│     toString() { return "C2(" + this.b + ")"; }
+//│     toString() { return "C2(" + globalThis.Predef.render(this.b) + ")"; }
 //│   };
-//│   tmp = C1(1);
-//│   tmp1 = C2(2);
+//│   tmp1 = C11(1);
+//│   tmp2 = C21(2);
 //│   return [
-//│     tmp,
-//│     tmp1
-//│   ];
-//│ }
+//│     tmp1,
+//│     tmp2
+//│   ]
+//│ };
 //│ null
 
 test(123)
-//│ > 123,1
-//│ > 123,2
-//│ = [ C1 { b: 1 }, C2 { b: 2 } ]
+//│ > [123, 1]
+//│ > [123, 2]
+//│ = [C1(1), C2(2)]
 
 
 :sjs
@@ -123,27 +127,59 @@ class Foo(a) with
   foo()
 Foo(123)
 //│ JS (unsanitized):
-//│ this.Foo = function Foo(a1) { return new Foo.class(a1); };
-//│ this.Foo.class = class Foo {
+//│ let Foo1;
+//│ Foo1 = function Foo(a1) { return new Foo.class(a1); };
+//│ Foo1.class = class Foo {
 //│   constructor(a) {
 //│     this.a = a;
 //│     this.foo()
 //│   }
 //│   foo() {
-//│     let tmp;
+//│     let bar, baz, tmp1;
 //│     const this$Foo = this;
-//│     function bar() {
-//│       return this$Foo.a;
-//│     }
-//│     function baz() {
-//│       return this$Foo.a;
-//│     }
-//│     tmp = bar();
-//│     return baz();
+//│     bar = function bar() {
+//│       return this$Foo.a
+//│     };
+//│     baz = function baz() {
+//│       return this$Foo.a
+//│     };
+//│     tmp1 = bar();
+//│     return baz()
 //│   }
-//│   toString() { return "Foo(" + this.a + ")"; }
+//│   toString() { return "Foo(" + globalThis.Predef.render(this.a) + ")"; }
 //│ };
-//│ this.Foo(123)
-//│ = Foo { a: 123 }
+//│ Foo1(123)
+//│ = Foo(123)
 
-
+:sjs
+class Bar(x) with
+  fun foo()() =
+    fun bar() =
+      x
+    bar()
+  foo()()
+Bar(1)
+//│ JS (unsanitized):
+//│ let Bar1;
+//│ Bar1 = function Bar(x1) { return new Bar.class(x1); };
+//│ Bar1.class = class Bar {
+//│   constructor(x) {
+//│     this.x = x;
+//│     let tmp1;
+//│     tmp1 = this.foo();
+//│     tmp1() ?? null
+//│   }
+//│   foo() {
+//│     return () => {
+//│       let bar;
+//│       const this$Bar = this;
+//│       bar = function bar() {
+//│         return this$Bar.x
+//│       };
+//│       return bar()
+//│     }
+//│   }
+//│   toString() { return "Bar(" + globalThis.Predef.render(this.x) + ")"; }
+//│ };
+//│ Bar1(1)
+//│ = Bar(1)

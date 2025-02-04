@@ -14,20 +14,22 @@ let rcd =
 //│ ╔══[ERROR] Name not found: fieldB
 //│ ║  l.9: 	  fieldB:
 //│ ╙──     	  ^^^^^^
+//│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: rcd (class hkmc2.semantics.VarSymbol)
 
 // * Or this syntax?
 
 :todo
 let rcd =
-  fieldA = 1
-  fieldB =
+  foo = 1
+  bar =
     "..."
-//│ ╔══[ERROR] Name not found: fieldA
-//│ ║  l.22: 	  fieldA = 1
-//│ ╙──      	  ^^^^^^
-//│ ╔══[ERROR] Name not found: fieldB
-//│ ║  l.23: 	  fieldB =
-//│ ╙──      	  ^^^^^^
+//│ ╔══[ERROR] Name not found: foo
+//│ ║  l.23: 	  foo = 1
+//│ ╙──      	  ^^^
+//│ ╔══[ERROR] Name not found: bar
+//│ ║  l.24: 	  bar =
+//│ ╙──      	  ^^^
+//│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: rcd (class hkmc2.semantics.VarSymbol)
 
 // * Or this syntax?
 
@@ -36,8 +38,12 @@ let rcd = new with
   fieldA = 1
   fieldB =
     "..."
-//│ ╔══[PARSE ERROR] Expected expression or block after `new` keyword; found 'with' keyword instead
-//│ ║  l.35: 	let rcd = new with
-//│ ╙──      	              ^^^^
+//│ ╔══[ERROR] Name not found: fieldA
+//│ ║  l.38: 	  fieldA = 1
+//│ ╙──      	  ^^^^^^
+//│ ╔══[ERROR] Name not found: fieldB
+//│ ║  l.39: 	  fieldB =
+//│ ╙──      	  ^^^^^^
+//│ rcd = $anon
 
 

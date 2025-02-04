@@ -231,6 +231,8 @@ final case class ClsLikeDefn(
     preCtor: Block,
     ctor: Block,
 ) extends Defn:
+  publicFields.foreach: f =>
+    require(f.owner.contains(isym))
   val innerSym = S(isym)
 
 final case class Handler(

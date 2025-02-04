@@ -417,7 +417,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
   
   private def genContClass(b: Block)(using HandlerCtx): Opt[ClsLikeDefn] =
     val clsSym = ClassSymbol(
-      Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
+      Tree.DummyTypeDef(syntax.Cls),
       Tree.Ident("Cont$")
     )
     

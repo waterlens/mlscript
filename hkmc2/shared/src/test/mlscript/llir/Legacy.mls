@@ -1,6 +1,169 @@
 :js
 :llir
 
+:global
+
+:intl
+class Pair[A, B](x: A, y: B)
+fun mktup2(x, y) = mktup(x, y)
+fun mktup(x, y) = Pair(x, y)
+fun foo() =
+  mktup2(1, 2)
+foo()
+//│ = Pair(1, 2)
+//│ 
+//│ Interpreted:
+//│ Pair(1,2)
+
+:intl
+class Pair[A, B](x: A, y: B)
+fun foo(pair) =
+  if pair is
+    Pair(x, y) then Pair(x, y)
+fun bar() =
+  foo(Pair(1, 2))
+bar()
+//│ = Pair(1, 2)
+//│ 
+//│ Interpreted:
+//│ Pair(1,2)
+
+:intl
+class Pair[A, B](x: A, y: B)
+fun foo(pair) =
+  if pair is
+    Pair(x, y) then Pair(x, y)
+fun bar() =
+  foo(Pair(1, 2))
+bar()
+//│ = Pair(1, 2)
+//│ 
+//│ Interpreted:
+//│ Pair(1,2)
+
+:intl
+class Pair[A, B](x: A, y: B)
+fun silly(pair) =
+  let x = 0
+  let n = if pair is
+    Pair(x1, x2) then
+      if pair is
+        Pair (x3, x4) then x3 + 1
+  n + 1
+fun foo() =
+    let a = Pair(0, 1)
+    let b = silly(a)
+    b
+foo()
+//│ = 2
+//│ 
+//│ Interpreted:
+//│ 2
+
+
+:intl
+class Pair[A, B](x: A, y: B)
+fun inc_fst(pair) =
+  let c = 2
+  if pair is
+    Pair(x1, x2) then x1 + c
+fun foo() =
+    let a = Pair(0, 1)
+    let b = inc_fst(a)
+    b
+foo()
+//│ = 2
+//│ 
+//│ Interpreted:
+//│ 2
+
+:intl
+class Pair[A, B](x: A, y: B)
+fun inc_fst(pair) =
+  let x = 0
+  if pair is
+    Pair(x1, x2) then x2 + 1
+fun foo() =
+    let b = inc_fst(Pair(0, 1))
+    b
+foo()
+//│ = 2
+//│ 
+//│ Interpreted:
+//│ 2
+
+:intl
+:slot
+abstract class Either[out A, out B]: Left[A, B] | Right[A, B]
+class Left[out A, out B](x: A) extends Either[A, B]
+class Right[out A, out B](y: B) extends Either[A, B]
+fun foo(a, b) =
+  let t = if a is
+    Left(x) then Left(x + 1)
+    Right(y) then Right(b)
+  if t is
+    Left(x) then x
+    Right(y) then y
+fun bar() =
+  foo(Right(2), 2)
+bar()
+//│ Pretty Lowered:
+//│  
+//│ define fun foo(a, b) {
+//│   begin
+//│     match a
+//│       Left =>
+//│         set param0 = a.x in
+//│         set x = param0 in
+//│         set tmp = +(x, 1) in
+//│         set tmp1 = Left(tmp) in
+//│         end
+//│       else
+//│         match a
+//│           Right =>
+//│             set param01 = a.y in
+//│             set y = param01 in
+//│             set tmp1 = Right(b) in
+//│             end
+//│           else
+//│             throw new globalThis.Error("match error")
+//│         in
+//│         end
+//│     in
+//│     end;
+//│     set t = tmp1 in
+//│     match t
+//│       Left =>
+//│         set param02 = t.x in
+//│         set x1 = param02 in
+//│         return x1
+//│       else
+//│         match t
+//│           Right =>
+//│             set param03 = t.y in
+//│             set y1 = param03 in
+//│             return y1
+//│           else
+//│             throw new globalThis.Error("match error")
+//│         in
+//│         end
+//│     in
+//│     end
+//│ } in
+//│ define fun bar() {
+//│   set tmp2 = Right(2) in
+//│   return foo(tmp2, 2)
+//│ } in
+//│ define class Either in
+//│ define class Left(x2) in
+//│ define class Right(y2) in
+//│ set block$res7 = bar() in
+//│ return undefined
+//│ = 2
+//│ 
+//│ Interpreted:
+//│ 2
+
 :sllir
 :intl
 abstract class Option[out T]: Some[T] | None

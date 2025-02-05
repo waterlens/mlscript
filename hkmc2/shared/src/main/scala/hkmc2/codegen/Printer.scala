@@ -31,7 +31,8 @@ object Printer:
         .map{ case (c, b) => doc"${case_doc(c)} => #{  # ${mkDocument(b)} #} " }
         .mkDocument(sep = doc" # ")
       val docDefault = dflt.map(mkDocument).getOrElse(doc"")
-      doc"match ${mkDocument(scrut)} #{  # ${docCases} # else #{  # ${docDefault} #}  #} "
+      val docRest = mkDocument(rest)
+      doc"match ${mkDocument(scrut)} #{  # ${docCases} # else #{  # ${docDefault} #}  #}  # in # ${docRest}"
     case Return(res, implct) => doc"return ${mkDocument(res)}"
     case Throw(exc) => doc"throw ${mkDocument(exc)}"
     case Label(label, body, rest) =>

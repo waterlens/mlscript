@@ -298,4 +298,41 @@ f()
 //│ 11
 
 
-
+:sllir
+:intl
+class A(x)
+class B(y)
+fun f(a) =
+  let t = if a is
+    A(_) then 1
+    B(_) then 2
+  t
+f(A(1))
+//│ = 1
+//│ LLIR:
+//│   class A(x)
+//│   class B(y)
+//│   def f(a) =
+//│     case a of
+//│       A =>
+//│         let x$1 = a.<A:x> in
+//│         let x$2 = 1 in
+//│         jump j$0(x$2)
+//│       _ =>
+//│         case a of
+//│           B =>
+//│             let x$4 = a.<B:y> in
+//│             let x$5 = 2 in
+//│             jump j$1(x$5)
+//│           _ =>
+//│             panic "match error"
+//│   def j$1(x$3) =
+//│     jump j$0(x$3)
+//│   def j$0(x$0) =
+//│     x$0
+//│   let x$6 = A(1) in
+//│   let* (x$7) = f(x$6) in
+//│   x$7
+//│ 
+//│ Interpreted:
+//│ 1

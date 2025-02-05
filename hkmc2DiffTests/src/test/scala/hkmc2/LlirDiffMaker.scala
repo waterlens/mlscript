@@ -25,6 +25,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val scpp = NullaryCommand("scpp")
   val rcpp = NullaryCommand("rcpp")
   val intl = NullaryCommand("intl")
+  val lprelude = NullaryCommand("lpre")
   val wcpp = Command[Str]("wcpp", false)(x => x.stripLeading())
 
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) =
@@ -33,18 +34,21 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
 
   given Elaborator.Ctx = curCtx
 
+  var preludeBlock: Opt[Block] = None
+
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
     super.processTerm(trm, inImport)
     if llir.isSet then
       val low = ltl.givenIn:
         codegen.Lowering(lowerHandlers = false, stackLimit = None)
-      val le = low.program(trm)
+      var le = low.program(trm)
+      if lprelude.isSet then
+        preludeBlock = Some(le.main)
       given Scope = Scope.empty
       val fresh = Fresh()
       val fuid = FreshInt()
       val cuid = FreshInt()
       val llb = LlirBuilder(tl)(fresh, fuid, cuid)
-      given Ctx = Ctx.empty
       try
         val llirProg = llb.bProg(le)
         if sllir.isSet then

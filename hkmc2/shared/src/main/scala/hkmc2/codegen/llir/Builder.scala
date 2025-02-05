@@ -97,6 +97,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
   private def freeVarsFilter(fvs: Set[Local]) =
     fvs.filter:
       case s: BuiltinSymbol => false
+      case t: TopLevelSymbol => false
       case _ => true
   
   private def bBind(name: Opt[Str], e: Result, body: Block)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope): Node =
@@ -105,12 +106,12 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         case r: Expr.Ref =>
           given Ctx = ctx.addName(name.getOrElse(fresh.make.str), r.name)
           log(s"bBind ref: $name -> $r")
-          bBlock(body)(k)
+          bBlock(body)(k)(End(""))
         case l: Expr.Literal =>
           val v = fresh.make
           given Ctx = ctx.addName(name.getOrElse(fresh.make.str), v)
           log(s"bBind lit: $name -> $v")
-          Node.LetExpr(v, l, bBlock(body)(k))
+          Node.LetExpr(v, l, bBlock(body)(k)(End("")))
   
   private def bArgs(e: Ls[Arg])(k: Ls[TrivialExpr] => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope): Node =
     trace[Node](s"bArgs begin", x => s"bArgs end: ${x.show}"):
@@ -145,7 +146,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
           sym.nme,
           params = pl,
           resultNum = 1,
-          body = bBlock(body)(x => Node.Result(Ls(x)))(using ctx3)
+          body = bBlock(body)(x => Node.Result(Ls(x)))(End(""))(using ctx3)
         )
 
   private def bMethodDef(e: FunDefn)(using ctx: Ctx)(using Raise, Scope): Func =
@@ -165,7 +166,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
           sym.nme,
           params = pl,
           resultNum = 1,
-          body = bBlock(body)(x => Node.Result(Ls(x)))(using ctx3)
+          body = bBlock(body)(x => Node.Result(Ls(x)))(End(""))(using ctx3)
         )
 
   private def bClsLikeDef(e: ClsLikeDefn)(using ctx: Ctx)(using Raise, Scope): ClassInfo =
@@ -208,7 +209,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         s"apply${params.params.length}",
         params = pl,
         resultNum = 1,
-        body = bBlock(body)(x => Node.Result(Ls(x)))(using ctx3)
+        body = bBlock(body)(x => Node.Result(Ls(x)))(End(""))(using ctx3)
       )
       ctx.class_acc += ClassInfo(
         clsUid.make,
@@ -237,6 +238,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
             val app = Call(v, tempSymbols.map(x => Arg(false, Value.Ref(x))).toList)(true, false)
             bLam(Value.Lam(paramsList, Return(app, false)))(k)
           case None =>
+            log(s"bValue Ref: $x")
             k(ctx.findName(x) |> sr)
       case Value.This(sym) => errStop(msg"Unsupported value: This")
       case Value.Lit(lit) => k(Expr.Literal(lit))
@@ -306,18 +308,20 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
             Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(sym.nme), args), k(v |> sr))
       case Instantiate(cls, args) =>
         errStop(msg"Unsupported kind of Instantiate")
-        Node.Result(Ls())
       case x: Path => bPath(x)(k)
 
-  private def bBlock(blk: Block)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
+  private def bBlock(blk: Block)(k: TrivialExpr => Ctx ?=> Node)(ct: Block)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bBlock begin", x => s"bBlock end: ${x.show}"):
       blk match
       case Match(scrut, arms, dflt, rest) =>
         bPath(scrut):
           case e: TrivialExpr =>
+            val nextCont = Begin(rest, ct)
             val jp = fresh.make("j")
-            val fvset = freeVarsFilter(rest.freeVars -- rest.definedVars).map(allocIfNew)
+            val fvset = freeVarsFilter(nextCont.freeVars -- nextCont.definedVars).map(allocIfNew)
             val fvs1 = fvset.toList
+            log(s"Next cont is $nextCont")
+            log(s"Match free vars: $fvset ${nextCont.freeVars} ${nextCont.definedVars} $fvs1")
             val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, fresh.make))
             val fvs = fvs1.map(new_ctx.findName(_))
             def cont(x: TrivialExpr)(using ctx: Ctx) = Node.Jump(
@@ -326,18 +330,18 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
             )
             val casesList: Ls[(Pat, Node)] = arms.map:
               case (Case.Lit(lit), body) =>
-                (Pat.Lit(lit), bBlock(body)(cont)(using ctx))
+                (Pat.Lit(lit), bBlock(body)(cont)(nextCont)(using ctx))
               case (Case.Cls(cls, _), body) =>
-                (Pat.Class(ClassRef.fromName(cls.nme)), bBlock(body)(cont)(using ctx))
+                (Pat.Class(ClassRef.fromName(cls.nme)), bBlock(body)(cont)(nextCont)(using ctx))
               case (Case.Tup(len, inf), body) =>
-                (Pat.Class(ClassRef.fromName("Tuple" + len.toString())), bBlock(body)(cont)(using ctx))
-            val defaultCase = dflt.map(bBlock(_)(cont))
+                (Pat.Class(ClassRef.fromName("Tuple" + len.toString())), bBlock(body)(cont)(nextCont)(using ctx))
+            val defaultCase = dflt.map(bBlock(_)(cont)(nextCont)(using ctx))
             val jpdef = Func(
               fnUid.make,    
               jp.str,
               params = fvs,
               resultNum = 1,
-              bBlock(rest)(k)(using new_ctx),
+              bBlock(rest)(k)(ct)(using new_ctx),
             )
             summon[Ctx].def_acc += jpdef
             Node.Case(e, casesList, defaultCase)
@@ -353,16 +357,15 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
           case _: BlockTail => 
             val definedVars = sub.definedVars
             definedVars.foreach(allocIfNew)
-            bBlock(sub):
-              x => bBlock(rest)(k)
+            bBlock(sub)(x => bBlock(rest)(k)(ct))(Begin(rest, ct))
           case Assign(lhs, rhs, rest2) =>
-            bBlock(Assign(lhs, rhs, Begin(rest2, rest)))(k)
+            bBlock(Assign(lhs, rhs, Begin(rest2, rest)))(k)(ct)
           case Begin(sub, rest2) =>
-            bBlock(Begin(sub, Begin(rest2, rest)))(k)
+            bBlock(Begin(sub, Begin(rest2, rest)))(k)(ct)
           case Define(defn, rest2) =>
-            bBlock(Define(defn, Begin(rest2, rest)))(k)
+            bBlock(Define(defn, Begin(rest2, rest)))(k)(ct)
           case Match(scrut, arms, dflt, rest2) =>
-            bBlock(Match(scrut, arms, dflt, Begin(rest2, rest)))(k)
+            bBlock(Match(scrut, arms, dflt, Begin(rest2, rest)))(k)(ct)
           case _ => TODO(s"Other non-tail sub components of Begin not supported $sub")
       case TryBlock(sub, finallyDo, rest) => TODO("TryBlock not supported")
       case Assign(lhs, rhs, rest) =>
@@ -375,24 +378,34 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         val ctx2 = ctx.addFuncName(sym, Name(sym.nme), params.head.params.length)
         val f = bFunDef(fd)(using ctx2)
         ctx.def_acc += f
-        bBlock(rest)(k)(using ctx2)
-      case Define(_: ClsLikeDefn, rest) => bBlock(rest)(k)
+        bBlock(rest)(k)(End(""))(using ctx2)
+      case Define(_: ClsLikeDefn, rest) => bBlock(rest)(k)(End(""))
       case End(msg) => k(Expr.Literal(Tree.UnitLit(false)))
       case _: Block =>
         val docBlock = blk.showAsTree
         errStop(msg"Unsupported block: $docBlock")
-        Node.Result(Ls())
   
   def registerClasses(b: Block)(using ctx: Ctx)(using Raise, Scope): Ctx =
     b match
     case Define(cd @ ClsLikeDefn(_own, isym, sym, kind, _paramsOpt, parentSym, methods, privateFields, publicFields, preCtor, ctor), rest) =>
       val c = bClsLikeDef(cd)
-      ctx.class_acc += c
       val new_ctx = ctx.addClassName(sym, Name(c.name)).addClassName(isym, Name(c.name))
+      ctx.class_acc += c
       log(s"Define class: ${sym.nme} -> ${new_ctx}")
       registerClasses(rest)(using new_ctx)
     case _ =>
       b.subBlocks.foldLeft(ctx)((ctx, rest) => registerClasses(rest)(using ctx))
+
+  def registerFunctions(b: Block)(using ctx: Ctx)(using Raise, Scope): Ctx =
+    b match
+    case Define(fd @ FunDefn(_own, sym, params, body), rest) =>
+      if params.length != 1 then
+        errStop(msg"Curried function or zero arguments function not supported: ${params.length.toString}")
+      val ctx2 = ctx.addFuncName(sym, Name(sym.nme), params.head.params.length)
+      log(s"Define function: ${sym.nme} -> ${ctx2}")
+      registerFunctions(rest)(using ctx2)
+    case _ =>
+      b.subBlocks.foldLeft(ctx)((ctx, rest) => registerFunctions(rest)(using ctx))
   
   def bProg(e: Program)(using Raise, Scope): LlirProgram =
     var ctx = Ctx.empty
@@ -400,7 +413,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
     // * Classes may be defined after other things such as functions,
     // * especially now that the elaborator moves all functions to the top of the block.
     ctx = registerClasses(e.main)(using ctx)
+    ctx = registerFunctions(e.main)(using ctx)
     
-    val entry = bBlock(e.main)(x => Node.Result(Ls(x)))(using ctx)
+    val entry = bBlock(e.main)(x => Node.Result(Ls(x)))(End(""))(using ctx)
     LlirProgram(ctx.class_acc.toSet, ctx.def_acc.toSet, entry)
 

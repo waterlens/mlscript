@@ -24,23 +24,26 @@ def errStop(msg: Message)(using Raise) =
   err(msg)
   throw LowLevelIRError("stopped")
 
+final case class FuncInfo (
+  name: Name,
+  paramsSize: Int,
+)
 
 final case class Ctx(
   def_acc: ListBuffer[Func],
   class_acc: ListBuffer[ClassInfo],
   symbol_ctx: Map[Str, Name] = Map.empty,
-  fn_ctx: Map[Local, Name] = Map.empty, // is a known function
+  fn_ctx: Map[Local, FuncInfo] = Map.empty, // is a known function
   class_ctx: Map[Local, Name] = Map.empty,
   block_ctx: Map[Local, Name] = Map.empty,
   is_top_level: Bool = true,
   method_class: Opt[Symbol] = None,
-  this_name: Opt[Name] = None,
+  free_vars: Set[Local] = Set.empty,
 ):
-  def addFuncName(n: Local, m: Name) = copy(fn_ctx = fn_ctx + (n -> m))
+  def addFuncName(n: Local, m: Name, paramsSize: Int) = copy(fn_ctx = fn_ctx + (n -> FuncInfo(m, paramsSize)))
   def findFuncName(n: Local)(using Raise) = fn_ctx.get(n) match
     case None =>
       errStop(msg"Function name not found: ${n.toString()}")
-      Name("error")
     case Some(value) => value
   def addClassName(n: Local, m: Name) = copy(class_ctx = class_ctx + (n -> m))
   def findClassName(n: Local)(using Raise) = class_ctx.get(n) match
@@ -53,14 +56,14 @@ final case class Ctx(
       errStop(msg"Name not found: $n")
     case Some(value) => value
   def setClass(c: Symbol) = copy(method_class = Some(c))
-  def setThis(n: Name) = copy(this_name = Some(n))
+  def setFreeVars(n: Set[Local]) = copy(free_vars = free_vars)
   def nonTopLevel = copy(is_top_level = false)
 
 object Ctx:
   def empty = Ctx(ListBuffer.empty, ListBuffer.empty)
 
 
-final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: FreshInt):
+final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: FreshInt):
   import tl.{trace, log, logs}
   
   def er = Expr.Ref
@@ -90,6 +93,11 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
       case ts: semantics.InnerSymbol =>
         summon[Scope].findThis_!(ts)
       case _ => summon[Scope].lookup_!(l)
+  
+  private def freeVarsFilter(fvs: Set[Local]) =
+    fvs.filter:
+      case s: BuiltinSymbol => false
+      case _ => true
   
   private def bBind(name: Opt[Str], e: Result, body: Block)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope): Node =
     trace[Node](s"bBind begin: $name", x => s"bBind end: ${x.show}"):
@@ -151,7 +159,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         val paramsList = params.head.params.map(x => x -> summon[Scope].allocateName(x.sym))
         val ctx2 = paramsList.foldLeft(ctx)((acc, x) => acc.addName(getVar_!(x._1.sym), x._2 |> nme))
         val ctx3 = ctx2.nonTopLevel
-        val pl = ctx.this_name.getOrElse(errStop(msg"Not in a class")) :: paramsList.map(_._2).map(nme)
+        val pl = paramsList.map(_._2).map(nme)
         Func(
           fnUid.make,
           sym.nme,
@@ -170,30 +178,70 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         val clsDefn = sym.defn.getOrElse(die)
         val clsParams = paramsOpt.fold(Nil)(_.paramSyms)
         val clsFields = publicFields.map(_.sym)
-        given Ctx = ctx.setClass(sym).setThis(fresh.make("this"))
+        given Ctx = ctx.setClass(sym)
         val funcs = methods.map(bMethodDef)
-        ctx.def_acc ++= funcs
+        def parentFromPath(p: Path): Set[Str] = p match
+          case Value.Ref(l) => Set(l.nme)
+          case _ => errStop(msg"Unsupported parent path")
         ClassInfo(
           clsUid.make,
           sym.nme,
           clsParams.map(_.nme) ++ clsFields.map(_.nme),
+          parentSym.fold(Set.empty)(parentFromPath),
+          funcs.map(f => f.name -> f).toMap,
         )
   
+  private def bLam(lam: Value.Lam)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
+    trace[Node](s"bLam begin", x => s"bLam end: ${x.show}"):
+      val Value.Lam(params, body) = lam
+      // Generate an auxiliary class inheriting from Callable
+      val freeVars = freeVarsFilter(lam.freeVars -- lam.body.definedVars -- ctx.fn_ctx.keySet)
+      val name = fresh.make("Lambda")
+      val clsParams = freeVars.toList.map(_.nme)
+      val args = freeVars.toList.map(allocIfNew)
+      val ctx2 = ctx.setFreeVars(freeVars)
+      val applyParams = params.params.map(x => x -> summon[Scope].allocateName(x.sym))
+      val ctx3 = applyParams.foldLeft(ctx2)((acc, x) => acc.addName(getVar_!(x._1.sym), x._2 |> nme)).nonTopLevel
+      val pl = applyParams.map(_._2).map(nme)
+      val method = Func(
+        fnUid.make,
+        s"apply${params.params.length}",
+        params = pl,
+        resultNum = 1,
+        body = bBlock(body)(x => Node.Result(Ls(x)))(using ctx3)
+      )
+      ctx.class_acc += ClassInfo(
+        clsUid.make,
+        name.str,
+        clsParams,
+        Set("Callable"),
+        Map(method.name -> method),
+      )
+      val v = fresh.make
+      Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(name), args.map(sr)), k(v |> sr)(using ctx))
+
   private def bValue(v: Value)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bValue { $v } begin", x => s"bValue end: ${x.show}"):
       v match
       case Value.Ref(l: TermSymbol) if l.owner.nonEmpty =>
-        val v = fresh.make
-        Node.LetExpr(v, 
-          Expr.Select(ctx.this_name.getOrElse(errStop(msg"Not in a class")), ClassRef.fromName(l.owner.get.nme), l.name), k(v |> sr))
+        k(Name(l.name) |> sr)
       case Value.Ref(sym) if sym.nme.isCapitalized =>
         val v = fresh.make
         Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(sym.nme), Ls()), k(v |> sr))
-      case Value.Ref(l) => k(ctx.findName(getVar_!(l)) |> sr)
-      case Value.This(sym) => errStop(msg"Unsupported value: This"); Node.Result(Ls())
+      case Value.Ref(l) => 
+        val x = getVar_!(l)
+        ctx.fn_ctx.get(l) match
+          case Some(f) =>
+            val tempSymbols = (0 until f.paramsSize).map(_ => VarSymbol(Tree.Ident("lam_arg")))
+            val paramsList = PlainParamList((0 until f.paramsSize).zip(tempSymbols).map((_n, sym) => Param(FldFlags.empty, sym, N)).toList)
+            val app = Call(v, tempSymbols.map(x => Arg(false, Value.Ref(x))).toList)(true, false)
+            bLam(Value.Lam(paramsList, Return(app, false)))(k)
+          case None =>
+            k(ctx.findName(x) |> sr)
+      case Value.This(sym) => errStop(msg"Unsupported value: This")
       case Value.Lit(lit) => k(Expr.Literal(lit))
-      case Value.Lam(params, body) => errStop(msg"Unsupported value: Lam"); Node.Result(Ls())
-      case Value.Arr(elems) => errStop(msg"Unsupported value: Arr"); Node.Result(Ls())
+      case lam @ Value.Lam(params, body) => bLam(lam)(k)
+      case Value.Arr(elems) => errStop(msg"Unsupported value: Arr")
   
   private def getClassOfMem(p: FieldSymbol)(using ctx: Ctx)(using Raise, Scope): Local =
     trace[Local](s"bMemSym { $p } begin", x => s"bMemSym end: $x"):
@@ -205,9 +253,9 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
     trace[Node](s"bPath { $p } begin", x => s"bPath end: ${x.show}"):
       p match
       case Select(Value.Ref(cls: ClassSymbol), name) if ctx.method_class.contains(cls) =>
-        val v = fresh.make
-        val _ = Node.LetExpr(v, Expr.Select(ctx.this_name.getOrElse(errStop(msg"Not in a class")), ClassRef.fromName(cls.nme), name.name), k(v |> sr))
-        errStop(msg"Unsupported field in the class")
+        k(Name(name.name) |> sr)
+      case s @ DynSelect(qual, fld, arrayIdx) =>
+        errStop(msg"Unsupported dynamic selection")
       case s @ Select(qual, name) =>
         log(s"bPath Select: $qual.$name with ${s.symbol}")
         s.symbol match
@@ -238,18 +286,18 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
           case args: Ls[TrivialExpr] =>
             val v = fresh.make
             Node.LetExpr(v, Expr.CtorApp(ClassRef.fromName(sym.nme), args), k(v |> sr))
-      case Call(Value.Ref(sym), args) =>
+      case Call(s @ Value.Ref(sym), args) =>
         bArgs(args):
           case args: Ls[TrivialExpr] =>
             val v = fresh.make
-            Node.LetCall(Ls(v), FuncRef.fromName(sym.nme), args, k(v |> sr))
-      case Call(fn, args) =>
-        bPath(fn):
-          case f: TrivialExpr =>
-            bArgs(args):
-              case args: Ls[TrivialExpr] =>
-                val v = fresh.make
-                Node.LetMethodCall(Ls(v), ClassRef(R("Callable")), Name("apply" + args.length), f :: args, k(v |> sr))
+            ctx.fn_ctx.get(sym) match
+              case Some(f) =>
+                Node.LetCall(Ls(v), FuncRef.fromName(f.name), args, k(v |> sr))
+              case None =>
+                bPath(s):
+                  case f: TrivialExpr =>
+                    Node.LetMethodCall(Ls(v), ClassRef(R("Callable")), Name("apply" + args.length), f :: args, k(v |> sr))
+      case Call(_, _) => errStop(msg"Unsupported kind of Call")
       case Instantiate(
         Select(Value.Ref(sym), Tree.Ident("class")), args) =>
         bPaths(args):
@@ -268,10 +316,7 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         bPath(scrut):
           case e: TrivialExpr =>
             val jp = fresh.make("j")
-            val fvset = (rest.freeVars -- rest.definedVars).filter{
-              case s: BuiltinSymbol => false
-              case _ => true
-            }.map(allocIfNew)
+            val fvset = freeVarsFilter(rest.freeVars -- rest.definedVars).map(allocIfNew)
             val fvs1 = fvset.toList
             val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, fresh.make))
             val fvs = fvs1.map(new_ctx.findName(_))
@@ -325,10 +370,12 @@ final class LlirBuilder(tl: TraceLogger)(fresh: Fresh, fnUid: FreshInt, clsUid: 
         bBind(S(name), rhs, rest)(k)
       case AssignField(lhs, nme, rhs, rest) => TODO("AssignField not supported")
       case Define(fd @ FunDefn(_own, sym, params, body), rest) =>
-        val f = bFunDef(fd)
+        if params.length != 1 then
+          errStop(msg"Curried function or zero arguments function not supported: ${params.length.toString}")
+        val ctx2 = ctx.addFuncName(sym, Name(sym.nme), params.head.params.length)
+        val f = bFunDef(fd)(using ctx2)
         ctx.def_acc += f
-        val new_ctx = ctx.addFuncName(sym, Name(f.name))
-        bBlock(rest)(k)(using new_ctx)
+        bBlock(rest)(k)(using ctx2)
       case Define(_: ClsLikeDefn, rest) => bBlock(rest)(k)
       case End(msg) => k(Expr.Literal(Tree.UnitLit(false)))
       case _: Block =>

@@ -49,9 +49,9 @@ case class ClassInfo(
   id: Int,
   name: Str,
   fields: Ls[Str],
+  parents: Set[Str],
+  methods: Map[Str, Func],
 ):
-  var parents: Set[Str] = Set.empty
-  var methods: Map[Str, Func] = Map.empty
   override def hashCode: Int = id
   override def toString: String =
     s"ClassInfo($id, $name, [${fields mkString ","}], parents: ${parents mkString ","}, methods:\n${methods mkString ",\n"})"
@@ -63,10 +63,10 @@ case class ClassInfo(
     if methods.isEmpty then
       doc"class $name(${fields.mkString(",")})$ext"
     else
-      val docFirst = doc"class $name (${fields.mkString(",")})$ext {"
+      val docFirst = doc"class $name(${fields.mkString(",")})$ext {"
       val docMethods = methods.map { (_, func) => func.toDocument }.toList.mkDocument(doc" # ")
       val docLast = doc"}"
-      doc"$docFirst #{  # $docMethods #  #} $docLast"
+      doc"$docFirst #{  # $docMethods #}  # $docLast"
 
 case class Name(str: Str):
   def trySubst(map: Map[Str, Name]) = map.getOrElse(str, this)

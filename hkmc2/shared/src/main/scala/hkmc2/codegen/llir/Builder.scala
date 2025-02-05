@@ -232,7 +232,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         val x = getVar_!(l)
         ctx.fn_ctx.get(l) match
           case Some(f) =>
-            val tempSymbols = (0 until f.paramsSize).map(_ => VarSymbol(Tree.Ident("lam_arg")))
+            val tempSymbols = (0 until f.paramsSize).map(x => VarSymbol(Tree.Ident(fresh.make("arg").str)))
             val paramsList = PlainParamList((0 until f.paramsSize).zip(tempSymbols).map((_n, sym) => Param(FldFlags.empty, sym, N)).toList)
             val app = Call(v, tempSymbols.map(x => Arg(false, Value.Ref(x))).toList)(true, false)
             bLam(Value.Lam(paramsList, Return(app, false)))(k)

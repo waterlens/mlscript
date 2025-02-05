@@ -209,7 +209,9 @@ object CppCodeGen:
 
   // Topological sort of classes based on inheritance relationships
   def sortClasses(prog: Program): Ls[ClassInfo] =
+    val builtinClasses = Set("Callable")
     var depgraph = prog.classes.map(x => (x.name, x.parents)).toMap
+      ++ builtinClasses.map(x => (x, Set.empty[Str]))
     var degree = depgraph.view.mapValues(_.size).toMap
     def removeNode(node: Str) =
       degree -= node
@@ -221,7 +223,7 @@ object CppCodeGen:
     while work.nonEmpty do
       val node = work.head
       work -= node
-      sorted.addOne(prog.classes.find(_.name == node).get)
+      prog.classes.find(_.name == node).fold(())(sorted.addOne)
       removeNode(node)
       val next = degree.filter(_._2 == 0).keys
       work ++= next

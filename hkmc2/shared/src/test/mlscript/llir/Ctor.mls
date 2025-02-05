@@ -1,0 +1,32 @@
+:js
+:llir
+
+:global
+
+:sllir
+object None
+fun testCtor1() = None
+fun testCtor2() = new None
+//│ LLIR:
+//│   class None()
+//│   def testCtor1() =
+//│     let x$0 = None() in
+//│     x$0
+//│   def testCtor2() =
+//│     let x$1 = None() in
+//│     x$1
+//│   undefined
+
+:sllir
+class A(x)
+fun testCtor1() = A(1)
+fun testCtor2() = new A(1)
+//│ LLIR:
+//│   class A(x)
+//│   def testCtor1() =
+//│     let x$0 = A(1) in
+//│     x$0
+//│   def testCtor2() =
+//│     let x$1 = A(1) in
+//│     x$1
+//│   undefined

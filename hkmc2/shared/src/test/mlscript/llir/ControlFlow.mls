@@ -336,3 +336,65 @@ f(A(1))
 //│ 
 //│ Interpreted:
 //│ 1
+
+:sllir
+:intl
+class A(x)
+class B(y)
+fun f(a) =
+  let t = if a is
+    A(_) then if a is
+      A(1) then 1
+      B(_) then 2
+    B(_) then 3
+  t
+f(A(1))
+//│ = 1
+//│ LLIR:
+//│   class A(x)
+//│   class B(y)
+//│   def f(a) =
+//│     case a of
+//│       A =>
+//│         let x$1 = a.<A:x> in
+//│         case a of
+//│           A =>
+//│             let x$3 = a.<A:x> in
+//│             case x$3 of
+//│               IntLit(1) =>
+//│                 let x$5 = 1 in
+//│                 jump j$2(x$5)
+//│               _ =>
+//│                 panic "match error"
+//│           _ =>
+//│             case a of
+//│               B =>
+//│                 let x$7 = a.<B:y> in
+//│                 let x$8 = 2 in
+//│                 jump j$3(x$8)
+//│               _ =>
+//│                 panic "match error"
+//│       _ =>
+//│         case a of
+//│           B =>
+//│             let x$10 = a.<B:y> in
+//│             let x$11 = 3 in
+//│             jump j$4(x$11)
+//│           _ =>
+//│             panic "match error"
+//│   def j$2(x$4) =
+//│     jump j$1(x$4)
+//│   def j$3(x$6) =
+//│     jump j$1(x$6)
+//│   def j$1(x$2) =
+//│     jump j$0(x$2)
+//│   def j$4(x$9) =
+//│     jump j$0(x$9)
+//│   def j$0(x$0) =
+//│     x$0
+//│   let x$12 = A(1) in
+//│   let* (x$13) = f(x$12) in
+//│   x$13
+//│ 
+//│ Interpreted:
+//│ 1

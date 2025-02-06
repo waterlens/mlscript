@@ -95,23 +95,23 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
       case _ => summon[Scope].lookup_!(l)
   
   private def freeVarsFilter(fvs: Set[Local]) =
-    fvs.filter:
-      case s: BuiltinSymbol => false
-      case t: TopLevelSymbol => false
-      case _ => true
+    trace[Set[Local]](s"freeVarsFilter begin", x => s"freeVarsFilter end: $x"):
+      fvs.filter:
+        case _: (BuiltinSymbol | TopLevelSymbol | ClassSymbol | MemberSymbol[?]) => false
+        case _ => true
   
-  private def bBind(name: Opt[Str], e: Result, body: Block)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope): Node =
+  private def bBind(name: Opt[Str], e: Result, body: Block)(k: TrivialExpr => Ctx ?=> Node)(ct: Block)(using ctx: Ctx)(using Raise, Scope): Node =
     trace[Node](s"bBind begin: $name", x => s"bBind end: ${x.show}"):
       bResult(e):
         case r: Expr.Ref =>
           given Ctx = ctx.addName(name.getOrElse(fresh.make.str), r.name)
           log(s"bBind ref: $name -> $r")
-          bBlock(body)(k)(End(""))
+          bBlock(body)(k)(ct)
         case l: Expr.Literal =>
           val v = fresh.make
           given Ctx = ctx.addName(name.getOrElse(fresh.make.str), v)
           log(s"bBind lit: $name -> $v")
-          Node.LetExpr(v, l, bBlock(body)(k)(End("")))
+          Node.LetExpr(v, l, bBlock(body)(k)(ct))
   
   private def bArgs(e: Ls[Arg])(k: Ls[TrivialExpr] => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope): Node =
     trace[Node](s"bArgs begin", x => s"bArgs end: ${x.show}"):
@@ -146,7 +146,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
           sym.nme,
           params = pl,
           resultNum = 1,
-          body = bBlock(body)(x => Node.Result(Ls(x)))(End(""))(using ctx3)
+          body = bBlockWithEndCont(body)(x => Node.Result(Ls(x)))(using ctx3)
         )
 
   private def bMethodDef(e: FunDefn)(using ctx: Ctx)(using Raise, Scope): Func =
@@ -166,7 +166,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
           sym.nme,
           params = pl,
           resultNum = 1,
-          body = bBlock(body)(x => Node.Result(Ls(x)))(End(""))(using ctx3)
+          body = bBlockWithEndCont(body)(x => Node.Result(Ls(x)))(using ctx3)
         )
 
   private def bClsLikeDef(e: ClsLikeDefn)(using ctx: Ctx)(using Raise, Scope): ClassInfo =
@@ -209,7 +209,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         s"apply${params.params.length}",
         params = pl,
         resultNum = 1,
-        body = bBlock(body)(x => Node.Result(Ls(x)))(End(""))(using ctx3)
+        body = bBlockWithEndCont(body)(x => Node.Result(Ls(x)))(using ctx3)
       )
       ctx.class_acc += ClassInfo(
         clsUid.make,
@@ -310,6 +310,9 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         errStop(msg"Unsupported kind of Instantiate")
       case x: Path => bPath(x)(k)
 
+  private def bBlockWithEndCont(blk: Block)(k: TrivialExpr => Ctx ?=> Node)(using Ctx)(using Raise, Scope) : Node =
+    bBlock(blk)(k)(End(""))
+
   private def bBlock(blk: Block)(k: TrivialExpr => Ctx ?=> Node)(ct: Block)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bBlock begin", x => s"bBlock end: ${x.show}"):
       blk match
@@ -320,7 +323,6 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
             val jp = fresh.make("j")
             val fvset = freeVarsFilter(nextCont.freeVars -- nextCont.definedVars).map(allocIfNew)
             val fvs1 = fvset.toList
-            log(s"Next cont is $nextCont")
             log(s"Match free vars: $fvset ${nextCont.freeVars} ${nextCont.definedVars} $fvs1")
             val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, fresh.make))
             val fvs = fvs1.map(new_ctx.findName(_))
@@ -348,7 +350,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
       case Return(res, implct) => bResult(res)(x => Node.Result(Ls(x)))
       case Throw(Instantiate(Select(Value.Ref(_), ident), Ls(Value.Lit(Tree.StrLit(e))))) if ident.name == "Error" =>
         Node.Panic(e)
-      case Label(label, body, rest) => ???
+      case Label(label, body, rest) => TODO("Label not supported")
       case Break(label) => TODO("Break not supported")
       case Continue(label) => TODO("Continue not supported")
       case Begin(sub, rest) =>
@@ -370,7 +372,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
       case TryBlock(sub, finallyDo, rest) => TODO("TryBlock not supported")
       case Assign(lhs, rhs, rest) =>
         val name = allocIfNew(lhs)
-        bBind(S(name), rhs, rest)(k)
+        bBind(S(name), rhs, rest)(k)(ct)
       case AssignField(lhs, nme, rhs, rest) => TODO("AssignField not supported")
       case Define(fd @ FunDefn(_own, sym, params, body), rest) =>
         if params.length != 1 then
@@ -378,8 +380,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         val ctx2 = ctx.addFuncName(sym, Name(sym.nme), params.head.params.length)
         val f = bFunDef(fd)(using ctx2)
         ctx.def_acc += f
-        bBlock(rest)(k)(End(""))(using ctx2)
-      case Define(_: ClsLikeDefn, rest) => bBlock(rest)(k)(End(""))
+        bBlock(rest)(k)(ct)(using ctx2)
+      case Define(_: ClsLikeDefn, rest) => bBlock(rest)(k)(ct)
       case End(msg) => k(Expr.Literal(Tree.UnitLit(false)))
       case _: Block =>
         val docBlock = blk.showAsTree
@@ -415,6 +417,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
     ctx = registerClasses(e.main)(using ctx)
     ctx = registerFunctions(e.main)(using ctx)
     
-    val entry = bBlock(e.main)(x => Node.Result(Ls(x)))(End(""))(using ctx)
+    log(s"Classes: ${ctx.class_ctx}")
+
+    val entry = bBlockWithEndCont(e.main)(x => Node.Result(Ls(x)))(using ctx)
     LlirProgram(ctx.class_acc.toSet, ctx.def_acc.toSet, entry)
 

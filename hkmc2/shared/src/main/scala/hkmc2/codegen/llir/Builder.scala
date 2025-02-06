@@ -183,7 +183,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         val funcs = methods.map(bMethodDef)
         def parentFromPath(p: Path): Set[Str] = p match
           case Value.Ref(l) => Set(l.nme)
-          case _ => errStop(msg"Unsupported parent path")
+          case Select(Value.Ref(l), Tree.Ident("class")) => Set(l.nme)
+          case _ => errStop(msg"Unsupported parent path ${p.toString()}")
         ClassInfo(
           clsUid.make,
           sym.nme,
@@ -299,7 +300,15 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
                 bPath(s):
                   case f: TrivialExpr =>
                     Node.LetMethodCall(Ls(v), ClassRef(R("Callable")), Name("apply" + args.length), f :: args, k(v |> sr))
-      case Call(_, _) => errStop(msg"Unsupported kind of Call")
+      case Call(s @ Select(r @ Value.Ref(sym), Tree.Ident(fld)), args) if s.symbol.isDefined =>
+        bPath(r):
+          case r =>
+            bArgs(args):
+              case args: Ls[TrivialExpr] =>
+                val v = fresh.make
+                log(s"Method Call Select: $r.$fld with ${s.symbol}")
+                errStop(msg"Unsupported method call")
+      case Call(_, _) => errStop(msg"Unsupported kind of Call ${r.toString()}")
       case Instantiate(
         Select(Value.Ref(sym), Tree.Ident("class")), args) =>
         bPaths(args):

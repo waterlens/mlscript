@@ -3,16 +3,23 @@
 :llir
 :cpp
 
-
 :sllir
-:lot
+:slot
 class A(m) with
   fun f() = m
+fun main() =
+  let a = A(1)
+  a.A#f()
+main()
 //│ LLIR:
 //│   class A(m) {
 //│     def f() =
 //│       m
 //│   }
-//│   
-//│   undefined
+//│   def main() =
+//│     let x$0 = A(1) in
+//│     let x$1 = f.f(x$0) in
+//│     x$1
+//│   let* (x$2) = main() in
+//│   x$2
 

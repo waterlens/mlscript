@@ -129,7 +129,7 @@ fun dummy() = add
 dummy()(1, 2)
 //│ = 3
 //│ LLIR:
-//│   class Lambda$0() extends Callable {
+//│   class Lambda_add$0() extends Callable {
 //│     def apply2(arg$0,arg$1) =
 //│       let* (x$1) = add(arg$0,arg$1) in
 //│       x$1
@@ -138,7 +138,7 @@ dummy()(1, 2)
 //│     let x$0 = +(a,b) in
 //│     x$0
 //│   def dummy() =
-//│     let x$2 = Lambda$0() in
+//│     let x$2 = Lambda_add$0() in
 //│     x$2
 //│   let* (x$3) = dummy() in
 //│   let x$4 = Callable.apply2(x$3,1,2) in
@@ -146,17 +146,17 @@ dummy()(1, 2)
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
-//│ struct _mls_Lambda_0;
+//│ struct _mls_Lambda_add_0;
 //│ _mlsValue _mls_add(_mlsValue, _mlsValue);
 //│ _mlsValue _mls_dummy();
 //│ _mlsValue _mlsMain();
-//│ struct _mls_Lambda_0: public _mls_Callable {
+//│ struct _mls_Lambda_add_0: public _mls_Callable {
 //│   
-//│   constexpr static inline const char *typeName = "Lambda$0";
+//│   constexpr static inline const char *typeName = "Lambda_add$0";
 //│   constexpr static inline uint32_t typeTag = nextTypeTag();
 //│   virtual void print() const override { std::printf("%s", typeName); }
 //│   virtual void destroy() override {  operator delete (this, std::align_val_t(_mlsAlignment)); }
-//│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_0; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
+//│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_add_0; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
 //│   virtual _mlsValue _mls_apply2(_mlsValue _mls_arg_0, _mlsValue _mls_arg_1) {
 //│     _mlsValue _mls_retval;
 //│     auto _mls_x_1 = _mls_add(_mls_arg_0, _mls_arg_1);
@@ -172,7 +172,7 @@ dummy()(1, 2)
 //│ }
 //│ _mlsValue _mls_dummy() {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x_2 = _mlsValue::create<_mls_Lambda_0>();
+//│   auto _mls_x_2 = _mlsValue::create<_mls_Lambda_add_0>();
 //│   _mls_retval = _mls_x_2;
 //│   return _mls_retval;
 //│ }
@@ -212,7 +212,7 @@ main()
 //│       let* (x$10) = inc(x1) in
 //│       x$10
 //│   }
-//│   class Lambda$1() extends Callable {
+//│   class Lambda_inc$0() extends Callable {
 //│     def apply1(arg$0) =
 //│       let* (x$16) = inc(arg$0) in
 //│       x$16
@@ -249,7 +249,7 @@ main()
 //│     let x$13 = Nil() in
 //│     let x$14 = Cons(4,x$13) in
 //│     let x$15 = Cons(3,x$14) in
-//│     let x$17 = Lambda$1() in
+//│     let x$17 = Lambda_inc$0() in
 //│     let* (x$18) = map(x$17,x$15) in
 //│     x$18
 //│   let* (x$19) = main() in

@@ -35,6 +35,7 @@ final case class Ctx(
   symbol_ctx: Map[Str, Name] = Map.empty,
   fn_ctx: Map[Local, FuncInfo] = Map.empty, // is a known function
   class_ctx: Map[Local, Name] = Map.empty,
+  flow_ctx: Map[Path, Name] = Map.empty,
   block_ctx: Map[Local, Name] = Map.empty,
   is_top_level: Bool = true,
   method_class: Opt[Symbol] = None,
@@ -50,6 +51,7 @@ final case class Ctx(
     case None =>
       errStop(msg"Class not found: ${n.toString}")
     case Some(value) => value
+  def addKnownClass(n: Path, m: Name) = copy(flow_ctx = flow_ctx + (n -> m))
   def addName(n: Str, m: Name) = copy(symbol_ctx = symbol_ctx + (n -> m))
   def findName(n: Str)(using Raise): Name = symbol_ctx.get(n) match
     case None =>
@@ -193,12 +195,12 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
           funcs.map(f => f.name -> f).toMap,
         )
   
-  private def bLam(lam: Value.Lam)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
+  private def bLam(lam: Value.Lam, nameHint: Opt[Str])(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bLam begin", x => s"bLam end: ${x.show}"):
       val Value.Lam(params, body) = lam
       // Generate an auxiliary class inheriting from Callable
       val freeVars = freeVarsFilter(lam.freeVars -- lam.body.definedVars -- ctx.fn_ctx.keySet)
-      val name = fresh.make("Lambda")
+      val name = fresh.make(s"Lambda${nameHint.fold("")(x => "_" + x)}")
       val clsParams = freeVars.toList.map(_.nme)
       val args = freeVars.toList.map(allocIfNew)
       val ctx2 = ctx.setFreeVars(freeVars)
@@ -237,20 +239,27 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
             val tempSymbols = (0 until f.paramsSize).map(x => VarSymbol(Tree.Ident(fresh.make("arg").str)))
             val paramsList = PlainParamList((0 until f.paramsSize).zip(tempSymbols).map((_n, sym) => Param(FldFlags.empty, sym, N)).toList)
             val app = Call(v, tempSymbols.map(x => Arg(false, Value.Ref(x))).toList)(true, false)
-            bLam(Value.Lam(paramsList, Return(app, false)))(k)
+            log(s"bValue Ref: ${l.toString()} -> $x")
+            bLam(Value.Lam(paramsList, Return(app, false)), S(x))(k)
           case None =>
             log(s"bValue Ref: $x")
             k(ctx.findName(x) |> sr)
       case Value.This(sym) => errStop(msg"Unsupported value: This")
       case Value.Lit(lit) => k(Expr.Literal(lit))
-      case lam @ Value.Lam(params, body) => bLam(lam)(k)
+      case lam @ Value.Lam(params, body) => bLam(lam, N)(k)
       case Value.Arr(elems) => errStop(msg"Unsupported value: Arr")
   
   private def getClassOfMem(p: FieldSymbol)(using ctx: Ctx)(using Raise, Scope): Local =
     trace[Local](s"bMemSym { $p } begin", x => s"bMemSym end: $x"):
       p match
       case ts: TermSymbol => ts.owner.get
-      case ms: MemberSymbol[?] => ms.defn.get.sym
+      case ms: MemberSymbol[?] => 
+        ms.defn match
+        case Some(d: ClassLikeDef) => d.owner.get
+        case Some(d: TermDefinition) => d.owner.get
+        case Some(value) => errStop(msg"Member symbol without class definition ${value.toString}")
+        case None => errStop(msg"Member symbol without definition")
+      
   
   private def bPath(p: Path)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bPath { $p } begin", x => s"bPath end: ${x.show}"):
@@ -263,7 +272,19 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
         log(s"bPath Select: $qual.$name with ${s.symbol}")
         s.symbol match
           case None =>
-            errStop(msg"Unsupported selection by users")
+            ctx.flow_ctx.get(qual) match
+              case Some(cls) =>
+                bPath(qual):
+                  case q: Expr.Ref =>
+                    val v = fresh.make
+                    val clsN = ClassRef.fromName(cls)
+                    val field = name.name
+                    Node.LetExpr(v, Expr.Select(q.name, clsN, field), k(v |> sr))
+                  case q: Expr.Literal =>
+                    errStop(msg"Unsupported select on literal")
+              case None =>
+                log(s"${ctx.flow_ctx}")
+                errStop(msg"Unsupported selection by users")
           case Some(value) =>
             bPath(qual):
               case q: Expr.Ref =>
@@ -273,7 +294,6 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
                 Node.LetExpr(v, Expr.Select(q.name, cls, field), k(v |> sr))
               case q: Expr.Literal =>
                 errStop(msg"Unsupported select on literal")
-                Node.Result(Ls())
       case x: Value => bValue(x)(k)
 
   private def bResult(r: Result)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
@@ -307,7 +327,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
               case args: Ls[TrivialExpr] =>
                 val v = fresh.make
                 log(s"Method Call Select: $r.$fld with ${s.symbol}")
-                errStop(msg"Unsupported method call")
+                Node.LetMethodCall(Ls(v), ClassRef.fromName(getClassOfMem(s.symbol.get).nme), Name(fld), r :: args, k(v |> sr))
       case Call(_, _) => errStop(msg"Unsupported kind of Call ${r.toString()}")
       case Instantiate(
         Select(Value.Ref(sym), Tree.Ident("class")), args) =>
@@ -345,7 +365,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
               case (Case.Cls(cls, _), body) =>
                 (Pat.Class(ClassRef.fromName(cls.nme)), bBlock(body)(cont)(nextCont)(using ctx))
               case (Case.Tup(len, inf), body) =>
-                (Pat.Class(ClassRef.fromName("Tuple" + len.toString())), bBlock(body)(cont)(nextCont)(using ctx))
+                val ctx2 = ctx.addKnownClass(scrut, Name("Tuple" + len.toString()))
+                (Pat.Class(ClassRef.fromName("Tuple" + len.toString())), bBlock(body)(cont)(nextCont)(using ctx2))
             val defaultCase = dflt.map(bBlock(_)(cont)(nextCont)(using ctx))
             val jpdef = Func(
               fnUid.make,    

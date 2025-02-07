@@ -1,3 +1,6 @@
+:llir
+:js
+
 type Char = String
 
 abstract class Option[out T]: Some[T] | None
@@ -5,3 +8,271 @@ class Some[out T](x: T) extends Option[T]
 object None extends Option
 
 fun fromSome(s) = if s is Some(x) then x
+
+abstract class List[out T]: Cons[T] | Nil
+class (::) Cons[out T](head: T, tail: List[T]) extends List[T]
+object Nil extends List
+fun ltList(xs, ys, lt, gt) = if xs is
+  Nil and
+    ys is Nil then false
+    else true
+  x :: xs and ys is
+    Nil then false
+    y :: ys and
+      lt(x, y) then true
+      gt(x, y) then false
+      else ltList(xs, ys, lt, gt)
+
+fun ltTup2(t1, t2, lt1, gt1, lt2) = if t1 is [a, b] and t2 is [c, d] and
+  lt1(a, c) then true
+  gt1(a, c) then false
+  else lt2(b, d)
+fun eqTup2(t1, t2) = if t1 is [a, b] and t2 is [c, d] then a == c and b == d
+
+fun compose(f, g) = x => f(g(x))
+
+fun snd(x) = if x is [f, s] then s
+fun fst(x) = if x is [f, s] then f
+
+fun until(p, f, i) = if p(i) then i else until(p, f, f(i))
+
+fun flip(f, x, y) = f(y)(x)
+
+fun head(l) = if l is h :: t then h
+fun tail(l) = if l is h :: t then t
+
+fun while_(p, f, x) = if p(x) then while_(p, f, f(x)) else x
+
+:todo
+fun reverse(l) =
+  fun r(l', l) = if l is x :: xs then r(x :: l', xs) else l'
+  r(Nil, l)
+//│ ═══[COMPILATION ERROR] Non top-level definition r not supported
+//│ Stopped due to an error during the Llir generation
+
+fun map(f, xs) = if xs is
+  x :: xs then f(x) :: map(f, xs)
+  Nil then Nil
+
+fun listLen(ls) =
+  fun l(ls, a) = if ls is
+    Nil then a
+    h :: t then l(t, a + 1)
+  l(ls, 0)
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Non top-level definition l not supported
+//│ Stopped due to an error during the Llir generation
+
+fun listEq(xs, ys) = if
+  xs is Nil and ys is Nil then true
+  xs is hx :: tx and ys is hy :: ty and (hx == hy) then listEq(tx, ty)
+  else false
+
+fun listEqBy(f, a, b) = if a is
+  Nil and b is Nil then true
+  x :: xs and b is y :: ys then f(x, y) && listEqBy(f, xs, ys)
+  else false
+
+fun listNeq(xs, ys) = if
+  xs is Nil and ys is Nil then false
+  xs is hx :: tx and ys is hy :: ty and (hx == hy) then listNeq(tx, ty)
+  else true
+
+fun enumFromTo(a, b) = if a <= b then a :: enumFromTo(a + 1, b) else Nil
+
+fun enumFromThenTo(a, t, b) = if a <= b then a :: enumFromThenTo(t, 2 * t - a, b) else Nil
+
+fun drop(n, ls) = if ls is
+  Nil then Nil
+  h :: t and
+    n <= 0 then ls
+    else drop(n - 1, t)
+
+fun take(n, ls) = if ls is
+  Nil then Nil
+  h :: t and
+    n <= 0 then Nil
+    else h :: take(n - 1, t)
+
+fun splitAt(n, ls) = [take(n, ls), drop(n, ls)]
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Name not found: take
+//│ Stopped due to an error during the Llir generation
+
+fun zip(xs, ys) = if xs is
+  x :: xs and ys is y :: ys then [x, y] :: zip(xs, ys)
+  else Nil
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Unsupported value: Arr
+//│ Stopped due to an error during the Llir generation
+
+fun inList(x, ls) = if ls is
+  h :: t and
+    x === h then true
+    else inList(x, t)
+  Nil then false
+
+fun notElem(x, ls) = not(inList(x, ls))
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Name not found: inList
+//│ Stopped due to an error during the Llir generation
+
+fun (+:) append(xs, ys) = if xs is
+  Nil then ys
+  x :: xs then x :: append(xs, ys)
+
+fun concat(ls) = if ls is
+  Nil then Nil
+  x :: xs then append(x, concat(xs))
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Name not found: append
+//│ Stopped due to an error during the Llir generation
+
+fun filter(f, ls) = if ls is
+  Nil then Nil
+  h :: t and
+    f(h) then h :: filter(f, t)
+    else filter(f, t)
+
+fun all(p, ls) = if ls is
+  Nil then true
+  h :: t and
+    p(h) then all(p, t)
+    else false
+
+fun orList(ls) = if ls is
+  Nil then false
+  h :: t and
+    h then true
+    else orList(t)
+
+fun dropWhile(f, ls) = if ls is
+  Nil then Nil
+  h :: t and
+    f(h) then dropWhile(f, t)
+    else h :: t
+
+fun foldl(f, a, xs) = if xs is
+  Nil then a
+  h :: t then foldl(f, f(a, h), t)
+
+fun scanl(f, q, ls) = if ls is
+  Nil then q :: Nil
+  x :: xs then q :: scanl(f, f(q, x), xs)
+
+fun scanr(f, q, ls) = if ls is
+  Nil then q :: Nil
+  x :: xs and scanr(f, q, xs) is q :: t then f(x, q) :: q :: t
+
+fun foldr(f, z, xs) = if xs is
+  Nil then z
+  h :: t then f(h, foldr(f, z, t))
+
+fun foldl1(f, ls) = if
+  ls is x :: xs then foldl(f, x, xs)
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Name not found: foldl
+//│ Stopped due to an error during the Llir generation
+
+fun foldr1(f, ls) = if ls is
+  x :: Nil then x
+  x :: xs then f(x, foldr1(f, xs))
+
+fun maximum(xs) = foldl1((x, y) => if x > y then x else y, xs)
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Name not found: foldl1
+//│ Stopped due to an error during the Llir generation
+
+fun nubBy(eq, ls) = if ls is
+  Nil then Nil
+  h :: t then h :: nubBy(eq, filter(y => not(eq(h, y)), t))
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Member symbol without definition
+//│ Stopped due to an error during the Llir generation
+
+fun zipWith(f, xss, yss) = if
+  xss is x :: xs and yss is y :: ys then f(x, y) :: zipWith(f, xs, ys)
+  else Nil
+
+fun deleteBy(eq, x, ys) = if ys is
+  Nil then Nil
+  y :: ys and
+    eq(x, y) then ys
+    else y :: deleteBy(eq, x, ys)
+
+fun unionBy(eq, xs, ys) = append(xs, foldl((acc, y) => deleteBy(eq, y, acc), nubBy(eq, ys), xs))
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Name not found: nubBy
+//│ Stopped due to an error during the Llir generation
+
+fun union(xs, ys) = unionBy((x, y) => x == y, xs, ys)
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Name not found: unionBy
+//│ Stopped due to an error during the Llir generation
+
+fun atIndex(i, ls) = if ls is
+  h :: t and
+    i == 0 then h
+    else atIndex(i - 1, t)
+
+fun sum(xs) =
+  fun go(xs, a) = if xs is
+    Nil then a
+    h :: t then go(t, a + h)
+  go(xs, 0)
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Non top-level definition go not supported
+//│ Stopped due to an error during the Llir generation
+
+fun null_(ls) = if ls is
+  Nil then true
+  else false
+
+fun replicate(n, x) = if n == 0 then Nil else x :: replicate(n - 1, x)
+
+fun unzip(l) =
+  fun f(l, a, b) = if l is
+    Nil then [reverse(a), reverse(b)]
+    [x, y] :: t then f(t, x :: a,  y :: b)
+  f(l, Nil, Nil)
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Non top-level definition f not supported
+//│ Stopped due to an error during the Llir generation
+
+fun zip3(xs, ys, zs) = if
+  xs is x :: xs and ys is y :: ys and zs is z :: zs then [x, y, z] :: zip3(xs, ys, zs)
+  else Nil
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Unsupported value: Arr
+//│ Stopped due to an error during the Llir generation
+
+fun transpose(xss) =
+  fun lscomp(ls) = if ls is
+    Nil then Nil
+    h :: t and h is
+      hd :: tl then [hd, tl] :: lscomp(t)
+      else lscomp(t)
+  fun combine(y, h, ys, t) = (y :: h) :: transpose(ys :: t)
+  if xss is
+    Nil then Nil
+    Nil :: xss then transpose(xss)
+    (x :: xs) :: xss and unzip(lscomp(xss)) is [hds, tls] then combine(x, hds, xs, tls)
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Non top-level definition lscomp not supported
+//│ Stopped due to an error during the Llir generation
+
+fun break_(p, ls) = if ls is
+  Nil then [Nil, Nil]
+  x :: xs and
+    p(x) then [Nil, x :: xs]
+    break_(p, xs) is [ys, zs] then [x :: ys, zs]
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Unsupported value: Arr
+//│ Stopped due to an error during the Llir generation
+
+fun flatMap(f, ls) = if ls is
+  Nil then Nil
+  h :: t then append(f(h), flatMap(f, t))
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Name not found: append
+//│ Stopped due to an error during the Llir generation

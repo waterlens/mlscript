@@ -25,5 +25,24 @@ fun main() =
   let d = Derived()
   d.Base#get() * d.Derived#get()
 main()
-//│ ═══[COMPILATION ERROR] Unsupported method call
-//│ Stopped due to an error during the Llir generation
+//│ LLIR:
+//│   class Base() {
+//│     def get() =
+//│       1
+//│   }
+//│   class Derived() extends Base {
+//│     def get() =
+//│       2
+//│   }
+//│   def main() =
+//│     let x$0 = Derived() in
+//│     let x$1 = Base.get(x$0) in
+//│     let x$2 = Derived.get(x$0) in
+//│     let x$3 = *(x$1,x$2) in
+//│     x$3
+//│   let* (x$4) = main() in
+//│   x$4
+//│ 
+//│ Interpreted:
+//│ 4
+

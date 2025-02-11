@@ -201,7 +201,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger)(fresh: Fresh, f
       // Generate an auxiliary class inheriting from Callable
       val freeVars = freeVarsFilter(lam.freeVars -- lam.body.definedVars -- ctx.fn_ctx.keySet)
       val name = fresh.make(s"Lambda${nameHint.fold("")(x => "_" + x)}")
-      val clsParams = freeVars.toList.map(_.nme)
+      val clsParams = freeVars.toList.map(allocIfNew)
       val args = freeVars.toList.map(allocIfNew)
       val ctx2 = ctx.setFreeVars(freeVars)
       val applyParams = params.params.map(x => x -> summon[Scope].allocateName(x.sym))

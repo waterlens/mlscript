@@ -14,12 +14,12 @@ f1()
 //│ = 2
 //│ LLIR:
 //│   
-//│   def f1() =
-//│     let x$0 = 1 in
-//│     let x$1 = 2 in
-//│     x$1
-//│   let* (x$2) = f1() in
-//│   x$2
+//│   def f1$249() =
+//│     let x$310 = 1 in
+//│     let x$311 = 2 in
+//│     x$311
+//│   let* (x$312) = f1() in
+//│   x$312
 //│ 
 //│ Interpreted:
 //│ 2
@@ -33,18 +33,18 @@ f2()
 //│ = 3
 //│ LLIR:
 //│   
-//│   def f2() =
-//│     let x$0 = 0 in
-//│     let x$1 = ==(x$0,1) in
-//│     case x$1 of
+//│   def f2$313() =
+//│     let x$375 = 0 in
+//│     let x$376 = ==(x$375,1) in
+//│     case x$376 of
 //│       BoolLit(true) =>
 //│         2
 //│       _ =>
 //│         3
-//│   def j$0() =
+//│   def j$377() =
 //│     null
-//│   let* (x$2) = f2() in
-//│   x$2
+//│   let* (x$378) = f2() in
+//│   x$378
 //│ 
 //│ Interpreted:
 //│ 3
@@ -59,19 +59,19 @@ f3()
 //│ = 0
 //│ LLIR:
 //│   
-//│   def f3() =
-//│     let x$0 = 0 in
-//│     let x$1 = 1 in
-//│     let x$2 = true in
-//│     case x$2 of
+//│   def f3$379() =
+//│     let x$441 = 0 in
+//│     let x$442 = 1 in
+//│     let x$443 = true in
+//│     case x$443 of
 //│       BoolLit(true) =>
-//│         x$0
+//│         x$441
 //│       _ =>
-//│         x$1
-//│   def j$0() =
+//│         x$442
+//│   def j$444() =
 //│     null
-//│   let* (x$3) = f3() in
-//│   x$3
+//│   let* (x$445) = f3() in
+//│   x$445
 
 
 :sllir
@@ -84,20 +84,20 @@ f4()
 //│ = 3
 //│ LLIR:
 //│   
-//│   def f4() =
-//│     let x$0 = 0 in
-//│     let x$1 = ==(x$0,1) in
-//│     case x$1 of
+//│   def f4$446() =
+//│     let x$511 = 0 in
+//│     let x$512 = ==(x$511,1) in
+//│     case x$512 of
 //│       BoolLit(true) =>
-//│         let x$3 = 2 in
-//│         jump j$0(x$3)
+//│         let x$514 = 2 in
+//│         jump j$513(x$514)
 //│       _ =>
-//│         let x$4 = 3 in
-//│         jump j$0(x$4)
-//│   def j$0(x$2) =
-//│     x$2
-//│   let* (x$5) = f4() in
-//│   x$5
+//│         let x$515 = 3 in
+//│         jump j$513(x$515)
+//│   def j$513(tmp$457) =
+//│     tmp$457
+//│   let* (x$516) = f4() in
+//│   x$516
 //│ 
 //│ Interpreted:
 //│ 3
@@ -113,29 +113,29 @@ f5()
 //│ = 5
 //│ LLIR:
 //│   
-//│   def f5() =
-//│     let x$0 = 0 in
-//│     let x$1 = ==(x$0,1) in
-//│     case x$1 of
+//│   def f5$517() =
+//│     let x$587 = 0 in
+//│     let x$588 = ==(x$587,1) in
+//│     case x$588 of
 //│       BoolLit(true) =>
-//│         let x$3 = 2 in
-//│         jump j$0(x$3)
+//│         let x$590 = 2 in
+//│         jump j$589(x$590)
 //│       _ =>
-//│         let x$4 = 3 in
-//│         jump j$0(x$4)
-//│   def j$0(x$2) =
-//│     let x$5 = ==(x$2,2) in
-//│     case x$5 of
+//│         let x$591 = 3 in
+//│         jump j$589(x$591)
+//│   def j$589(tmp$532) =
+//│     let x$592 = ==(tmp$532,2) in
+//│     case x$592 of
 //│       BoolLit(true) =>
-//│         let x$7 = 4 in
-//│         jump j$1(x$7)
+//│         let x$594 = 4 in
+//│         jump j$593(x$594)
 //│       _ =>
-//│         let x$8 = 5 in
-//│         jump j$1(x$8)
-//│   def j$1(x$6) =
-//│     x$6
-//│   let* (x$9) = f5() in
-//│   x$9
+//│         let x$595 = 5 in
+//│         jump j$593(x$595)
+//│   def j$593(tmp$533) =
+//│     tmp$533
+//│   let* (x$596) = f5() in
+//│   x$596
 //│ 
 //│ Interpreted:
 //│ 5
@@ -146,45 +146,19 @@ fun test() =
   if true do test()
 //│ LLIR:
 //│   
-//│   def test() =
-//│     let x$0 = true in
-//│     case x$0 of
+//│   def test$597() =
+//│     let x$657 = true in
+//│     case x$657 of
 //│       BoolLit(true) =>
-//│         let* (x$1) = test() in
-//│         x$1
+//│         let* (x$659) = test() in
+//│         x$659
 //│       _ =>
 //│         undefined
-//│   def j$0() =
+//│   def j$658() =
 //│     null
 //│   undefined
 //│ 
 //│ Cpp:
-//│ #include "mlsprelude.h"
-//│ _mlsValue _mls_j_0();
-//│ _mlsValue _mls_test();
-//│ _mlsValue _mlsMain();
-//│ _mlsValue _mls_j_0() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_test() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_0 = _mlsValue::fromIntLit(1);
-//│   if (_mlsValue::isIntLit(_mls_x_0, 1)) {
-//│     auto _mls_x_1 = _mls_test();
-//│     _mls_retval = _mls_x_1;
-//│   } else {
-//│     _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   }
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 
 :sllir
 :scpp
@@ -192,47 +166,20 @@ fun test() =
   (if true then test()) + 1
 //│ LLIR:
 //│   
-//│   def test() =
-//│     let x$0 = true in
-//│     case x$0 of
+//│   def test$660() =
+//│     let x$723 = true in
+//│     case x$723 of
 //│       BoolLit(true) =>
-//│         let* (x$2) = test() in
-//│         jump j$0(x$2)
+//│         let* (x$725) = test() in
+//│         jump j$724(x$725)
 //│       _ =>
 //│         panic "match error"
-//│   def j$0(x$1) =
-//│     let x$3 = +(x$1,1) in
-//│     x$3
+//│   def j$724(tmp$670) =
+//│     let x$726 = +(tmp$670,1) in
+//│     x$726
 //│   undefined
 //│ 
 //│ Cpp:
-//│ #include "mlsprelude.h"
-//│ _mlsValue _mls_j_0(_mlsValue);
-//│ _mlsValue _mls_test();
-//│ _mlsValue _mlsMain();
-//│ _mlsValue _mls_j_0(_mlsValue _mls_x_1) {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_3 = (_mls_x_1 + _mlsValue::fromIntLit(1));
-//│   _mls_retval = _mls_x_3;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_test() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_0 = _mlsValue::fromIntLit(1);
-//│   if (_mlsValue::isIntLit(_mls_x_0, 1)) {
-//│     auto _mls_x_2 = _mls_test();
-//│     _mls_retval = _mls_j_0(_mls_x_2);
-//│   } else {
-//│     throw std::runtime_error("match error");
-//│   }
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 
 
 :sllir
@@ -247,57 +194,26 @@ f()
 //│ = 11
 //│ LLIR:
 //│   
-//│   def f() =
-//│     let x$0 = 10 in
-//│     let x$1 = true in
-//│     case x$1 of
+//│   def f$727() =
+//│     let x$793 = 10 in
+//│     let x$794 = true in
+//│     case x$794 of
 //│       BoolLit(true) =>
-//│         let x$3 = +(x$0,1) in
-//│         let x$4 = undefined in
-//│         jump j$0(x$3)
+//│         let x$796 = +(x$793,1) in
+//│         let x$797 = undefined in
+//│         jump j$795(x$796)
 //│       _ =>
-//│         let x$5 = undefined in
-//│         jump j$0(x$0)
-//│   def j$0(x$2) =
-//│     x$2
-//│   let* (x$6) = f() in
-//│   x$6
+//│         let x$798 = undefined in
+//│         jump j$795(x$793)
+//│   def j$795(x$728) =
+//│     x$728
+//│   let* (x$799) = f() in
+//│   x$799
 //│ 
 //│ Cpp:
-//│ #include "mlsprelude.h"
-//│ _mlsValue _mls_j_0(_mlsValue);
-//│ _mlsValue _mls_f();
-//│ _mlsValue _mlsMain();
-//│ _mlsValue _mls_j_0(_mlsValue _mls_x_2) {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mls_x_2;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_f() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_0 = _mlsValue::fromIntLit(10);
-//│   auto _mls_x_1 = _mlsValue::fromIntLit(1);
-//│   if (_mlsValue::isIntLit(_mls_x_1, 1)) {
-//│     auto _mls_x_3 = (_mls_x_0 + _mlsValue::fromIntLit(1));
-//│     auto _mls_x_4 = _mlsValue::create<_mls_Unit>();
-//│     _mls_retval = _mls_j_0(_mls_x_3);
-//│   } else {
-//│     auto _mls_x_5 = _mlsValue::create<_mls_Unit>();
-//│     _mls_retval = _mls_j_0(_mls_x_0);
-//│   }
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_6 = _mls_f();
-//│   _mls_retval = _mls_x_6;
-//│   return _mls_retval;
-//│ }
-//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
 //│ 11
-
 
 :sllir
 :intl
@@ -311,29 +227,29 @@ fun f(a) =
 f(A(1))
 //│ = 1
 //│ LLIR:
-//│   class A(x)
-//│   class B(y)
-//│   def f(a) =
-//│     case a of
-//│       A =>
-//│         let x$1 = a.<A:x> in
-//│         let x$2 = 1 in
-//│         jump j$0(x$2)
+//│   class A(x$805)
+//│   class B(y$808)
+//│   def f$802(a$809) =
+//│     case a$809 of
+//│       A$803 =>
+//│         let x$881 = a$809.<A$803:x> in
+//│         let x$882 = 1 in
+//│         jump j$880(x$882)
 //│       _ =>
-//│         case a of
-//│           B =>
-//│             let x$4 = a.<B:y> in
-//│             let x$5 = 2 in
-//│             jump j$1(x$5)
+//│         case a$809 of
+//│           B$806 =>
+//│             let x$884 = a$809.<B$806:y> in
+//│             let x$885 = 2 in
+//│             jump j$883(x$885)
 //│           _ =>
 //│             panic "match error"
-//│   def j$1(x$3) =
-//│     jump j$0(x$3)
-//│   def j$0(x$0) =
-//│     x$0
-//│   let x$6 = A(1) in
-//│   let* (x$7) = f(x$6) in
-//│   x$7
+//│   def j$883(tmp$824) =
+//│     jump j$880(tmp$824)
+//│   def j$880(tmp$824) =
+//│     tmp$824
+//│   let x$886 = A$803(1) in
+//│   let* (x$887) = f(x$886) in
+//│   x$887
 //│ 
 //│ Interpreted:
 //│ 1
@@ -352,50 +268,50 @@ fun f(a) =
 f(A(1))
 //│ = 1
 //│ LLIR:
-//│   class A(x)
-//│   class B(y)
-//│   def f(a) =
-//│     case a of
-//│       A =>
-//│         let x$1 = a.<A:x> in
-//│         case a of
-//│           A =>
-//│             let x$3 = a.<A:x> in
-//│             case x$3 of
+//│   class A(x$893)
+//│   class B(y$896)
+//│   def f$890(a$897) =
+//│     case a$897 of
+//│       A$891 =>
+//│         let x$973 = a$897.<A$891:x> in
+//│         case a$897 of
+//│           A$891 =>
+//│             let x$975 = a$897.<A$891:x> in
+//│             case x$975 of
 //│               IntLit(1) =>
-//│                 let x$5 = 1 in
-//│                 jump j$2(x$5)
+//│                 let x$977 = 1 in
+//│                 jump j$976(x$977)
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
-//│             case a of
-//│               B =>
-//│                 let x$7 = a.<B:y> in
-//│                 let x$8 = 2 in
-//│                 jump j$3(x$8)
+//│             case a$897 of
+//│               B$894 =>
+//│                 let x$979 = a$897.<B$894:y> in
+//│                 let x$980 = 2 in
+//│                 jump j$978(x$980)
 //│               _ =>
 //│                 panic "match error"
 //│       _ =>
-//│         case a of
-//│           B =>
-//│             let x$10 = a.<B:y> in
-//│             let x$11 = 3 in
-//│             jump j$4(x$11)
+//│         case a$897 of
+//│           B$894 =>
+//│             let x$982 = a$897.<B$894:y> in
+//│             let x$983 = 3 in
+//│             jump j$981(x$983)
 //│           _ =>
 //│             panic "match error"
-//│   def j$2(x$4) =
-//│     jump j$1(x$4)
-//│   def j$3(x$6) =
-//│     jump j$1(x$6)
-//│   def j$1(x$2) =
-//│     jump j$0(x$2)
-//│   def j$4(x$9) =
-//│     jump j$0(x$9)
-//│   def j$0(x$0) =
-//│     x$0
-//│   let x$12 = A(1) in
-//│   let* (x$13) = f(x$12) in
-//│   x$13
+//│   def j$976(tmp$915) =
+//│     jump j$974(tmp$915)
+//│   def j$978(tmp$915) =
+//│     jump j$974(tmp$915)
+//│   def j$974(tmp$915) =
+//│     jump j$972(tmp$915)
+//│   def j$981(tmp$916) =
+//│     jump j$972(tmp$916)
+//│   def j$972(tmp$916) =
+//│     tmp$916
+//│   let x$984 = A$891(1) in
+//│   let* (x$985) = f(x$984) in
+//│   x$985
 //│ 
 //│ Interpreted:
 //│ 1

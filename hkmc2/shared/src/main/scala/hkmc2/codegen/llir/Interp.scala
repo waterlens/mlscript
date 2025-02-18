@@ -9,6 +9,8 @@ import scala.util.boundary, boundary.break
 
 import hkmc2.codegen.llir.*
 import hkmc2.syntax.Tree
+import hkmc2.codegen.Local
+import hkmc2.utils.TraceLogger
 
 enum Stuck:
   case StuckExpr(expr: Expr, msg: Str)
@@ -21,8 +23,8 @@ enum Stuck:
 
 final case class InterpreterError(message: String) extends Exception(message)
 
-class Interpreter(verbose: Bool):
-  private def log(x: Any) = if verbose then println(x)
+class Interpreter(tl: TraceLogger):
+  import tl.{trace, log, logs}
   import Stuck._
 
   private case class Configuration(
@@ -38,7 +40,7 @@ class Interpreter(verbose: Bool):
     override def toString: String =
       import hkmc2.syntax.Tree.*
       this match
-        case Class(cls, fields) => s"${cls.name}(${fields.mkString(",")})"
+        case Class(cls, fields) => s"${cls.name.nme}(${fields.mkString(",")})"
         case Literal(IntLit(lit)) => lit.toString
         case Literal(BoolLit(lit)) => lit.toString 
         case Literal(DecLit(lit)) => lit.toString
@@ -46,9 +48,9 @@ class Interpreter(verbose: Bool):
         case Literal(UnitLit(undefinedOrNull)) => if undefinedOrNull then "undefined" else "null"
 
   private final case class Ctx(
-    bindingCtx: Map[Str, Value],
-    classCtx: Map[Str, ClassInfo],
-    funcCtx: Map[Str, Func],
+    bindingCtx: Map[Local, Value],
+    classCtx: Map[Local, ClassInfo],
+    funcCtx: Map[Local, Func],
   )
   
   import Node._
@@ -86,21 +88,21 @@ class Interpreter(verbose: Bool):
     stuck.toLeft(values.toList)
 
   private def eval(expr: TrivialExpr)(using ctx: Ctx): Result[Value] = expr match
-    case e @ Ref(name) => ctx.bindingCtx.get(name.str).toRight(StuckExpr(e, s"undefined variable $name"))
+    case e @ Ref(name) => ctx.bindingCtx.get(name).toRight(StuckExpr(e, s"undefined variable $name"))
     case Literal(lit) => R(Value.Literal(lit))
   
   private def eval(expr: Expr)(using ctx: Ctx): Result[Value] = expr match
-    case Ref(Name(x)) => ctx.bindingCtx.get(x).toRight(StuckExpr(expr, s"undefined variable $x"))
+    case Ref(x) => ctx.bindingCtx.get(x).toRight(StuckExpr(expr, s"undefined variable $x"))
     case Literal(x) => R(Value.Literal(x))
     case CtorApp(cls, args) =>
       for
         xs <- evalArgs(args)
-        cls <- ctx.classCtx.get(cls.name).toRight(StuckExpr(expr, s"undefined class ${cls.name}"))
+        cls <- ctx.classCtx.get(cls).toRight(StuckExpr(expr, s"undefined class ${cls.nme}"))
       yield Value.Class(cls, xs)
     case Select(name, cls, field) =>
-      ctx.bindingCtx.get(name.str).toRight(StuckExpr(expr, s"undefined variable $name")).flatMap {
-        case Value.Class(cls2, xs) if cls.name == cls2.name =>
-          xs.zip(cls2.fields).find{_._2 == field} match
+      ctx.bindingCtx.get(name).toRight(StuckExpr(expr, s"undefined variable $name")).flatMap {
+        case Value.Class(cls2, xs) if cls == cls2.name =>
+          xs.zip(cls2.fields).find{_._2.nme == field} match
             case Some((x, _)) => R(x)
             case None => L(StuckExpr(expr, s"unable to find selected field $field"))
         case Value.Class(cls2, xs) => L(StuckExpr(expr, s"unexpected class $cls2"))
@@ -109,19 +111,19 @@ class Interpreter(verbose: Bool):
     case BasicOp(name, args) => boundary:
       evalArgs(args).flatMap(
         xs => 
-          name match
+          name.nme match
             case "+" | "-" | "*" | "/" | "==" | "!=" | "<=" | ">=" | "<" | ">" => 
               if xs.length < 2 then break:
                 L(StuckExpr(expr, s"not enough arguments for basic operation $name"))
-              else eval(name, xs.head, xs.tail.head).toRight(StuckExpr(expr, s"unable to evaluate basic operation"))
+              else eval(name.nme, xs.head, xs.tail.head).toRight(StuckExpr(expr, s"unable to evaluate basic operation"))
             case _ => L(StuckExpr(expr, s"unexpected basic operation $name")))
     case AssignField(assignee, cls, field, value) =>
       for
         x <- eval(Ref(assignee): TrivialExpr)
         y <- eval(value)
         res <- x match
-          case obj @ Value.Class(cls2, xs) if cls.name == cls2.name =>
-            xs.zip(cls2.fields).find{_._2 == field} match
+          case obj @ Value.Class(cls2, xs) if cls == cls2 =>
+            xs.zip(cls2.fields).find{_._2.nme == field} match
               case Some((_, _)) =>
                 obj.fields = xs.map(x => if x == obj then y else x)
                 // Ideally, we should return a unit value here, but here we return the assignee value for simplicity.
@@ -136,15 +138,15 @@ class Interpreter(verbose: Bool):
     case Jump(func, args) =>
       for
         xs <- evalArgs(args)
-        func <- ctx.funcCtx.get(func.name).toRight(StuckNode(node, s"undefined function ${func.name}"))
-        ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx ++ func.params.map{_.str}.zip(xs))
+        func <- ctx.funcCtx.get(func).toRight(StuckNode(node, s"undefined function ${func.nme}"))
+        ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx ++ func.params.zip(xs))
         res <- eval(func.body)(using ctx1)
       yield res
     case Case(scrut, cases, default) =>
       eval(scrut) flatMap {
         case Value.Class(cls, fields) => 
           cases.find {
-            case (Pat.Class(cls2), _) => cls.name == cls2.name
+            case (Pat.Class(cls2), _) => cls.name == cls2
             case _ => false
           } match {
             case Some((_, x)) => eval(x)
@@ -168,29 +170,35 @@ class Interpreter(verbose: Bool):
     case LetExpr(name, expr, body) =>
       for
         x <- eval(expr)
-        ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx + (name.str -> x))
+        ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx + (name -> x))
         res <- eval(body)(using ctx1)
       yield res
     case LetMethodCall(names, cls, method, args, body) =>
+      def lookup_method(cls: ClassInfo, method: Local): Option[Func] =
+        // The methods with the same name in a subclass will override the method in the superclass.
+        // But they have different symbols for the method definition.
+        // So, we don't directly use the method symbol to find the method.
+        // Instead, we fallback to use the method name.
+        cls.methods.find(_._1.nme == method.nme).map(_._2)
       for
         ys <- evalArgs(args).flatMap {
           case Value.Class(cls2, xs) :: args =>
-            cls2.methods.get(method.str).toRight(StuckNode(node, s"undefined method ${method.str}")).flatMap { method =>
-              val ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx ++ cls2.fields.zip(xs) ++ method.params.map{_.str}.zip(args))
+            lookup_method(cls2, method).toRight(StuckNode(node, s"undefined method ${method.nme}")).flatMap { method =>
+              val ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx ++ cls2.fields.zip(xs) ++ method.params.zip(args))
               eval(method.body)(using ctx1)
             }
           case _ => L(StuckNode(node, s"not enough arguments for method call, or the first argument is not a class"))
         }
-        ctx2 = ctx.copy(bindingCtx = ctx.bindingCtx ++ names.map{_.str}.zip(ys))
+        ctx2 = ctx.copy(bindingCtx = ctx.bindingCtx ++ names.zip(ys))
         res <- eval(body)(using ctx2)
       yield res
     case LetCall(names, func, args, body) =>
       for
         xs <- evalArgs(args)
-        func <- ctx.funcCtx.get(func.name).toRight(StuckNode(node, s"undefined function ${func.name}"))
-        ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx ++ func.params.map{_.str}.zip(xs))
+        func <- ctx.funcCtx.get(func).toRight(StuckNode(node, s"undefined function ${func.nme}"))
+        ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx ++ func.params.zip(xs))
         ys <- eval(func.body)(using ctx1)
-        ctx2 = ctx.copy(bindingCtx = ctx.bindingCtx ++ names.map{_.str}.zip(ys))
+        ctx2 = ctx.copy(bindingCtx = ctx.bindingCtx ++ names.zip(ys))
         res <- eval(body)(using ctx2)
       yield res
     case Panic(msg) => L(StuckNode(node, msg))
@@ -199,8 +207,8 @@ class Interpreter(verbose: Bool):
     val Program(classes, defs, main) = prog
     given Ctx = Ctx(
       bindingCtx = Map.empty,
-      classCtx = classes.map{cls => cls.name -> cls}.toMap,
-      funcCtx = defs.map{func => func.name -> func}.toMap,
+      classCtx = classes.map(cls => (cls.name, cls)).toMap,
+      funcCtx = defs.map(func => (func.name, func)).toMap,
     )
     eval(main) match
       case R(x) => x

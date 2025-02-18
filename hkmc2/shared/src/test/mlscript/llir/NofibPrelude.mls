@@ -28,11 +28,17 @@ fun ltTup2(t1, t2, lt1, gt1, lt2) = if t1 is [a, b] and t2 is [c, d] and
   gt1(a, c) then false
   else lt2(b, d)
 fun eqTup2(t1, t2) = if t1 is [a, b] and t2 is [c, d] then a == c and b == d
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Unsupported selection by users
+//│ Stopped due to an error during the Llir generation
 
 fun compose(f, g) = x => f(g(x))
 
 fun snd(x) = if x is [f, s] then s
 fun fst(x) = if x is [f, s] then f
+//│ FAILURE: Unexpected compilation error
+//│ ═══[COMPILATION ERROR] Unsupported selection by users
+//│ Stopped due to an error during the Llir generation
 
 fun until(p, f, i) = if p(i) then i else until(p, f, f(i))
 
@@ -96,15 +102,12 @@ fun take(n, ls) = if ls is
 
 fun splitAt(n, ls) = [take(n, ls), drop(n, ls)]
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: take
+//│ ═══[COMPILATION ERROR] Name not found: member:take
 //│ Stopped due to an error during the Llir generation
 
 fun zip(xs, ys) = if xs is
   x :: xs and ys is y :: ys then [x, y] :: zip(xs, ys)
   else Nil
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Unsupported value: Arr
-//│ Stopped due to an error during the Llir generation
 
 fun inList(x, ls) = if ls is
   h :: t and
@@ -114,7 +117,7 @@ fun inList(x, ls) = if ls is
 
 fun notElem(x, ls) = not(inList(x, ls))
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: inList
+//│ ═══[COMPILATION ERROR] Name not found: member:inList
 //│ Stopped due to an error during the Llir generation
 
 fun (+:) append(xs, ys) = if xs is
@@ -125,7 +128,7 @@ fun concat(ls) = if ls is
   Nil then Nil
   x :: xs then append(x, concat(xs))
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: append
+//│ ═══[COMPILATION ERROR] Name not found: member:append
 //│ Stopped due to an error during the Llir generation
 
 fun filter(f, ls) = if ls is
@@ -171,7 +174,7 @@ fun foldr(f, z, xs) = if xs is
 fun foldl1(f, ls) = if
   ls is x :: xs then foldl(f, x, xs)
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: foldl
+//│ ═══[COMPILATION ERROR] Name not found: member:foldl
 //│ Stopped due to an error during the Llir generation
 
 fun foldr1(f, ls) = if ls is
@@ -180,7 +183,7 @@ fun foldr1(f, ls) = if ls is
 
 fun maximum(xs) = foldl1((x, y) => if x > y then x else y, xs)
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: foldl1
+//│ ═══[COMPILATION ERROR] Name not found: member:foldl1
 //│ Stopped due to an error during the Llir generation
 
 fun nubBy(eq, ls) = if ls is
@@ -202,12 +205,12 @@ fun deleteBy(eq, x, ys) = if ys is
 
 fun unionBy(eq, xs, ys) = append(xs, foldl((acc, y) => deleteBy(eq, y, acc), nubBy(eq, ys), xs))
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: nubBy
+//│ ═══[COMPILATION ERROR] Name not found: member:nubBy
 //│ Stopped due to an error during the Llir generation
 
 fun union(xs, ys) = unionBy((x, y) => x == y, xs, ys)
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: unionBy
+//│ ═══[COMPILATION ERROR] Name not found: member:unionBy
 //│ Stopped due to an error during the Llir generation
 
 fun atIndex(i, ls) = if ls is
@@ -242,9 +245,6 @@ fun unzip(l) =
 fun zip3(xs, ys, zs) = if
   xs is x :: xs and ys is y :: ys and zs is z :: zs then [x, y, z] :: zip3(xs, ys, zs)
   else Nil
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Unsupported value: Arr
-//│ Stopped due to an error during the Llir generation
 
 fun transpose(xss) =
   fun lscomp(ls) = if ls is
@@ -267,12 +267,12 @@ fun break_(p, ls) = if ls is
     p(x) then [Nil, x :: xs]
     break_(p, xs) is [ys, zs] then [x :: ys, zs]
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Unsupported value: Arr
+//│ ═══[COMPILATION ERROR] Unsupported selection by users
 //│ Stopped due to an error during the Llir generation
 
 fun flatMap(f, ls) = if ls is
   Nil then Nil
   h :: t then append(f(h), flatMap(f, t))
 //│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: append
+//│ ═══[COMPILATION ERROR] Name not found: member:append
 //│ Stopped due to an error during the Llir generation

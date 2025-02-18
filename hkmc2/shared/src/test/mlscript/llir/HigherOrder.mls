@@ -11,51 +11,19 @@ fun add(x) = y => x + y
 add(1)(2)
 //│ = 3
 //│ LLIR:
-//│   class Lambda$0(x) extends Callable {
-//│     def apply1(y) =
-//│       let x$0 = +(x,y) in
-//│       x$0
+//│   class Lambda(x$250) extends Callable {
+//│     def apply1$278(y$251) =
+//│       let x$318 = +(x$250,y$251) in
+//│       x$318
 //│   }
-//│   def add(x) =
-//│     let x$1 = Lambda$0(x) in
-//│     x$1
-//│   let* (x$2) = add(1) in
-//│   let x$3 = Callable.apply1(x$2,2) in
-//│   x$3
+//│   def add$249(x$250) =
+//│     let x$319 = Lambda$316(x$250) in
+//│     x$319
+//│   let* (x$320) = add(1) in
+//│   let x$321 = Callable.apply1$278(x$320,2) in
+//│   x$321
 //│ 
 //│ Cpp:
-//│ #include "mlsprelude.h"
-//│ struct _mls_Lambda_0;
-//│ _mlsValue _mls_add(_mlsValue);
-//│ _mlsValue _mlsMain();
-//│ struct _mls_Lambda_0: public _mls_Callable {
-//│   _mlsValue _mls_x;
-//│   constexpr static inline const char *typeName = "Lambda$0";
-//│   constexpr static inline uint32_t typeTag = nextTypeTag();
-//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->_mls_x.print();  std::printf(")"); }
-//│   virtual void destroy() override { _mlsValue::destroy(this->_mls_x);  operator delete (this, std::align_val_t(_mlsAlignment)); }
-//│   static _mlsValue create(_mlsValue _mls_x) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_0; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->_mls_x = _mls_x;  return _mlsValue(_mlsVal); }
-//│   virtual _mlsValue _mls_apply1(_mlsValue _mls_y) {
-//│     _mlsValue _mls_retval;
-//│     auto _mls_x_0 = (_mls_x + _mls_y);
-//│     _mls_retval = _mls_x_0;
-//│     return _mls_retval;
-//│   }
-//│ };
-//│ _mlsValue _mls_add(_mlsValue _mls_x) {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_1 = _mlsValue::create<_mls_Lambda_0>(_mls_x);
-//│   _mls_retval = _mls_x_1;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_2 = _mls_add(_mlsValue::fromIntLit(1));
-//│   auto _mls_x_3 = _mlsMethodCall<_mls_Callable>(_mls_x_2)->_mls_apply1(_mlsValue::fromIntLit(2));
-//│   _mls_retval = _mls_x_3;
-//│   return _mls_retval;
-//│ }
-//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
 //│ 3
@@ -67,56 +35,21 @@ fun add4(a, b) = (c, d) => a + b + c + d
 add4(1, 2)(3, 4)
 //│ = 10
 //│ LLIR:
-//│   class Lambda$0(a,b) extends Callable {
-//│     def apply2(c,d) =
-//│       let x$0 = +(a,b) in
-//│       let x$1 = +(x$0,c) in
-//│       let x$2 = +(x$1,d) in
-//│       x$2
+//│   class Lambda(b$324,a$323) extends Callable {
+//│     def apply2$361(c$325,d$326) =
+//│       let x$399 = +(a$323,b$324) in
+//│       let x$400 = +(x$399,c$325) in
+//│       let x$401 = +(x$400,d$326) in
+//│       x$401
 //│   }
-//│   def add4(a,b) =
-//│     let x$3 = Lambda$0(a,b) in
-//│     x$3
-//│   let* (x$4) = add4(1,2) in
-//│   let x$5 = Callable.apply2(x$4,3,4) in
-//│   x$5
+//│   def add4$322(a$323,b$324) =
+//│     let x$402 = Lambda$397(b$324,a$323) in
+//│     x$402
+//│   let* (x$403) = add4(1,2) in
+//│   let x$404 = Callable.apply2$361(x$403,3,4) in
+//│   x$404
 //│ 
 //│ Cpp:
-//│ #include "mlsprelude.h"
-//│ struct _mls_Lambda_0;
-//│ _mlsValue _mls_add4(_mlsValue, _mlsValue);
-//│ _mlsValue _mlsMain();
-//│ struct _mls_Lambda_0: public _mls_Callable {
-//│   _mlsValue _mls_a;
-//│   _mlsValue _mls_b;
-//│   constexpr static inline const char *typeName = "Lambda$0";
-//│   constexpr static inline uint32_t typeTag = nextTypeTag();
-//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->_mls_a.print(); std::printf(", "); this->_mls_b.print();  std::printf(")"); }
-//│   virtual void destroy() override { _mlsValue::destroy(this->_mls_a); _mlsValue::destroy(this->_mls_b);  operator delete (this, std::align_val_t(_mlsAlignment)); }
-//│   static _mlsValue create(_mlsValue _mls_a, _mlsValue _mls_b) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_0; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->_mls_a = _mls_a; _mlsVal->_mls_b = _mls_b;  return _mlsValue(_mlsVal); }
-//│   virtual _mlsValue _mls_apply2(_mlsValue _mls_c, _mlsValue _mls_d) {
-//│     _mlsValue _mls_retval;
-//│     auto _mls_x_0 = (_mls_a + _mls_b);
-//│     auto _mls_x_1 = (_mls_x_0 + _mls_c);
-//│     auto _mls_x_2 = (_mls_x_1 + _mls_d);
-//│     _mls_retval = _mls_x_2;
-//│     return _mls_retval;
-//│   }
-//│ };
-//│ _mlsValue _mls_add4(_mlsValue _mls_a, _mlsValue _mls_b) {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_3 = _mlsValue::create<_mls_Lambda_0>(_mls_a, _mls_b);
-//│   _mls_retval = _mls_x_3;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_4 = _mls_add4(_mlsValue::fromIntLit(1), _mlsValue::fromIntLit(2));
-//│   auto _mls_x_5 = _mlsMethodCall<_mls_Callable>(_mls_x_4)->_mls_apply2(_mlsValue::fromIntLit(3), _mlsValue::fromIntLit(4));
-//│   _mls_retval = _mls_x_5;
-//│   return _mls_retval;
-//│ }
-//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
 //│ 10
@@ -129,61 +62,22 @@ fun dummy() = add
 dummy()(1, 2)
 //│ = 3
 //│ LLIR:
-//│   class Lambda_add$0() extends Callable {
-//│     def apply2(arg$0,arg$1) =
-//│       let* (x$1) = add(arg$0,arg$1) in
-//│       x$1
+//│   class Lambda_add() extends Callable {
+//│     def apply2$438(arg$475,arg$476) =
+//│       let* (x$479) = add(arg$475,arg$476) in
+//│       x$479
 //│   }
-//│   def add(a,b) =
-//│     let x$0 = +(a,b) in
-//│     x$0
-//│   def dummy() =
-//│     let x$2 = Lambda_add$0() in
-//│     x$2
-//│   let* (x$3) = dummy() in
-//│   let x$4 = Callable.apply2(x$3,1,2) in
-//│   x$4
+//│   def add$405(a$407,b$408) =
+//│     let x$474 = +(a$407,b$408) in
+//│     x$474
+//│   def dummy$406() =
+//│     let x$480 = Lambda_add$477() in
+//│     x$480
+//│   let* (x$481) = dummy() in
+//│   let x$482 = Callable.apply2$438(x$481,1,2) in
+//│   x$482
 //│ 
 //│ Cpp:
-//│ #include "mlsprelude.h"
-//│ struct _mls_Lambda_add_0;
-//│ _mlsValue _mls_add(_mlsValue, _mlsValue);
-//│ _mlsValue _mls_dummy();
-//│ _mlsValue _mlsMain();
-//│ struct _mls_Lambda_add_0: public _mls_Callable {
-//│   
-//│   constexpr static inline const char *typeName = "Lambda_add$0";
-//│   constexpr static inline uint32_t typeTag = nextTypeTag();
-//│   virtual void print() const override { std::printf("%s", typeName); }
-//│   virtual void destroy() override {  operator delete (this, std::align_val_t(_mlsAlignment)); }
-//│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_add_0; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
-//│   virtual _mlsValue _mls_apply2(_mlsValue _mls_arg_0, _mlsValue _mls_arg_1) {
-//│     _mlsValue _mls_retval;
-//│     auto _mls_x_1 = _mls_add(_mls_arg_0, _mls_arg_1);
-//│     _mls_retval = _mls_x_1;
-//│     return _mls_retval;
-//│   }
-//│ };
-//│ _mlsValue _mls_add(_mlsValue _mls_a, _mlsValue _mls_b) {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_0 = (_mls_a + _mls_b);
-//│   _mls_retval = _mls_x_0;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_dummy() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_2 = _mlsValue::create<_mls_Lambda_add_0>();
-//│   _mls_retval = _mls_x_2;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x_3 = _mls_dummy();
-//│   auto _mls_x_4 = _mlsMethodCall<_mls_Callable>(_mls_x_3)->_mls_apply2(_mlsValue::fromIntLit(1), _mlsValue::fromIntLit(2));
-//│   _mls_retval = _mls_x_4;
-//│   return _mls_retval;
-//│ }
-//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
 //│ 3
@@ -205,55 +99,55 @@ main()
 //│ = Cons(4, Cons(5, Nil))
 //│ LLIR:
 //│   class List()
-//│   class Cons(head,tail) extends List
+//│   class Cons(head$495,tail$496) extends List
 //│   class Nil() extends List
-//│   class Lambda$0() extends Callable {
-//│     def apply1(x1) =
-//│       let* (x$10) = inc(x1) in
-//│       x$10
+//│   class Lambda() extends Callable {
+//│     def apply1$577(x$513) =
+//│       let* (x$629) = inc(x$513) in
+//│       x$629
 //│   }
-//│   class Lambda_inc$0() extends Callable {
-//│     def apply1(arg$0) =
-//│       let* (x$16) = inc(arg$0) in
-//│       x$16
+//│   class Lambda_inc() extends Callable {
+//│     def apply1$577(arg$635) =
+//│       let* (x$638) = inc(arg$635) in
+//│       x$638
 //│   }
-//│   def map(f,l) =
-//│     case l of
-//│       Cons =>
-//│         let x$0 = l.<Cons:head> in
-//│         let x$1 = l.<Cons:tail> in
-//│         let x$2 = Callable.apply1(f,x$0) in
-//│         let* (x$3) = map(f,x$1) in
-//│         let x$4 = Cons(x$2,x$3) in
-//│         x$4
+//│   def map$484(f$499,l$500) =
+//│     case l$500 of
+//│       Cons$492 =>
+//│         let x$616 = l$500.<Cons$492:head> in
+//│         let x$617 = l$500.<Cons$492:tail> in
+//│         let x$618 = Callable.apply1$577(f$499,x$616) in
+//│         let* (x$619) = map(f$499,x$617) in
+//│         let x$620 = Cons$492(x$618,x$619) in
+//│         x$620
 //│       _ =>
-//│         case l of
-//│           Nil =>
-//│             let x$5 = Nil() in
-//│             x$5
+//│         case l$500 of
+//│           Nil$497 =>
+//│             let x$622 = Nil$497() in
+//│             x$622
 //│           _ =>
 //│             panic "match error"
-//│   def j$1() =
-//│     jump j$0()
-//│   def j$0() =
+//│   def j$621() =
+//│     jump j$615()
+//│   def j$615() =
 //│     null
-//│   def inc(x) =
-//│     let x$6 = +(x,1) in
-//│     x$6
-//│   def main() =
-//│     let x$7 = Nil() in
-//│     let x$8 = Cons(2,x$7) in
-//│     let x$9 = Cons(1,x$8) in
-//│     let x$11 = Lambda$0() in
-//│     let* (x$12) = map(x$11,x$9) in
-//│     let x$13 = Nil() in
-//│     let x$14 = Cons(4,x$13) in
-//│     let x$15 = Cons(3,x$14) in
-//│     let x$17 = Lambda_inc$0() in
-//│     let* (x$18) = map(x$17,x$15) in
-//│     x$18
-//│   let* (x$19) = main() in
-//│   x$19
+//│   def inc$487(x$509) =
+//│     let x$623 = +(x$509,1) in
+//│     x$623
+//│   def main$485() =
+//│     let x$624 = Nil$497() in
+//│     let x$625 = Cons$492(2,x$624) in
+//│     let x$626 = Cons$492(1,x$625) in
+//│     let x$630 = Lambda$627() in
+//│     let* (x$631) = map(x$630,x$626) in
+//│     let x$632 = Nil$497() in
+//│     let x$633 = Cons$492(4,x$632) in
+//│     let x$634 = Cons$492(3,x$633) in
+//│     let x$639 = Lambda_inc$636() in
+//│     let* (x$640) = map(x$639,x$634) in
+//│     x$640
+//│   let* (x$641) = main() in
+//│   x$641
 //│ 
 //│ Interpreted:
 //│ Cons(4,Cons(5,Nil()))

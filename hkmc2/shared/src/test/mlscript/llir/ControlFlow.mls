@@ -14,12 +14,12 @@ f1()
 //│ = 2
 //│ LLIR:
 //│   
-//│   def f1$249() =
-//│     let x$310 = 1 in
-//│     let x$311 = 2 in
-//│     x$311
-//│   let* (x$312) = f1() in
-//│   x$312
+//│   def f1$239() =
+//│     let x$290 = 1 in
+//│     let x$291 = 2 in
+//│     x$291
+//│   let* (x$292) = f1() in
+//│   x$292
 //│ 
 //│ Interpreted:
 //│ 2
@@ -33,18 +33,18 @@ f2()
 //│ = 3
 //│ LLIR:
 //│   
-//│   def f2$313() =
-//│     let x$375 = 0 in
-//│     let x$376 = ==(x$375,1) in
-//│     case x$376 of
+//│   def f2$293() =
+//│     let x$345 = 0 in
+//│     let x$346 = ==(x$345,1) in
+//│     case x$346 of
 //│       BoolLit(true) =>
 //│         2
 //│       _ =>
 //│         3
-//│   def j$377() =
+//│   def j$347() =
 //│     null
-//│   let* (x$378) = f2() in
-//│   x$378
+//│   let* (x$348) = f2() in
+//│   x$348
 //│ 
 //│ Interpreted:
 //│ 3
@@ -59,19 +59,19 @@ f3()
 //│ = 0
 //│ LLIR:
 //│   
-//│   def f3$379() =
-//│     let x$441 = 0 in
-//│     let x$442 = 1 in
-//│     let x$443 = true in
-//│     case x$443 of
+//│   def f3$349() =
+//│     let x$401 = 0 in
+//│     let x$402 = 1 in
+//│     let x$403 = true in
+//│     case x$403 of
 //│       BoolLit(true) =>
-//│         x$441
+//│         x$401
 //│       _ =>
-//│         x$442
-//│   def j$444() =
+//│         x$402
+//│   def j$404() =
 //│     null
-//│   let* (x$445) = f3() in
-//│   x$445
+//│   let* (x$405) = f3() in
+//│   x$405
 
 
 :sllir
@@ -84,20 +84,20 @@ f4()
 //│ = 3
 //│ LLIR:
 //│   
-//│   def f4$446() =
-//│     let x$511 = 0 in
-//│     let x$512 = ==(x$511,1) in
-//│     case x$512 of
+//│   def f4$406() =
+//│     let x$461 = 0 in
+//│     let x$462 = ==(x$461,1) in
+//│     case x$462 of
 //│       BoolLit(true) =>
-//│         let x$514 = 2 in
-//│         jump j$513(x$514)
+//│         let x$464 = 2 in
+//│         jump j$463(x$464)
 //│       _ =>
-//│         let x$515 = 3 in
-//│         jump j$513(x$515)
-//│   def j$513(tmp$457) =
-//│     tmp$457
-//│   let* (x$516) = f4() in
-//│   x$516
+//│         let x$465 = 3 in
+//│         jump j$463(x$465)
+//│   def j$463(tmp$417) =
+//│     tmp$417
+//│   let* (x$466) = f4() in
+//│   x$466
 //│ 
 //│ Interpreted:
 //│ 3
@@ -113,29 +113,29 @@ f5()
 //│ = 5
 //│ LLIR:
 //│   
-//│   def f5$517() =
-//│     let x$587 = 0 in
-//│     let x$588 = ==(x$587,1) in
-//│     case x$588 of
+//│   def f5$467() =
+//│     let x$527 = 0 in
+//│     let x$528 = ==(x$527,1) in
+//│     case x$528 of
 //│       BoolLit(true) =>
-//│         let x$590 = 2 in
-//│         jump j$589(x$590)
+//│         let x$530 = 2 in
+//│         jump j$529(x$530)
 //│       _ =>
-//│         let x$591 = 3 in
-//│         jump j$589(x$591)
-//│   def j$589(tmp$532) =
-//│     let x$592 = ==(tmp$532,2) in
-//│     case x$592 of
+//│         let x$531 = 3 in
+//│         jump j$529(x$531)
+//│   def j$529(tmp$482) =
+//│     let x$532 = ==(tmp$482,2) in
+//│     case x$532 of
 //│       BoolLit(true) =>
-//│         let x$594 = 4 in
-//│         jump j$593(x$594)
+//│         let x$534 = 4 in
+//│         jump j$533(x$534)
 //│       _ =>
-//│         let x$595 = 5 in
-//│         jump j$593(x$595)
-//│   def j$593(tmp$533) =
-//│     tmp$533
-//│   let* (x$596) = f5() in
-//│   x$596
+//│         let x$535 = 5 in
+//│         jump j$533(x$535)
+//│   def j$533(tmp$483) =
+//│     tmp$483
+//│   let* (x$536) = f5() in
+//│   x$536
 //│ 
 //│ Interpreted:
 //│ 5
@@ -146,19 +146,171 @@ fun test() =
   if true do test()
 //│ LLIR:
 //│   
-//│   def test$597() =
-//│     let x$657 = true in
-//│     case x$657 of
+//│   def test$537() =
+//│     let x$587 = true in
+//│     case x$587 of
 //│       BoolLit(true) =>
-//│         let* (x$659) = test() in
-//│         x$659
+//│         let* (x$589) = test() in
+//│         x$589
 //│       _ =>
 //│         undefined
-//│   def j$658() =
+//│   def j$588() =
 //│     null
 //│   undefined
 //│ 
 //│ Cpp:
+//│ #include "mlsprelude.h"
+//│ struct Tuple4;
+//│ struct Tuple3;
+//│ struct Tuple2;
+//│ struct Tuple8;
+//│ struct Tuple0;
+//│ struct Tuple1;
+//│ struct Tuple7;
+//│ struct Tuple6;
+//│ struct Tuple9;
+//│ struct Tuple5;
+//│ _mlsValue j();
+//│ _mlsValue test();
+//│ _mlsValue _mlsMain();
+//│ struct Tuple4: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   constexpr static inline const char *typeName = "Tuple4";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple4; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple3: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   constexpr static inline const char *typeName = "Tuple3";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple3; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple2: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   constexpr static inline const char *typeName = "Tuple2";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple2; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple8: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   _mlsValue field7;
+//│   constexpr static inline const char *typeName = "Tuple8";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print(); std::printf(", "); this->field7.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6); _mlsValue::destroy(this->field7);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6, _mlsValue field7) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple8; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6; _mlsVal->field7 = field7;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple0: public _mlsObject {
+//│   
+//│   constexpr static inline const char *typeName = "Tuple0";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); }
+//│   virtual void destroy() override {  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple0; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple1: public _mlsObject {
+//│   _mlsValue field0;
+//│   constexpr static inline const char *typeName = "Tuple1";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple1; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple7: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   constexpr static inline const char *typeName = "Tuple7";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple7; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple6: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   constexpr static inline const char *typeName = "Tuple6";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple6; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple9: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   _mlsValue field7;
+//│   _mlsValue field8;
+//│   constexpr static inline const char *typeName = "Tuple9";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print(); std::printf(", "); this->field7.print(); std::printf(", "); this->field8.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6); _mlsValue::destroy(this->field7); _mlsValue::destroy(this->field8);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6, _mlsValue field7, _mlsValue field8) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple9; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6; _mlsVal->field7 = field7; _mlsVal->field8 = field8;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple5: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   constexpr static inline const char *typeName = "Tuple5";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple5; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4;  return _mlsValue(_mlsVal); }
+//│ };
+//│ _mlsValue j() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue test() {
+//│   _mlsValue _mls_retval;
+//│   auto x = _mlsValue::fromIntLit(1);
+//│   if (_mlsValue::isIntLit(x, 1)) {
+//│     auto x1 = test();
+//│     _mls_retval = x1;
+//│   } else {
+//│     _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   }
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mlsMain() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 
 :sllir
 :scpp
@@ -166,20 +318,173 @@ fun test() =
   (if true then test()) + 1
 //│ LLIR:
 //│   
-//│   def test$660() =
-//│     let x$723 = true in
-//│     case x$723 of
+//│   def test$590() =
+//│     let x$643 = true in
+//│     case x$643 of
 //│       BoolLit(true) =>
-//│         let* (x$725) = test() in
-//│         jump j$724(x$725)
+//│         let* (x$645) = test() in
+//│         jump j$644(x$645)
 //│       _ =>
 //│         panic "match error"
-//│   def j$724(tmp$670) =
-//│     let x$726 = +(tmp$670,1) in
-//│     x$726
+//│   def j$644(tmp$600) =
+//│     let x$646 = +(tmp$600,1) in
+//│     x$646
 //│   undefined
 //│ 
 //│ Cpp:
+//│ #include "mlsprelude.h"
+//│ struct Tuple4;
+//│ struct Tuple3;
+//│ struct Tuple2;
+//│ struct Tuple8;
+//│ struct Tuple0;
+//│ struct Tuple1;
+//│ struct Tuple7;
+//│ struct Tuple6;
+//│ struct Tuple9;
+//│ struct Tuple5;
+//│ _mlsValue j(_mlsValue);
+//│ _mlsValue test();
+//│ _mlsValue _mlsMain();
+//│ struct Tuple4: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   constexpr static inline const char *typeName = "Tuple4";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple4; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple3: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   constexpr static inline const char *typeName = "Tuple3";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple3; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple2: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   constexpr static inline const char *typeName = "Tuple2";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple2; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple8: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   _mlsValue field7;
+//│   constexpr static inline const char *typeName = "Tuple8";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print(); std::printf(", "); this->field7.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6); _mlsValue::destroy(this->field7);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6, _mlsValue field7) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple8; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6; _mlsVal->field7 = field7;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple0: public _mlsObject {
+//│   
+//│   constexpr static inline const char *typeName = "Tuple0";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); }
+//│   virtual void destroy() override {  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple0; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple1: public _mlsObject {
+//│   _mlsValue field0;
+//│   constexpr static inline const char *typeName = "Tuple1";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple1; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple7: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   constexpr static inline const char *typeName = "Tuple7";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple7; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple6: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   constexpr static inline const char *typeName = "Tuple6";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple6; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple9: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   _mlsValue field7;
+//│   _mlsValue field8;
+//│   constexpr static inline const char *typeName = "Tuple9";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print(); std::printf(", "); this->field7.print(); std::printf(", "); this->field8.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6); _mlsValue::destroy(this->field7); _mlsValue::destroy(this->field8);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6, _mlsValue field7, _mlsValue field8) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple9; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6; _mlsVal->field7 = field7; _mlsVal->field8 = field8;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple5: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   constexpr static inline const char *typeName = "Tuple5";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple5; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4;  return _mlsValue(_mlsVal); }
+//│ };
+//│ _mlsValue j(_mlsValue tmp) {
+//│   _mlsValue _mls_retval;
+//│   auto x = (tmp + _mlsValue::fromIntLit(1));
+//│   _mls_retval = x;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue test() {
+//│   _mlsValue _mls_retval;
+//│   auto x1 = _mlsValue::fromIntLit(1);
+//│   if (_mlsValue::isIntLit(x1, 1)) {
+//│     auto x2 = test();
+//│     _mls_retval = j(x2);
+//│   } else {
+//│     throw std::runtime_error("match error");
+//│   }
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mlsMain() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 
 
 :sllir
@@ -194,23 +499,179 @@ f()
 //│ = 11
 //│ LLIR:
 //│   
-//│   def f$727() =
-//│     let x$793 = 10 in
-//│     let x$794 = true in
-//│     case x$794 of
+//│   def f$647() =
+//│     let x$703 = 10 in
+//│     let x$704 = true in
+//│     case x$704 of
 //│       BoolLit(true) =>
-//│         let x$796 = +(x$793,1) in
-//│         let x$797 = undefined in
-//│         jump j$795(x$796)
+//│         let x$706 = +(x$703,1) in
+//│         let x$707 = undefined in
+//│         jump j$705(x$706)
 //│       _ =>
-//│         let x$798 = undefined in
-//│         jump j$795(x$793)
-//│   def j$795(x$728) =
-//│     x$728
-//│   let* (x$799) = f() in
-//│   x$799
+//│         let x$708 = undefined in
+//│         jump j$705(x$703)
+//│   def j$705(x$648) =
+//│     x$648
+//│   let* (x$709) = f() in
+//│   x$709
 //│ 
 //│ Cpp:
+//│ #include "mlsprelude.h"
+//│ struct Tuple4;
+//│ struct Tuple3;
+//│ struct Tuple2;
+//│ struct Tuple8;
+//│ struct Tuple0;
+//│ struct Tuple1;
+//│ struct Tuple7;
+//│ struct Tuple6;
+//│ struct Tuple9;
+//│ struct Tuple5;
+//│ _mlsValue j(_mlsValue);
+//│ _mlsValue f();
+//│ _mlsValue _mlsMain();
+//│ struct Tuple4: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   constexpr static inline const char *typeName = "Tuple4";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple4; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple3: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   constexpr static inline const char *typeName = "Tuple3";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple3; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple2: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   constexpr static inline const char *typeName = "Tuple2";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple2; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple8: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   _mlsValue field7;
+//│   constexpr static inline const char *typeName = "Tuple8";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print(); std::printf(", "); this->field7.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6); _mlsValue::destroy(this->field7);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6, _mlsValue field7) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple8; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6; _mlsVal->field7 = field7;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple0: public _mlsObject {
+//│   
+//│   constexpr static inline const char *typeName = "Tuple0";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); }
+//│   virtual void destroy() override {  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple0; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple1: public _mlsObject {
+//│   _mlsValue field0;
+//│   constexpr static inline const char *typeName = "Tuple1";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple1; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple7: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   constexpr static inline const char *typeName = "Tuple7";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple7; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple6: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   constexpr static inline const char *typeName = "Tuple6";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple6; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple9: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   _mlsValue field5;
+//│   _mlsValue field6;
+//│   _mlsValue field7;
+//│   _mlsValue field8;
+//│   constexpr static inline const char *typeName = "Tuple9";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print(); std::printf(", "); this->field5.print(); std::printf(", "); this->field6.print(); std::printf(", "); this->field7.print(); std::printf(", "); this->field8.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4); _mlsValue::destroy(this->field5); _mlsValue::destroy(this->field6); _mlsValue::destroy(this->field7); _mlsValue::destroy(this->field8);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4, _mlsValue field5, _mlsValue field6, _mlsValue field7, _mlsValue field8) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple9; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4; _mlsVal->field5 = field5; _mlsVal->field6 = field6; _mlsVal->field7 = field7; _mlsVal->field8 = field8;  return _mlsValue(_mlsVal); }
+//│ };
+//│ struct Tuple5: public _mlsObject {
+//│   _mlsValue field0;
+//│   _mlsValue field1;
+//│   _mlsValue field2;
+//│   _mlsValue field3;
+//│   _mlsValue field4;
+//│   constexpr static inline const char *typeName = "Tuple5";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->field0.print(); std::printf(", "); this->field1.print(); std::printf(", "); this->field2.print(); std::printf(", "); this->field3.print(); std::printf(", "); this->field4.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->field0); _mlsValue::destroy(this->field1); _mlsValue::destroy(this->field2); _mlsValue::destroy(this->field3); _mlsValue::destroy(this->field4);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create(_mlsValue field0, _mlsValue field1, _mlsValue field2, _mlsValue field3, _mlsValue field4) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) Tuple5; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->field0 = field0; _mlsVal->field1 = field1; _mlsVal->field2 = field2; _mlsVal->field3 = field3; _mlsVal->field4 = field4;  return _mlsValue(_mlsVal); }
+//│ };
+//│ _mlsValue j(_mlsValue x) {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = x;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue f() {
+//│   _mlsValue _mls_retval;
+//│   auto x1 = _mlsValue::fromIntLit(10);
+//│   auto x2 = _mlsValue::fromIntLit(1);
+//│   if (_mlsValue::isIntLit(x2, 1)) {
+//│     auto x4 = (x1 + _mlsValue::fromIntLit(1));
+//│     auto x5 = _mlsValue::create<_mls_Unit>();
+//│     _mls_retval = j(x4);
+//│   } else {
+//│     auto x3 = _mlsValue::create<_mls_Unit>();
+//│     _mls_retval = j(x1);
+//│   }
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mlsMain() {
+//│   _mlsValue _mls_retval;
+//│   auto x6 = f();
+//│   _mls_retval = x6;
+//│   return _mls_retval;
+//│ }
+//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
 //│ 11
@@ -227,29 +688,29 @@ fun f(a) =
 f(A(1))
 //│ = 1
 //│ LLIR:
-//│   class A(x$805)
-//│   class B(y$808)
-//│   def f$802(a$809) =
-//│     case a$809 of
-//│       A$803 =>
-//│         let x$881 = a$809.<A$803:x> in
-//│         let x$882 = 1 in
-//│         jump j$880(x$882)
+//│   class A(x$715)
+//│   class B(y$718)
+//│   def f$712(a$719) =
+//│     case a$719 of
+//│       A$713 =>
+//│         let x$781 = a$719.<A$713:x> in
+//│         let x$782 = 1 in
+//│         jump j$780(x$782)
 //│       _ =>
-//│         case a$809 of
-//│           B$806 =>
-//│             let x$884 = a$809.<B$806:y> in
-//│             let x$885 = 2 in
-//│             jump j$883(x$885)
+//│         case a$719 of
+//│           B$716 =>
+//│             let x$784 = a$719.<B$716:y> in
+//│             let x$785 = 2 in
+//│             jump j$783(x$785)
 //│           _ =>
 //│             panic "match error"
-//│   def j$883(tmp$824) =
-//│     jump j$880(tmp$824)
-//│   def j$880(tmp$824) =
-//│     tmp$824
-//│   let x$886 = A$803(1) in
-//│   let* (x$887) = f(x$886) in
-//│   x$887
+//│   def j$783(tmp$734) =
+//│     jump j$780(tmp$734)
+//│   def j$780(tmp$734) =
+//│     tmp$734
+//│   let x$786 = A$713(1) in
+//│   let* (x$787) = f(x$786) in
+//│   x$787
 //│ 
 //│ Interpreted:
 //│ 1
@@ -268,50 +729,50 @@ fun f(a) =
 f(A(1))
 //│ = 1
 //│ LLIR:
-//│   class A(x$893)
-//│   class B(y$896)
-//│   def f$890(a$897) =
-//│     case a$897 of
-//│       A$891 =>
-//│         let x$973 = a$897.<A$891:x> in
-//│         case a$897 of
-//│           A$891 =>
-//│             let x$975 = a$897.<A$891:x> in
-//│             case x$975 of
+//│   class A(x$793)
+//│   class B(y$796)
+//│   def f$790(a$797) =
+//│     case a$797 of
+//│       A$791 =>
+//│         let x$863 = a$797.<A$791:x> in
+//│         case a$797 of
+//│           A$791 =>
+//│             let x$865 = a$797.<A$791:x> in
+//│             case x$865 of
 //│               IntLit(1) =>
-//│                 let x$977 = 1 in
-//│                 jump j$976(x$977)
+//│                 let x$867 = 1 in
+//│                 jump j$866(x$867)
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
-//│             case a$897 of
-//│               B$894 =>
-//│                 let x$979 = a$897.<B$894:y> in
-//│                 let x$980 = 2 in
-//│                 jump j$978(x$980)
+//│             case a$797 of
+//│               B$794 =>
+//│                 let x$869 = a$797.<B$794:y> in
+//│                 let x$870 = 2 in
+//│                 jump j$868(x$870)
 //│               _ =>
 //│                 panic "match error"
 //│       _ =>
-//│         case a$897 of
-//│           B$894 =>
-//│             let x$982 = a$897.<B$894:y> in
-//│             let x$983 = 3 in
-//│             jump j$981(x$983)
+//│         case a$797 of
+//│           B$794 =>
+//│             let x$872 = a$797.<B$794:y> in
+//│             let x$873 = 3 in
+//│             jump j$871(x$873)
 //│           _ =>
 //│             panic "match error"
-//│   def j$976(tmp$915) =
-//│     jump j$974(tmp$915)
-//│   def j$978(tmp$915) =
-//│     jump j$974(tmp$915)
-//│   def j$974(tmp$915) =
-//│     jump j$972(tmp$915)
-//│   def j$981(tmp$916) =
-//│     jump j$972(tmp$916)
-//│   def j$972(tmp$916) =
-//│     tmp$916
-//│   let x$984 = A$891(1) in
-//│   let* (x$985) = f(x$984) in
-//│   x$985
+//│   def j$866(tmp$815) =
+//│     jump j$864(tmp$815)
+//│   def j$868(tmp$815) =
+//│     jump j$864(tmp$815)
+//│   def j$864(tmp$815) =
+//│     jump j$862(tmp$815)
+//│   def j$871(tmp$816) =
+//│     jump j$862(tmp$816)
+//│   def j$862(tmp$816) =
+//│     tmp$816
+//│   let x$874 = A$791(1) in
+//│   let* (x$875) = f(x$874) in
+//│   x$875
 //│ 
 //│ Interpreted:
 //│ 1

@@ -14,6 +14,7 @@ import hkmc2.codegen.Path
 import hkmc2.semantics.Term.Blk
 import hkmc2.utils.Scope
 import hkmc2.codegen.llir._
+import hkmc2.codegen.cpp._
 import hkmc2.semantics.Elaborator
 
 abstract class LlirDiffMaker extends BbmlDiffMaker:
@@ -48,21 +49,21 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
           output("LLIR:")
           output(llirProg.show())
         if cpp.isSet || scpp.isSet || rcpp.isSet || wcpp.isSet then
-          // val cpp = codegen.cpp.CppCodeGen.codegen(llirProg)
+          val cpp = CppCodeGen(tl).codegen(llb.builtinSymbols, llirProg)
           if scpp.isSet then
             output("\nCpp:")
-          //  output(cpp.toDocument.toString)
-          val auxPath =  os.Path(rootPath) / "hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
+            output(cpp.toDocument.toString)
+          val auxPath =  os.Path(rootPath)/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
           if wcpp.isSet then
-            // printToFile(java.io.File((auxPath / s"${wcpp.get.get}.cpp").toString)):
-            //   p => p.println(cpp.toDocument.toString)
+            printToFile(java.io.File((auxPath / s"${wcpp.get.get}.cpp").toString)):
+              p => p.println(cpp.toDocument.toString)
           if rcpp.isSet then
             val cppHost = CppCompilerHost(auxPath.toString, output.apply)
             if !cppHost.ready then
               output("\nCpp Compilation Failed: Cpp compiler or GNU Make not found")
             else
               output("\n")
-              // cppHost.compileAndRun(cpp.toDocument.toString)
+              cppHost.compileAndRun(cpp.toDocument.toString)
         if intl.isSet then
           val intr = codegen.llir.Interpreter(tl)
           output("\nInterpreted:")

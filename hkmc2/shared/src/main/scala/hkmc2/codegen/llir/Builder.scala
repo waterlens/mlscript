@@ -101,6 +101,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private def newClassSym(len: Int) =
     ClassSymbol(Tree.TypeDef(hkmc2.syntax.Cls, Tree.Empty(), N, N), Tree.Ident(s"Tuple$len"))
   private def newMemSym(name: Str) = TermSymbol(hkmc2.syntax.ImmutVal, None, Tree.Ident(name))
+  private def newMethodSym(name: Str) = TermSymbol(hkmc2.syntax.Fun, None, Tree.Ident(name))
   private val builtinField: Map[Int, Local] =
     Map(
       0 -> newMemSym("field0"),
@@ -117,18 +118,18 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private val builtinCallable: Local = newLambdaSym("Callable")
   private val builtinApply: Map[Int, Local] =
     Map(
-      0 -> newLambdaSym("apply0"),
-      1 -> newLambdaSym("apply1"),
-      2 -> newLambdaSym("apply2"),
-      3 -> newLambdaSym("apply3"),
-      4 -> newLambdaSym("apply4"),
-      5 -> newLambdaSym("apply5"),
-      6 -> newLambdaSym("apply6"),
-      7 -> newLambdaSym("apply7"),
-      8 -> newLambdaSym("apply8"),
-      9 -> newLambdaSym("apply9"),
+      0 -> newMethodSym("apply0"),
+      1 -> newMethodSym("apply1"),
+      2 -> newMethodSym("apply2"),
+      3 -> newMethodSym("apply3"),
+      4 -> newMethodSym("apply4"),
+      5 -> newMethodSym("apply5"),
+      6 -> newMethodSym("apply6"),
+      7 -> newMethodSym("apply7"),
+      8 -> newMethodSym("apply8"),
+      9 -> newMethodSym("apply9"),
     )
-  private val  builtinTuple: Map[Int, Local] =
+  private val builtinTuple: Map[Int, Local] =
     Map(
       0 -> newClassSym(0),
       1 -> newClassSym(1),
@@ -141,6 +142,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       8 -> newClassSym(8),
       9 -> newClassSym(9),
     )
+  val builtinSymbols = Set(builtinCallable)
 
   private def bBind(name: Opt[Local], e: Result, body: Block)(k: TrivialExpr => Ctx ?=> Node)(ct: Block)(using ctx: Ctx)(using Raise, Scope): Node =
     trace[Node](s"bBind begin: $name", x => s"bBind end: ${x.show}"):

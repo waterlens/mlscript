@@ -189,8 +189,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
         given Ctx = ctx.setClass(isym)
         val funcs = methods.map(bMethodDef)
         def parentFromPath(p: Path): Set[Local] = p match
-          case Value.Ref(l) => Set(l)
-          case Select(Value.Ref(l), Tree.Ident("class")) => Set(l)
+          case Value.Ref(l) => Set(fromMemToClass(l))
+          case Select(Value.Ref(l), Tree.Ident("class")) => Set(fromMemToClass(l))
           case _ => errStop(msg"Unsupported parent path ${p.toString()}")
         ClassInfo(
           uid.make,
@@ -267,17 +267,17 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
         case Some(d: ClassLikeDef) => d.owner.get
         case Some(d: TermDefinition) => d.owner.get
         case Some(value) => errStop(msg"Member symbol without class definition ${value.toString}")
-        case None => errStop(msg"Member symbol without definition") 
+        case None => errStop(msg"Member symbol without definition ${ms.toString}") 
   
   private def fromMemToClass(m: Symbol)(using ctx: Ctx)(using Raise, Scope): Local =
-    trace[Local](s"bFromMemToClass", x => s"bFromMemToClass end: $x"):
+    trace[Local](s"bFromMemToClass $m", x => s"bFromMemToClass end: $x"):
       m match
       case ms: MemberSymbol[?] =>
         ms.defn match
-        case Some(d: ClassLikeDef) => d.sym
+        case Some(d: ClassLikeDef) => d.sym.asClsLike.getOrElse(errStop(msg"Class definition without symbol"))
         case Some(d: TermDefinition) => d.sym
         case Some(value) => errStop(msg"Member symbol without class definition ${value.toString}")
-        case None => errStop(msg"Member symbol without definition") 
+        case None => errStop(msg"Member symbol without definition ${ms.toString}") 
       case _ => errStop(msg"Unsupported symbol kind ${m.toString}")
         
   
@@ -445,7 +445,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
     case Define(cd @ ClsLikeDefn(_own, isym, sym, kind, _paramsOpt, parentSym, methods, privateFields, publicFields, preCtor, ctor), rest) =>
       val c = bClsLikeDef(cd)
       ctx.class_acc += c
-      val new_ctx = ctx.addClassInfo(sym, c).addClassInfo(isym, c)
+      val new_ctx = ctx.addClassInfo(isym, c)
       log(s"Define class: ${isym.toString()} -> ${ctx}")
       registerClasses(rest)(using new_ctx)
     case _ =>
@@ -454,13 +454,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   def registerInternalClasses(using ctx: Ctx)(using Raise, Scope): Ctx =
     tupleSym.foldLeft(ctx):
       case (ctx, (len, sym)) =>
-        val c = ClassInfo(
-          uid.make,
-          sym,
-          (0 until len).map(x => builtinField(x)).toList,
-          Set.empty,
-          Map.empty,
-        )
+        val c = ClassInfo(uid.make, sym, (0 until len).map(x => builtinField(x)).toList, Set.empty, Map.empty)
         ctx.class_acc += c
         ctx.addClassInfo(sym, c)
   
@@ -475,8 +469,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
     case _ =>
       b.subBlocks.foldLeft(ctx)((ctx, rest) => registerFunctions(rest)(using ctx))
   
-  def bProg(e: Program)(using Raise, Scope): LlirProgram =
-    var ctx = Ctx.empty
+  def bProg(e: Program)(using Raise, Scope, Ctx): (LlirProgram, Ctx) =
+    var ctx = summon[Ctx]
     
     // * Classes may be defined after other things such as functions,
     // * especially now that the elaborator moves all functions to the top of the block.
@@ -489,5 +483,10 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
 
     ctx = registerInternalClasses(using ctx)
     
-    LlirProgram(ctx.class_acc.toSet, ctx.def_acc.toSet, entry)
+    val prog = LlirProgram(ctx.class_acc.toSet, ctx.def_acc.toSet, entry)
+
+    ctx.class_acc.clear()
+    ctx.def_acc.clear()
+    
+    (prog, ctx)
 

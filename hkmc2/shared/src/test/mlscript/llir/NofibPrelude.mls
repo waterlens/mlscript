@@ -1,6 +1,9 @@
 :llir
 :js
 
+// shadow the one in Predef
+fun not(c) = if c then false else true
+
 type Char = String
 
 abstract class Option[out T]: Some[T] | None
@@ -95,9 +98,6 @@ fun take(n, ls) = if ls is
     else h :: take(n - 1, t)
 
 fun splitAt(n, ls) = [take(n, ls), drop(n, ls)]
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: member:take
-//│ Stopped due to an error during the Llir generation
 
 fun zip(xs, ys) = if xs is
   x :: xs and ys is y :: ys then [x, y] :: zip(xs, ys)
@@ -110,9 +110,6 @@ fun inList(x, ls) = if ls is
   Nil then false
 
 fun notElem(x, ls) = not(inList(x, ls))
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: member:inList
-//│ Stopped due to an error during the Llir generation
 
 fun (+:) append(xs, ys) = if xs is
   Nil then ys
@@ -121,9 +118,6 @@ fun (+:) append(xs, ys) = if xs is
 fun concat(ls) = if ls is
   Nil then Nil
   x :: xs then append(x, concat(xs))
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: member:append
-//│ Stopped due to an error during the Llir generation
 
 fun filter(f, ls) = if ls is
   Nil then Nil
@@ -167,25 +161,16 @@ fun foldr(f, z, xs) = if xs is
 
 fun foldl1(f, ls) = if
   ls is x :: xs then foldl(f, x, xs)
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: member:foldl
-//│ Stopped due to an error during the Llir generation
 
 fun foldr1(f, ls) = if ls is
   x :: Nil then x
   x :: xs then f(x, foldr1(f, xs))
 
 fun maximum(xs) = foldl1((x, y) => if x > y then x else y, xs)
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: member:foldl1
-//│ Stopped due to an error during the Llir generation
 
 fun nubBy(eq, ls) = if ls is
   Nil then Nil
   h :: t then h :: nubBy(eq, filter(y => not(eq(h, y)), t))
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Member symbol without definition
-//│ Stopped due to an error during the Llir generation
 
 fun zipWith(f, xss, yss) = if
   xss is x :: xs and yss is y :: ys then f(x, y) :: zipWith(f, xs, ys)
@@ -198,14 +183,8 @@ fun deleteBy(eq, x, ys) = if ys is
     else y :: deleteBy(eq, x, ys)
 
 fun unionBy(eq, xs, ys) = append(xs, foldl((acc, y) => deleteBy(eq, y, acc), nubBy(eq, ys), xs))
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: member:nubBy
-//│ Stopped due to an error during the Llir generation
 
 fun union(xs, ys) = unionBy((x, y) => x == y, xs, ys)
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: member:unionBy
-//│ Stopped due to an error during the Llir generation
 
 fun atIndex(i, ls) = if ls is
   h :: t and
@@ -264,7 +243,4 @@ fun break_(p, ls) = if ls is
 fun flatMap(f, ls) = if ls is
   Nil then Nil
   h :: t then append(f(h), flatMap(f, t))
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Name not found: member:append
-//│ Stopped due to an error during the Llir generation
 

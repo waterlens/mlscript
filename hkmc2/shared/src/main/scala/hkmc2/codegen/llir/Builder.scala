@@ -3,6 +3,7 @@ package codegen
 package llir
 
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{HashMap => MutMap}
 
 import mlscript.utils.*
 import mlscript.utils.shorthands.*
@@ -98,51 +99,19 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private def newNamed(name: Str) = VarSymbol(Tree.Ident(name))
   private def newLambdaSym(name: Str) =
     ClassSymbol(Tree.TypeDef(hkmc2.syntax.Cls, Tree.Empty(), N, N), Tree.Ident(name))
-  private def newClassSym(len: Int) =
+  private def newTupleSym(len: Int) =
     ClassSymbol(Tree.TypeDef(hkmc2.syntax.Cls, Tree.Empty(), N, N), Tree.Ident(s"Tuple$len"))
   private def newMemSym(name: Str) = TermSymbol(hkmc2.syntax.ImmutVal, None, Tree.Ident(name))
   private def newMethodSym(name: Str) = TermSymbol(hkmc2.syntax.Fun, None, Tree.Ident(name))
-  private val builtinField: Map[Int, Local] =
-    Map(
-      0 -> newMemSym("field0"),
-      1 -> newMemSym("field1"),
-      2 -> newMemSym("field2"),
-      3 -> newMemSym("field3"),
-      4 -> newMemSym("field4"),
-      5 -> newMemSym("field5"),
-      6 -> newMemSym("field6"),
-      7 -> newMemSym("field7"),
-      8 -> newMemSym("field8"),
-      9 -> newMemSym("field9"),
-    )
-  private val builtinCallable: Local = newLambdaSym("Callable")
-  private val builtinApply: Map[Int, Local] =
-    Map(
-      0 -> newMethodSym("apply0"),
-      1 -> newMethodSym("apply1"),
-      2 -> newMethodSym("apply2"),
-      3 -> newMethodSym("apply3"),
-      4 -> newMethodSym("apply4"),
-      5 -> newMethodSym("apply5"),
-      6 -> newMethodSym("apply6"),
-      7 -> newMethodSym("apply7"),
-      8 -> newMethodSym("apply8"),
-      9 -> newMethodSym("apply9"),
-    )
-  private val builtinTuple: Map[Int, Local] =
-    Map(
-      0 -> newClassSym(0),
-      1 -> newClassSym(1),
-      2 -> newClassSym(2),
-      3 -> newClassSym(3),
-      4 -> newClassSym(4),
-      5 -> newClassSym(5),
-      6 -> newClassSym(6),
-      7 -> newClassSym(7),
-      8 -> newClassSym(8),
-      9 -> newClassSym(9),
-    )
-  val builtinSymbols = Set(builtinCallable)
+  private val fieldSym: MutMap[Int, Local] = MutMap.empty
+  private val applySym: MutMap[Int, Local] = MutMap.empty
+  private val tupleSym: MutMap[Int, Local] = MutMap.empty
+  private val callableSym = newMemSym("Callable")
+  private def builtinField(n: Int) = fieldSym.getOrElseUpdate(n, newMemSym(s"field$n"))
+  private def builtinApply(n: Int) = applySym.getOrElseUpdate(n, newMethodSym(s"apply$n"))
+  private def builtinTuple(n: Int) = tupleSym.getOrElseUpdate(n, newTupleSym(n))
+  private def builtinCallable: Local = callableSym
+  val builtinSymbols = Set(builtinCallable) // Callable is implicitly defined in the runtime
 
   private def bBind(name: Opt[Local], e: Result, body: Block)(k: TrivialExpr => Ctx ?=> Node)(ct: Block)(using ctx: Ctx)(using Raise, Scope): Node =
     trace[Node](s"bBind begin: $name", x => s"bBind end: ${x.show}"):
@@ -483,7 +452,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       b.subBlocks.foldLeft(ctx)((ctx, rest) => registerClasses(rest)(using ctx))
 
   def registerInternalClasses(using ctx: Ctx)(using Raise, Scope): Ctx =
-    builtinTuple.foldLeft(ctx):
+    tupleSym.foldLeft(ctx):
       case (ctx, (len, sym)) =>
         val c = ClassInfo(
           uid.make,
@@ -509,8 +478,6 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   def bProg(e: Program)(using Raise, Scope): LlirProgram =
     var ctx = Ctx.empty
     
-    ctx = registerInternalClasses(using ctx)
-
     // * Classes may be defined after other things such as functions,
     // * especially now that the elaborator moves all functions to the top of the block.
     ctx = registerClasses(e.main)(using ctx)
@@ -519,5 +486,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
     log(s"Classes: ${ctx.class_ctx}")
 
     val entry = bBlockWithEndCont(e.main)(x => Node.Result(Ls(x)))(using ctx)
+
+    ctx = registerInternalClasses(using ctx)
+    
     LlirProgram(ctx.class_acc.toSet, ctx.def_acc.toSet, entry)
 

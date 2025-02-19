@@ -147,15 +147,16 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       val FunDefn(_own, sym, params, body) = e
       if !ctx.is_top_level then
         errStop(msg"Non top-level definition ${sym.nme} not supported")
-      else if params.length != 1 then
-        errStop(msg"Curried function or zero arguments function not supported: ${params.length.toString}")
+      else if params.length == 0 then
+        errStop(msg"Function without arguments not supported: ${params.length.toString}")
       else 
         val paramsList = params.head.params
         val ctx2 = paramsList.foldLeft(ctx)((acc, x) => acc.addName(x.sym, x.sym)).nonTopLevel
         val pl = paramsList.map(_.sym)
+        val wrappedLambda = params.tail.foldRight(body)((params, acc) => Return(Value.Lam(params, acc), false))
         Func(
           uid.make, sym, params = pl, resultNum = 1,
-          body = bBlockWithEndCont(body)(x => Node.Result(Ls(x)))(using ctx2)
+          body = bBlockWithEndCont(wrappedLambda)(x => Node.Result(Ls(x)))(using ctx2)
         )
 
   private def bMethodDef(e: FunDefn)(using ctx: Ctx)(using Raise, Scope): Func =
@@ -163,15 +164,16 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       val FunDefn(_own, sym, params, body) = e
       if !ctx.is_top_level then
         errStop(msg"Non top-level definition ${sym.nme} not supported")
-      else if params.length != 1 then
-        errStop(msg"Curried function or zero arguments function not supported: ${params.length.toString}")
+      else if params.length == 0 then
+        errStop(msg"Function without arguments not supported: ${params.length.toString}")
       else 
         val paramsList = params.head.params
         val ctx2 = paramsList.foldLeft(ctx)((acc, x) => acc.addName(x.sym, x.sym)).nonTopLevel
         val pl = paramsList.map(_.sym)
+        val wrappedLambda = params.tail.foldRight(body)((params, acc) => Return(Value.Lam(params, acc), false))
         Func(
           uid.make, sym, params = pl, resultNum = 1,
-          body = bBlockWithEndCont(body)(x => Node.Result(Ls(x)))(using ctx2)
+          body = bBlockWithEndCont(wrappedLambda)(x => Node.Result(Ls(x)))(using ctx2)
         )
 
   private def bClsLikeDef(e: ClsLikeDefn)(using ctx: Ctx)(using Raise, Scope): ClassInfo =
@@ -428,12 +430,9 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
         bBind(S(lhs), rhs, rest)(k)(ct)
       case AssignField(lhs, nme, rhs, rest) => TODO("AssignField not supported")
       case Define(fd @ FunDefn(_own, sym, params, body), rest) =>
-        if params.length != 1 then
-          errStop(msg"Curried function or zero arguments function not supported: ${params.length.toString}")
-        val ctx2 = ctx.addFuncName(sym, params.head.params.length)
-        val f = bFunDef(fd)(using ctx2)
+        val f = bFunDef(fd)(using ctx)
         ctx.def_acc += f
-        bBlock(rest)(k)(ct)(using ctx2)
+        bBlock(rest)(k)(ct)(using ctx)
       case Define(_: ClsLikeDefn, rest) => bBlock(rest)(k)(ct)
       case End(msg) => k(Expr.Literal(Tree.UnitLit(false)))
       case _: Block =>
@@ -467,8 +466,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   def registerFunctions(b: Block)(using ctx: Ctx)(using Raise, Scope): Ctx =
     b match
     case Define(fd @ FunDefn(_own, sym, params, body), rest) =>
-      if params.length != 1 then
-        errStop(msg"Curried function or zero arguments function not supported: ${params.length.toString}")
+      if params.length == 0 then
+        errStop(msg"Function without arguments not supported: ${params.length.toString}")
       val ctx2 = ctx.addFuncName(sym, params.head.params.length)
       log(s"Define function: ${sym.nme} -> ${ctx2}")
       registerFunctions(rest)(using ctx2)

@@ -7,15 +7,26 @@
 :intl
 :sllir
 fun mkTup(x, y) = [x, y]
+fun fst(t) = if t is [x, y] then x 
 mkTup(1, 2)
 //│ = [1, 2]
 //│ LLIR:
 //│   
-//│   def mkTup$198(x$199,y$200) =
-//│     let x$208 = Tuple2$209(x$199,y$200) in
-//│     x$208
-//│   let* (x$211) = mkTup(1,2) in
-//│   x$211
+//│   def mkTup$198(x$200,y$201) =
+//│     let x$215 = Tuple2$216(x$200,y$201) in
+//│     x$215
+//│   def fst$199(t$203) =
+//│     case t$203 of
+//│       Tuple2$216 =>
+//│         let x$219 = t$203.<Tuple2$216:0> in
+//│         let x$220 = t$203.<Tuple2$216:1> in
+//│         x$219
+//│       _ =>
+//│         panic "match error"
+//│   def j$218() =
+//│     null
+//│   let* (x$221) = mkTup(1,2) in
+//│   x$221
 //│ 
 //│ Interpreted:
 //│ Tuple2(1,2)

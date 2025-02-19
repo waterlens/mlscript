@@ -392,7 +392,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
               case (Case.Cls(cls, _), body) =>
                 (Pat.Class(cls), bBlock(body)(cont)(nextCont)(using ctx))
               case (Case.Tup(len, inf), body) =>
-                (Pat.Class(builtinTuple(len)), bBlock(body)(cont)(nextCont)(using ctx))
+                val ctx2 = ctx.addKnownClass(scrut, builtinTuple(len))
+                (Pat.Class(builtinTuple(len)), bBlock(body)(cont)(nextCont)(using ctx2))
             val defaultCase = dflt.map(bBlock(_)(cont)(nextCont)(using ctx))
             val jpdef = Func(
               uid.make,

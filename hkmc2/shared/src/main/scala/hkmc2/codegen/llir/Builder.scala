@@ -30,6 +30,7 @@ final case class FuncInfo(paramsSize: Int)
 final case class BuiltinSymbols(
   var callableSym: Opt[Local] = None,
   var thisSym: Opt[Local] = None,
+  var builtinSym: Opt[Local] = None,
   fieldSym: MutMap[Int, Local] = MutMap.empty,
   applySym: MutMap[Int, Local] = MutMap.empty,
   tupleSym: MutMap[Int, Local] = MutMap.empty,
@@ -130,6 +131,13 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       case None => 
         val sym = newBuiltinSym("<this>")
         ctx.builtin_sym.thisSym = Some(sym);
+        sym
+      case Some(value) => value
+  private def builtin(using ctx: Ctx) : Local =
+    ctx.builtin_sym.thisSym match
+      case None => 
+        val sym = newBuiltinSym("<builtin>")
+        ctx.builtin_sym.builtinSym = Some(sym);
         sym
       case Some(value) => value
 
@@ -380,6 +388,11 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
                     bArgs(args):
                       case args: Ls[TrivialExpr] =>
                         Node.LetMethodCall(Ls(v), builtinCallable, builtinApply(args.length), f :: args, k(v |> sr))
+      case Call(Select(Value.Ref(sym: TopLevelSymbol), Tree.Ident("builtin")), args) =>
+        bArgs(args):
+          case args: Ls[TrivialExpr] =>
+            val v: Local = newTemp
+            Node.LetCall(Ls(v), builtin, args, k(v |> sr))
       case Call(s @ Select(r @ Value.Ref(sym), Tree.Ident(fld)), args) if s.symbol.isDefined =>
         bPath(r):
           case r =>

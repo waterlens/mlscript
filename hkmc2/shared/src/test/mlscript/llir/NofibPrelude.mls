@@ -41,12 +41,27 @@ fun until(p, f, i) = if p(i) then i else until(p, f, f(i))
 
 fun flip(f, x, y) = f(y)(x)
 
+fun power(a, n) = globalThis.builtin("pow", a, n)
+
+fun intDiv(a, b) = globalThis.builtin("floor_div", a, b)
+fun intQuot(a, b) = a / b
+
+fun intMod(a, b) = a - (b * intDiv(a, b))
+fun intRem(a, b) = a - (b * intQuot(a, b))
+
+fun quotRem(a, b) = [intQuot(a, b), intRem(a, b)]
+fun divMod(a, b) = [intDiv(a, b), intMod(a, b)]
+
+fun max(a, b) = if a > b then a else b
+fun min(a, b) = if a < b then a else b
+
+fun abs(x) = if x < 0 then -x else x
+
 fun head(l) = if l is h :: t then h
 fun tail(l) = if l is h :: t then t
 
 fun while_(p, f, x) = if p(x) then while_(p, f, f(x)) else x
 
-:todo
 fun reverse(l) =
   fun r(l', l) = if l is x :: xs then r(x :: l', xs) else l'
   r(Nil, l)
@@ -54,7 +69,6 @@ fun reverse(l) =
 fun map(f, xs) = if xs is
   x :: xs then f(x) :: map(f, xs)
   Nil then Nil
-
 
 fun listLen(ls) =
   fun l(ls, a) = if ls is
@@ -230,3 +244,15 @@ fun break_(p, ls) = if ls is
 fun flatMap(f, ls) = if ls is
   Nil then Nil
   h :: t then append(f(h), flatMap(f, t))
+
+fun stringOfInt(x) = globalThis.builtin("string_of_int", x)
+fun stringConcat(x, y) = globalThis.builtin("str_concat", x, y)
+fun stringListConcat(ls) = if ls is
+  Nil then ""
+  h :: t then stringConcat(h, stringListConcat(t))
+fun sqrt(x) = globalThis.builtin("sqrt", x)
+fun tan(x) = globalThis.builtin("tan", x)
+fun sin(x) = globalThis.builtin("sin", x)
+fun cos(x) = globalThis.builtin("cos", x)
+fun round(x) = globalThis.builtin("round", x)
+fun int_of_char(x) = globalThis.builtin("int_of_char", x)

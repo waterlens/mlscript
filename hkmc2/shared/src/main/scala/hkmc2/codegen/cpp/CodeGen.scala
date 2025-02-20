@@ -234,7 +234,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
       case Node.LetExpr(name, expr, body) =>
         val stmts2 = stmts ++ Ls(Stmt.AutoBind(Ls(name |> allocIfNew), codegen(expr)))
         codegen(body, storeInto)(using decls, stmts2)
-      case Node.LetMethodCall(names, cls, method, IExpr.Ref(bin: BuiltinSymbol) :: args, body) if bin.nme == "<builtin>" =>
+      case Node.LetCall(names, bin: BuiltinSymbol, args, body) if bin.nme == "<builtin>" =>
         val stmts2 = stmts ++ codegenBuiltin(names, args.head.toString.replace("\"", ""), args.tail)
         codegen(body, storeInto)(using decls, stmts2)
       case Node.LetMethodCall(names, cls, method, IExpr.Ref(bin: BuiltinSymbol) :: args, body) if bin.nme == "<this>" =>

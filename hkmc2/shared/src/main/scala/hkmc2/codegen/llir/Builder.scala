@@ -27,6 +27,13 @@ def errStop(msg: Message)(using Raise) =
 
 final case class FuncInfo(paramsSize: Int)
 
+final case class BuiltinSymbols(
+  var callableSym: Opt[Local] = None,
+  fieldSym: MutMap[Int, Local] = MutMap.empty,
+  applySym: MutMap[Int, Local] = MutMap.empty,
+  tupleSym: MutMap[Int, Local] = MutMap.empty,
+)
+
 final case class Ctx(
   def_acc: ListBuffer[Func],
   class_acc: ListBuffer[ClassInfo],
@@ -37,6 +44,7 @@ final case class Ctx(
   is_top_level: Bool = true,
   method_class: Opt[Symbol] = None,
   free_vars: Set[Local] = Set.empty,
+  builtin_sym: BuiltinSymbols = BuiltinSymbols(),
 ):
   def addFuncName(n: Local, paramsSize: Int) = copy(fn_ctx = fn_ctx + (n -> FuncInfo(paramsSize)))
   def findFuncName(n: Local)(using Raise) = fn_ctx.get(n) match
@@ -97,21 +105,23 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private def newTemp = TempSymbol(N, "x")
   private def newNamedTemp(name: Str) = TempSymbol(N, name)
   private def newNamed(name: Str) = VarSymbol(Tree.Ident(name))
-  private def newLambdaSym(name: Str) =
+  private def newClassSym(name: Str) =
     ClassSymbol(Tree.TypeDef(hkmc2.syntax.Cls, Tree.Empty(), N, N), Tree.Ident(name))
   private def newTupleSym(len: Int) =
     ClassSymbol(Tree.TypeDef(hkmc2.syntax.Cls, Tree.Empty(), N, N), Tree.Ident(s"Tuple$len"))
   private def newMemSym(name: Str) = TermSymbol(hkmc2.syntax.ImmutVal, None, Tree.Ident(name))
   private def newMethodSym(name: Str) = TermSymbol(hkmc2.syntax.Fun, None, Tree.Ident(name))
-  private val fieldSym: MutMap[Int, Local] = MutMap.empty
-  private val applySym: MutMap[Int, Local] = MutMap.empty
-  private val tupleSym: MutMap[Int, Local] = MutMap.empty
-  private val callableSym = newMemSym("Callable")
-  private def builtinField(n: Int) = fieldSym.getOrElseUpdate(n, newMemSym(s"field$n"))
-  private def builtinApply(n: Int) = applySym.getOrElseUpdate(n, newMethodSym(s"apply$n"))
-  private def builtinTuple(n: Int) = tupleSym.getOrElseUpdate(n, newTupleSym(n))
-  private def builtinCallable: Local = callableSym
-  val builtinSymbols = Set(builtinCallable) // Callable is implicitly defined in the runtime
+  private def builtinField(n: Int)(using Ctx) = summon[Ctx].builtin_sym.fieldSym.getOrElseUpdate(n, newMemSym(s"field$n"))
+  private def builtinApply(n: Int)(using Ctx) = summon[Ctx].builtin_sym.applySym.getOrElseUpdate(n, newMethodSym(s"apply$n"))
+  private def builtinTuple(n: Int)(using Ctx) = summon[Ctx].builtin_sym.tupleSym.getOrElseUpdate(n, newTupleSym(n))
+  private def builtinCallable(using ctx: Ctx) : Local =
+    ctx.builtin_sym.callableSym match
+      case None => 
+        val sym = newClassSym("Callable")
+        ctx.builtin_sym.callableSym = Some(sym);
+        sym
+      case Some(value) => value
+    
 
   private def bBind(name: Opt[Local], e: Result, body: Block)(k: TrivialExpr => Ctx ?=> Node)(ct: Block)(using ctx: Ctx)(using Raise, Scope): Node =
     trace[Node](s"bBind begin: $name", x => s"bBind end: ${x.show}"):
@@ -205,7 +215,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       val Value.Lam(params, body) = lam
       // Generate an auxiliary class inheriting from Callable
       val freeVars = freeVarsFilter(lam.freeVars -- lam.body.definedVars -- ctx.fn_ctx.keySet)
-      val name = newLambdaSym(s"Lambda${nameHint.fold("")(x => "_" + x)}")
+      val name = newClassSym(s"Lambda${nameHint.fold("")(x => "_" + x)}")
       val clsParams = freeVars.toList
       val args = freeVars.toList
       val ctx2 = ctx.setFreeVars(freeVars)
@@ -452,7 +462,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       b.subBlocks.foldLeft(ctx)((ctx, rest) => registerClasses(rest)(using ctx))
 
   def registerInternalClasses(using ctx: Ctx)(using Raise, Scope): Ctx =
-    tupleSym.foldLeft(ctx):
+    ctx.builtin_sym.tupleSym.foldLeft(ctx):
       case (ctx, (len, sym)) =>
         val c = ClassInfo(uid.make, sym, (0 until len).map(x => builtinField(x)).toList, Set.empty, Map.empty)
         ctx.class_acc += c

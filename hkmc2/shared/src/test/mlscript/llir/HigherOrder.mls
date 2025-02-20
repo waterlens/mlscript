@@ -12,24 +12,24 @@ fun add_curried(x)(y) = x + y
 add(1)(2)
 //│ = 3
 //│ LLIR:
-//│   class Lambda(x$200) extends Callable {
-//│     def apply1$221(y$201) =
-//│       let x$222 = +(x$200,y$201) in
-//│       x$222
+//│   class Lambda(x$199) extends Callable {
+//│     def apply1$219(y$200) =
+//│       let x$220 = +(x$199,y$200) in
+//│       x$220
 //│   }
-//│   class Lambda(x$204) extends Callable {
-//│     def apply1$221(y$205) =
-//│       let x$226 = +(x$204,y$205) in
+//│   class Lambda(x$203) extends Callable {
+//│     def apply1$219(y$204) =
+//│       let x$226 = +(x$203,y$204) in
 //│       x$226
 //│   }
-//│   def add$198(x$200) =
-//│     let x$223 = Lambda$219(x$200) in
+//│   def add$197(x$199) =
+//│     let x$223 = Lambda$217(x$199) in
 //│     x$223
-//│   def add_curried$199(x$204) =
-//│     let x$227 = Lambda$224(x$204) in
+//│   def add_curried$198(x$203) =
+//│     let x$227 = Lambda$224(x$203) in
 //│     x$227
 //│   let* (x$228) = add(1) in
-//│   let x$229 = Callable.apply1$221(x$228,2) in
+//│   let x$229 = Callable.apply1$219(x$228,2) in
 //│   x$229
 //│ 
 //│ Cpp:
@@ -100,28 +100,28 @@ add4(1, 2)(3, 4)
 //│ = 10
 //│ LLIR:
 //│   class Lambda(b$233,a$232) extends Callable {
-//│     def apply2$269(c$234,d$235) =
-//│       let x$270 = +(a$232,b$233) in
-//│       let x$271 = +(x$270,c$234) in
-//│       let x$272 = +(x$271,d$235) in
-//│       x$272
+//│     def apply2$268(c$234,d$235) =
+//│       let x$269 = +(a$232,b$233) in
+//│       let x$270 = +(x$269,c$234) in
+//│       let x$271 = +(x$270,d$235) in
+//│       x$271
 //│   }
 //│   class Lambda(a$240,b$241) extends Callable {
-//│     def apply2$269(c$242,d$243) =
-//│       let x$276 = +(a$240,b$241) in
-//│       let x$277 = +(x$276,c$242) in
-//│       let x$278 = +(x$277,d$243) in
-//│       x$278
+//│     def apply2$268(c$242,d$243) =
+//│       let x$275 = +(a$240,b$241) in
+//│       let x$276 = +(x$275,c$242) in
+//│       let x$277 = +(x$276,d$243) in
+//│       x$277
 //│   }
 //│   def add4$231(a$232,b$233) =
-//│     let x$273 = Lambda$267(b$233,a$232) in
-//│     x$273
+//│     let x$272 = Lambda$266(b$233,a$232) in
+//│     x$272
 //│   def add4_curried$230(a$240,b$241) =
-//│     let x$279 = Lambda$274(a$240,b$241) in
-//│     x$279
-//│   let* (x$280) = add4(1,2) in
-//│   let x$281 = Callable.apply2$269(x$280,3,4) in
-//│   x$281
+//│     let x$278 = Lambda$273(a$240,b$241) in
+//│     x$278
+//│   let* (x$279) = add4(1,2) in
+//│   let x$280 = Callable.apply2$268(x$279,3,4) in
+//│   x$280
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -197,19 +197,19 @@ dummy()(1, 2)
 //│ = 3
 //│ LLIR:
 //│   class Lambda_add() extends Callable {
-//│     def apply2$305(arg$301,arg$302) =
-//│       let* (x$306) = add(arg$301,arg$302) in
-//│       x$306
+//│     def apply2$268(arg$299,arg$300) =
+//│       let* (x$303) = add(arg$299,arg$300) in
+//│       x$303
 //│   }
-//│   def add$282(a$284,b$285) =
-//│     let x$300 = +(a$284,b$285) in
-//│     x$300
-//│   def dummy$283() =
-//│     let x$307 = Lambda_add$303() in
-//│     x$307
-//│   let* (x$308) = dummy() in
-//│   let x$309 = Callable.apply2$305(x$308,1,2) in
-//│   x$309
+//│   def add$281(a$283,b$284) =
+//│     let x$298 = +(a$283,b$284) in
+//│     x$298
+//│   def dummy$282() =
+//│     let x$304 = Lambda_add$301() in
+//│     x$304
+//│   let* (x$305) = dummy() in
+//│   let x$306 = Callable.apply2$268(x$305,1,2) in
+//│   x$306
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -272,55 +272,55 @@ main()
 //│ = Cons(4, Cons(5, Nil))
 //│ LLIR:
 //│   class List()
-//│   class Cons(head$322,tail$323) extends List
+//│   class Cons(head$319,tail$320) extends List
 //│   class Nil() extends List
 //│   class Lambda() extends Callable {
-//│     def apply1$395(x$340) =
-//│       let* (x$406) = inc(x$340) in
-//│       x$406
+//│     def apply1$219(x$337) =
+//│       let* (x$401) = inc(x$337) in
+//│       x$401
 //│   }
 //│   class Lambda_inc() extends Callable {
-//│     def apply1$395(arg$412) =
-//│       let* (x$415) = inc(arg$412) in
-//│       x$415
+//│     def apply1$219(arg$407) =
+//│       let* (x$410) = inc(arg$407) in
+//│       x$410
 //│   }
-//│   def map$311(f$326,l$327) =
-//│     case l$327 of
-//│       Cons$319 =>
-//│         let x$392 = l$327.<Cons$319:head> in
-//│         let x$393 = l$327.<Cons$319:tail> in
-//│         let x$394 = Callable.apply1$395(f$326,x$392) in
-//│         let* (x$396) = map(f$326,x$393) in
-//│         let x$397 = Cons$319(x$394,x$396) in
-//│         x$397
+//│   def map$308(f$323,l$324) =
+//│     case l$324 of
+//│       Cons$316 =>
+//│         let x$388 = l$324.<Cons$316:head> in
+//│         let x$389 = l$324.<Cons$316:tail> in
+//│         let x$390 = Callable.apply1$219(f$323,x$388) in
+//│         let* (x$391) = map(f$323,x$389) in
+//│         let x$392 = Cons$316(x$390,x$391) in
+//│         x$392
 //│       _ =>
-//│         case l$327 of
-//│           Nil$324 =>
-//│             let x$399 = Nil$324() in
-//│             x$399
+//│         case l$324 of
+//│           Nil$321 =>
+//│             let x$394 = Nil$321() in
+//│             x$394
 //│           _ =>
 //│             panic "match error"
-//│   def j$398() =
-//│     jump j$391()
-//│   def j$391() =
+//│   def j$393() =
+//│     jump j$387()
+//│   def j$387() =
 //│     null
-//│   def inc$314(x$336) =
-//│     let x$400 = +(x$336,1) in
-//│     x$400
-//│   def main$312() =
-//│     let x$401 = Nil$324() in
-//│     let x$402 = Cons$319(2,x$401) in
-//│     let x$403 = Cons$319(1,x$402) in
-//│     let x$407 = Lambda$404() in
-//│     let* (x$408) = map(x$407,x$403) in
-//│     let x$409 = Nil$324() in
-//│     let x$410 = Cons$319(4,x$409) in
-//│     let x$411 = Cons$319(3,x$410) in
-//│     let x$416 = Lambda_inc$413() in
-//│     let* (x$417) = map(x$416,x$411) in
-//│     x$417
-//│   let* (x$418) = main() in
-//│   x$418
+//│   def inc$311(x$333) =
+//│     let x$395 = +(x$333,1) in
+//│     x$395
+//│   def main$309() =
+//│     let x$396 = Nil$321() in
+//│     let x$397 = Cons$316(2,x$396) in
+//│     let x$398 = Cons$316(1,x$397) in
+//│     let x$402 = Lambda$399() in
+//│     let* (x$403) = map(x$402,x$398) in
+//│     let x$404 = Nil$321() in
+//│     let x$405 = Cons$316(4,x$404) in
+//│     let x$406 = Cons$316(3,x$405) in
+//│     let x$411 = Lambda_inc$408() in
+//│     let* (x$412) = map(x$411,x$406) in
+//│     x$412
+//│   let* (x$413) = main() in
+//│   x$413
 //│ 
 //│ Interpreted:
 //│ Cons(4,Cons(5,Nil()))

@@ -161,43 +161,48 @@ case class CompilationUnit(includes: Ls[Str], decls: Ls[Decl], defs: Ls[Def]):
   def toDocumentWithoutHidden: Document =
     val hiddenNames: Set[Str] = Set()
     defs.filterNot { 
-      case Def.StructDef(name, _, _, _) => hiddenNames.contains(name.stripPrefix("_mls_"))
+      case Def.StructDef(name, _, _, _, _) => hiddenNames.contains(name.stripPrefix("_mls_"))
       case _ => false
     }.map(_.toDocument).mkDocument(doc" # ")
 
 enum Decl:
   case StructDecl(name: Str)
   case EnumDecl(name: Str)
-  case FuncDecl(ret: Type, name: Str, args: Ls[Type])
+  case FuncDecl(ret: Type, name: Str, args: Ls[Type], or: Bool = false, virt: Bool = false)
   case VarDecl(name: Str, typ: Type)
 
   def toDocument: Document =
     def aux(x: Decl): Document = x match
       case StructDecl(name) => doc"struct $name;"
       case EnumDecl(name) => doc"enum $name;"
-      case FuncDecl(ret, name, args) =>
-        doc"${ret.toDocument()} $name(${Type.toDocuments(args, sep = ", ")});"
+      case FuncDecl(ret, name, args, or, virt) =>
+        val docVirt = (if virt then doc"virtual " else doc"")
+        val docSpecRet = ret.toDocument()
+        val docArgs = Type.toDocuments(args, sep = ", ")
+        val docOverride = if or then doc" override" else doc""
+        doc"$docVirt$docSpecRet $name($docArgs)$docOverride;"
       case VarDecl(name, typ) => 
         doc"${typ.toDocument()} $name;"
     aux(this)
 
 enum Def:
-  case StructDef(name: Str, fields: Ls[(Str, Type)], inherit: Opt[Ls[Str]], methods: Ls[Def] = Ls.empty)
+  case StructDef(name: Str, fields: Ls[(Str, Type)], inherit: Opt[Ls[Str]], methods: Ls[Def] = Ls.empty, methods_decl: Ls[Decl] = Ls.empty)
   case EnumDef(name: Str, fields: Ls[(Str, Opt[Int])])
-  case FuncDef(specret: Type, name: Str, args: Ls[(Str, Type)], body: Stmt.Block, or: Bool = false, virt: Bool = false)
+  case FuncDef(specret: Type, name: Str, args: Ls[(Str, Type)], body: Stmt.Block, or: Bool = false, virt: Bool = false, scope: Opt[Str] = None)
   case VarDef(typ: Type, name: Str, init: Opt[Expr])
   case RawDef(raw: Str)
 
   def toDocument: Document =
     def aux(x: Def): Document = x match
-      case StructDef(name, fields, inherit, defs) =>
+      case StructDef(name, fields, inherit, defs, decls) =>
         val docFirst = doc"struct $name${inherit.fold(doc"")(x => doc": public ${x.mkDocument(doc", ")}")} {"
         val docFields = fields.map {
           case (name, typ) => doc"${typ.toDocument()} $name;"
         }.mkDocument(doc" # ")
         val docDefs = defs.map(_.toDocument).mkDocument(doc" # ")
+        val docDecls = decls.map(_.toDocument).mkDocument(doc" # ")
         val docLast = "};"
-        doc"$docFirst #{  # $docFields # $docDefs #}  # $docLast"
+        doc"$docFirst #{  # $docFields # $docDefs # $docDecls #}  # $docLast"
       case EnumDef(name, fields) =>
         val docFirst = doc"enum $name {"
         val docFields = fields.map {
@@ -205,13 +210,14 @@ enum Def:
         }.mkDocument(doc" # ")
         val docLast = "};"
         doc"$docFirst #{  # $docFields #}  # $docLast"
-      case FuncDef(specret, name, args, body, or, virt) =>
+      case FuncDef(specret, name, args, body, or, virt, scope) =>
         val docVirt = (if virt then doc"virtual " else doc"")
         val docSpecRet = specret.toDocument()
         val docArgs = Type.toDocuments(args, sep = ", ")
         val docOverride = if or then doc" override" else doc""
         val docBody = body.toDocument
-        doc"$docVirt$docSpecRet $name($docArgs)$docOverride ${body.toDocument}"
+        val docScope = scope.fold(doc"")(x => doc"$x::")
+        doc"$docVirt$docSpecRet $docScope$name($docArgs)$docOverride ${body.toDocument}"
       case VarDef(typ, name, init) =>
         val docTyp = typ.toDocument()
         val docInit = init.fold(raw(""))(x => doc" = ${x.toDocument}")

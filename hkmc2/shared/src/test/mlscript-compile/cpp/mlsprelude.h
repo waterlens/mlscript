@@ -206,6 +206,24 @@ public:
     assert(false);
   }
 
+  _mlsValue operator!=(const _mlsValue &other) const {
+    if (isInt63() && other.isInt63())
+      return _mlsValue::fromBoolLit(!eqInt63(other));
+    assert(false);
+  }
+
+  _mlsValue operator&&(const _mlsValue &other) const {
+    if (isInt63() && other.isInt63())
+      return _mlsValue::fromBoolLit(asInt63() && other.asInt63());
+    assert(false);
+  }
+
+  _mlsValue operator||(const _mlsValue &other) const {
+    if (isInt63() && other.isInt63())
+      return _mlsValue::fromBoolLit(asInt63() || other.asInt63());
+    assert(false);
+  }
+
   _mlsValue operator+(const _mlsValue &other) const {
     if (isInt63() && other.isInt63())
       return addInt63(other);

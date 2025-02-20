@@ -50,21 +50,17 @@ fun while_(p, f, x) = if p(x) then while_(p, f, f(x)) else x
 fun reverse(l) =
   fun r(l', l) = if l is x :: xs then r(x :: l', xs) else l'
   r(Nil, l)
-//│ ═══[COMPILATION ERROR] Non top-level definition r not supported
-//│ Stopped due to an error during the Llir generation
 
 fun map(f, xs) = if xs is
   x :: xs then f(x) :: map(f, xs)
   Nil then Nil
+
 
 fun listLen(ls) =
   fun l(ls, a) = if ls is
     Nil then a
     h :: t then l(t, a + 1)
   l(ls, 0)
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Non top-level definition l not supported
-//│ Stopped due to an error during the Llir generation
 
 fun listEq(xs, ys) = if
   xs is Nil and ys is Nil then true
@@ -196,9 +192,6 @@ fun sum(xs) =
     Nil then a
     h :: t then go(t, a + h)
   go(xs, 0)
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Non top-level definition go not supported
-//│ Stopped due to an error during the Llir generation
 
 fun null_(ls) = if ls is
   Nil then true
@@ -211,9 +204,6 @@ fun unzip(l) =
     Nil then [reverse(a), reverse(b)]
     [x, y] :: t then f(t, x :: a,  y :: b)
   f(l, Nil, Nil)
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Non top-level definition f not supported
-//│ Stopped due to an error during the Llir generation
 
 fun zip3(xs, ys, zs) = if
   xs is x :: xs and ys is y :: ys and zs is z :: zs then [x, y, z] :: zip3(xs, ys, zs)
@@ -230,9 +220,6 @@ fun transpose(xss) =
     Nil then Nil
     Nil :: xss then transpose(xss)
     (x :: xs) :: xss and unzip(lscomp(xss)) is [hds, tls] then combine(x, hds, xs, tls)
-//│ FAILURE: Unexpected compilation error
-//│ ═══[COMPILATION ERROR] Non top-level definition lscomp not supported
-//│ Stopped due to an error during the Llir generation
 
 fun break_(p, ls) = if ls is
   Nil then [Nil, Nil]
@@ -243,4 +230,3 @@ fun break_(p, ls) = if ls is
 fun flatMap(f, ls) = if ls is
   Nil then Nil
   h :: t then append(f(h), flatMap(f, t))
-

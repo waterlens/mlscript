@@ -29,6 +29,7 @@ final case class FuncInfo(paramsSize: Int)
 
 final case class BuiltinSymbols(
   var callableSym: Opt[Local] = None,
+  var thisSym: Opt[Local] = None,
   fieldSym: MutMap[Int, Local] = MutMap.empty,
   applySym: MutMap[Int, Local] = MutMap.empty,
   tupleSym: MutMap[Int, Local] = MutMap.empty,
@@ -44,7 +45,7 @@ final case class Ctx(
   is_top_level: Bool = true,
   method_class: Opt[Symbol] = None,
   free_vars: Set[Local] = Set.empty,
-  builtin_sym: BuiltinSymbols = BuiltinSymbols(),
+  builtin_sym: BuiltinSymbols = BuiltinSymbols()
 ):
   def addFuncName(n: Local, paramsSize: Int) = copy(fn_ctx = fn_ctx + (n -> FuncInfo(paramsSize)))
   def findFuncName(n: Local)(using Raise) = fn_ctx.get(n) match
@@ -65,7 +66,6 @@ final case class Ctx(
 
 object Ctx:
   def empty = Ctx(ListBuffer.empty, ListBuffer.empty)
-
 
 final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   import tl.{trace, log, logs}
@@ -100,7 +100,10 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
     trace[Set[Local]](s"freeVarsFilter begin", x => s"freeVarsFilter end: $x"):
       fvs.filter:
         case _: (BuiltinSymbol | TopLevelSymbol | ClassSymbol | MemberSymbol[?]) => false
-        case _ => true
+        case x => true
+
+  private def symMap(s: Local)(using ctx: Ctx)(using Raise, Scope) =
+    ctx.findName(s)
 
   private def newTemp = TempSymbol(N, "x")
   private def newNamedTemp(name: Str) = TempSymbol(N, name)
@@ -111,17 +114,24 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
     ClassSymbol(Tree.TypeDef(hkmc2.syntax.Cls, Tree.Empty(), N, N), Tree.Ident(s"Tuple$len"))
   private def newMemSym(name: Str) = TermSymbol(hkmc2.syntax.ImmutVal, None, Tree.Ident(name))
   private def newMethodSym(name: Str) = TermSymbol(hkmc2.syntax.Fun, None, Tree.Ident(name))
+  private def newBuiltinSym(name: Str) = BuiltinSymbol(name, false, false, false, false)
   private def builtinField(n: Int)(using Ctx) = summon[Ctx].builtin_sym.fieldSym.getOrElseUpdate(n, newMemSym(s"field$n"))
   private def builtinApply(n: Int)(using Ctx) = summon[Ctx].builtin_sym.applySym.getOrElseUpdate(n, newMethodSym(s"apply$n"))
   private def builtinTuple(n: Int)(using Ctx) = summon[Ctx].builtin_sym.tupleSym.getOrElseUpdate(n, newTupleSym(n))
   private def builtinCallable(using ctx: Ctx) : Local =
     ctx.builtin_sym.callableSym match
       case None => 
-        val sym = newClassSym("Callable")
+        val sym = newBuiltinSym("Callable")
         ctx.builtin_sym.callableSym = Some(sym);
         sym
       case Some(value) => value
-    
+  private def builtinThis(using ctx: Ctx) : Local =
+    ctx.builtin_sym.thisSym match
+      case None => 
+        val sym = newBuiltinSym("<this>")
+        ctx.builtin_sym.thisSym = Some(sym);
+        sym
+      case Some(value) => value
 
   private def bBind(name: Opt[Local], e: Result, body: Block)(k: TrivialExpr => Ctx ?=> Node)(ct: Block)(using ctx: Ctx)(using Raise, Scope): Node =
     trace[Node](s"bBind begin: $name", x => s"bBind end: ${x.show}"):
@@ -152,12 +162,21 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
         case r: TrivialExpr => bPaths(xs):
           case rs: Ls[TrivialExpr] => k(r :: rs)
   
+  private def bNestedFunDef(e: FunDefn)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope): Node =
+    val FunDefn(_own, sym, params, body) = e
+    // generate it as a single named lambda expression that may be self-recursing
+    if params.length == 0 then
+      errStop(msg"Function without arguments not supported: ${params.length.toString}")
+    else
+      val fstParams = params.head
+      val wrappedLambda = params.tail.foldRight(body)((params, acc) => Return(Value.Lam(params, acc), false))
+      bLam(Value.Lam(fstParams, wrappedLambda), S(sym.nme), S(sym))(k)(using ctx)
+
   private def bFunDef(e: FunDefn)(using ctx: Ctx)(using Raise, Scope): Func =
     trace[Func](s"bFunDef begin: ${e.sym}", x => s"bFunDef end: ${x.show}"):
       val FunDefn(_own, sym, params, body) = e
-      if !ctx.is_top_level then
-        errStop(msg"Non top-level definition ${sym.nme} not supported")
-      else if params.length == 0 then
+      assert(ctx.is_top_level)
+      if params.length == 0 then
         errStop(msg"Function without arguments not supported: ${params.length.toString}")
       else 
         val paramsList = params.head.params
@@ -210,24 +229,25 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
           funcs.map(f => f.name -> f).toMap,
         )
   
-  private def bLam(lam: Value.Lam, nameHint: Opt[Str])(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
+  private def bLam(lam: Value.Lam, nameHint: Opt[Str], recName: Opt[Local])(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bLam begin", x => s"bLam end: ${x.show}"):
       val Value.Lam(params, body) = lam
       // Generate an auxiliary class inheriting from Callable
       val freeVars = freeVarsFilter(lam.freeVars -- lam.body.definedVars -- ctx.fn_ctx.keySet)
       val name = newClassSym(s"Lambda${nameHint.fold("")(x => "_" + x)}")
-      val clsParams = freeVars.toList
-      val args = freeVars.toList
+      val args = freeVars.toList.map(symMap)
+      val clsParams = args
       val ctx2 = ctx.setFreeVars(freeVars)
       val applyParams = params.params.map(x => x -> x.sym)
       val ctx3 = applyParams.foldLeft(ctx2)((acc, x) => acc.addName(x._1.sym, x._1.sym)).nonTopLevel
+      val ctx4 = recName.fold(ctx3)(x => ctx3.addName(x, builtinThis))
       val pl = applyParams.map(_._1.sym)
       val method = Func(
         uid.make,
         builtinApply(params.params.length),
         params = pl,
         resultNum = 1,
-        body = bBlockWithEndCont(body)(x => Node.Result(Ls(x)))(using ctx3)
+        body = bBlockWithEndCont(body)(x => Node.Result(Ls(x)))(using ctx4)
       )
       ctx.class_acc += ClassInfo(
         uid.make,
@@ -237,7 +257,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
         Map(method.name -> method),
       )
       val v: Local = newTemp
-      Node.LetExpr(v, Expr.CtorApp(name, args.map(sr)), k(v |> sr)(using ctx))
+      val new_ctx = recName.fold(ctx)(x => ctx.addName(x, v))
+      Node.LetExpr(v, Expr.CtorApp(name, args.map(sr)), k(v |> sr)(using new_ctx))
 
   private def bValue(v: Value)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bValue { $v } begin", x => s"bValue end: ${x.show}"):
@@ -255,12 +276,12 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
               (0 until f.paramsSize).zip(tempSymbols).map((_n, sym) =>
                 Param(FldFlags.empty, sym, N)).toList)
             val app = Call(v, tempSymbols.map(x => Arg(false, Value.Ref(x))).toList)(true, false)
-            bLam(Value.Lam(paramsList, Return(app, false)), S(l.nme))(k)
+            bLam(Value.Lam(paramsList, Return(app, false)), S(l.nme), N)(k)
           case None =>
             k(ctx.findName(l) |> sr)
       case Value.This(sym) => errStop(msg"Unsupported value: This")
       case Value.Lit(lit) => k(Expr.Literal(lit))
-      case lam @ Value.Lam(params, body) => bLam(lam, N)(k)
+      case lam @ Value.Lam(params, body) => bLam(lam, N, N)(k)
       case Value.Arr(elems) =>
         bArgs(elems):
           case args: Ls[TrivialExpr] =>
@@ -347,16 +368,18 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
             val v: Local = newTemp
             Node.LetExpr(v, Expr.CtorApp(fromMemToClass(sym), args), k(v |> sr))
       case Call(s @ Value.Ref(sym), args) =>
-        bArgs(args):
-          case args: Ls[TrivialExpr] =>
             val v: Local = newTemp
             ctx.fn_ctx.get(sym) match
               case Some(f) =>
-                Node.LetCall(Ls(v), sym, args, k(v |> sr))
+                bArgs(args):
+                  case args: Ls[TrivialExpr] =>
+                    Node.LetCall(Ls(v), sym, args, k(v |> sr))
               case None =>
                 bPath(s):
                   case f: TrivialExpr =>
-                    Node.LetMethodCall(Ls(v), builtinCallable, builtinApply(args.length), f :: args, k(v |> sr))
+                    bArgs(args):
+                      case args: Ls[TrivialExpr] =>
+                        Node.LetMethodCall(Ls(v), builtinCallable, builtinApply(args.length), f :: args, k(v |> sr))
       case Call(s @ Select(r @ Value.Ref(sym), Tree.Ident(fld)), args) if s.symbol.isDefined =>
         bPath(r):
           case r =>
@@ -441,9 +464,14 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
         bBind(S(lhs), rhs, rest)(k)(ct)
       case AssignField(lhs, nme, rhs, rest) => TODO("AssignField not supported")
       case Define(fd @ FunDefn(_own, sym, params, body), rest) =>
-        val f = bFunDef(fd)(using ctx)
-        ctx.def_acc += f
-        bBlock(rest)(k)(ct)(using ctx)
+        if ctx.is_top_level then
+          val f = bFunDef(fd)
+          ctx.def_acc += f
+          bBlock(rest)(k)(ct)
+        else
+          bNestedFunDef(fd):
+            case r: TrivialExpr =>
+              bBlock(rest)(k)(ct)
       case Define(_: ClsLikeDefn, rest) => bBlock(rest)(k)(ct)
       case End(msg) => k(Expr.Literal(Tree.UnitLit(false)))
       case _: Block =>

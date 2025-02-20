@@ -11,6 +11,7 @@ import hkmc2.codegen.llir.*
 import hkmc2.syntax.Tree
 import hkmc2.codegen.Local
 import hkmc2.utils.TraceLogger
+import hkmc2.semantics.BuiltinSymbol
 
 enum Stuck:
   case StuckExpr(expr: Expr, msg: Str)
@@ -51,6 +52,7 @@ class Interpreter(tl: TraceLogger):
     bindingCtx: Map[Local, Value],
     classCtx: Map[Local, ClassInfo],
     funcCtx: Map[Local, Func],
+    thisVal: Opt[Value],
   )
   
   import Node._
@@ -67,7 +69,10 @@ class Interpreter(tl: TraceLogger):
     case ("-", Li(IntLit(x)), Li(IntLit(y))) => S(Li(IntLit(x - y)))
     case ("*", Li(IntLit(x)), Li(IntLit(y))) => S(Li(IntLit(x * y)))
     case ("/", Li(IntLit(x)), Li(IntLit(y))) => S(Li(IntLit(x / y)))
+    case ("&&", Li(BoolLit(x)), Li(BoolLit(y))) => S(if x && y then getTrue else getFalse)
+    case ("||", Li(BoolLit(x)), Li(BoolLit(y))) => S(if x || y then getTrue else getFalse)
     case ("==", Li(IntLit(x)), Li(IntLit(y))) => S(if x == y then getTrue else getFalse)
+    case ("===", Li(IntLit(x)), Li(IntLit(y))) => S(if x == y then getTrue else getFalse)
     case ("!=", Li(IntLit(x)), Li(IntLit(y))) => S(if x != y then getTrue else getFalse)
     case ("<=", Li(IntLit(x)), Li(IntLit(y))) => S(if x <= y then getTrue else getFalse)
     case (">=", Li(IntLit(x)), Li(IntLit(y))) => S(if x >= y then getTrue else getFalse)
@@ -80,20 +85,22 @@ class Interpreter(tl: TraceLogger):
     var stuck: Opt[Stuck] = None
     exprs foreach { expr =>
       stuck match
-        case None => eval(expr) match
+        case None => eval_t(expr) match
           case L(x) => stuck = Some(x)
           case R(x) => values += x
         case _ => ()
     } 
     stuck.toLeft(values.toList)
 
-  private def eval(expr: TrivialExpr)(using ctx: Ctx): Result[Value] = expr match
-    case e @ Ref(name) => ctx.bindingCtx.get(name).toRight(StuckExpr(e, s"undefined variable $name"))
-    case Literal(lit) => R(Value.Literal(lit))
+  private def eval_t(expr: TrivialExpr)(using ctx: Ctx): Result[Value] = expr match
+    case Ref(x: BuiltinSymbol) => x.nme match
+      case "<this>" => ctx.thisVal.toRight(StuckExpr(expr.toExpr, s"undefined this value"))
+      case _ => L(StuckExpr(expr.toExpr, s"undefined builtin ${x.nme}"))
+    case Ref(x) => ctx.bindingCtx.get(x).toRight(StuckExpr(expr.toExpr, s"undefined variable $x"))
+    case Literal(x) => R(Value.Literal(x))
   
   private def eval(expr: Expr)(using ctx: Ctx): Result[Value] = expr match
-    case Ref(x) => ctx.bindingCtx.get(x).toRight(StuckExpr(expr, s"undefined variable $x"))
-    case Literal(x) => R(Value.Literal(x))
+    case x: TrivialExpr => eval_t(x)
     case CtorApp(cls, args) =>
       for
         xs <- evalArgs(args)
@@ -112,15 +119,15 @@ class Interpreter(tl: TraceLogger):
       evalArgs(args).flatMap(
         xs => 
           name.nme match
-            case "+" | "-" | "*" | "/" | "==" | "!=" | "<=" | ">=" | "<" | ">" => 
+            case "+" | "-" | "*" | "/" | "==" | "===" | "!=" | "<=" | ">=" | "<" | ">" => 
               if xs.length < 2 then break:
                 L(StuckExpr(expr, s"not enough arguments for basic operation $name"))
               else eval(name.nme, xs.head, xs.tail.head).toRight(StuckExpr(expr, s"unable to evaluate basic operation"))
             case _ => L(StuckExpr(expr, s"unexpected basic operation $name")))
     case AssignField(assignee, cls, field, value) =>
       for
-        x <- eval(Ref(assignee): TrivialExpr)
-        y <- eval(value)
+        x <- eval_t(Ref(assignee): TrivialExpr)
+        y <- eval_t(value)
         res <- x match
           case obj @ Value.Class(cls2, xs) if cls == cls2 =>
             xs.zip(cls2.fields).find{_._2.nme == field} match
@@ -143,7 +150,7 @@ class Interpreter(tl: TraceLogger):
         res <- eval(func.body)(using ctx1)
       yield res
     case Case(scrut, cases, default) =>
-      eval(scrut) flatMap {
+      eval_t(scrut) flatMap {
         case Value.Class(cls, fields) => 
           cases.find {
             case (Pat.Class(cls2), _) => cls.name == cls2
@@ -182,9 +189,12 @@ class Interpreter(tl: TraceLogger):
         cls.methods.find(_._1.nme == method.nme).map(_._2)
       for
         ys <- evalArgs(args).flatMap {
-          case Value.Class(cls2, xs) :: args =>
+          case (ths @ Value.Class(cls2, xs)) :: args =>
             lookup_method(cls2, method).toRight(StuckNode(node, s"undefined method ${method.nme}")).flatMap { method =>
-              val ctx1 = ctx.copy(bindingCtx = ctx.bindingCtx ++ cls2.fields.zip(xs) ++ method.params.zip(args))
+              val ctx1 = ctx.copy(
+                bindingCtx = ctx.bindingCtx ++ cls2.fields.zip(xs) ++ method.params.zip(args),
+                thisVal = S(ths)
+              )
               eval(method.body)(using ctx1)
             }
           case _ => L(StuckNode(node, s"not enough arguments for method call, or the first argument is not a class"))
@@ -209,6 +219,7 @@ class Interpreter(tl: TraceLogger):
       bindingCtx = Map.empty,
       classCtx = classes.map(cls => (cls.name, cls)).toMap,
       funcCtx = defs.map(func => (func.name, func)).toMap,
+      thisVal = None,
     )
     eval(main) match
       case R(x) => x

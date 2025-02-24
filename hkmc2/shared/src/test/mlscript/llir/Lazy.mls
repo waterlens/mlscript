@@ -1,0 +1,116 @@
+:llir
+
+:sllir
+:scpp
+abstract class Lazy[out A](init: () -> A) with
+  fun get: A
+fun lazy(x) = Lazy(x)
+fun force(x) = if x is Lazy then x.Lazy#get()
+fun side_effect() =
+  console.log("executed")
+  1
+fun main() =
+  let x = lazy(() => side_effect())
+  let y = force(x)
+  let y1 = force(x) // force again, but should not execute side_effect again
+  ()
+main()
+//│ LLIR:
+//│   class Lazy(init$225)
+//│   class Lambda() extends Callable {
+//│     def apply0$265() =
+//│       let* (x$266) = side_effect() in
+//│       x$266
+//│   }
+//│   def lazy$217(x$227) =
+//│     let x$257 = Lazy$222(x$227) in
+//│     x$257
+//│   def force$218(x$230) =
+//│     case x$230 of
+//│       Lazy$222 =>
+//│         let x$259 = Lazy.get$216(x$230) in
+//│         x$259
+//│       _ =>
+//│         panic "match error"
+//│   def j$258() =
+//│     null
+//│   def side_effect$221() =
+//│     let* (x$260) = <builtin>("println","executed") in
+//│     1
+//│   def main$219() =
+//│     let x$268 = Lambda$263() in
+//│     let* (x$262) = lazy(x$268) in
+//│     let* (x$269) = force(x$262) in
+//│     let* (x$270) = force(x$262) in
+//│     undefined
+//│   let* (x$271) = main() in
+//│   x$271
+//│ 
+//│ Cpp:
+//│ #include "mlsprelude.h"
+//│ struct _mls_Lazy;
+//│ struct _mls_Lambda;
+//│ _mlsValue _mls_main();
+//│ _mlsValue _mls_force(_mlsValue);
+//│ _mlsValue _mls_lazy(_mlsValue);
+//│ _mlsValue _mls_j();
+//│ _mlsValue _mls_side_effect();
+//│ _mlsValue _mlsMain();
+//│ struct _mls_Lambda: public _mls_Callable {
+//│   
+//│   constexpr static inline const char *typeName = "Lambda";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); }
+//│   virtual void destroy() override {  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
+//│   virtual _mlsValue _mls_apply0();
+//│ };
+//│ _mlsValue _mls_lazy(_mlsValue _mls_x6) {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x5 = _mlsValue::create<_mls_Lazy>(_mls_x6);
+//│   _mls_retval = _mls_x5;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_force(_mlsValue _mls_x7) {
+//│   _mlsValue _mls_retval;
+//│   if (_mlsValue::isValueOf<_mls_Lazy>(_mls_x7)) {
+//│     auto _mls_x8 = _mlsMethodCall<_mls_Lazy>(_mls_x7)->_mls_get();
+//│     _mls_retval = _mls_x8;
+//│   } else {
+//│     throw std::runtime_error("match error");
+//│   }
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_side_effect() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x9 = _mls_builtin_println(_mlsValue::create<_mls_Str>("executed"));
+//│   _mls_retval = _mlsValue::fromIntLit(1);
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_main() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x1 = _mlsValue::create<_mls_Lambda>();
+//│   auto _mls_x2 = _mls_lazy(_mls_x1);
+//│   auto _mls_x3 = _mls_force(_mls_x2);
+//│   auto _mls_x4 = _mls_force(_mls_x2);
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_Lambda::_mls_apply0() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x = _mls_side_effect();
+//│   _mls_retval = _mls_x;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mlsMain() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x10 = _mls_main();
+//│   _mls_retval = _mls_x10;
+//│   return _mls_retval;
+//│ }
+//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }

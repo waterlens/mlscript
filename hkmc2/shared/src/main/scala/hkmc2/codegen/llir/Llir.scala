@@ -13,6 +13,7 @@ import util.Sorting
 import collection.immutable.SortedSet
 import language.implicitConversions
 import collection.mutable.{Map as MutMap, Set as MutSet, HashMap, ListBuffer}
+import hkmc2.escaped
 
 private def raw(x: String): Document = doc"$x"
 
@@ -136,7 +137,7 @@ enum Expr:
       case Literal(Tree.BoolLit(lit)) => s"$lit"
       case Literal(Tree.IntLit(lit)) => s"$lit"
       case Literal(Tree.DecLit(lit)) => s"$lit"
-      case Literal(Tree.StrLit(lit)) => s"$lit"
+      case Literal(Tree.StrLit(lit)) => s"${lit.escaped}"
       case Literal(Tree.UnitLit(undefinedOrNull)) => if undefinedOrNull then "undefined" else "null"
       case CtorApp(cls, args) =>
         doc"${docSymWithUid(cls)}(${args.map(_.toString).mkString(",")})"

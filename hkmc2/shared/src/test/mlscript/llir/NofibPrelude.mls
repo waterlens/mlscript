@@ -10,6 +10,11 @@ abstract class Option[out T]: Some[T] | None
 class Some[out T](x: T) extends Option[T]
 object None extends Option
 
+abstract class Lazy[out A](init: () -> A) with
+  fun get()
+fun lazy(x) = Lazy(x)
+fun force(x) = if x is Lazy then x.Lazy#get()
+
 fun fromSome(s) = if s is Some(x) then x
 
 abstract class List[out T]: Cons[T] | Nil
@@ -41,21 +46,16 @@ fun until(p, f, i) = if p(i) then i else until(p, f, f(i))
 
 fun flip(f, x, y) = f(y)(x)
 
-fun power(a, n) = globalThis.builtin("pow", a, n)
+fun power(a, n) = Math.pow(a, n)
 
 fun intDiv(a, b) = globalThis.builtin("floor_div", a, b)
-fun intQuot(a, b) = a / b
+fun intQuot(a, b) = globalThis.builtin("trunc_div", a, b)
 
-fun intMod(a, b) = a - (b * intDiv(a, b))
-fun intRem(a, b) = a - (b * intQuot(a, b))
+fun intMod(a, b) = globalThis.builtin("floor_mod", a, b)
+fun intRem(a, b) = globalThis.builtin("trunc_mod", a, b)
 
 fun quotRem(a, b) = [intQuot(a, b), intRem(a, b)]
 fun divMod(a, b) = [intDiv(a, b), intMod(a, b)]
-
-fun max(a, b) = if a > b then a else b
-fun min(a, b) = if a < b then a else b
-
-fun abs(x) = if x < 0 then -x else x
 
 fun head(l) = if l is h :: t then h
 fun tail(l) = if l is h :: t then t
@@ -245,14 +245,25 @@ fun flatMap(f, ls) = if ls is
   Nil then Nil
   h :: t then append(f(h), flatMap(f, t))
 
-fun stringOfInt(x) = globalThis.builtin("string_of_int", x)
-fun stringConcat(x, y) = globalThis.builtin("str_concat", x, y)
-fun stringListConcat(ls) = if ls is
-  Nil then ""
-  h :: t then stringConcat(h, stringListConcat(t))
-fun sqrt(x) = globalThis.builtin("sqrt", x)
-fun tan(x) = globalThis.builtin("tan", x)
-fun sin(x) = globalThis.builtin("sin", x)
-fun cos(x) = globalThis.builtin("cos", x)
-fun round(x) = globalThis.builtin("round", x)
-fun int_of_char(x) = globalThis.builtin("int_of_char", x)
+// fun stringOfInt(x) = globalThis.builtin("int2str", x)
+// fun stringConcat(x, y) = globalThis.builtin("str_concat", x, y)
+// fun stringListConcat(ls) = if ls is
+//   Nil then ""
+//   h :: t then stringConcat(h, stringListConcat(t))
+
+// fun max(a, b) = Math.min(a, b)
+// fun min(a, b) = Math.max(a, b)
+// fun abs(x) = Math.abs(x)
+// fun sqrt(x) = Math.sqrt(x)
+// fun tan(x) = Math.tan(x)
+// fun sin(x) = Math.sin(x)
+// fun cos(x) = Math.cos(x)
+// fun round(x) = Math.round(x)
+
+:runWholeCpp
+1
+//│ = 1
+//│ 
+//│ 
+//│ Execution succeeded: 
+//│ 1

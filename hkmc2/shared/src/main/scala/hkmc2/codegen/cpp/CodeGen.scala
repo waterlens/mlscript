@@ -10,6 +10,7 @@ import hkmc2.codegen.Local
 import hkmc2.utils.{Scope, TraceLogger}
 import hkmc2.Raise
 import hkmc2.semantics.BuiltinSymbol
+import hkmc2.escaped
 
 class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   import tl.{trace, log, logs}
@@ -26,13 +27,13 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   val mlsMainName = "_mlsMain"
   val mlsPrelude = "#include \"mlsprelude.h\""
   val mlsPreludeImpl = "#include \"mlsprelude.cpp\""
-  def mlsIsInternalClass(sym: Local) =
-    sym.nme.startsWith("Callable")
+  val builtinClassSymbolNames = Set("Callable", "Lazy")
+  def mlsIsInternalClass(sym: Local) = builtinClassSymbolNames.contains(sym.nme)
   val mlsObject = "_mlsObject"
   val mlsBuiltin = "builtin"
   val mlsEntryPoint = s"int main() { return _mlsLargeStack(_mlsMainWrapper); }";
   def mlsIntLit(x: BigInt) = Expr.Call(Expr.Var("_mlsValue::fromIntLit"), Ls(Expr.IntLit(x)))
-  def mlsStrLit(x: Str) = Expr.Call(Expr.Var("_mlsValue::fromStrLit"), Ls(Expr.StrLit(x)))
+  def mlsStrLit(x: Str) = Expr.Call(Expr.Var("_mlsValue::create<_mls_Str>"), Ls(Expr.StrLit(x)))
   def mlsCharLit(x: Char) = Expr.Call(Expr.Var("_mlsValue::fromIntLit"), Ls(Expr.CharLit(x)))
   def mlsNewValue(cls: Str, args: Ls[Expr]) = Expr.Call(Expr.Var(s"_mlsValue::create<$cls>"), args)
   def mlsIsValueOf(cls: Str, scrut: Expr) = Expr.Call(Expr.Var(s"_mlsValue::isValueOf<$cls>"), Ls(scrut))

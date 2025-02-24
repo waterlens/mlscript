@@ -15,6 +15,7 @@ import hkmc2.syntax.Tree
 import hkmc2.semantics.*
 import hkmc2.codegen.llir.{ Program => LlirProgram, Node, Func }
 import hkmc2.codegen.Program
+import hkmc2.codegen.cpp.Expr.StrLit
 
 
 def err(msg: Message)(using Raise): Unit =
@@ -34,7 +35,8 @@ final case class BuiltinSymbols(
   fieldSym: MutMap[Int, Local] = MutMap.empty,
   applySym: MutMap[Int, Local] = MutMap.empty,
   tupleSym: MutMap[Int, Local] = MutMap.empty,
-)
+):
+  def hiddenClasses = callableSym.toSet
 
 final case class Ctx(
   def_acc: ListBuffer[Func],
@@ -134,7 +136,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
         sym
       case Some(value) => value
   private def builtin(using ctx: Ctx) : Local =
-    ctx.builtin_sym.thisSym match
+    ctx.builtin_sym.builtinSym match
       case None => 
         val sym = newBuiltinSym("<builtin>")
         ctx.builtin_sym.builtinSym = Some(sym);
@@ -388,11 +390,21 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
                     bArgs(args):
                       case args: Ls[TrivialExpr] =>
                         Node.LetMethodCall(Ls(v), builtinCallable, builtinApply(args.length), f :: args, k(v |> sr))
-      case Call(Select(Value.Ref(sym: TopLevelSymbol), Tree.Ident("builtin")), args) =>
+      case Call(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident("builtin")), args) =>
         bArgs(args):
           case args: Ls[TrivialExpr] =>
             val v: Local = newTemp
             Node.LetCall(Ls(v), builtin, args, k(v |> sr))
+      case Call(Select(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident("console")), Tree.Ident("log")), args) =>
+        bArgs(args):
+          case args: Ls[TrivialExpr] =>
+            val v: Local = newTemp
+            Node.LetCall(Ls(v), builtin, Expr.Literal(Tree.StrLit("println")) :: args, k(v |> sr))
+      case Call(Select(Select(Value.Ref(_: TopLevelSymbol), Tree.Ident("Math")), Tree.Ident(mathPrimitive)), args) =>
+        bArgs(args):
+          case args: Ls[TrivialExpr] =>
+            val v: Local = newTemp
+            Node.LetCall(Ls(v), builtin, Expr.Literal(Tree.StrLit(mathPrimitive)) :: args, k(v |> sr))
       case Call(s @ Select(r @ Value.Ref(sym), Tree.Ident(fld)), args) if s.symbol.isDefined =>
         bPath(r):
           case r =>

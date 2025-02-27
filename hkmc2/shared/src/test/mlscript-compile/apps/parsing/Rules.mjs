@@ -1,17 +1,17 @@
-import runtime from "./../Runtime.mjs";
-import Predef from "./../Predef.mjs";
-import Option from "./../Option.mjs";
-import Stack from "./../Stack.mjs";
-import BetterMap from "./../BetterMap.mjs";
-import TreeTracer from "./../TreeTracer.mjs";
-import Iter from "./../Iter.mjs";
-import Lexer from "./Lexer.mjs";
-import Token from "./parsing/Token.mjs";
-import TokenHelpers from "./parsing/TokenHelpers.mjs";
-import Keyword from "./parsing/Keyword.mjs";
-import Precedence from "./parsing/Precedence.mjs";
-import Tree from "./parsing/Tree.mjs";
-import ParseRule from "./parsing/ParseRule.mjs";
+import runtime from "./../../Runtime.mjs";
+import Predef from "./../../Predef.mjs";
+import Option from "./../../Option.mjs";
+import Stack from "./../../Stack.mjs";
+import BetterMap from "./../../BetterMap.mjs";
+import TreeTracer from "./../../TreeTracer.mjs";
+import Iter from "./../../Iter.mjs";
+import Lexer from "./../Lexer.mjs";
+import Token from "./Token.mjs";
+import TokenHelpers from "./TokenHelpers.mjs";
+import Keyword from "./Keyword.mjs";
+import Precedence from "./Precedence.mjs";
+import Tree from "./Tree.mjs";
+import ParseRule from "./ParseRule.mjs";
 let Parser1;
 Parser1 = class Parser {
   static #letExpression;
@@ -648,4 +648,3 @@ Parser1 = class Parser {
   }
   static toString() { return "Parser"; }
 };
-let Parser = Parser1; export default Parser;

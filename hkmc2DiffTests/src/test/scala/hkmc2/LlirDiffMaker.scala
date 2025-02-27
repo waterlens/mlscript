@@ -81,11 +81,16 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             if show then
               output(s"\n$name:")
               output(cpp.toDocument.toString)
-            val auxPath =  os.Path(rootPath)/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
+            val rPath = os.Path(rootPath)
+            val auxPath =  
+              if rPath.last == "mlscript" then 
+                rPath/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
+              else
+                rPath/"src"/"test"/"mlscript-compile"/"cpp"
             if write.isDefined then
               printToFile(java.io.File((auxPath / s"${write.get}.cpp").toString)):
                 p => p.println(cpp.toDocument.toString)
-            if run then
+            if run then 
               val cppHost = CppCompilerHost(auxPath.toString, output.apply)
               if !cppHost.ready then
                 output("\nCpp Compilation Failed: Cpp compiler or GNU Make not found")

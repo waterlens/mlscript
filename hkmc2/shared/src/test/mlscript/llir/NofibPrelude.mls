@@ -31,6 +31,11 @@ fun ltList(xs, ys, lt, gt) = if xs is
       gt(x, y) then false
       else ltList(xs, ys, lt, gt)
 
+type LazyList[out T] = Lazy[LzList[T]]
+abstract class LzList[out T]: LzCons[T] | LzNil
+class LzCons[out T](head: T, tail: LazyList[T]) extends LzList[T]
+object LzNil extends LzList
+
 fun ltTup2(t1, t2, lt1, gt1, lt2) = if t1 is [a, b] and t2 is [c, d] and
   lt1(a, c) then true
   gt1(a, c) then false
@@ -244,6 +249,83 @@ fun break_(p, ls) = if ls is
 fun flatMap(f, ls) = if ls is
   Nil then Nil
   h :: t then append(f(h), flatMap(f, t))
+
+
+// =====================
+
+fun map_lz(f, ls) = lazy of () =>
+  if force(ls) is
+    LzNil then LzNil
+    LzCons(h, t) then LzCons(f(h), map_lz(f, t))
+
+fun filter_lz(p, ls) = Lazy of () =>
+  if force(ls) is
+    LzNil then LzNil
+    LzCons(h, t) and
+      p(h) then LzCons(h, filter_lz(p, t))
+      else force(filter_lz(p, t))
+
+fun nubBy_lz(eq, ls) = Lazy of () =>
+  if force(ls) is
+    LzNil then LzNil
+    LzCons(h, t) then LzCons(h, nubBy_lz(eq, filter_lz(y => not(eq(h, y)), t)))
+
+fun nub_lz(ls) = nubBy_lz((x, y) => x == y, ls)
+
+fun take_lz(n, ls) = if
+  n > 0 and force(ls) is
+    LzNil then Nil
+    LzCons(h, t) then h :: take_lz(n - 1, t)
+  else Nil
+
+fun take_lz_lz(n, ls) = lazy of () =>
+  if n > 0 and force(ls) is
+    LzNil then LzNil
+    LzCons(h, t) then LzCons(h, take_lz_lz(n - 1, t))
+  else LzNil
+
+fun drop_lz(n, ls) = if
+  n <= 0 then ls
+  force(ls) is
+    LzNil then lazy of () => LzNil
+    LzCons(h, t) then drop_lz(n - 1, t)
+
+fun splitAt_lz(n, ls) = [take_lz(n, ls), drop_lz(n, ls)]
+
+fun zip_lz_nl(xs, ys) = if
+  force(xs) is LzCons(x, xs) and ys is y :: ys then [x, y] :: zip_lz_nl(xs, ys)
+  else Nil
+
+fun zip_lz_lz(xs, ys) = if
+  force(xs) is LzCons(x, xs) and force(ys) is LzCons(y, ys) then lazy of () => LzCons([x, y], zip_lz_lz(xs, ys))
+  else lazy of () => LzNil
+
+fun zipWith_lz_lz(f, xss, yss) = lazy of () => if
+  force(xss) is LzCons(x, xs) and (force(yss)) is LzCons(y, ys) then LzCons(f(x, y), zipWith_lz_lz(f, xs, ys))
+  else LzNil
+
+fun zipWith_lz_nl(f, xss, yss) = if
+  force(xss) is LzCons(x, xs) and yss is y :: ys then f(x, y) :: zipWith_lz_nl(f, xs, ys)
+  else Nil
+
+fun iterate(f, x) = lazy of () => LzCons(x, iterate(f, f(x)))
+
+fun append_nl_lz(xs, ys) = if xs is
+  Nil then ys
+  h :: t then lazy of () => LzCons(h, append_nl_lz(t, ys))
+
+fun append_lz_lz(xs, ys) = lazy of () => if force(xs) is
+  LzNil then force(ys)
+  LzCons(h, t) then LzCons(h, append_lz_lz(t, ys))
+
+fun replicate_lz(n, x) = if n == 0 then lazy of () => LzNil else lazy of () => LzCons(x, replicate_lz(n - 1, x))
+
+fun enumFrom(a) = lazy of () => LzCons(a, enumFrom(a + 1))
+
+fun head_lz(ls) = if force(ls) is LzCons(h, t) then h
+
+fun repeat(x) = lazy of () => LzCons(x, repeat(x))
+// =====================
 
 // fun stringOfInt(x) = globalThis.builtin("int2str", x)
 // fun stringConcat(x, y) = globalThis.builtin("str_concat", x, y)

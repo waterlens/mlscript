@@ -8,6 +8,7 @@ import hkmc2.Message.MessageContext
 import hkmc2.document._
 
 import scala.language.implicitConversions
+import hkmc2.escaped
 
 private def raw(x: String): Document = doc"$x"
 given Conversion[String, Document] = x => doc"$x"
@@ -137,7 +138,7 @@ enum Expr:
       case Var(name) => name
       case IntLit(value) => value.toString
       case DoubleLit(value) => value.toString
-      case StrLit(value) => s"\"$value\"" // need more reliable escape utils
+      case StrLit(value) => value.escaped
       case CharLit(value) => value.toInt.toString
       case Call(func, args) =>
         doc"${func.toDocument}(${Expr.toDocuments(args, sep = ", ")})"

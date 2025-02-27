@@ -47,7 +47,6 @@ final case class Ctx(
   flow_ctx: Map[Path, Local] = Map.empty,
   is_top_level: Bool = true,
   method_class: Opt[Symbol] = None,
-  free_vars: Set[Local] = Set.empty,
   builtin_sym: BuiltinSymbols = BuiltinSymbols()
 ):
   def addFuncName(n: Local, paramsSize: Int) = copy(fn_ctx = fn_ctx + (n -> FuncInfo(paramsSize)))
@@ -64,7 +63,6 @@ final case class Ctx(
     case Some(value) => value
   def addKnownClass(n: Path, m: Local) = copy(flow_ctx = flow_ctx + (n -> m))
   def setClass(c: Symbol) = copy(method_class = Some(c))
-  def setFreeVars(n: Set[Local]) = copy(free_vars = free_vars)
   def nonTopLevel = copy(is_top_level = false)
 
 object Ctx:
@@ -243,15 +241,23 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
     trace[Node](s"bLam begin", x => s"bLam end: ${x.show}"):
       val Value.Lam(params, body) = lam
       // Generate an auxiliary class inheriting from Callable
-      val freeVars = freeVarsFilter(lam.freeVars -- lam.body.definedVars -- ctx.fn_ctx.keySet)
+      val freeVars = freeVarsFilter(lam.freeVars -- ctx.fn_ctx.keySet)
+      log(s"Match free vars: ${lam.freeVars} ${body.definedVars} ${params.params.map(p => p.sym)}")
       val name = newClassSym(s"Lambda${nameHint.fold("")(x => "_" + x)}")
-      val args = freeVars.toList.map(symMap)
-      val clsParams = args
-      val ctx2 = ctx.setFreeVars(freeVars)
-      val applyParams = params.params.map(x => x -> x.sym)
-      val ctx3 = applyParams.foldLeft(ctx2)((acc, x) => acc.addName(x._1.sym, x._1.sym)).nonTopLevel
-      val ctx4 = recName.fold(ctx3)(x => ctx3.addName(x, builtinThis))
-      val pl = applyParams.map(_._1.sym)
+      val freeVarsList = freeVars.toList
+      val args = freeVarsList.map(symMap)
+      // args may have the same name (with different uid)
+      // it's not allowed when generating the names of fields in the backend
+      val clsParams = args.zipWithIndex.map:
+        case (arg, i) => newNamedTemp(s"lam_arg$i")
+      val applyParams = params.params
+      // add the parameters of lambda expression to the context
+      val ctx2 = applyParams.foldLeft(ctx)((acc, x) => acc.addName(x.sym, x.sym))
+      // add the free variables (class parameters) to the context
+      val ctx3 = clsParams.iterator.zip(freeVarsList).foldLeft(ctx2):
+        case (acc, (param, arg)) => acc.addName(arg, param)
+      val ctx4 = recName.fold(ctx3)(x => ctx3.addName(x, builtinThis)).nonTopLevel
+      val pl = applyParams.map(_.sym)
       val method = Func(
         uid.make,
         builtinApply(params.params.length),
@@ -273,6 +279,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private def bValue(v: Value)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bValue { $v } begin", x => s"bValue end: ${x.show}"):
       v match
+      // TODO: why?
       case Value.Ref(l: TermSymbol) if l.owner.nonEmpty =>
         k(l |> sr)
       case Value.Ref(sym) if sym.nme.isCapitalized =>
@@ -435,9 +442,9 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
           case e: TrivialExpr =>
             val nextCont = Begin(rest, ct)
             val jp: Local = newNamedTemp("j")
-            val fvset = freeVarsFilter(nextCont.freeVars -- nextCont.definedVars)
+            val fvset = freeVarsFilter(nextCont.freeVars)
             val fvs1 = fvset.toList
-            log(s"Match free vars: $fvset ${nextCont.freeVars} ${nextCont.definedVars} $fvs1")
+            log(s"Match free vars: $fvset ${nextCont.freeVars} $fvs1")
             val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, x))
             val fvs = fvs1.map(new_ctx.findName(_))
             def cont(x: TrivialExpr)(using ctx: Ctx) = Node.Jump(

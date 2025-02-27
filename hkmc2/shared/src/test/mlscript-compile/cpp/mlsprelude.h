@@ -6,9 +6,10 @@
 #include <new>
 #include <pthread.h>
 #include <stdexcept>
+#include <string>
+#include <string_view>
 #include <sys/resource.h>
 #include <tuple>
-#include <string>
 #include <utility>
 
 constexpr std::size_t _mlsAlignment = 8;
@@ -47,6 +48,11 @@ consteval auto nextTypeTag() {
     return nextTypeTag<Id + 1>();
 }
 
+constexpr static inline uint32_t unitTag = nextTypeTag();
+constexpr static inline uint32_t floatTag = nextTypeTag();
+constexpr static inline uint32_t strTag = nextTypeTag();
+constexpr static inline uint32_t lazyTag = nextTypeTag();
+
 struct _mlsObject {
   uint32_t refCount;
   uint32_t tag;
@@ -75,14 +81,20 @@ public:
   }
 };
 
+struct _mlsFloatShape : public _mlsObject {
+  double f;
+};
+
 class _mlsValue {
   using uintptr_t = std::uintptr_t;
   using intptr_t = std::intptr_t;
   using int64_t = std::int64_t;
 
-  void *value alignas(_mlsAlignment);
+  void *value;
 
   bool isInt63() const { return (reinterpret_cast<uintptr_t>(value) & 1) == 1; }
+
+  bool isFloat() const { return isPtr() && asObject()->tag == floatTag; }
 
   bool isPtr() const { return (reinterpret_cast<uintptr_t>(value) & 1) == 0; }
 
@@ -247,103 +259,41 @@ public:
     return static_cast<T *>(v.asObject());
   }
 
-  _mlsValue floorDiv(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return floorDivInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue floorDiv(const _mlsValue &other) const;
 
-  _mlsValue floorMod(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return floorModInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue floorMod(const _mlsValue &other) const;
 
-  _mlsValue pow(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return fromInt63(std::pow(asInt63(), other.asInt63()));
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue pow(const _mlsValue &other) const;
 
   // Operators
 
-  _mlsValue operator==(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return _mlsValue::fromBoolLit(eqInt63(other));
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator==(const _mlsValue &other) const;
 
-  _mlsValue operator!=(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return _mlsValue::fromBoolLit(!eqInt63(other));
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator!=(const _mlsValue &other) const;
 
-  _mlsValue operator&&(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return _mlsValue::fromBoolLit(asInt63() && other.asInt63());
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator&&(const _mlsValue &other) const;
 
-  _mlsValue operator||(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return _mlsValue::fromBoolLit(asInt63() || other.asInt63());
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator||(const _mlsValue &other) const;
 
-  _mlsValue operator+(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return addInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator+(const _mlsValue &other) const;
 
-  _mlsValue operator-(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return subInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator-(const _mlsValue &other) const;
 
-  _mlsValue operator*(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return mulInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator-() const;
 
-  _mlsValue operator/(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return divInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator*(const _mlsValue &other) const;
 
-  _mlsValue operator%(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return modInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator/(const _mlsValue &other) const;
 
-  _mlsValue operator>(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return gtInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator%(const _mlsValue &other) const;
 
-  _mlsValue operator<(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return ltInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator>(const _mlsValue &other) const;
 
-  _mlsValue operator>=(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return geInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator<(const _mlsValue &other) const;
 
-  _mlsValue operator<=(const _mlsValue &other) const {
-    if (isInt63() && other.isInt63())
-      return leInt63(other);
-    _mlsUtil::panic("incorrect type");
-  }
+  _mlsValue operator>=(const _mlsValue &other) const;
+
+  _mlsValue operator<=(const _mlsValue &other) const;
 
   // Auxiliary functions
 
@@ -430,7 +380,7 @@ inline void *_mlsMainWrapper(void *) {
 
 struct _mls_Unit final : public _mlsObject {
   constexpr static inline const char *typeName = "Unit";
-  constexpr static inline uint32_t typeTag = nextTypeTag();
+  constexpr static inline uint32_t typeTag = unitTag;
   virtual void print() const override { std::printf(typeName); }
   static _mlsValue create() {
     static _mls_Unit mlsUnit alignas(_mlsAlignment);
@@ -441,19 +391,79 @@ struct _mls_Unit final : public _mlsObject {
   virtual void destroy() override {}
 };
 
+struct _mls_Float final : public _mlsFloatShape {
+  constexpr static inline const char *typeName = "Float";
+  constexpr static inline uint32_t typeTag = floatTag;
+  virtual void print() const override {
+    std::printf(typeName);
+    std::printf("(");
+    std::printf("%f", f);
+    std::printf(")");
+  }
+  static _mlsValue create(double f) {
+    auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Float;
+    _mlsVal->f = f;
+    _mlsVal->refCount = 1;
+    _mlsVal->tag = typeTag;
+    return _mlsValue(_mlsVal);
+  }
+  _mlsValue operator+(const _mls_Float &other) const {
+    return _mlsValue::create<_mls_Float>(f + other.f);
+  }
+  _mlsValue operator-(const _mls_Float &other) const {
+    return _mlsValue::create<_mls_Float>(f - other.f);
+  }
+  _mlsValue operator*(const _mls_Float &other) const {
+    return _mlsValue::create<_mls_Float>(f * other.f);
+  }
+  _mlsValue operator/(const _mls_Float &other) const {
+    return _mlsValue::create<_mls_Float>(f / other.f);
+  }
+  _mlsValue operator==(const _mls_Float &other) const {
+    return _mlsValue::fromBoolLit(f == other.f);
+  }
+  _mlsValue operator!=(const _mls_Float &other) const {
+    return _mlsValue::fromBoolLit(f == other.f);
+  }
+  _mlsValue operator>(const _mls_Float &other) const {
+    return _mlsValue::fromBoolLit(f > other.f);
+  }
+  _mlsValue operator<(const _mls_Float &other) const {
+    return _mlsValue::fromBoolLit(f < other.f);
+  }
+  _mlsValue operator>=(const _mls_Float &other) const {
+    return _mlsValue::fromBoolLit(f >= other.f);
+  }
+  _mlsValue operator<=(const _mls_Float &other) const {
+    return _mlsValue::fromBoolLit(f <= other.f);
+  }
+  virtual void destroy() override {
+    operator delete(this, std::align_val_t(_mlsAlignment));
+  }
+};
+
 struct _mls_Str final : public _mlsObject {
   std::string str;
   constexpr static inline const char *typeName = "Str";
-  constexpr static inline uint32_t typeTag = nextTypeTag();
+  constexpr static inline uint32_t typeTag = strTag;
   virtual void print() const override {
     std::printf(typeName);
     std::printf("(");
     std::printf("%s", str.c_str());
     std::printf(")");
   }
-  static _mlsValue create(const char *str) {
+  static _mlsValue create(const std::string_view str) {
     auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Str;
     _mlsVal->str = str;
+    _mlsVal->refCount = 1;
+    _mlsVal->tag = typeTag;
+    return _mlsValue(_mlsVal);
+  }
+  static _mlsValue create(const std::string_view str1,
+                          const std::string_view str2) {
+    auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Str;
+    _mlsVal->str = str1;
+    _mlsVal->str += str2;
     _mlsVal->refCount = 1;
     _mlsVal->tag = typeTag;
     return _mlsValue(_mlsVal);
@@ -469,7 +479,7 @@ struct _mls_Lazy final : public _mlsObject {
   _mlsValue value;
   bool evaluated;
   constexpr static inline const char *typeName = "Lazy";
-  constexpr static inline uint32_t typeTag = nextTypeTag();
+  constexpr static inline uint32_t typeTag = lazyTag;
   virtual void print() const override { std::printf(typeName); }
   static _mlsValue create(_mlsValue init) {
     auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lazy;
@@ -616,6 +626,28 @@ inline _mlsValue _mls_builtin_trunc_mod(_mlsValue a, _mlsValue b) {
   return a % b;
 }
 
+inline _mlsValue _mls_builtin_int2str(_mlsValue a) {
+  assert(_mlsValue::isInt(a));
+  char buf[32];
+  std::snprintf(buf, sizeof(buf), "%" PRIu64, a.asInt());
+  return _mlsValue::create<_mls_Str>(buf);
+}
+
+inline _mlsValue _mls_builtin_float2str(_mlsValue a) {
+  assert(_mlsValue::isValueOf<_mls_Float>(a));
+  char buf[128];
+  std::snprintf(buf, sizeof(buf), "%f", _mlsValue::cast<_mls_Float>(a)->f);
+  return _mlsValue::create<_mls_Str>(buf);
+}
+
+inline _mlsValue _mls_builtin_str_concat(_mlsValue a, _mlsValue b) {
+  assert(_mlsValue::isValueOf<_mls_Str>(a));
+  assert(_mlsValue::isValueOf<_mls_Str>(b));
+  auto *strA = _mlsValue::cast<_mls_Str>(a);
+  auto *strB = _mlsValue::cast<_mls_Str>(b);
+  return _mlsValue::create<_mls_Str>(strA->str.c_str(), strB->str.c_str());
+}
+
 inline _mlsValue _mls_builtin_z_add(_mlsValue a, _mlsValue b) {
   assert(_mlsValue::isValueOf<_mls_ZInt>(a));
   assert(_mlsValue::isValueOf<_mls_ZInt>(b));
@@ -701,4 +733,133 @@ inline _mlsValue _mls_builtin_debug(_mlsValue a) {
   a.print();
   std::puts("");
   return a;
+}
+
+inline _mlsValue _mlsValue::floorDiv(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return floorDivInt63(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::floorMod(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return floorModInt63(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::pow(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return fromInt63(std::pow(asInt63(), other.asInt63()));
+  if (isFloat() && other.isFloat())
+    return _mlsValue::create<_mls_Float>(
+        std::pow(as<_mls_Float>(*this)->f, as<_mls_Float>(other)->f));
+  _mlsUtil::panic("incorrect type");
+}
+
+// Operators
+
+inline _mlsValue _mlsValue::operator==(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return _mlsValue::fromBoolLit(eqInt63(other));
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) == *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator!=(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return _mlsValue::fromBoolLit(!eqInt63(other));
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) != *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator&&(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return _mlsValue::fromBoolLit(asInt63() && other.asInt63());
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator||(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return _mlsValue::fromBoolLit(asInt63() || other.asInt63());
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator+(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return addInt63(other);
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) + *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator-(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return subInt63(other);
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) - *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator-() const {
+  if (isInt63())
+    return fromInt63(-asInt63());
+  if (isFloat())
+    return _mlsValue::create<_mls_Float>(-as<_mls_Float>(*this)->f);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator*(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return mulInt63(other);
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) * *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator/(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return divInt63(other);
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) / *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator%(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return modInt63(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator>(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return gtInt63(other);
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) > *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator<(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return ltInt63(other);
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) < *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator>=(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return geInt63(other);
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) >= *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
+}
+
+inline _mlsValue _mlsValue::operator<=(const _mlsValue &other) const {
+  if (isInt63() && other.isInt63())
+    return leInt63(other);
+  if (isFloat() && other.isFloat())
+    return *as<_mls_Float>(*this) <= *as<_mls_Float>(other);
+  _mlsUtil::panic("incorrect type");
 }

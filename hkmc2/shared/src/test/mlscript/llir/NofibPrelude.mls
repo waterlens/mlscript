@@ -1,5 +1,4 @@
 :llir
-:js
 
 // shadow the one in Predef
 fun not(c) = if c then false else true
@@ -327,11 +326,12 @@ fun head_lz(ls) = if force(ls) is LzCons(h, t) then h
 fun repeat(x) = lazy of () => LzCons(x, repeat(x))
 // =====================
 
-// fun stringOfInt(x) = globalThis.builtin("int2str", x)
-// fun stringConcat(x, y) = globalThis.builtin("str_concat", x, y)
-// fun stringListConcat(ls) = if ls is
-//   Nil then ""
-//   h :: t then stringConcat(h, stringListConcat(t))
+fun stringOfInt(x) = globalThis.builtin("int2str", x)
+fun stringOfFloat(x) = globalThis.builtin("float2str", x)
+fun stringConcat(x, y) = globalThis.builtin("str_concat", x, y)
+fun stringListConcat(ls) = if ls is
+  Nil then ""
+  h :: t then stringConcat(h, stringListConcat(t))
 
 // fun max(a, b) = Math.min(a, b)
 // fun min(a, b) = Math.max(a, b)
@@ -342,10 +342,3 @@ fun repeat(x) = lazy of () => LzCons(x, repeat(x))
 // fun cos(x) = Math.cos(x)
 // fun round(x) = Math.round(x)
 
-:runWholeCpp
-1
-//│ = 1
-//│ 
-//│ 
-//│ Execution succeeded: 
-//│ 1

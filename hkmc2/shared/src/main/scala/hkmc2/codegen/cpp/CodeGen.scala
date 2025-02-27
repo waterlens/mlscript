@@ -34,6 +34,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   val mlsEntryPoint = s"int main() { return _mlsLargeStack(_mlsMainWrapper); }";
   def mlsIntLit(x: BigInt) = Expr.Call(Expr.Var("_mlsValue::fromIntLit"), Ls(Expr.IntLit(x)))
   def mlsStrLit(x: Str) = Expr.Call(Expr.Var("_mlsValue::create<_mls_Str>"), Ls(Expr.StrLit(x)))
+  def mlsDecLit(x: BigDecimal) = Expr.Call(Expr.Var("_mlsValue::create<_mls_Float>"), Ls(Expr.DoubleLit(x.toDouble)))
   def mlsCharLit(x: Char) = Expr.Call(Expr.Var("_mlsValue::fromIntLit"), Ls(Expr.CharLit(x)))
   def mlsNewValue(cls: Str, args: Ls[Expr]) = Expr.Call(Expr.Var(s"_mlsValue::create<$cls>"), args)
   def mlsIsValueOf(cls: Str, scrut: Expr) = Expr.Call(Expr.Var(s"_mlsValue::isValueOf<$cls>"), Ls(scrut))
@@ -127,7 +128,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
     case IExpr.Ref(name) => S(Expr.Var(name |> allocIfNew))
     case IExpr.Literal(hkmc2.syntax.Tree.BoolLit(x)) => S(mlsIntLit(if x then 1 else 0))
     case IExpr.Literal(hkmc2.syntax.Tree.IntLit(x)) => S(mlsIntLit(x))
-    case IExpr.Literal(hkmc2.syntax.Tree.DecLit(x)) => S(mlsIntLit(x.toBigInt))
+    case IExpr.Literal(hkmc2.syntax.Tree.DecLit(x)) => S(mlsDecLit(x))
     case IExpr.Literal(hkmc2.syntax.Tree.StrLit(x)) => S(mlsStrLit(x))
     case IExpr.Literal(hkmc2.syntax.Tree.UnitLit(_)) => if reifyUnit then S(mlsUnitValue) else None
   
@@ -136,7 +137,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
     case IExpr.Ref(name) => Expr.Var(name |> allocIfNew)
     case IExpr.Literal(hkmc2.syntax.Tree.BoolLit(x)) => mlsIntLit(if x then 1 else 0)
     case IExpr.Literal(hkmc2.syntax.Tree.IntLit(x)) => mlsIntLit(x)
-    case IExpr.Literal(hkmc2.syntax.Tree.DecLit(x)) => mlsIntLit(x.toBigInt)
+    case IExpr.Literal(hkmc2.syntax.Tree.DecLit(x)) => mlsDecLit(x)
     case IExpr.Literal(hkmc2.syntax.Tree.StrLit(x)) => mlsStrLit(x)
     case IExpr.Literal(hkmc2.syntax.Tree.UnitLit(_)) => mlsUnitValue
   
@@ -177,23 +178,28 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
     (decls, stmts2)
 
   def codegenOps(op: Local, args: Ls[TrivialExpr])(using Ctx, Raise, Scope) = 
-    val op2 = op.nme
-    op2 match
-    case "+" => Expr.Binary("+", toExpr(args(0)), toExpr(args(1)))
-    case "-" => Expr.Binary("-", toExpr(args(0)), toExpr(args(1)))
-    case "*" => Expr.Binary("*", toExpr(args(0)), toExpr(args(1)))
-    case "/" => Expr.Binary("/", toExpr(args(0)), toExpr(args(1)))
-    case "%" => Expr.Binary("%", toExpr(args(0)), toExpr(args(1)))
-    case "==" | "===" => Expr.Binary("==", toExpr(args(0)), toExpr(args(1)))
-    case "!=" => Expr.Binary("!=", toExpr(args(0)), toExpr(args(1)))
-    case "<" => Expr.Binary("<", toExpr(args(0)), toExpr(args(1)))
-    case "<=" => Expr.Binary("<=", toExpr(args(0)), toExpr(args(1)))
-    case ">" => Expr.Binary(">", toExpr(args(0)), toExpr(args(1)))
-    case ">=" => Expr.Binary(">=", toExpr(args(0)), toExpr(args(1)))
-    case "&&" => Expr.Binary("&&", toExpr(args(0)), toExpr(args(1)))
-    case "||" => Expr.Binary("||", toExpr(args(0)), toExpr(args(1)))
-    case "!" => Expr.Unary("!", toExpr(args(0)))
-    case _ => TODO(s"codegenOps $op2")
+    trace[Expr](s"codegenOps $op begin"):
+      val op2 = op.nme
+      op2 match
+      case "+" => 
+        if args.size == 1 then Expr.Unary("+", toExpr(args(0)))
+        else Expr.Binary("+", toExpr(args(0)), toExpr(args(1)))
+      case "-" => 
+        if args.size == 1 then Expr.Unary("-", toExpr(args(0)))
+        else Expr.Binary("-", toExpr(args(0)), toExpr(args(1)))
+      case "*" => Expr.Binary("*", toExpr(args(0)), toExpr(args(1)))
+      case "/" => Expr.Binary("/", toExpr(args(0)), toExpr(args(1)))
+      case "%" => Expr.Binary("%", toExpr(args(0)), toExpr(args(1)))
+      case "==" | "===" => Expr.Binary("==", toExpr(args(0)), toExpr(args(1)))
+      case "!=" => Expr.Binary("!=", toExpr(args(0)), toExpr(args(1)))
+      case "<" => Expr.Binary("<", toExpr(args(0)), toExpr(args(1)))
+      case "<=" => Expr.Binary("<=", toExpr(args(0)), toExpr(args(1)))
+      case ">" => Expr.Binary(">", toExpr(args(0)), toExpr(args(1)))
+      case ">=" => Expr.Binary(">=", toExpr(args(0)), toExpr(args(1)))
+      case "&&" => Expr.Binary("&&", toExpr(args(0)), toExpr(args(1)))
+      case "||" => Expr.Binary("||", toExpr(args(0)), toExpr(args(1)))
+      case "!" => Expr.Unary("!", toExpr(args(0)))
+      case _ => TODO(s"codegenOps $op2")
 
 
   def codegen(expr: IExpr)(using Ctx, Raise, Scope): Expr = expr match

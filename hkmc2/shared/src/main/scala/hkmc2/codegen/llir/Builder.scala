@@ -100,7 +100,10 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private def freeVarsFilter(fvs: Set[Local]) =
     trace[Set[Local]](s"freeVarsFilter begin", x => s"freeVarsFilter end: $x"):
       fvs.filter:
-        case _: (BuiltinSymbol | TopLevelSymbol | ClassSymbol | MemberSymbol[?]) => false
+        case _: (BuiltinSymbol | TopLevelSymbol | ClassSymbol) => false
+        case ms: MemberSymbol[?] => ms.defn match
+          case Some(d: ClassLikeDef) => false
+          case _ => true
         case x => true
 
   private def symMap(s: Local)(using ctx: Ctx)(using Raise, Scope) =
@@ -241,8 +244,8 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
     trace[Node](s"bLam begin", x => s"bLam end: ${x.show}"):
       val Value.Lam(params, body) = lam
       // Generate an auxiliary class inheriting from Callable
-      val freeVars = freeVarsFilter(lam.freeVars -- ctx.fn_ctx.keySet)
-      log(s"Match free vars: ${lam.freeVars} ${body.definedVars} ${params.params.map(p => p.sym)}")
+      val freeVars = freeVarsFilter(lam.freeVars -- body.definedVars -- recName.iterator -- ctx.fn_ctx.keySet)
+      log(s"Match free vars: ${lam.freeVars -- body.definedVars} ${ctx.fn_ctx.keySet} ${params.params.map(p => p.sym)}")
       val name = newClassSym(s"Lambda${nameHint.fold("")(x => "_" + x)}")
       val freeVarsList = freeVars.toList
       val args = freeVarsList.map(symMap)
@@ -442,9 +445,9 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
           case e: TrivialExpr =>
             val nextCont = Begin(rest, ct)
             val jp: Local = newNamedTemp("j")
-            val fvset = freeVarsFilter(nextCont.freeVars)
+            val fvset = freeVarsFilter(nextCont.freeVars -- nextCont.definedVars -- ctx.fn_ctx.keySet)
             val fvs1 = fvset.toList
-            log(s"Match free vars: $fvset ${nextCont.freeVars} $fvs1")
+            log(s"Match free vars: $fvset ${nextCont.freeVars -- nextCont.definedVars} $fvs1")
             val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, x))
             val fvs = fvs1.map(new_ctx.findName(_))
             def cont(x: TrivialExpr)(using ctx: Ctx) = Node.Jump(
@@ -530,14 +533,36 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   
   def registerFunctions(b: Block)(using ctx: Ctx)(using Raise, Scope): Ctx =
     b match
+    case Match(scrut, arms, dflt, rest) => registerFunctions(rest)
+    case Return(res, implct) => ctx
+    case Throw(exc) => ctx
+    case Label(label, body, rest) => registerFunctions(rest)
+    case Break(label) => ctx
+    case Continue(label) => ctx
+    case Begin(sub, rest) =>
+      val ctx1 = registerFunctions(sub)
+      registerFunctions(rest)(using ctx1)
+    case TryBlock(sub, finallyDo, rest) =>
+      val ctx1 = registerFunctions(sub)
+      val ctx2 = registerFunctions(finallyDo)
+      registerFunctions(rest)(using ctx2)
+    case Assign(lhs, rhs, rest) =>
+      registerFunctions(rest)
+    case AssignField(lhs, nme, rhs, rest) =>
+      registerFunctions(rest)
+    case AssignDynField(lhs, fld, arrayIdx, rhs, rest) =>
+      registerFunctions(rest)
     case Define(fd @ FunDefn(_own, sym, params, body), rest) =>
       if params.length == 0 then
         errStop(msg"Function without arguments not supported: ${params.length.toString}")
       val ctx2 = ctx.addFuncName(sym, params.head.params.length)
       log(s"Define function: ${sym.nme} -> ${ctx2}")
       registerFunctions(rest)(using ctx2)
-    case _ =>
-      b.subBlocks.foldLeft(ctx)((ctx, rest) => registerFunctions(rest)(using ctx))
+    case Define(defn, rest) => registerFunctions(rest)
+    case HandleBlock(lhs, res, par, args, cls, hdr, bod, rst) =>
+      TODO("HandleBlock not supported")
+    case HandleBlockReturn(res) => ctx
+    case End(msg) => ctx
   
   def bProg(e: Program)(using Raise, Scope, Ctx): (LlirProgram, Ctx) =
     var ctx = summon[Ctx]

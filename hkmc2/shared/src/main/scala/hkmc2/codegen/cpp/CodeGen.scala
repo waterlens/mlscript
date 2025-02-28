@@ -68,6 +68,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   def mlsFnWrapperName(fn: Str) = s"_mlsFn_$fn"
   def mlsFnCreateMethod(fn: Str) = s"static _mlsValue create() { static _mlsFn_$fn mlsFn alignas(_mlsAlignment); mlsFn.refCount = stickyRefCount; mlsFn.tag = typeTag; return _mlsValue(&mlsFn); }"
   def mlsNeverValue(n: Int) = if (n <= 1) then Expr.Call(Expr.Var(s"_mlsValue::never"), Ls()) else Expr.Call(Expr.Var(s"_mlsValue::never<$n>"), Ls())
+  val mlsThis = Expr.Var("_mlsValue(this)")
 
   case class Ctx(
     defnCtx: Set[Local],
@@ -125,6 +126,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   
   def toExpr(texpr: TrivialExpr, reifyUnit: Bool = false)(using Ctx, Raise, Scope): Opt[Expr] = texpr match
     case IExpr.Ref(name) if summon[Ctx].fieldCtx.contains(name) => S(Expr.Var(name |> directName))
+    case IExpr.Ref(name: BuiltinSymbol) if name.nme == "<this>" => S(mlsThis)
     case IExpr.Ref(name) => S(Expr.Var(name |> allocIfNew))
     case IExpr.Literal(hkmc2.syntax.Tree.BoolLit(x)) => S(mlsIntLit(if x then 1 else 0))
     case IExpr.Literal(hkmc2.syntax.Tree.IntLit(x)) => S(mlsIntLit(x))
@@ -134,6 +136,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   
   def toExpr(texpr: TrivialExpr)(using Ctx, Raise, Scope): Expr = texpr match
     case IExpr.Ref(name) if summon[Ctx].fieldCtx.contains(name) => Expr.Var(name |> directName)
+    case IExpr.Ref(name: BuiltinSymbol) if name.nme == "<this>" => mlsThis
     case IExpr.Ref(name) => Expr.Var(name |> allocIfNew)
     case IExpr.Literal(hkmc2.syntax.Tree.BoolLit(x)) => mlsIntLit(if x then 1 else 0)
     case IExpr.Literal(hkmc2.syntax.Tree.IntLit(x)) => mlsIntLit(x)

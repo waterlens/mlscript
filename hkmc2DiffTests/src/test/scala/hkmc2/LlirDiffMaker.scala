@@ -88,7 +88,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
               else
                 rPath/"src"/"test"/"mlscript-compile"/"cpp"
             if write.isDefined then
-              printToFile(java.io.File((auxPath / s"${write.get}.cpp").toString)):
+              printToFile(java.io.File((auxPath / s"${write.get}").toString)):
                 p => p.println(cpp.toDocument.toString)
             if run then 
               val cppHost = CppCompilerHost(auxPath.toString, output.apply)

@@ -1,7 +1,7 @@
 CXX := g++
 CFLAGS += -O3 -g -Wall -Wextra -std=c++20 -I. -Wno-inconsistent-missing-override -I/opt/homebrew/include
 LDFLAGS += -L/opt/homebrew/lib
-LDLIBS := -lgmp -lboost_stacktrace_basic
+LDLIBS := -lmimalloc -lgmp -lboost_stacktrace_basic
 SRC :=
 INCLUDES := mlsprelude.h
 DST :=

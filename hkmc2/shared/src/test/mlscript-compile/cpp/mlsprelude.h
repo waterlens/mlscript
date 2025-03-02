@@ -218,8 +218,13 @@ class _mlsValue {
   }
 
 public:
+  struct inc_ref_tag {};
   explicit _mlsValue() : value(nullptr) {}
   explicit _mlsValue(void *value) : value(value) {}
+  explicit _mlsValue(void *value, inc_ref_tag) : value(value) {
+    if (isPtr())
+      asObject()->incRef();
+  }
   _mlsValue(const _mlsValue &other) : value(other.value) {
     if (isPtr())
       asObject()->incRef();
@@ -696,6 +701,10 @@ inline _mlsValue _mls_builtin_float2str(_mlsValue a) {
   char buf[128];
   std::snprintf(buf, sizeof(buf), "%f", _mlsValue::cast<_mls_Float>(a)->f);
   return _mlsValue::create<_mls_Str>(buf);
+}
+
+inline _mlsValue _mls_builtin_int2float(_mlsValue a) {
+  return _mlsValue::create<_mls_Float>(a.asInt());
 }
 
 inline _mlsValue _mls_builtin_str_concat(_mlsValue a, _mlsValue b) {

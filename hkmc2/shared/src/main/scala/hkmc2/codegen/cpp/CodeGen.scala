@@ -32,6 +32,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   val mlsObject = "_mlsObject"
   val mlsBuiltin = "builtin"
   val mlsEntryPoint = s"int main() { return _mlsLargeStack(_mlsMainWrapper); }";
+  def mlsCallEntry(s: Str) = s"_mlsValue _mlsMain() { return $s(); }"
   def mlsIntLit(x: BigInt) = Expr.Call(Expr.Var("_mlsValue::fromIntLit"), Ls(Expr.IntLit(x)))
   def mlsStrLit(x: Str) = Expr.Call(Expr.Var("_mlsValue::create<_mls_Str>"), Ls(Expr.StrLit(x)))
   def mlsDecLit(x: BigDecimal) = Expr.Call(Expr.Var("_mlsValue::create<_mls_Float>"), Ls(Expr.DoubleLit(x.toDouble)))
@@ -276,15 +277,6 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
       val decl = Decl.FuncDecl(mlsValType, name |> allocIfNew, params.map(x => mlsValType))
       (theDef, decl)
 
-  def codegenTopNode(node: Node)(using Ctx, Raise, Scope): (Def, Decl) =
-    val decls = Ls(mlsRetValueDecl)
-    val stmts = Ls.empty[Stmt]
-    val (decls2, stmts2) = codegen(node, mlsRetValue)(using decls, stmts)
-    val stmtsWithReturn = stmts2 :+ Stmt.Return(Expr.Var(mlsRetValue))
-    val theDef = Def.FuncDef(mlsValType, mlsMainName, Ls(), Stmt.Block(decls2, stmtsWithReturn))
-    val decl = Decl.FuncDecl(mlsValType, mlsMainName, Ls())
-    (theDef, decl)
-
   // Topological sort of classes based on inheritance relationships
   def sortClasses(prog: Program)(using Raise, Scope): Ls[ClassInfo] =
     var depgraph = prog.classes.map(x => (x.name |> mapClsLikeName, x.parents.map(mapClsLikeName))).toMap
@@ -317,6 +309,5 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
     given Ctx = Ctx(defnCtx, fieldCtx)
     val (defs, decls, methodsDef) = sortedClasses.map(codegenClassInfo).unzip3
     val (defs2, decls2) = prog.defs.map(codegenDefn).unzip
-    val (defMain, declMain) = codegenTopNode(prog.main)
-    CompilationUnit(Ls(mlsPrelude), decls ++ decls2 :+ declMain, defs.flatten ++ defs2 ++ methodsDef.flatten :+ defMain :+ Def.RawDef(mlsEntryPoint))
+    CompilationUnit(Ls(mlsPrelude), decls ++ decls2, defs.flatten ++ defs2 ++ methodsDef.flatten :+ Def.RawDef(mlsCallEntry(prog.entry |> allocIfNew)) :+ Def.RawDef(mlsEntryPoint))
 

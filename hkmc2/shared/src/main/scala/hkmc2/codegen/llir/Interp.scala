@@ -214,14 +214,16 @@ class Interpreter(tl: TraceLogger):
     case Panic(msg) => L(StuckNode(node, msg))
 
   private def f(prog: Program): Ls[Value] =
-    val Program(classes, defs, main) = prog
+    val Program(classes, defs, entry) = prog
     given Ctx = Ctx(
       bindingCtx = Map.empty,
       classCtx = classes.map(cls => (cls.name, cls)).toMap,
       funcCtx = defs.map(func => (func.name, func)).toMap,
       thisVal = None,
     )
-    eval(main) match
+    val entryFunc = summon[Ctx].funcCtx.getOrElse(entry, throw InterpreterError("Entry doesn't exist"))
+    assert(entryFunc.params.isEmpty, "Entry function should not have parameters")
+    eval(entryFunc.body) match
       case R(x) => x
       case L(x) => throw InterpreterError("Stuck evaluation: " + x.toString)
     

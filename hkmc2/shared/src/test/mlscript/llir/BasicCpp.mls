@@ -25,7 +25,9 @@ fun foo(a) =
 //│   def j$226(x$218) =
 //│     let x$230 = +(x$218,1) in
 //│     x$230
-//│   undefined
+//│   def entry$231() =
+//│     undefined
+//│   entry = entry$231
 
 :showWholeCpp
 fun bar(x) =
@@ -34,14 +36,32 @@ foo(1)
 //│ 
 //│ WholeProgramCpp:
 //│ #include "mlsprelude.h"
-//│ _mlsValue _mls_j(_mlsValue);
 //│ _mlsValue _mls_foo(_mlsValue);
+//│ _mlsValue _mls_entry();
+//│ _mlsValue _mls_j(_mlsValue);
+//│ _mlsValue _mls_entry1();
 //│ _mlsValue _mls_bar(_mlsValue);
-//│ _mlsValue _mlsMain();
+//│ _mlsValue _mls_bar(_mlsValue _mls_x8) {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x7 = (_mls_x8 + _mlsValue::fromIntLit(1));
+//│   _mls_retval = _mls_x7;
+//│   return _mls_retval;
+//│ }
 //│ _mlsValue _mls_j(_mlsValue _mls_x1) {
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x = (_mls_x1 + _mlsValue::fromIntLit(1));
 //│   _mls_retval = _mls_x;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_entry1() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x9 = _mls_foo(_mlsValue::fromIntLit(1));
+//│   _mls_retval = _mls_x9;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_entry() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_foo(_mlsValue _mls_a) {
@@ -58,16 +78,5 @@ foo(1)
 //│   }
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_bar(_mlsValue _mls_x8) {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x7 = (_mls_x8 + _mlsValue::fromIntLit(1));
-//│   _mls_retval = _mls_x7;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x9 = _mls_foo(_mlsValue::fromIntLit(1));
-//│   _mls_retval = _mls_x9;
-//│   return _mls_retval;
-//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry1(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }

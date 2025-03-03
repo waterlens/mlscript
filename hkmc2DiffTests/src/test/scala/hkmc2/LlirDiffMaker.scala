@@ -50,12 +50,12 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
 
   def mkWholeProgram: Program =
     if wholeProg.length == 0 then
-      Program(Set.empty, Set.empty, Node.Panic("No program to compile"))
+      throw new Exception("No program to make")
     else
       Program(
         classes = wholeProg.iterator.flatMap(_.classes).toSet,
         defs = wholeProg.iterator.flatMap(_.defs).toSet,
-        main = wholeProg.last.main
+        entry = wholeProg.last.entry
       )
 
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
@@ -106,4 +106,6 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
       catch
         case e: LowLevelIRError =>
           output("Stopped due to an error during the Llir generation")
+        case e: OptErr =>
+          output("Stopped due to an error during the optimization")
 

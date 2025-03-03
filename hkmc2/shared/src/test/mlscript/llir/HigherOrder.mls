@@ -12,25 +12,27 @@ fun add_curried(x)(y) = x + y
 add(1)(2)
 //│ = 3
 //│ LLIR:
-//│   class Lambda(lam_arg0$240) extends Callable {
-//│     def apply1$241(y$221) =
-//│       let x$242 = +(lam_arg0$240,y$221) in
-//│       x$242
+//│   class Lambda(lam_arg0$241) extends Callable {
+//│     def apply1$242(y$222) =
+//│       let x$243 = +(lam_arg0$241,y$222) in
+//│       x$243
 //│   }
-//│   class Lambda(lam_arg0$247) extends Callable {
-//│     def apply1$241(y$225) =
-//│       let x$248 = +(lam_arg0$247,y$225) in
-//│       x$248
+//│   class Lambda(lam_arg0$248) extends Callable {
+//│     def apply1$242(y$226) =
+//│       let x$249 = +(lam_arg0$248,y$226) in
+//│       x$249
 //│   }
-//│   def add$218(x$220) =
-//│     let x$244 = Lambda$238(x$220) in
-//│     x$244
-//│   def add_curried$219(x$224) =
-//│     let x$249 = Lambda$245(x$224) in
-//│     x$249
-//│   let* (x$250) = add(1) in
-//│   let x$251 = Callable.apply1$241(x$250,2) in
-//│   x$251
+//│   def add$219(x$221) =
+//│     let x$245 = Lambda$239(x$221) in
+//│     x$245
+//│   def add_curried$220(x$225) =
+//│     let x$250 = Lambda$246(x$225) in
+//│     x$250
+//│   def entry$253() =
+//│     let* (x$251) = add(1) in
+//│     let x$252 = Callable.apply1$242(x$251,2) in
+//│     x$252
+//│   entry = entry$253
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -38,7 +40,7 @@ add(1)(2)
 //│ struct _mls_Lambda1;
 //│ _mlsValue _mls_add(_mlsValue);
 //│ _mlsValue _mls_add_curried(_mlsValue);
-//│ _mlsValue _mlsMain();
+//│ _mlsValue _mls_entry1();
 //│ struct _mls_Lambda: public _mls_Callable {
 //│   _mlsValue _mls_lam_arg0;
 //│   constexpr static inline const char *typeName = "Lambda";
@@ -69,6 +71,13 @@ add(1)(2)
 //│   _mls_retval = _mls_x4;
 //│   return _mls_retval;
 //│ }
+//│ _mlsValue _mls_entry1() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x6 = _mls_add(_mlsValue::fromIntLit(1));
+//│   auto _mls_x7 = _mlsMethodCall<_mls_Callable>(_mls_x6)->_mls_apply1(_mlsValue::fromIntLit(2));
+//│   _mls_retval = _mls_x7;
+//│   return _mls_retval;
+//│ }
 //│ _mlsValue _mls_Lambda::_mls_apply1(_mlsValue _mls_y) {
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x = (_mls_lam_arg0 + _mls_y);
@@ -81,13 +90,7 @@ add(1)(2)
 //│   _mls_retval = _mls_x1;
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x6 = _mls_add(_mlsValue::fromIntLit(1));
-//│   auto _mls_x7 = _mlsMethodCall<_mls_Callable>(_mls_x6)->_mls_apply1(_mlsValue::fromIntLit(2));
-//│   _mls_retval = _mls_x7;
-//│   return _mls_retval;
-//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry1(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
@@ -101,29 +104,31 @@ fun add4_curried(a, b)(c, d) = a + b + c + d
 add4(1, 2)(3, 4)
 //│ = 10
 //│ LLIR:
-//│   class Lambda(lam_arg0$290,lam_arg1$291) extends Callable {
-//│     def apply2$292(c$256,d$257) =
-//│       let x$293 = +(lam_arg1$291,lam_arg0$290) in
-//│       let x$294 = +(x$293,c$256) in
-//│       let x$295 = +(x$294,d$257) in
-//│       x$295
+//│   class Lambda(lam_arg0$292,lam_arg1$293) extends Callable {
+//│     def apply2$294(c$258,d$259) =
+//│       let x$295 = +(lam_arg1$293,lam_arg0$292) in
+//│       let x$296 = +(x$295,c$258) in
+//│       let x$297 = +(x$296,d$259) in
+//│       x$297
 //│   }
-//│   class Lambda(lam_arg0$299,lam_arg1$300) extends Callable {
-//│     def apply2$292(c$264,d$265) =
-//│       let x$301 = +(lam_arg1$300,lam_arg0$299) in
-//│       let x$302 = +(x$301,c$264) in
-//│       let x$303 = +(x$302,d$265) in
-//│       x$303
+//│   class Lambda(lam_arg0$301,lam_arg1$302) extends Callable {
+//│     def apply2$294(c$266,d$267) =
+//│       let x$303 = +(lam_arg1$302,lam_arg0$301) in
+//│       let x$304 = +(x$303,c$266) in
+//│       let x$305 = +(x$304,d$267) in
+//│       x$305
 //│   }
-//│   def add4$253(a$254,b$255) =
-//│     let x$296 = Lambda$288(b$255,a$254) in
-//│     x$296
-//│   def add4_curried$252(a$262,b$263) =
-//│     let x$304 = Lambda$297(b$263,a$262) in
-//│     x$304
-//│   let* (x$305) = add4(1,2) in
-//│   let x$306 = Callable.apply2$292(x$305,3,4) in
-//│   x$306
+//│   def add4$255(a$256,b$257) =
+//│     let x$298 = Lambda$290(b$257,a$256) in
+//│     x$298
+//│   def add4_curried$254(a$264,b$265) =
+//│     let x$306 = Lambda$299(b$265,a$264) in
+//│     x$306
+//│   def entry$309() =
+//│     let* (x$307) = add4(1,2) in
+//│     let x$308 = Callable.apply2$294(x$307,3,4) in
+//│     x$308
+//│   entry = entry$309
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -131,7 +136,7 @@ add4(1, 2)(3, 4)
 //│ struct _mls_Lambda3;
 //│ _mlsValue _mls_add4(_mlsValue, _mlsValue);
 //│ _mlsValue _mls_add4_curried(_mlsValue, _mlsValue);
-//│ _mlsValue _mlsMain();
+//│ _mlsValue _mls_entry2();
 //│ struct _mls_Lambda2: public _mls_Callable {
 //│   _mlsValue _mls_lam_arg0;
 //│   _mlsValue _mls_lam_arg1;
@@ -164,6 +169,13 @@ add4(1, 2)(3, 4)
 //│   _mls_retval = _mls_x15;
 //│   return _mls_retval;
 //│ }
+//│ _mlsValue _mls_entry2() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x16 = _mls_add4(_mlsValue::fromIntLit(1), _mlsValue::fromIntLit(2));
+//│   auto _mls_x17 = _mlsMethodCall<_mls_Callable>(_mls_x16)->_mls_apply2(_mlsValue::fromIntLit(3), _mlsValue::fromIntLit(4));
+//│   _mls_retval = _mls_x17;
+//│   return _mls_retval;
+//│ }
 //│ _mlsValue _mls_Lambda2::_mls_apply2(_mlsValue _mls_c, _mlsValue _mls_d) {
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x8 = (_mls_lam_arg1 + _mls_lam_arg0);
@@ -180,13 +192,7 @@ add4(1, 2)(3, 4)
 //│   _mls_retval = _mls_x13;
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x16 = _mls_add4(_mlsValue::fromIntLit(1), _mlsValue::fromIntLit(2));
-//│   auto _mls_x17 = _mlsMethodCall<_mls_Callable>(_mls_x16)->_mls_apply2(_mlsValue::fromIntLit(3), _mlsValue::fromIntLit(4));
-//│   _mls_retval = _mls_x17;
-//│   return _mls_retval;
-//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry2(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
@@ -201,26 +207,28 @@ dummy()(1, 2)
 //│ = 3
 //│ LLIR:
 //│   class Lambda_add() extends Callable {
-//│     def apply2$292(arg$325,arg$326) =
-//│       let* (x$329) = add(arg$325,arg$326) in
-//│       x$329
+//│     def apply2$294(arg$328,arg$329) =
+//│       let* (x$332) = add(arg$328,arg$329) in
+//│       x$332
 //│   }
-//│   def add$307(a$309,b$310) =
-//│     let x$324 = +(a$309,b$310) in
-//│     x$324
-//│   def dummy$308() =
-//│     let x$330 = Lambda_add$327() in
-//│     x$330
-//│   let* (x$331) = dummy() in
-//│   let x$332 = Callable.apply2$292(x$331,1,2) in
-//│   x$332
+//│   def add$310(a$312,b$313) =
+//│     let x$327 = +(a$312,b$313) in
+//│     x$327
+//│   def dummy$311() =
+//│     let x$333 = Lambda_add$330() in
+//│     x$333
+//│   def entry$336() =
+//│     let* (x$334) = dummy() in
+//│     let x$335 = Callable.apply2$294(x$334,1,2) in
+//│     x$335
+//│   entry = entry$336
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
 //│ struct _mls_Lambda_add;
 //│ _mlsValue _mls_add1(_mlsValue, _mlsValue);
 //│ _mlsValue _mls_dummy();
-//│ _mlsValue _mlsMain();
+//│ _mlsValue _mls_entry3();
 //│ struct _mls_Lambda_add: public _mls_Callable {
 //│   
 //│   constexpr static inline const char *typeName = "Lambda_add";
@@ -242,19 +250,20 @@ dummy()(1, 2)
 //│   _mls_retval = _mls_x20;
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_Lambda_add::_mls_apply2(_mlsValue _mls_arg, _mlsValue _mls_arg1) {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x18 = _mls_add1(_mls_arg, _mls_arg1);
-//│   _mls_retval = _mls_x18;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mlsMain() {
+//│ _mlsValue _mls_entry3() {
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x21 = _mls_dummy();
 //│   auto _mls_x22 = _mlsMethodCall<_mls_Callable>(_mls_x21)->_mls_apply2(_mlsValue::fromIntLit(1), _mlsValue::fromIntLit(2));
 //│   _mls_retval = _mls_x22;
 //│   return _mls_retval;
 //│ }
+//│ _mlsValue _mls_Lambda_add::_mls_apply2(_mlsValue _mls_arg, _mlsValue _mls_arg1) {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x18 = _mls_add1(_mls_arg, _mls_arg1);
+//│   _mls_retval = _mls_x18;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry3(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
@@ -277,55 +286,57 @@ main()
 //│ = Cons(4, Cons(5, Nil))
 //│ LLIR:
 //│   class List()
-//│   class Cons(head$345,tail$346) extends List
+//│   class Cons(head$349,tail$350) extends List
 //│   class Nil() extends List
 //│   class Lambda() extends Callable {
-//│     def apply1$241(x$363) =
-//│       let* (x$428) = inc(x$363) in
-//│       x$428
+//│     def apply1$242(x$367) =
+//│       let* (x$432) = inc(x$367) in
+//│       x$432
 //│   }
 //│   class Lambda_inc() extends Callable {
-//│     def apply1$241(arg$434) =
-//│       let* (x$437) = inc(arg$434) in
-//│       x$437
+//│     def apply1$242(arg$438) =
+//│       let* (x$441) = inc(arg$438) in
+//│       x$441
 //│   }
-//│   def map$334(f$349,l$350) =
-//│     case l$350 of
-//│       Cons$342 =>
-//│         let x$414 = l$350.<Cons$342:head> in
-//│         let x$415 = l$350.<Cons$342:tail> in
-//│         let x$416 = Callable.apply1$241(f$349,x$414) in
-//│         let* (x$417) = map(f$349,x$415) in
-//│         let x$418 = Cons$342(x$416,x$417) in
-//│         x$418
+//│   def map$338(f$353,l$354) =
+//│     case l$354 of
+//│       Cons$346 =>
+//│         let x$418 = l$354.<Cons$346:head> in
+//│         let x$419 = l$354.<Cons$346:tail> in
+//│         let x$420 = Callable.apply1$242(f$353,x$418) in
+//│         let* (x$421) = map(f$353,x$419) in
+//│         let x$422 = Cons$346(x$420,x$421) in
+//│         x$422
 //│       _ =>
-//│         case l$350 of
-//│           Nil$347 =>
-//│             let x$420 = Nil$347() in
-//│             x$420
+//│         case l$354 of
+//│           Nil$351 =>
+//│             let x$424 = Nil$351() in
+//│             x$424
 //│           _ =>
 //│             panic "match error"
-//│   def j$419() =
-//│     jump j$413()
-//│   def j$413() =
+//│   def j$423() =
+//│     jump j$417()
+//│   def j$417() =
 //│     null
-//│   def inc$337(x$359) =
-//│     let x$421 = +(x$359,1) in
-//│     x$421
-//│   def main$335() =
-//│     let x$422 = Nil$347() in
-//│     let x$423 = Cons$342(2,x$422) in
-//│     let x$424 = Cons$342(1,x$423) in
-//│     let x$429 = Lambda$426() in
-//│     let* (x$425) = map(x$429,x$424) in
-//│     let x$430 = Nil$347() in
-//│     let x$431 = Cons$342(4,x$430) in
-//│     let x$432 = Cons$342(3,x$431) in
-//│     let x$438 = Lambda_inc$435() in
-//│     let* (x$433) = map(x$438,x$432) in
-//│     x$433
-//│   let* (x$439) = main() in
-//│   x$439
+//│   def inc$341(x$363) =
+//│     let x$425 = +(x$363,1) in
+//│     x$425
+//│   def main$339() =
+//│     let x$426 = Nil$351() in
+//│     let x$427 = Cons$346(2,x$426) in
+//│     let x$428 = Cons$346(1,x$427) in
+//│     let x$433 = Lambda$430() in
+//│     let* (x$429) = map(x$433,x$428) in
+//│     let x$434 = Nil$351() in
+//│     let x$435 = Cons$346(4,x$434) in
+//│     let x$436 = Cons$346(3,x$435) in
+//│     let x$442 = Lambda_inc$439() in
+//│     let* (x$437) = map(x$442,x$436) in
+//│     x$437
+//│   def entry$444() =
+//│     let* (x$443) = main() in
+//│     x$443
+//│   entry = entry$444
 //│ 
 //│ Interpreted:
 //│ Cons(4,Cons(5,Nil()))
@@ -349,83 +360,85 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│ = Cons(1, Cons(2, Cons(3, Nil)))
 //│ LLIR:
 //│   class List()
-//│   class Cons(head$452,tail$453) extends List
+//│   class Cons(head$457,tail$458) extends List
 //│   class Nil() extends List
-//│   class Lambda(lam_arg0$559,lam_arg1$560) extends Callable {
-//│     def apply1$241(y$479) =
-//│       let x$561 = Callable.apply2$292(lam_arg0$559,lam_arg1$560,y$479) in
-//│       let* (x$562) = not(x$561) in
-//│       x$562
+//│   class Lambda(lam_arg0$564,lam_arg1$565) extends Callable {
+//│     def apply1$242(y$484) =
+//│       let x$566 = Callable.apply2$294(lam_arg0$564,lam_arg1$565,y$484) in
+//│       let* (x$567) = not(x$566) in
+//│       x$567
 //│   }
 //│   class Lambda() extends Callable {
-//│     def apply2$292(x$484,y$485) =
-//│       let x$574 = ==(x$484,y$485) in
-//│       x$574
+//│     def apply2$294(x$489,y$490) =
+//│       let x$579 = ==(x$489,y$490) in
+//│       x$579
 //│   }
-//│   def not$443(c$456) =
-//│     case c$456 of
+//│   def not$448(c$461) =
+//│     case c$461 of
 //│       BoolLit(true) =>
 //│         false
 //│       _ =>
 //│         true
-//│   def j$540() =
+//│   def j$545() =
 //│     null
-//│   def filter$442(f$458,ls$459) =
-//│     case ls$459 of
-//│       Nil$454 =>
-//│         let x$542 = Nil$454() in
-//│         x$542
+//│   def filter$447(f$463,ls$464) =
+//│     case ls$464 of
+//│       Nil$459 =>
+//│         let x$547 = Nil$459() in
+//│         x$547
 //│       _ =>
-//│         case ls$459 of
-//│           Cons$449 =>
-//│             let x$544 = ls$459.<Cons$449:head> in
-//│             let x$545 = ls$459.<Cons$449:tail> in
-//│             let x$546 = Callable.apply1$241(f$458,x$544) in
-//│             case x$546 of
+//│         case ls$464 of
+//│           Cons$454 =>
+//│             let x$549 = ls$464.<Cons$454:head> in
+//│             let x$550 = ls$464.<Cons$454:tail> in
+//│             let x$551 = Callable.apply1$242(f$463,x$549) in
+//│             case x$551 of
 //│               BoolLit(true) =>
-//│                 let* (x$548) = filter(f$458,x$545) in
-//│                 let x$549 = Cons$449(x$544,x$548) in
-//│                 x$549
+//│                 let* (x$553) = filter(f$463,x$550) in
+//│                 let x$554 = Cons$454(x$549,x$553) in
+//│                 x$554
 //│               _ =>
-//│                 let* (x$550) = filter(f$458,x$545) in
-//│                 x$550
+//│                 let* (x$555) = filter(f$463,x$550) in
+//│                 x$555
 //│           _ =>
 //│             panic "match error"
-//│   def j$547() =
-//│     jump j$543()
-//│   def j$543() =
-//│     jump j$541()
-//│   def j$541() =
+//│   def j$552() =
+//│     jump j$548()
+//│   def j$548() =
+//│     jump j$546()
+//│   def j$546() =
 //│     null
-//│   def nubBy$445(eq$470,ls$471) =
-//│     case ls$471 of
-//│       Nil$454 =>
-//│         let x$552 = Nil$454() in
-//│         x$552
+//│   def nubBy$450(eq$475,ls$476) =
+//│     case ls$476 of
+//│       Nil$459 =>
+//│         let x$557 = Nil$459() in
+//│         x$557
 //│       _ =>
-//│         case ls$471 of
-//│           Cons$449 =>
-//│             let x$554 = ls$471.<Cons$449:head> in
-//│             let x$555 = ls$471.<Cons$449:tail> in
-//│             let x$563 = Lambda$557(eq$470,x$554) in
-//│             let* (x$556) = filter(x$563,x$555) in
-//│             let* (x$564) = nubBy(eq$470,x$556) in
-//│             let x$565 = Cons$449(x$554,x$564) in
-//│             x$565
+//│         case ls$476 of
+//│           Cons$454 =>
+//│             let x$559 = ls$476.<Cons$454:head> in
+//│             let x$560 = ls$476.<Cons$454:tail> in
+//│             let x$568 = Lambda$562(eq$475,x$559) in
+//│             let* (x$561) = filter(x$568,x$560) in
+//│             let* (x$569) = nubBy(eq$475,x$561) in
+//│             let x$570 = Cons$454(x$559,x$569) in
+//│             x$570
 //│           _ =>
 //│             panic "match error"
-//│   def j$553() =
-//│     jump j$551()
-//│   def j$551() =
+//│   def j$558() =
+//│     jump j$556()
+//│   def j$556() =
 //│     null
-//│   let x$566 = Nil$454() in
-//│   let x$567 = Cons$449(3,x$566) in
-//│   let x$568 = Cons$449(3,x$567) in
-//│   let x$569 = Cons$449(2,x$568) in
-//│   let x$570 = Cons$449(1,x$569) in
-//│   let x$575 = Lambda$572() in
-//│   let* (x$571) = nubBy(x$575,x$570) in
-//│   x$571
+//│   def entry$581() =
+//│     let x$571 = Nil$459() in
+//│     let x$572 = Cons$454(3,x$571) in
+//│     let x$573 = Cons$454(3,x$572) in
+//│     let x$574 = Cons$454(2,x$573) in
+//│     let x$575 = Cons$454(1,x$574) in
+//│     let x$580 = Lambda$577() in
+//│     let* (x$576) = nubBy(x$580,x$575) in
+//│     x$576
+//│   entry = entry$581
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -434,6 +447,7 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│ struct _mls_Nil1;
 //│ struct _mls_Lambda6;
 //│ struct _mls_Lambda5;
+//│ _mlsValue _mls_entry5();
 //│ _mlsValue _mls_j4();
 //│ _mlsValue _mls_j6();
 //│ _mlsValue _mls_filter(_mlsValue, _mlsValue);
@@ -443,7 +457,6 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│ _mlsValue _mls_nubBy(_mlsValue, _mlsValue);
 //│ _mlsValue _mls_j2();
 //│ _mlsValue _mls_j3();
-//│ _mlsValue _mlsMain();
 //│ struct _mls_List1: public _mlsObject {
 //│   
 //│   constexpr static inline const char *typeName = "List";
@@ -491,60 +504,6 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│   static _mlsValue create(_mlsValue _mls_lam_arg0, _mlsValue _mls_lam_arg1) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda5; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->_mls_lam_arg0 = _mls_lam_arg0; _mlsVal->_mls_lam_arg1 = _mls_lam_arg1;  return _mlsValue(_mlsVal); }
 //│   virtual _mlsValue _mls_apply1(_mlsValue);
 //│ };
-//│ _mlsValue _mls_j3() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_j5() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mls_j2();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_j4() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mls_j3();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_filter(_mlsValue _mls_f1, _mlsValue _mls_ls1) {
-//│   _mlsValue _mls_retval;
-//│   if (_mlsValue::isValueOf<_mls_Nil1>(_mls_ls1)) {
-//│     auto _mls_x62 = _mlsValue::create<_mls_Nil1>();
-//│     _mls_retval = _mls_x62;
-//│   } else {
-//│     if (_mlsValue::isValueOf<_mls_Cons1>(_mls_ls1)) {
-//│       auto _mls_x56 = _mlsValue::cast<_mls_Cons1>(_mls_ls1)->_mls_head;
-//│       auto _mls_x57 = _mlsValue::cast<_mls_Cons1>(_mls_ls1)->_mls_tail;
-//│       auto _mls_x58 = _mlsMethodCall<_mls_Callable>(_mls_f1)->_mls_apply1(_mls_x56);
-//│       if (_mlsValue::isIntLit(_mls_x58, 1)) {
-//│         auto _mls_x60 = _mls_filter(_mls_f1, _mls_x57);
-//│         auto _mls_x61 = _mlsValue::create<_mls_Cons1>(_mls_x56, _mls_x60);
-//│         _mls_retval = _mls_x61;
-//│       } else {
-//│         auto _mls_x59 = _mls_filter(_mls_f1, _mls_x57);
-//│         _mls_retval = _mls_x59;
-//│       }
-//│     } else {
-//│       throw std::runtime_error("match error");
-//│     }
-//│   }
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_j6() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_j7() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mls_j4();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_j2() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
 //│ _mlsValue _mls_not(_mlsValue _mls_c2) {
 //│   _mlsValue _mls_retval;
 //│   if (_mlsValue::isIntLit(_mls_c2, 1)) {
@@ -554,7 +513,69 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│   }
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_nubBy(_mlsValue _mls_eq, _mlsValue _mls_ls) {
+//│ _mlsValue _mls_entry5() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x56 = _mlsValue::create<_mls_Nil1>();
+//│   auto _mls_x57 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(3), _mls_x56);
+//│   auto _mls_x58 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(3), _mls_x57);
+//│   auto _mls_x59 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(2), _mls_x58);
+//│   auto _mls_x60 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(1), _mls_x59);
+//│   auto _mls_x61 = _mlsValue::create<_mls_Lambda6>();
+//│   auto _mls_x62 = _mls_nubBy(_mls_x61, _mls_x60);
+//│   _mls_retval = _mls_x62;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j6() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mls_j5();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j3() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_nubBy(_mlsValue _mls_eq, _mlsValue _mls_ls1) {
+//│   _mlsValue _mls_retval;
+//│   if (_mlsValue::isValueOf<_mls_Nil1>(_mls_ls1)) {
+//│     auto _mls_x69 = _mlsValue::create<_mls_Nil1>();
+//│     _mls_retval = _mls_x69;
+//│   } else {
+//│     if (_mlsValue::isValueOf<_mls_Cons1>(_mls_ls1)) {
+//│       auto _mls_x63 = _mlsValue::cast<_mls_Cons1>(_mls_ls1)->_mls_head;
+//│       auto _mls_x64 = _mlsValue::cast<_mls_Cons1>(_mls_ls1)->_mls_tail;
+//│       auto _mls_x65 = _mlsValue::create<_mls_Lambda5>(_mls_eq, _mls_x63);
+//│       auto _mls_x66 = _mls_filter(_mls_x65, _mls_x64);
+//│       auto _mls_x67 = _mls_nubBy(_mls_eq, _mls_x66);
+//│       auto _mls_x68 = _mlsValue::create<_mls_Cons1>(_mls_x63, _mls_x67);
+//│       _mls_retval = _mls_x68;
+//│     } else {
+//│       throw std::runtime_error("match error");
+//│     }
+//│   }
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j4() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mls_j2();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j2() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j5() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mls_j3();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j7() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_filter(_mlsValue _mls_f1, _mlsValue _mls_ls) {
 //│   _mlsValue _mls_retval;
 //│   if (_mlsValue::isValueOf<_mls_Nil1>(_mls_ls)) {
 //│     auto _mls_x55 = _mlsValue::create<_mls_Nil1>();
@@ -563,11 +584,15 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│     if (_mlsValue::isValueOf<_mls_Cons1>(_mls_ls)) {
 //│       auto _mls_x49 = _mlsValue::cast<_mls_Cons1>(_mls_ls)->_mls_head;
 //│       auto _mls_x50 = _mlsValue::cast<_mls_Cons1>(_mls_ls)->_mls_tail;
-//│       auto _mls_x51 = _mlsValue::create<_mls_Lambda5>(_mls_eq, _mls_x49);
-//│       auto _mls_x52 = _mls_filter(_mls_x51, _mls_x50);
-//│       auto _mls_x53 = _mls_nubBy(_mls_eq, _mls_x52);
-//│       auto _mls_x54 = _mlsValue::create<_mls_Cons1>(_mls_x49, _mls_x53);
-//│       _mls_retval = _mls_x54;
+//│       auto _mls_x51 = _mlsMethodCall<_mls_Callable>(_mls_f1)->_mls_apply1(_mls_x49);
+//│       if (_mlsValue::isIntLit(_mls_x51, 1)) {
+//│         auto _mls_x53 = _mls_filter(_mls_f1, _mls_x50);
+//│         auto _mls_x54 = _mlsValue::create<_mls_Cons1>(_mls_x49, _mls_x53);
+//│         _mls_retval = _mls_x54;
+//│       } else {
+//│         auto _mls_x52 = _mls_filter(_mls_f1, _mls_x50);
+//│         _mls_retval = _mls_x52;
+//│       }
 //│     } else {
 //│       throw std::runtime_error("match error");
 //│     }
@@ -587,18 +612,7 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│   _mls_retval = _mls_x48;
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x63 = _mlsValue::create<_mls_Nil1>();
-//│   auto _mls_x64 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(3), _mls_x63);
-//│   auto _mls_x65 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(3), _mls_x64);
-//│   auto _mls_x66 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(2), _mls_x65);
-//│   auto _mls_x67 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(1), _mls_x66);
-//│   auto _mls_x68 = _mlsValue::create<_mls_Lambda6>();
-//│   auto _mls_x69 = _mls_nubBy(_mls_x68, _mls_x67);
-//│   _mls_retval = _mls_x69;
-//│   return _mls_retval;
-//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry5(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
@@ -616,32 +630,34 @@ f(3)
 //│ = 6
 //│ LLIR:
 //│   class Lambda_self_rec() extends Callable {
-//│     def apply1$241(x$579) =
-//│       let x$604 = ==(x$579,0) in
-//│       case x$604 of
+//│     def apply1$242(x$585) =
+//│       let x$610 = ==(x$585,0) in
+//│       case x$610 of
 //│         BoolLit(true) =>
 //│           0
 //│         _ =>
-//│           let x$606 = -(x$579,1) in
-//│           let x$607 = Callable.apply1$241(<this>$603,x$606) in
-//│           let x$608 = +(x$579,x$607) in
-//│           x$608
+//│           let x$612 = -(x$585,1) in
+//│           let x$613 = Callable.apply1$242(<this>$609,x$612) in
+//│           let x$614 = +(x$585,x$613) in
+//│           x$614
 //│   }
-//│   def f$577(x$578) =
-//│     let x$609 = Lambda_self_rec$601() in
-//│     let x$610 = Callable.apply1$241(x$609,x$578) in
-//│     x$610
-//│   def j$605() =
+//│   def f$583(x$584) =
+//│     let x$615 = Lambda_self_rec$607() in
+//│     let x$616 = Callable.apply1$242(x$615,x$584) in
+//│     x$616
+//│   def j$611() =
 //│     null
-//│   let* (x$611) = f(3) in
-//│   x$611
+//│   def entry$618() =
+//│     let* (x$617) = f(3) in
+//│     x$617
+//│   entry = entry$618
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
 //│ struct _mls_Lambda_self_rec;
 //│ _mlsValue _mls_j8();
 //│ _mlsValue _mls_f2(_mlsValue);
-//│ _mlsValue _mlsMain();
+//│ _mlsValue _mls_entry6();
 //│ struct _mls_Lambda_self_rec: public _mls_Callable {
 //│   
 //│   constexpr static inline const char *typeName = "Lambda_self_rec";
@@ -663,6 +679,12 @@ f(3)
 //│   _mls_retval = _mls_x77;
 //│   return _mls_retval;
 //│ }
+//│ _mlsValue _mls_entry6() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x78 = _mls_f2(_mlsValue::fromIntLit(3));
+//│   _mls_retval = _mls_x78;
+//│   return _mls_retval;
+//│ }
 //│ _mlsValue _mls_Lambda_self_rec::_mls_apply1(_mlsValue _mls_x71) {
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x70 = (_mls_x71 == _mlsValue::fromIntLit(0));
@@ -676,12 +698,7 @@ f(3)
 //│   }
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x78 = _mls_f2(_mlsValue::fromIntLit(3));
-//│   _mls_retval = _mls_x78;
-//│   return _mls_retval;
-//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry6(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:
@@ -702,64 +719,66 @@ fun f(x) =
 f(3)
 //│ = false
 //│ LLIR:
-//│   class Lambda_odd(lam_arg0$653) extends Callable {
-//│     def apply1$241(x$617) =
-//│       let x$654 = ==(x$617,0) in
-//│       case x$654 of
-//│         BoolLit(true) =>
-//│           true
-//│         _ =>
-//│           let x$656 = ==(x$617,1) in
-//│           case x$656 of
-//│             BoolLit(true) =>
-//│               false
-//│             _ =>
-//│               let x$658 = -(x$617,1) in
-//│               let x$659 = Callable.apply1$241(lam_arg0$653,x$658) in
-//│               x$659
-//│   }
-//│   class Lambda_even() extends Callable {
-//│     def apply1$241(x$616) =
-//│       let x$660 = Lambda_odd$651(<this>$603) in
-//│       let x$661 = ==(x$616,0) in
+//│   class Lambda_odd(lam_arg0$660) extends Callable {
+//│     def apply1$242(x$624) =
+//│       let x$661 = ==(x$624,0) in
 //│       case x$661 of
 //│         BoolLit(true) =>
 //│           true
 //│         _ =>
-//│           let x$663 = ==(x$616,1) in
+//│           let x$663 = ==(x$624,1) in
 //│           case x$663 of
 //│             BoolLit(true) =>
 //│               false
 //│             _ =>
-//│               let x$665 = -(x$616,1) in
-//│               let x$666 = Callable.apply1$241(x$660,x$665) in
+//│               let x$665 = -(x$624,1) in
+//│               let x$666 = Callable.apply1$242(lam_arg0$660,x$665) in
 //│               x$666
 //│   }
-//│   def f$614(x$615) =
-//│     let x$667 = Lambda_even$649() in
-//│     let x$668 = Callable.apply1$241(x$667,x$615) in
-//│     x$668
-//│   def j$657() =
-//│     jump j$655()
-//│   def j$655() =
-//│     null
+//│   class Lambda_even() extends Callable {
+//│     def apply1$242(x$623) =
+//│       let x$667 = Lambda_odd$658(<this>$609) in
+//│       let x$668 = ==(x$623,0) in
+//│       case x$668 of
+//│         BoolLit(true) =>
+//│           true
+//│         _ =>
+//│           let x$670 = ==(x$623,1) in
+//│           case x$670 of
+//│             BoolLit(true) =>
+//│               false
+//│             _ =>
+//│               let x$672 = -(x$623,1) in
+//│               let x$673 = Callable.apply1$242(x$667,x$672) in
+//│               x$673
+//│   }
+//│   def f$621(x$622) =
+//│     let x$674 = Lambda_even$656() in
+//│     let x$675 = Callable.apply1$242(x$674,x$622) in
+//│     x$675
 //│   def j$664() =
 //│     jump j$662()
 //│   def j$662() =
 //│     null
-//│   let* (x$669) = f(3) in
-//│   x$669
+//│   def j$671() =
+//│     jump j$669()
+//│   def j$669() =
+//│     null
+//│   def entry$677() =
+//│     let* (x$676) = f(3) in
+//│     x$676
+//│   entry = entry$677
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
 //│ struct _mls_Lambda_odd;
 //│ struct _mls_Lambda_even;
 //│ _mlsValue _mls_j11();
+//│ _mlsValue _mls_entry7();
 //│ _mlsValue _mls_f3(_mlsValue);
 //│ _mlsValue _mls_j10();
 //│ _mlsValue _mls_j9();
 //│ _mlsValue _mls_j12();
-//│ _mlsValue _mlsMain();
 //│ struct _mls_Lambda_odd: public _mls_Callable {
 //│   _mlsValue _mls_lam_arg0;
 //│   constexpr static inline const char *typeName = "Lambda_odd";
@@ -778,14 +797,20 @@ f(3)
 //│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_even; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
 //│   virtual _mlsValue _mls_apply1(_mlsValue);
 //│ };
-//│ _mlsValue _mls_j10() {
+//│ _mlsValue _mls_entry7() {
 //│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   auto _mls_x90 = _mls_f3(_mlsValue::fromIntLit(3));
+//│   _mls_retval = _mls_x90;
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_j12() {
 //│   _mlsValue _mls_retval;
-//│   _mls_retval = _mls_j9();
+//│   _mls_retval = _mls_j11();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j11() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_j9() {
@@ -793,16 +818,16 @@ f(3)
 //│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_f3(_mlsValue _mls_x91) {
+//│ _mlsValue _mls_f3(_mlsValue _mls_x92) {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x90 = _mlsValue::create<_mls_Lambda_even>();
-//│   auto _mls_x92 = _mlsMethodCall<_mls_Callable>(_mls_x90)->_mls_apply1(_mls_x91);
-//│   _mls_retval = _mls_x92;
+//│   auto _mls_x91 = _mlsValue::create<_mls_Lambda_even>();
+//│   auto _mls_x93 = _mlsMethodCall<_mls_Callable>(_mls_x91)->_mls_apply1(_mls_x92);
+//│   _mls_retval = _mls_x93;
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_j11() {
+//│ _mlsValue _mls_j10() {
 //│   _mlsValue _mls_retval;
-//│   _mls_retval = _mls_j10();
+//│   _mls_retval = _mls_j9();
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_Lambda_odd::_mls_apply1(_mlsValue _mls_x80) {
@@ -824,7 +849,7 @@ f(3)
 //│ }
 //│ _mlsValue _mls_Lambda_even::_mls_apply1(_mlsValue _mls_x86) {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x84 = _mlsValue::create<_mls_Lambda_odd>(_mlsValue(this));
+//│   auto _mls_x84 = _mlsValue::create<_mls_Lambda_odd>(_mlsValue(this, _mlsValue::inc_ref_tag{}));
 //│   auto _mls_x85 = (_mls_x86 == _mlsValue::fromIntLit(0));
 //│   if (_mlsValue::isIntLit(_mls_x85, 1)) {
 //│     _mls_retval = _mlsValue::fromIntLit(1);
@@ -840,10 +865,5 @@ f(3)
 //│   }
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x93 = _mls_f3(_mlsValue::fromIntLit(3));
-//│   _mls_retval = _mls_x93;
-//│   return _mls_retval;
-//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry7(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }

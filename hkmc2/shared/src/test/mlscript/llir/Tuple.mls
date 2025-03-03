@@ -13,21 +13,23 @@ mkTup(1, 2)
 //│ = [1, 2]
 //│ LLIR:
 //│   
-//│   def mkTup$218(x$220,y$221) =
-//│     let x$234 = Tuple2$235(x$220,y$221) in
-//│     x$234
-//│   def fst$219(t$223) =
-//│     case t$223 of
-//│       Tuple2$235 =>
-//│         let x$238 = t$223.<Tuple2$235:0> in
-//│         let x$239 = t$223.<Tuple2$235:1> in
-//│         x$238
+//│   def mkTup$219(x$221,y$222) =
+//│     let x$235 = Tuple2$236(x$221,y$222) in
+//│     x$235
+//│   def fst$220(t$224) =
+//│     case t$224 of
+//│       Tuple2$236 =>
+//│         let x$239 = t$224.<Tuple2$236:0> in
+//│         let x$240 = t$224.<Tuple2$236:1> in
+//│         x$239
 //│       _ =>
 //│         panic "match error"
-//│   def j$237() =
+//│   def j$238() =
 //│     null
-//│   let* (x$240) = mkTup(1,2) in
-//│   x$240
+//│   def entry$242() =
+//│     let* (x$241) = mkTup(1,2) in
+//│     x$241
+//│   entry = entry$242
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -35,7 +37,7 @@ mkTup(1, 2)
 //│ _mlsValue _mls_mkTup(_mlsValue, _mlsValue);
 //│ _mlsValue _mls_j();
 //│ _mlsValue _mls_fst(_mlsValue);
-//│ _mlsValue _mlsMain();
+//│ _mlsValue _mls_entry1();
 //│ struct _mls_Tuple2: public _mlsObject {
 //│   _mlsValue _mls_field0;
 //│   _mlsValue _mls_field1;
@@ -68,12 +70,13 @@ mkTup(1, 2)
 //│   }
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mlsMain() {
+//│ _mlsValue _mls_entry1() {
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x4 = _mls_mkTup(_mlsValue::fromIntLit(1), _mlsValue::fromIntLit(2));
 //│   _mls_retval = _mls_x4;
 //│   return _mls_retval;
 //│ }
+//│ _mlsValue _mlsMain() { return _mls_entry1(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
 //│ 
 //│ Interpreted:

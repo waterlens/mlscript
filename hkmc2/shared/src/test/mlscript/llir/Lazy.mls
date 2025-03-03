@@ -22,28 +22,30 @@ fun main() =
 main()
 //│ LLIR:
 //│   class Lambda() extends Callable {
-//│     def apply0$281() =
-//│       let* (x$282) = side_effect() in
-//│       x$282
+//│     def apply0$283() =
+//│       let* (x$284) = side_effect() in
+//│       x$284
 //│   }
-//│   def side_effect$254() =
-//│     let* (x$276) = <builtin>("println","executed") in
+//│   def side_effect$256() =
+//│     let* (x$278) = <builtin>("println","executed") in
 //│     1
-//│   def main$253() =
-//│     let x$284 = Lambda$279() in
-//│     let* (x$278) = lazy(x$284) in
-//│     let* (x$285) = force(x$278) in
-//│     let* (x$286) = force(x$278) in
+//│   def main$255() =
+//│     let x$286 = Lambda$281() in
+//│     let* (x$280) = lazy(x$286) in
+//│     let* (x$287) = force(x$280) in
+//│     let* (x$288) = force(x$280) in
 //│     undefined
-//│   let* (x$287) = main() in
-//│   x$287
+//│   def entry$290() =
+//│     let* (x$289) = main() in
+//│     x$289
+//│   entry = entry$290
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
 //│ struct _mls_Lambda;
 //│ _mlsValue _mls_side_effect();
 //│ _mlsValue _mls_main();
-//│ _mlsValue _mlsMain();
+//│ _mlsValue _mls_entry();
 //│ struct _mls_Lambda: public _mls_Callable {
 //│   
 //│   constexpr static inline const char *typeName = "Lambda";
@@ -68,16 +70,17 @@ main()
 //│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
+//│ _mlsValue _mls_entry() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x6 = _mls_main();
+//│   _mls_retval = _mls_x6;
+//│   return _mls_retval;
+//│ }
 //│ _mlsValue _mls_Lambda::_mls_apply0() {
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x = _mls_side_effect();
 //│   _mls_retval = _mls_x;
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mlsMain() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x6 = _mls_main();
-//│   _mls_retval = _mls_x6;
-//│   return _mls_retval;
-//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }

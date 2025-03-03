@@ -29,14 +29,14 @@ def defaultHidden(x: Str): Bool =
 case class Program(
   classes: Set[ClassInfo],
   defs: Set[Func],
-  main: Node,
+  entry: Local,
 ):
   override def toString: String =
     val t1 = classes.toArray
     val t2 = defs.toArray
     Sorting.quickSort(t1)
     Sorting.quickSort(t2)
-    s"Program({${t1.mkString(",\n")}}, {\n${t2.mkString("\n")}\n},\n$main)"
+    s"Program({${t1.mkString(",\n")}}, {\n${t2.mkString("\n")}\n},\n$entry)"
 
   def show(hide: Str => Bool = defaultHidden) = toDocument(hide).toString
   def toDocument(hide: Str => Bool = defaultHidden) : Document =
@@ -47,7 +47,7 @@ case class Program(
     given Conversion[String, Document] = raw
     val docClasses = t1.map(_.toDocument).toList.mkDocument(doc" # ")
     val docDefs = t2.map(_.toDocument).toList.mkDocument(doc" # ")
-    val docMain = main.toDocument
+    val docMain = doc"entry = ${entry.nme}$$${entry.uid.toString()}"
     doc" #{ $docClasses\n$docDefs\n$docMain #} "
 
 implicit object ClassInfoOrdering extends Ordering[ClassInfo] {

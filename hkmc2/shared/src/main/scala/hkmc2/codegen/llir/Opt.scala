@@ -20,8 +20,7 @@ import collection.immutable._
 import collection.mutable.{HashMap => MutHMap}
 import collection.mutable.{HashSet => MutHSet, Set => MutSet}
 import collection.mutable.{MultiMap, Queue}
-import javax.imageio.event.IIOWriteProgressListener
-import hkmc2.syntax.Keyword.`do`
+import scala.collection.mutable.ListBuffer
 
 final case class OptErr(message: String) extends Exception(message)
 
@@ -206,6 +205,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
         throw OptErr(s"Multiple introductions of $sym")
       env.intros.addOne(sym -> i)
 
+    // given the arguments of a function call, we find their intro-info and propagate them to the function's parameters
+    def bindIInfo(args: Ls[TrivialExpr], params: Ls[Symbol])(using env: Env) =
+      args.iterator.zip(params).foreach:
+        case (Expr.Ref(x), p) if env.intros.contains(x) => env.intros.addOne(p -> env.intros(x))
+        case _ => ()
+    
     def fTExprWithLoc(x: TrivialExpr, loc: Loc)(using env: Env): Opt[I] = x match
       case Expr.Ref(name) => env.intros.get(name)
       case _ => N
@@ -217,7 +222,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
 
     def fNode(node: Node)(using env: Env): Ls[Opt[I]] = node match
       case Node.Result(res) => res.map(f => fTExprWithLoc(f, node))
-      case Node.Jump(func, args) => info.getActiveResults(func)
+      case Node.Jump(func, args) => 
+        info.getActiveResults(func).map:
+          case N => N
+          case S(I(loc, i)) => S(I(node, i))
       case Node.Case(scrutinee, cases, default) =>
         val casesIntros = cases.map:
           case (Pat.Class(cls), body) =>
@@ -229,18 +237,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
           case S(x) => mergeIntros(casesIntros :+ fNode(x), node)
       case Node.Panic(msg) => env.default_intro
       case Node.LetExpr(name, expr, body) =>
-        for
-          i <- fExprWithLoc(expr, node)
-          _ = addI(name, i)
-        yield ()
+        for i <- fExprWithLoc(expr, node); _ = addI(name, i) yield ()
         fNode(body)
-      case Node.LetMethodCall(names, cls, method, args, body) =>
-        fNode(body)
+      case Node.LetMethodCall(names, cls, method, args, body) => fNode(body)
       case Node.LetCall(names, func, args, body) =>
         val funcDefn = info.getFunc(func)
         val ars = info.getActiveResults(func)
-        funcDefn.params.iterator.zip(ars).foreach:
-          case (p, S(i)) => addI(p, i)
+        names.iterator.zip(ars).foreach:
+          case (rv, S(I(oldLoc, i))) => addI(rv, I(node, i))
           case _ => ()
         fNode(body)
     
@@ -257,19 +261,116 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
 
   case class PreFunc(sym: Local, results: Ls[Local])
   case class PostFunc(sym: Local, params: Ls[Local])
-
-  // given the arguments of a function call, we find their intro-info and propagate them to the function's parameters
-  private def bindIInfo(args: Ls[TrivialExpr], params: Ls[Symbol])(using env: IntroductionAnalysis.Env) =
-    args.iterator.zip(params).foreach:
-      case (Expr.Ref(x), p) if env.intros.contains(x) => env.intros.addOne(p -> env.intros(x))
-      case _ => ()
-
-  // given the intro-info of a function's parameters, update the intros env
-  private def updateIInfo(func: Func, intros: Ls[Opt[I]])(using env: IntroductionAnalysis.Env) =
-    func.params.iterator.zip(intros).foreach:
-      case (p, S(i)) => env.intros.addOne(p -> i)
-      case _ => ()
-
   
   private class Splitting(info: FnInfo):
-    def f() = ???
+    case class Env(
+      i: IntroductionAnalysis.Env,
+      e: EliminationAnalysis.Env,
+    )
+
+    case class SymDDesc(
+      knownClass: Local,
+      isIndirect: Bool,
+      e: E
+    )
+
+    case class SDesc(
+      func: Func,
+      argumentsDesc: MutHMap[Local, SymDDesc] = MutHMap.empty,
+      firstDestructedSym: Opt[Local] = N,
+      mixingProducer: MutHMap[Local, Func] = MutHMap.empty,
+    )
+
+    def symAndIntroOfTExpr(te: TrivialExpr)(using env: Env): Opt[(Local, I)] = te match
+      case Expr.Ref(x) => for i <- env.i.intros.get(x) yield (x, i)
+      case _ => none
+    
+    def checkSTarget(func: Func, args: Ls[TrivialExpr])(using env: Env) =
+      val activeParams = info.getActiveParams(func.name)
+      val params = func.params
+      val argsIntros = args.iterator.map(symAndIntroOfTExpr)
+      val firstD = DestructUtils.getFirstDestructed(func.body)
+      var argumentsDesc = MutHMap.empty[Local, SymDDesc]
+      val mixingProducer = MutHMap.empty[Local, Func]
+      argsIntros.zip(params.iterator.zip(activeParams.iterator)).foreach:
+        case ((S((arg, I(loc, IInfo.Ctor(cls))))), (param, elims)) =>
+          for e <- elims do e match
+            case E(loc, EInfo.Des) => argumentsDesc.update(param, SymDDesc(cls, false, e))
+            case E(loc, EInfo.IndDes) => argumentsDesc.update(param, SymDDesc(cls, true, e))
+            case _ =>
+        case (S((arg, I(loc, IInfo.Mixed(is)))), (p, elims)) =>
+          for e <- elims do e match
+            case E(_, EInfo.Des | EInfo.IndDes) =>
+              loc match
+                case Loc(Node.LetCall(_, producer, _, _)) =>
+                // what to do with a mixing producer?
+                // it's different with other kinds of splitting
+                // 
+                // for example, in f0, we have following program:
+                //   ... #1
+                // let x1 = f1() in
+                //   ... #2
+                // let x2 = f2(x1) in
+                //   ... #3
+                // where x1 is `IInfo.Mixed`
+                // 
+                // what we need to to is splitting f1
+                // let ... = f1_pre() in
+                // case ... of 
+                //   C1(...) => let x1 = f1_post1(...) in
+                //              jump f0_post(x1)
+                //   C2(...) => let x1' = f1_post2(...) in
+                //              jump f0_post(x1')
+                // 
+                // f0_post will looks like
+                //   ... #2
+                // let x2 = f2(x1) in
+                //   ... #2
+                // the problem is how to correctly collect all structures necessary for `f0_post``.
+                // as we are traversing over the node chain, we shall accumulate the continuation that with a node hole.
+                // 
+                // in the example above, when we see f2(x1) and find the producer of x1 should be splitted,
+                // we already have the continuation until `... in #1`
+                // (we need record the pre-cont before every possible splitting position).
+                // though, it's still necessary to obtain `... #2` to `... #3` directly.
+                // how to do that? we also need record the post-cont after every possible splitting position.
+                // it indicates that yet another kind of context should be carefully maintained.
+                // another point is worth noticing that we need to do alpha-renaming after using the pre-cont and post-cont!!!
+                  mixingProducer.update(p, info.getFunc(producer))
+                case _ => ()
+            case _ =>
+        case _ => ()
+      SDesc(func, argumentsDesc, firstD, mixingProducer)
+
+    def fNode(node: Node)(k: Node => Env ?=> Node)(using env: Env): Node = node match
+      case Node.Result(res) => k(node)
+      case Node.Jump(func, args) =>
+        checkSTarget(info.getFunc(func), args)
+        k(node)
+      case Node.Case(scrutinee, cases, default) =>
+        symAndIntroOfTExpr(scrutinee) match
+          case Some((scrutinee, I(loc, IInfo.Mixed(i)))) =>
+            ???
+          case _ =>
+            val nuCases = cases.map:
+              case (p @ Pat.Class(cls), body) =>
+                val old = env.i.intros.put(cls, I(node, IInfo.Ctor(cls)))
+                val nuBody = fNode(body)(x => x)
+                for i <- old; _ = env.i.intros.update(cls, i) yield ()
+                (p, nuBody)
+              case (p @ Pat.Lit(lit), body) => 
+                (p, fNode(body)(x => x))
+            val dfltCase = default.map(fNode(_)(x => x))
+            k(Node.Case(scrutinee, nuCases, dfltCase))
+      case Node.Panic(msg) => node
+      case Node.LetExpr(name, expr, body) =>
+        fNode(body): inner =>
+          k(Node.LetExpr(name, expr, inner))
+      case Node.LetMethodCall(names, cls, method, args, body) =>
+        fNode(body): inner =>
+          k(Node.LetMethodCall(names, cls, method, args, inner))
+      case Node.LetCall(names, func, args, body) =>
+        checkSTarget(info.getFunc(func), args)
+        fNode(body): inner =>
+          k(Node.LetCall(names, func, args, inner))
+    

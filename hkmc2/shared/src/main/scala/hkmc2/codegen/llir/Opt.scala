@@ -104,13 +104,11 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
     def addBackwardE(sym: Local, e: E, newLoc: Loc)(using env: Env) =
       assert(env.def_count.getOrElse(sym, 0) <= 1, s"Multiple definitions of $sym")
       import EInfo.*
-      for
-        e2 <- e match
-          case E(_, Des) | E(_, IndDes) => Some(E(newLoc, IndDes))
-          case E(_, Pass) => Some(E(newLoc, Pass))
-          case _ => None
-        _ = env.elims.getOrElseUpdate(sym, MutHSet.empty).add(e2)
-      yield ()
+      val e2 = e match
+        case E(_, Des) | E(_, IndDes) => Some(E(newLoc, IndDes))
+        case E(_, Pass) => Some(E(newLoc, Pass))
+        case _ => None
+      for e2 <- e2 do env.elims.getOrElseUpdate(sym, MutHSet.empty).add(e2)
 
     def addDef(sym: Local)(using env: Env) =
       env.def_count.update(sym, env.def_count.getOrElse(sym, 0) + 1)
@@ -237,7 +235,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
           case S(x) => mergeIntros(casesIntros :+ fNode(x), node)
       case Node.Panic(msg) => env.default_intro
       case Node.LetExpr(name, expr, body) =>
-        for i <- fExprWithLoc(expr, node); _ = addI(name, i) yield ()
+        for i <- fExprWithLoc(expr, node) do addI(name, i)
         fNode(body)
       case Node.LetMethodCall(names, cls, method, args, body) => fNode(body)
       case Node.LetCall(names, func, args, body) =>
@@ -261,11 +259,20 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
 
   case class PreFunc(sym: Local, results: Ls[Local])
   case class PostFunc(sym: Local, params: Ls[Local])
+  case class PreFuncBody(body: Node => Node)
+  case class PostFuncBody(body: Node)
   
   private class Splitting(info: FnInfo):
+    case class RefEqNode(node: Node):
+      override def equals(that: Any) = that match
+        case RefEqNode(thatNode) => node eq thatNode
+        case _ => false
+      override def hashCode = node.hashCode
+    
     case class Env(
       i: IntroductionAnalysis.Env,
       e: EliminationAnalysis.Env,
+      possibleSplitting: MutHMap[RefEqNode, (PreFuncBody, PostFuncBody)] = MutHMap.empty,
     )
 
     case class SymDDesc(
@@ -285,6 +292,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
       case Expr.Ref(x) => for i <- env.i.intros.get(x) yield (x, i)
       case _ => none
     
+    def findProducer(loc: Loc) = loc match
+      case Loc(Node.LetCall(_, producer, _, _)) => some(producer)
+      case _ => none
+    
     def checkSTarget(func: Func, args: Ls[TrivialExpr])(using env: Env) =
       val activeParams = info.getActiveParams(func.name)
       val params = func.params
@@ -301,46 +312,49 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
         case (S((arg, I(loc, IInfo.Mixed(is)))), (p, elims)) =>
           for e <- elims do e match
             case E(_, EInfo.Des | EInfo.IndDes) =>
-              loc match
-                case Loc(Node.LetCall(_, producer, _, _)) =>
-                // what to do with a mixing producer?
-                // it's different with other kinds of splitting
-                // 
-                // for example, in f0, we have following program:
-                //   ... #1
-                // let x1 = f1() in
-                //   ... #2
-                // let x2 = f2(x1) in
-                //   ... #3
-                // where x1 is `IInfo.Mixed`
-                // 
-                // what we need to to is splitting f1
-                // let ... = f1_pre() in
-                // case ... of 
-                //   C1(...) => let x1 = f1_post1(...) in
-                //              jump f0_post(x1)
-                //   C2(...) => let x1' = f1_post2(...) in
-                //              jump f0_post(x1')
-                // 
-                // f0_post will looks like
-                //   ... #2
-                // let x2 = f2(x1) in
-                //   ... #2
-                // the problem is how to correctly collect all structures necessary for `f0_post``.
-                // as we are traversing over the node chain, we shall accumulate the continuation that with a node hole.
-                // 
-                // in the example above, when we see f2(x1) and find the producer of x1 should be splitted,
-                // we already have the continuation until `... in #1`
-                // (we need record the pre-cont before every possible splitting position).
-                // though, it's still necessary to obtain `... #2` to `... #3` directly.
-                // how to do that? we also need record the post-cont after every possible splitting position.
-                // it indicates that yet another kind of context should be carefully maintained.
-                // another point is worth noticing that we need to do alpha-renaming after using the pre-cont and post-cont!!!
-                  mixingProducer.update(p, info.getFunc(producer))
-                case _ => ()
+              // what to do with a mixing producer?
+              // it's different with other kinds of splitting
+              // 
+              // for example, in f0, we have following program:
+              //   ... #1
+              // let x1 = f1() in
+              //   ... #2
+              // let x2 = f2(x1) in
+              //   ... #3
+              // where x1 is `IInfo.Mixed`
+              // 
+              // what we need to to is splitting f1
+              // let ... = f1_pre() in
+              // case ... of 
+              //   C1(...) => let x1 = f1_post1(...) in
+              //              jump f0_post(x1)
+              //   C2(...) => let x1' = f1_post2(...) in
+              //              jump f0_post(x1')
+              // 
+              // f0_post will looks like
+              //   ... #2
+              // let x2 = f2(x1) in
+              //   ... #2
+              // the problem is how to correctly collect all structures necessary for `f0_post``.
+              // as we are traversing over the node chain, we shall accumulate the continuation that with a node hole.
+              // 
+              // in the example above, when we see f2(x1) and find the producer of x1 should be splitted,
+              // we already have the continuation until `... in #1`
+              // (we need record the pre-cont before every possible splitting position).
+              // though, it's still necessary to obtain `... #2` to `... #3` directly.
+              // how to do that? it's just a node following the f1() call, so it's naturally included by the LetCall node
+              // it also indicates that yet another kind of context should be carefully maintained.
+              // another point is worth noticing that we need to do alpha-renaming after using the pre-cont and post-cont!!!
+              val producer = findProducer(loc)
+              for p <- producer do 
+                mixingProducer.update(p, info.getFunc(p))
             case _ =>
         case _ => ()
       SDesc(func, argumentsDesc, firstD, mixingProducer)
+
+    def memoCall(callNode: Node.LetCall)(k: Node => Env ?=> Node)(using env: Env): Unit =
+      val Node.LetCall(names, func, args, body) = callNode
+      env.possibleSplitting.update(RefEqNode(callNode), (PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
 
     def fNode(node: Node)(k: Node => Env ?=> Node)(using env: Env): Node = node match
       case Node.Result(res) => k(node)
@@ -356,7 +370,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
               case (p @ Pat.Class(cls), body) =>
                 val old = env.i.intros.put(cls, I(node, IInfo.Ctor(cls)))
                 val nuBody = fNode(body)(x => x)
-                for i <- old; _ = env.i.intros.update(cls, i) yield ()
+                for i <- old do env.i.intros.update(cls, i)
                 (p, nuBody)
               case (p @ Pat.Lit(lit), body) => 
                 (p, fNode(body)(x => x))
@@ -369,8 +383,9 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger):
       case Node.LetMethodCall(names, cls, method, args, body) =>
         fNode(body): inner =>
           k(Node.LetMethodCall(names, cls, method, args, inner))
-      case Node.LetCall(names, func, args, body) =>
+      case node @ Node.LetCall(names, func, args, body) =>
         checkSTarget(info.getFunc(func), args)
+        memoCall(node)(k)
         fNode(body): inner =>
           k(Node.LetCall(names, func, args, inner))
     

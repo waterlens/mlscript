@@ -68,7 +68,7 @@ class UsefulnessAnalysis(verbose: Bool = false):
     f(x.body)
     uses.toMap
 
-class FreeVarAnalysis(ctx: Map[Local, Func], extended_scope: Bool = true, verbose: Bool = false):
+class FreeVarAnalysis(ctx: Local => Func):
   import Expr._
   import Node._
 
@@ -89,13 +89,7 @@ class FreeVarAnalysis(ctx: Map[Local, Func], extended_scope: Bool = true, verbos
   private def f(using defined: Set[Local])(node: Node, fv: Set[Local]): Set[Local] = node match
     case Result(res) => res.foldLeft(fv)((acc, arg) => f(using defined)(arg.toExpr, acc))
     case Jump(defn, args) =>
-      var fv2 = args.foldLeft(fv)((acc, arg) => f(using defined)(arg.toExpr, acc))
-      if extended_scope && !visited.contains(defn) then
-        visited.add(defn)
-        val func = ctx.getOrElse(defn, throw Exception(s"Function $defn not found"))
-        val defined2 = func.params.foldLeft(defined)((acc, param) => acc + param)
-        fv2 = f(using defined2)(func, fv2)
-      fv2
+      args.foldLeft(fv)((acc, arg) => f(using defined)(arg.toExpr, acc))
     case Case(scrut, cases, default) =>
       val fv2 = scrut match
         case Ref(name) => if defined.contains(name) then fv else fv + name
@@ -103,6 +97,7 @@ class FreeVarAnalysis(ctx: Map[Local, Func], extended_scope: Bool = true, verbos
       val fv3 = cases.foldLeft(fv2):
         case (acc, (cls, body)) => f(using defined)(body, acc)
       fv3
+    case Panic(msg) => fv
     case LetMethodCall(resultNames, cls, method, args, body) =>
       var fv2 = args.foldLeft(fv)((acc, arg) => f(using defined)(arg.toExpr, acc))
       val defined2 = resultNames.foldLeft(defined)((acc, name) => acc + name)
@@ -114,11 +109,6 @@ class FreeVarAnalysis(ctx: Map[Local, Func], extended_scope: Bool = true, verbos
     case LetCall(resultNames, defn, args, body) =>
       var fv2 = args.foldLeft(fv)((acc, arg) => f(using defined)(arg.toExpr, acc))
       val defined2 = resultNames.foldLeft(defined)((acc, name) => acc + name)
-      if extended_scope && !visited.contains(defn) then
-        visited.add(defn)
-        val func = ctx.getOrElse(defn, throw Exception(s"Function $defn not found"))
-        val defined2 = func.params.foldLeft(defined)((acc, param) => acc + param)
-        fv2 = f(using defined2)(func, fv2)
       f(using defined2)(body, fv2)
   def run(node: Node) = f(using Set.empty)(node, Set.empty)
   def run_with(node: Node, defined: Set[Local]) = f(using defined)(node, Set.empty)

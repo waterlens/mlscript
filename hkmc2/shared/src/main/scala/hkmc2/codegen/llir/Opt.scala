@@ -55,7 +55,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     
     def isDestructed(node: Node) = getFirstDestructed(node).isDefined
 
-  def newFunSym(name: Str) = TermSymbol(hkmc2.syntax.Fun, None, Tree.Ident(name))
+  def newFunSym(name: Str) = BlockMemberSymbol(name, Nil)
   def newTemp = TempSymbol(N, "x")
   val placeHolderSym = TempSymbol(N, "<placeholder>")
 
@@ -77,8 +77,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def substT(sym: IterableOnce[TrivialExpr]): Iterator[TrivialExpr] = sym.iterator.map(substT)
 
   case class RefEqNode(node: Node):
-    override def equals(that: Any) = that match
-      case RefEqNode(thatNode) => node eq thatNode
+    override def equals(that: Any) = 
+      that match
+      case RefEqNode(thatNode) =>
+        node is thatNode
       case _ => false
     override def hashCode = node.hashCode
   type Loc = RefEqNode
@@ -466,11 +468,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Expr.Ref(sym) => Expr.Ref(s.subst(sym))
       case Expr.Literal(lit) => expr
       case Expr.CtorApp(cls, args) => Expr.CtorApp(cls, s.substT(args).toList)
-      case Expr.Select(name, cls, field) => Expr.Select(s.subst(name), s.subst(cls), field)
-      case Expr.BasicOp(name, args) => Expr.BasicOp(s.subst(name), s.substT(args).toList)
+      case Expr.Select(name, cls, field) => Expr.Select(s.subst(name), cls, field)
+      case Expr.BasicOp(name, args) => Expr.BasicOp(name, s.substT(args).toList)
       case Expr.AssignField(assignee, cls, field, value) => Expr.AssignField(s.subst(assignee), cls, field, s.substT(value))
     
-
     def renameNode(node: Node)(using s: RenameUtil): Node = node match
       case Node.Result(res) => Node.Result(s.substT(res).toList)
       case Node.Jump(func, args) => Node.Jump(func, s.substT(args).toList) 
@@ -482,7 +483,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Node.LetExpr(name, expr, body) =>
         val nuName = s.subst(name)
         val nuExpr = renameExpr(expr)
-        Node.LetExpr(nuName, expr, renameNode(body))
+        Node.LetExpr(nuName, nuExpr, renameNode(body))
       case Node.LetMethodCall(names, cls, method, args, body) =>
         val nuNames = names.map(s.subst)
         Node.LetMethodCall(nuNames, cls, method, s.substT(args).toList, renameNode(body))
@@ -490,20 +491,32 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         val nuNames = names.map(s.subst)
         Node.LetCall(nuNames, func, s.substT(args).toList, renameNode(body))    
 
+    def reComposePreFunc(subst: RenameUtil, preBody: Node => Node, origParams: Ls[Local], preSym: Local, results: Ls[Local]): Func =
+      trace[Func](s"reComposePreFunc begin", f => s"reComposePreFunc end: $f"):
+        val preParams = subst.subst(origParams)
+        val preNode = renameNode(preBody(Node.Result(results.map(Expr.Ref(_)))))(using subst)
+        val preFunc = Func(freshInt.make, preSym, preParams.toList, results.length, preNode)
+        preFunc
+
+    def reComposePostFunc(subst: RenameUtil, params: Ls[Local], postBody: Node, postSym: Local, resultNum: Int): Func =
+      trace[Func](s"reComposePostFunc begin: $params $postBody", f => s"reComposePostFunc end: $f"):
+        val postParams = subst.subst(params)
+        val postNode = renameNode(postBody)(using subst)
+        val postFunc = Func(freshInt.make, postSym, postParams.toList, resultNum, postNode)
+        postFunc
+
     def reComposeWithArgs(sm: SplittingMode, args: Ls[TrivialExpr], returns: Opt[Ls[Local]], knownClass: Opt[Local]): ComposeResult =
       sm match
         case SplittingMode.A(
           PreFunc(preSym, results, PreFuncBody(preBody), orig),
           PostFunc(postSym, params, PostFuncBody(postBody), _),
           CallShape(func, nestedReturns, nestedArgs)) =>
-          val preNode = preBody(Node.Result(results.map(Expr.Ref(_))))
-          val postNode = postBody
-          val preFunc = Func(freshInt.make, preSym, orig.params, results.length, preNode)
-          val postFunc = Func(freshInt.make, postSym, params, orig.resultNum, postNode)
+          val preFunc = reComposePreFunc(RenameUtil(), preBody, orig.params, preSym, results)
+          val postFunc = reComposePostFunc(RenameUtil(), params, postBody, postSym, orig.resultNum)
           val k = (node: Node) =>
-            val subst = RenameUtil()
             // alpha rename the nestedReturns, results, nestedArgs, and params
             // since they may be reused in different contexts
+            val subst = RenameUtil()
             val nuNestedReturns = subst.subst(nestedReturns.get)
             val nuResults = subst.subst(results)
             val nuNestedArgs = subst.substT(nestedArgs)
@@ -514,13 +527,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               if tailJump then 
                 Node.Jump(postSym, nuParams.map(Expr.Ref(_)).toList)
               else
-                Node.LetCall(returns.get, postSym, nuParams.map(Expr.Ref(_)).toList, node)))
+                val nuReturns = subst.subst(returns.get)
+                Node.LetCall(nuReturns.toList, postSym, nuParams.map(Expr.Ref(_)).toList, renameNode(node)(using subst))))
           ComposeResult(k, List(preFunc, postFunc), orig)
         case SplittingMode.B(
           PreFunc(preSym, results, PreFuncBody(preBody), orig),
           CallShape(func, nestedReturns, nestedArgs)) =>
-          val preNode = preBody(Node.Result(results.map(Expr.Ref(_))))
-          val preFunc = Func(freshInt.make, preSym, orig.params, results.length, preNode)
+          val preFunc = reComposePreFunc(RenameUtil(), preBody, orig.params, preSym, results)
           val k = (node: Node) =>
             val subst = RenameUtil()
             // there are no nested returns since in original function it's a jump
@@ -531,36 +544,41 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               if tailJump then 
                 Node.Jump(func, nuNestedArgs.toList)
               else
-                Node.LetCall(returns.get, func, nuNestedArgs.toList, node))
+                val nuReturns = subst.subst(returns.get)
+                Node.LetCall(nuReturns.toList, func, nuNestedArgs.toList, renameNode(node)(using subst)))
           ComposeResult(k, List(preFunc), orig)
         case SplittingMode.C(
           PreFunc(preSym, results, PreFuncBody(preBody), orig),
           CaseShape(scrutinee, cases, default)) =>
-          val preNode = preBody(Node.Result(results.map(Expr.Ref(_))))
-          val preFunc = Func(freshInt.make, preSym, orig.params, results.length, preNode)
+          val preFunc = reComposePreFunc(RenameUtil(), preBody, orig.params, preSym, results)
           var matchedPat = none[Pat]
+    
           val allPostFunc = cases.map:
             case (pat, PostFunc(postSym, params, PostFuncBody(postBody), _)) =>
-              val postNode = postBody
-              val postFunc = Func(freshInt.make, postSym, params, orig.resultNum, postNode)
+              val postFunc = reComposePostFunc(RenameUtil(), params, postBody, postSym, orig.resultNum)
               (pat, knownClass) match
                 case (Pat.Class(cls), S(cls2)) if cls == cls2 => matchedPat = some(pat)
                 case _ =>
-              pat -> postFunc
+              (params, pat, postFunc)
           val defaultPostFunc = default.map:
             case PostFunc(postSym, params, PostFuncBody(postBody), _) =>
-              val postNode = postBody
-              val postFunc = Func(freshInt.make, postSym, params, orig.resultNum, postNode)
-              postFunc
-          def tailNodeLetCall(postFunc: Func, node: Node) = 
-            Node.LetCall(returns.get, postFunc.name, postFunc.params.map(Expr.Ref(_)).toList, node)
-          def tailNodeJump(postFunc: Func) = 
-            Node.Jump(postFunc.name, postFunc.params.map(Expr.Ref(_)).toList)
-          def tailNodeChoose(postFunc: Func, node: Node) = 
-            if returns.isEmpty then tailNodeJump(postFunc) else tailNodeLetCall(postFunc, node)
+              (params, reComposePostFunc(RenameUtil(), params, postBody, postSym, orig.resultNum))
+
+          def tailNodeLetCall(postFunc: Func, postFvs: Ls[Local], node: Node)(using subst: RenameUtil) = 
+            // the reason for postFvs instead of postFunc.params is that the later has been renamed
+            // so they cannot be correctly renamed with another RenameUtil
+            val postArgs = subst.subst(postFvs).map(Expr.Ref(_)).toList
+            val subst2 = RenameUtil()
+            val nuReturns = subst2.subst(returns.get)
+            Node.LetCall(nuReturns.toList, postFunc.name, postArgs, renameNode(node)(using subst2))
+          def tailNodeJump(postFunc: Func, postFvs: Ls[Local])(using subst: RenameUtil) = 
+            val postArgs = subst.subst(postFvs).map(Expr.Ref(_)).toList
+            Node.Jump(postFunc.name, postArgs)
+          def tailNodeChoose(postFvs: Ls[Local], postFunc: Func, node: Node)(using subst: RenameUtil) = 
+            if returns.isEmpty then tailNodeJump(postFunc, postFvs) else tailNodeLetCall(postFunc, postFvs, node)
           // the supplied node should be trivial, otherwise we actually duplicate stuff here
           val k = (node: Node) =>
-            val subst = RenameUtil()
+            given subst: RenameUtil = RenameUtil()
             val nuResults = subst.subst(results)
             val nuScrutinee = subst.substT(scrutinee)
             val tailJump = returns.isEmpty
@@ -568,85 +586,88 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             case (None, _) => 
               Node.LetCall(nuResults.toList, preSym, args,
                 Node.Case(nuScrutinee, allPostFunc.map:
-                  case (pat, postFunc) =>
-                    pat -> tailNodeChoose(postFunc, node),
-                  defaultPostFunc.map(postFunc =>
-                    tailNodeChoose(postFunc, node))))
+                  case (args, pat, postFunc) =>
+                    pat -> tailNodeChoose(args, postFunc, node),
+                  defaultPostFunc.map((args, postFunc) =>
+                    tailNodeChoose(args, postFunc, node))))
             case (Some(_), None) =>
               // only keep the default case if there's one
               defaultPostFunc match
                 case None => 
                   Node.LetCall(nuResults.toList, preSym, args,
                     Node.Case(nuScrutinee, allPostFunc.map:
-                      case (pat, postFunc) =>
-                        pat -> tailNodeChoose(postFunc, node),
-                      defaultPostFunc.map(postFunc =>
-                        tailNodeChoose(postFunc, node))))
-                case Some(postFunc) =>
+                      case (args, pat, postFunc) =>
+                        pat -> tailNodeChoose(args, postFunc, node),
+                      defaultPostFunc.map((args, postFunc) =>
+                        tailNodeChoose(args, postFunc, node))))
+                case Some((args2, postFunc)) =>
                   Node.LetCall(nuResults.toList, preSym, args,
-                    tailNodeChoose(postFunc, node))
+                    tailNodeChoose(args2, postFunc, node))
             case (Some(_), Some(matched)) =>
               Node.LetCall(nuResults.toList, preSym, args,
                 allPostFunc.flatMap:
-                  case (pat, postFunc) => if pat == matched then
-                    S(tailNodeChoose(postFunc, node)) else N
+                  case (args, pat, postFunc) => if pat == matched then
+                    S(tailNodeChoose(args, postFunc, node)) else N
                 .head)
-          ComposeResult(k, preFunc :: allPostFunc.map(_._2) ++ defaultPostFunc.toList, orig)
+          ComposeResult(k, preFunc :: allPostFunc.map(_._3) ++ defaultPostFunc.map(_._2).toList, orig)
 
     
     def sFunc(func: Func, splitPos: Loc): SplittingMode =
-      sNode(func.body, splitPos, func)(identity)
+      trace[SplittingMode](s"sFunc: ${func.name |> showSym}, $splitPos"):
+        sNode(func.body, splitPos, func)(identity)
 
-    def sNode(node: Node, splitPos: Loc, thisFunc: Func)(acc: Node => Node): SplittingMode = node match
-      case Node.Result(res) => oErrStop("sNode: unexpected Result")
-      case Node.Jump(func, args) =>
-        // B mode
-        val sym = newFunSym(s"${thisFunc.name.nme}_pre")
-        val pfBody = PreFuncBody(acc)
-        val fvs = FreeVarAnalysis(info.func).run(node)
-        val results = fvs.toList
-        val pf = PreFunc(sym, results, pfBody, thisFunc)
-        val cs = CallShape(func, none, args)
-        SplittingMode.B(pf, cs)
-      case Node.Case(scrutinee, cases, default) =>
-        // C mode
-        val sym = newFunSym(s"${thisFunc.name.nme}_pre")
-        val pfBody = PreFuncBody(acc)
-        val fvs = FreeVarAnalysis(info.func).run(node)
-        val results = fvs.toList
-        val pf = PreFunc(sym, results, pfBody, thisFunc)
-        val cases2 = cases.zipWithIndex.map:
-          case ((pat, body), i) =>
-            val sym = newFunSym(s"${thisFunc.name.nme}_case$i")
-            val fvs = FreeVarAnalysis(info.func).run(node)
-            val pfBody = PostFuncBody(body)
-            val pf = PostFunc(sym, fvs.toList, pfBody, thisFunc)
-            (pat, pf)
-        val default2 = default.map: node =>
-            val sym = newFunSym(s"${thisFunc.name.nme}_default")
-            val fvs = FreeVarAnalysis(info.func).run(node)
-            val pfBody = PostFuncBody(node)
-            val pf = PostFunc(sym, fvs.toList, pfBody, thisFunc)
-            pf
-        val caseS = CaseShape(scrutinee, cases2, default2)
-        SplittingMode.C(pf, caseS)
-      case Node.Panic(msg) => oErrStop("sNode: unexpected Panic")
-      case Node.LetExpr(name, expr, body) =>
-        sNode(body, splitPos, thisFunc)(x => Node.LetExpr(name, expr, x))
-      case Node.LetMethodCall(names, cls, method, args, body) =>
-        sNode(body, splitPos, thisFunc)(x => Node.LetMethodCall(names, cls, method, args, x))
-      case Node.LetCall(names, func, args, body) =>
-        if splitPos == RefEqNode(node) then
-          // A mode
+    def sNode(node: Node, splitPos: Loc, thisFunc: Func)(acc: Node => Node): SplittingMode = 
+      trace[SplittingMode](s"sNode: $node"): 
+        node match
+        case Node.Result(res) => oErrStop("sNode: unexpected Result")
+        case Node.Jump(func, args) =>
+          // B mode
           val sym = newFunSym(s"${thisFunc.name.nme}_pre")
           val pfBody = PreFuncBody(acc)
           val fvs = FreeVarAnalysis(info.func).run(node)
           val results = fvs.toList
           val pf = PreFunc(sym, results, pfBody, thisFunc)
-          val cs = CallShape(func, some(names), args)
-          SplittingMode.A(pf, PostFunc(func, names, PostFuncBody(body), thisFunc), cs)
-        else
-          sNode(body, splitPos, thisFunc)(x => Node.LetCall(names, func, args, x))
+          val cs = CallShape(func, none, args)
+          SplittingMode.B(pf, cs)
+        case Node.Case(scrutinee, cases, default) =>
+          // C mode
+          val sym = newFunSym(s"${thisFunc.name.nme}_pre")
+          val pfBody = PreFuncBody(acc)
+          val fvs = FreeVarAnalysis(info.func).run(node)
+          val results = fvs.toList
+          val pf = PreFunc(sym, results, pfBody, thisFunc)
+          val cases2 = cases.zipWithIndex.map:
+            case ((pat, body), i) =>
+              val sym = newFunSym(s"${thisFunc.name.nme}_case$i")
+              val fvs = FreeVarAnalysis(info.func).run(node)
+              val pfBody = PostFuncBody(body)
+              val pf = PostFunc(sym, fvs.toList, pfBody, thisFunc)
+              (pat, pf)
+          val default2 = default.map: node =>
+              val sym = newFunSym(s"${thisFunc.name.nme}_default")
+              val fvs = FreeVarAnalysis(info.func).run(node)
+              val pfBody = PostFuncBody(node)
+              val pf = PostFunc(sym, fvs.toList, pfBody, thisFunc)
+              pf
+          val caseS = CaseShape(scrutinee, cases2, default2)
+          SplittingMode.C(pf, caseS)
+        case Node.Panic(msg) => oErrStop("sNode: unexpected Panic")
+        case Node.LetExpr(name, expr, body) =>
+          sNode(body, splitPos, thisFunc)(x => Node.LetExpr(name, expr, x))
+        case Node.LetMethodCall(names, cls, method, args, body) =>
+          sNode(body, splitPos, thisFunc)(x => Node.LetMethodCall(names, cls, method, args, x))
+        case Node.LetCall(names, func, args, body) =>
+          if splitPos == RefEqNode(node) then
+            // A mode
+            val sym = newFunSym(s"${thisFunc.name.nme}_pre")
+            val pfBody = PreFuncBody(acc)
+            val fvs = FreeVarAnalysis(info.func).run(node)
+            val results = fvs.toList
+            val pf = PreFunc(sym, results, pfBody, thisFunc)
+            val cs = CallShape(func, some(names), args)
+            SplittingMode.A(pf, PostFunc(func, names, PostFuncBody(body), thisFunc), cs)
+          else
+            sNode(body, splitPos, thisFunc)(x => Node.LetCall(names, func, args, x))
     
     // yet another thing is to avoid duplication. once we split a function
     // the sub-components of the function will be wrapped into a new function
@@ -678,69 +699,74 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       info.func.update(sym, nuFunc)
       Node.Jump(sym, fvs.map(Expr.Ref(_)))
 
-    def fNode(node: Node)(k: Node => Env ?=> Node)(using env: Env, thisFunc: Func): Node = node match
-      case Node.Result(res) => k(node)
-      case Node.Jump(func, args) =>
-        val sDesc = checkSTarget(info.getFunc(func), args)
-        (sDesc.argumentsDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
-          case (true, _) => k(node)
-          case (false, _) =>
-            val desc = sDesc.argumentsDesc.head
-            val (sym, SymDDesc(knownC, isInd, e)) = desc
-            val old = info.getFunc(func)
-            val sm = sFunc(info.getFunc(func), e.loc)
-            rFunc(old, sm)
-            val cr = reComposeWithArgs(sm, args, N, N)
-            val nuBody = cr.k(Node.Panic("placeholder here"))
-            k(nuBody)
-      case Node.Case(scrutinee, cases, default) =>
-        symAndIntroOfTExpr(scrutinee) match
-          // case Some((scrutinee, I(loc, IInfo.Mixed(i)))) =>
-          //   ???
-          case _ =>
-            val nuCases = cases.map:
-              case (p @ Pat.Class(cls), body) =>
-                val old = env.i.intros.put(cls, I(node, IInfo.Ctor(cls)))
-                val nuBody = fNode(body)(identity)
-                for i <- old do env.i.intros.update(cls, i)
-                (p, nuBody)
-              case (p @ Pat.Lit(lit), body) => 
-                (p, fNode(body)(identity))
-            val dfltCase = default.map(fNode(_)(identity))
-            k(Node.Case(scrutinee, nuCases, dfltCase))
-      case Node.Panic(msg) => node
-      case Node.LetExpr(name, expr, body) =>
-        fNode(body): inner =>
-          k(Node.LetExpr(name, expr, inner))
-      case Node.LetMethodCall(names, cls, method, args, body) =>
-        fNode(body): inner =>
-          k(Node.LetMethodCall(names, cls, method, args, inner))
-      case node @ Node.LetCall(names, func, args, body) =>
-        if notBuiltin(func) then
+    def fNode(node: Node)(k: Node => Env ?=> Node)(using env: Env, thisFunc: Func): Node =
+      trace[Node](s"split fNode: $node"):
+        node match
+        case Node.Result(res) => k(node)
+        case Node.Jump(func, args) =>
           val sDesc = checkSTarget(info.getFunc(func), args)
           (sDesc.argumentsDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
-            case (true, _) =>
-              memoCall(node)(k)
-              fNode(body): inner =>
-                k(Node.LetCall(names, func, args, inner))
+            case (true, _) => k(node)
             case (false, _) =>
               val desc = sDesc.argumentsDesc.head
               val (sym, SymDDesc(knownC, isInd, e)) = desc
               val old = info.getFunc(func)
+              log(s"splitting: ${old.name |> showSym}")
               val sm = sFunc(info.getFunc(func), e.loc)
               rFunc(old, sm)
-              val cr = reComposeWithArgs(sm, args, S(names), N)
-              val tail = wrapPost(body)
-              val nuBody = cr.k(tail)
+              val cr = reComposeWithArgs(sm, args, N, N)
+              val nuBody = cr.k(Node.Panic("placeholder here"))
               k(nuBody)
-            // case (_, false) => ???
-        else
+        case Node.Case(scrutinee, cases, default) =>
+          symAndIntroOfTExpr(scrutinee) match
+            // case Some((scrutinee, I(loc, IInfo.Mixed(i)))) =>
+            //   ???
+            case _ =>
+              val nuCases = cases.map:
+                case (p @ Pat.Class(cls), body) =>
+                  val old = env.i.intros.put(cls, I(node, IInfo.Ctor(cls)))
+                  val nuBody = fNode(body)(identity)
+                  for i <- old do env.i.intros.update(cls, i)
+                  (p, nuBody)
+                case (p @ Pat.Lit(lit), body) => 
+                  (p, fNode(body)(identity))
+              val dfltCase = default.map(fNode(_)(identity))
+              k(Node.Case(scrutinee, nuCases, dfltCase))
+        case Node.Panic(msg) => node
+        case Node.LetExpr(name, expr, body) =>
           fNode(body): inner =>
-            k(Node.LetCall(names, func, args, inner))
+            k(Node.LetExpr(name, expr, inner))
+        case Node.LetMethodCall(names, cls, method, args, body) =>
+          fNode(body): inner =>
+            k(Node.LetMethodCall(names, cls, method, args, inner))
+        case node @ Node.LetCall(names, func, args, body) =>
+          if notBuiltin(func) then
+            val sDesc = checkSTarget(info.getFunc(func), args)
+            (sDesc.argumentsDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
+              case (true, _) =>
+                memoCall(node)(k)
+                fNode(body): inner =>
+                  k(Node.LetCall(names, func, args, inner))
+              case (false, _) =>
+                val desc = sDesc.argumentsDesc.head
+                val (sym, SymDDesc(knownC, isInd, e)) = desc
+                val old = info.getFunc(func)
+                log(s"splitting: ${old.name |> showSym}")
+                val sm = sFunc(info.getFunc(func), e.loc)
+                rFunc(old, sm)
+                val cr = reComposeWithArgs(sm, args, S(names), N)
+                val tail = wrapPost(body)
+                val nuBody = cr.k(tail)
+                k(nuBody)
+              // case (_, false) => ???
+          else
+            fNode(body): inner =>
+              k(Node.LetCall(names, func, args, inner))
 
     def fFunc(func: Func)(using env: Env): Unit =
-      val nuFunc = Func(func.id, func.name, func.params, func.resultNum, fNode(func.body)(identity)(using env, func))
-      info.func.update(func.name, nuFunc)
+      trace[Unit](s"split fFunc: ${func.name |> showSym}"):
+        val nuFunc = Func(func.id, func.name, func.params, func.resultNum, fNode(func.body)(identity)(using env, func))
+        info.func.update(func.name, nuFunc)
             
     def run() =
       val i = IntroductionAnalysis(info)
@@ -775,8 +801,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Expr.Ref(name) => Expr.Ref(m.subst(name))
       case Expr.Literal(lit) => expr
       case Expr.CtorApp(cls, args) => Expr.CtorApp(cls, m.substT(args).toList)
-      case Expr.Select(name, cls, field) => Expr.Select(m.subst(name), m.subst(cls), field)
-      case Expr.BasicOp(name, args) => Expr.BasicOp(m.subst(name), m.substT(args).toList)
+      case Expr.Select(name, cls, field) => Expr.Select(m.subst(name), cls, field)
+      case Expr.BasicOp(name, args) => Expr.BasicOp(name, m.substT(args).toList)
       case Expr.AssignField(assignee, cls, field, value) => 
         Expr.AssignField(m.subst(assignee), cls, field, m.substT(value))
 
@@ -828,6 +854,9 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     else
       val splitting = Splitting(info)
       splitting.run()
+    if flags.contains("simp2") then
+      val simp = Simplify(info)
+      simp.simplify
     info.toProgram
 
     
@@ -866,8 +895,6 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           case LetCall(names, func, args, body) => find(body)(using if notBuiltin(func) then acc.addF(func) else acc)
 
       def find(func: Func): FuncAndClass = find(func.body)(using FuncAndClass())
-
-    
 
     private def dfs(using visited: MutHMap[Local, Bool], out: Buf, postfix: Bool)(x: Func): Unit =
       trace[Unit](s"dfs: ${{showSym(x.name)}}"):

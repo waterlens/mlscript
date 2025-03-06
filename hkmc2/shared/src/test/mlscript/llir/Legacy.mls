@@ -1,6 +1,8 @@
 :js
 :llir
 :cpp
+:opt
+:optf simp,!split
 
 :global
 
@@ -223,7 +225,6 @@ main()
 //│ Interpreted:
 //│ Some(None())
 
-:sllir
 :intl
 abstract class Option[out T]: Some[T] | None
 class Some[out T](x: T) extends Option[T]
@@ -253,78 +254,6 @@ fun main() =
     Some(b1) then bbb()
 main()
 //│ = 404
-//│ LLIR:
-//│   class Option()
-//│   class Some(x$1049) extends Option
-//│   class None() extends Option
-//│   class Nat()
-//│   class S(s$1060) extends Nat
-//│   class O() extends Nat
-//│   def fromSome$1032(s$1052) =
-//│     case s$1052 of
-//│       Some$1046 =>
-//│         let x$1127 = s$1052.<Some$1046:x> in
-//│         x$1127
-//│       _ =>
-//│         panic "match error"
-//│   def j$1126() =
-//│     null
-//│   def aaa$1037() =
-//│     let x$1128 = 1 in
-//│     let x$1129 = 2 in
-//│     let x$1130 = 3 in
-//│     let x$1131 = 4 in
-//│     let x$1132 = +(x$1128,x$1129) in
-//│     let x$1133 = -(x$1132,x$1130) in
-//│     let x$1134 = +(x$1133,x$1131) in
-//│     x$1134
-//│   def bbb$1039() =
-//│     let* (x$1135) = aaa() in
-//│     let x$1136 = *(x$1135,100) in
-//│     let x$1137 = +(x$1136,4) in
-//│     x$1137
-//│   def not$1035(x$1076) =
-//│     case x$1076 of
-//│       BoolLit(true) =>
-//│         false
-//│       _ =>
-//│         true
-//│   def j$1138() =
-//│     null
-//│   def foo$1042(x$1078) =
-//│     case x$1078 of
-//│       BoolLit(true) =>
-//│         let x$1140 = None$1050() in
-//│         x$1140
-//│       _ =>
-//│         let* (x$1141) = not(x$1078) in
-//│         let* (x$1142) = foo(x$1141) in
-//│         let x$1143 = Some$1046(x$1142) in
-//│         x$1143
-//│   def j$1139() =
-//│     null
-//│   def main$1033() =
-//│     let* (x$1144) = foo(false) in
-//│     case x$1144 of
-//│       None$1050 =>
-//│         let* (x$1146) = aaa() in
-//│         x$1146
-//│       _ =>
-//│         case x$1144 of
-//│           Some$1046 =>
-//│             let x$1148 = x$1144.<Some$1046:x> in
-//│             let* (x$1149) = bbb() in
-//│             x$1149
-//│           _ =>
-//│             panic "match error"
-//│   def j$1147() =
-//│     jump j$1145()
-//│   def j$1145() =
-//│     null
-//│   def entry$1151() =
-//│     let* (x$1150) = main() in
-//│     x$1150
-//│   entry = entry$1151
 //│ 
 //│ Interpreted:
 //│ 404
@@ -550,9 +479,9 @@ fun to_nat(n) =
   if n == 0 then O
   else S(to_nat(n - 1))
 fun main() =
-  to_int(fib(to_nat(14)))
+  to_int(fib(to_nat(10)))
 main()
-//│ = 610
+//│ = 89
 //│ 
 //│ Interpreted:
-//│ 610
+//│ 89

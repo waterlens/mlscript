@@ -115,6 +115,12 @@ sealed trait TrivialExpr:
   def show: String
   def toDocument: Document
   def toExpr: Expr = this match { case x: Expr => x }
+  def foldRef(f: Local => TrivialExpr): TrivialExpr = this match
+    case Ref(sym) => f(sym)
+    case _ => this
+  def iterRef(f: Local => Unit): Unit = this match
+    case Ref(sym) => f(sym)
+    case _ => ()
 
 private def showArguments(args: Ls[TrivialExpr]) = args map (_.show) mkString ","
 

@@ -76,16 +76,6 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def substT(sym: TrivialExpr): TrivialExpr = sym.foldRef(x => Expr.Ref(subst(x)))
     def substT(sym: IterableOnce[TrivialExpr]): Iterator[TrivialExpr] = sym.iterator.map(substT)
 
-  case class RefEqNode(node: Node):
-    override def equals(that: Any) = 
-      that match
-      case RefEqNode(thatNode) =>
-        node is thatNode
-      case _ => false
-    override def hashCode = node.hashCode
-  type Loc = RefEqNode
-  given Conversion[Node, Loc] = RefEqNode(_)
-
   enum IInfo:
     case Ctor(c: Local)
     case Mixed(i: Set[I])
@@ -150,6 +140,19 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val defn: Local,
       val visited: MutHSet[Local] = MutHSet.empty,
     )
+
+  enum Loc:
+    case CallSite(func: Local, args: Ls[TrivialExpr])
+    case CaseSite(scrutinee: TrivialExpr)
+    case ExprBinder(assignee: Local)
+    case Other
+
+    def matches(node: Node) = (node, this) match
+      case (Node.Jump(func, args), CallSite(f, a)) => func == f && args == a
+      case (Node.LetCall(_, func, args, _), CallSite(f, a)) => func == f && args == a
+      case (Node.Case(scrutinee, _, _), CaseSite(s)) => scrutinee == s
+      case (Node.LetExpr(assignee, _, _), ExprBinder(a)) => assignee == a
+      case _ => false
   
   private class EliminationAnalysis(info: ProgInfo):
     import EliminationAnalysis.Env
@@ -182,7 +185,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       def fDef(func: Local, args: Ls[TrivialExpr], funcDefn: Func)(using env: Env) =
         val aps = info.getActiveParams(func)
         args.iterator.zip(aps).foreach:
-          case (Expr.Ref(x), ys) => ys.foreach(y => addBackwardE(x, y, node))
+          case (Expr.Ref(x), ys) => ys.foreach(y => addBackwardE(x, y, Loc.CallSite(func, args)))
           case _ =>
         if !env.visited.contains(func) && notBuiltin(func) then
           env.visited.add(func)
@@ -191,14 +194,15 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           val newEnv = env.copy(defn = func)
           fNode(funcDefn.body)(using newEnv)
       node match
-      case Node.Result(res) => res.foreach(fTExprWithLoc(_, node))
+      case Node.Result(res) => res.foreach(fTExprWithLoc(_, Loc.Other))
       case Node.Jump(func, args) =>
-        args.foreach(fTExprWithLoc(_, node))
+        args.foreach(fTExprWithLoc(_, Loc.Other))
         if notBuiltin(func) then
           fDef(func, args, info.getFunc(func))
-      case Node.Case(Expr.Ref(scrutinee), cases, default) =>
-        addE(scrutinee, E(node, EInfo.Pass))
-        addE(scrutinee, E(node, EInfo.Des))
+      case Node.Case(s @ Expr.Ref(scrutinee), cases, default) =>
+        val loc = Loc.CaseSite(s)
+        addE(scrutinee, E(loc, EInfo.Pass))
+        addE(scrutinee, E(loc, EInfo.Des))
         cases.foreach { case (cls, body) => fNode(body) }
         default.foreach(fNode)
       case Node.Case(_, cases, default) => 
@@ -206,7 +210,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         default.foreach(fNode)
       case Node.Panic(msg) =>
       case Node.LetExpr(name, expr, body) =>
-        fExprWithLoc(expr, node)
+        fExprWithLoc(expr, Loc.ExprBinder(name))
         addDef(name)
         fNode(body)
       case Node.LetMethodCall(names, cls, method, args, body) =>
@@ -214,7 +218,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         fNode(body)
       case Node.LetCall(names, func, args, body) =>
         names.foreach(addDef)
-        args.foreach(fTExprWithLoc(_, node))
+        args.foreach(fTExprWithLoc(_, Loc.Other))
         if notBuiltin(func) then
           fDef(func, args, info.getFunc(func))
         fNode(body)
@@ -282,11 +286,11 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def fNode(node: Node)(using env: Env): Ls[Opt[I]] = 
       trace[Ls[Opt[I]]](s"fNode: $node"):
         node match
-        case Node.Result(res) => res.map(f => fTExprWithLoc(f, node))
+        case Node.Result(res) => res.map(f => fTExprWithLoc(f, Loc.Other))
         case Node.Jump(func, args) => 
           info.getActiveResults(func).map:
             case N => N
-            case S(I(loc, i)) => S(I(node, i))
+            case S(I(loc, i)) => S(I(Loc.CallSite(func, args), i))
         case Node.Case(scrutinee, cases, default) =>
           val casesIntros = cases.map:
             case (Pat.Class(cls), body) =>
@@ -294,11 +298,11 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               fNode(body)
             case (Pat.Lit(lit), body) => fNode(body)
           default match
-            case N => mergeIntros(casesIntros, node)
-            case S(x) => mergeIntros(casesIntros :+ fNode(x), node)
+            case N => mergeIntros(casesIntros, Loc.CaseSite(scrutinee))
+            case S(x) => mergeIntros(casesIntros :+ fNode(x), Loc.CaseSite(scrutinee))
         case Node.Panic(msg) => env.default_intro
         case Node.LetExpr(name, expr, body) =>
-          for i <- fExprWithLoc(expr, node) do addI(name, i)
+          for i <- fExprWithLoc(expr, Loc.ExprBinder(name)) do addI(name, i)
           fNode(body)
         case Node.LetMethodCall(names, cls, method, args, body) => fNode(body)
         case Node.LetCall(names, func, args, body) =>
@@ -306,7 +310,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             val funcDefn = info.getFunc(func)
             val ars = info.getActiveResults(func)
             names.iterator.zip(ars).foreach:
-              case (rv, S(I(oldLoc, i))) => addI(rv, I(node, i))
+              case (rv, S(I(oldLoc, i))) => addI(rv, I(Loc.CallSite(func, args), i))
               case _ => ()
           fNode(body)
       
@@ -333,7 +337,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     case class Env(
       i: IntroductionAnalysis.Env,
       e: EliminationAnalysis.Env,
-      possibleSplitting: MutHMap[RefEqNode, (PreFuncBody, PostFuncBody)] = MutHMap.empty,
+      possibleSplitting: MutHMap[Loc, (PreFuncBody, PostFuncBody)] = MutHMap.empty,
       workingList: MutLSet[Func] = MutLSet.empty,
     )
 
@@ -354,7 +358,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case _ => none
     
     def findProducer(loc: Loc) = loc match
-      case RefEqNode(Node.LetCall(_, producer, _, _)) => some(producer)
+      case Loc.CallSite(producer, _) => some(producer)
       case _ => none
     
     // how this function reflects the splitting decision?
@@ -419,7 +423,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
     def memoCall(callNode: Node.LetCall)(k: Node => Env ?=> Node)(using env: Env): Unit =
       val Node.LetCall(names, func, args, body) = callNode
-      env.possibleSplitting.update(RefEqNode(callNode), (PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
+      env.possibleSplitting.update(Loc.CallSite(func, args), (PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
 
     // there's another strategy to split a callee of functions calls
     // they can be categorized into several kinds:
@@ -657,7 +661,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case Node.LetMethodCall(names, cls, method, args, body) =>
           sNode(body, splitPos, thisFunc)(x => Node.LetMethodCall(names, cls, method, args, x))
         case Node.LetCall(names, func, args, body) =>
-          if splitPos == RefEqNode(node) then
+          if splitPos.matches(node) then
             // A mode
             val sym = newFunSym(s"${thisFunc.name.nme}_pre")
             val pfBody = PreFuncBody(acc)
@@ -724,7 +728,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             case _ =>
               val nuCases = cases.map:
                 case (p @ Pat.Class(cls), body) =>
-                  val old = env.i.intros.put(cls, I(node, IInfo.Ctor(cls)))
+                  val old = env.i.intros.put(cls, I(Loc.CaseSite(scrutinee), IInfo.Ctor(cls)))
                   val nuBody = fNode(body)(identity)
                   for i <- old do env.i.intros.update(cls, i)
                   (p, nuBody)

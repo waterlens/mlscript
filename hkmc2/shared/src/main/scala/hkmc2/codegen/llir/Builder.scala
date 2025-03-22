@@ -31,11 +31,11 @@ final case class BuiltinSymbols(
   fieldSym: MutMap[Int, Local] = MutMap.empty,
   applySym: MutMap[Int, Local] = MutMap.empty,
   tupleSym: MutMap[Int, Local] = MutMap.empty,
+  runtimeSym: Opt[TempSymbol] = None,
 ):
   def hiddenClasses = callableSym.toSet
 
 final case class Ctx(
-  runtimeSymbol: TempSymbol,
   def_acc: ListBuffer[Func],
   class_acc: ListBuffer[ClassInfo],
   symbol_ctx: Map[Local, Local] = Map.empty,
@@ -64,7 +64,9 @@ final case class Ctx(
 
 object Ctx:
   def empty(using Elaborator.State) =
-    Ctx(Elaborator.State.runtimeSymbol, ListBuffer.empty, ListBuffer.empty)
+    Ctx(ListBuffer.empty, ListBuffer.empty).copy(builtin_sym = BuiltinSymbols(
+      runtimeSym = Some(Elaborator.State.runtimeSymbol)
+    ))
 
 final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   import tl.{trace, log, logs}
@@ -98,7 +100,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private def freeVarsFilter(fvs: Set[Local]) =
     trace[Set[Local]](s"freeVarsFilter begin", x => s"freeVarsFilter end: $x"):
       fvs.filter:
-        case _: (BuiltinSymbol | TopLevelSymbol | ClassSymbol) => false
+        case _: (BuiltinSymbol | TopLevelSymbol | ClassSymbol | TermSymbol) => false
         case ms: MemberSymbol[?] => ms.defn match
           case Some(d: ClassLikeDef) => false
           case _ => true
@@ -241,8 +243,10 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
     trace[Node](s"bLam begin", x => s"bLam end: ${x.show}"):
       val Value.Lam(params, body) = lam
       // Generate an auxiliary class inheriting from Callable
-      val freeVars = freeVarsFilter(lam.freeVars -- body.definedVars -- recName.iterator -- ctx.fn_ctx.keySet)
-      log(s"Match free vars: ${lam.freeVars -- body.definedVars} ${ctx.fn_ctx.keySet} ${params.params.map(p => p.sym)}")
+      val freeVars = freeVarsFilter(lam.freeVarsLLIR -- body.definedVars -- recName.iterator -- ctx.fn_ctx.keySet)
+      log(s"Defined vars: ${body.definedVars}")
+      log(s"Match free vars: ${lam.freeVarsLLIR -- body.definedVars} ${ctx.fn_ctx.keySet} ${params.params.map(p => p.sym)}")
+      log(s"Lot: $lam")
       val name = newClassSym(s"Lambda${nameHint.fold("")(x => "_" + x)}")
       val freeVarsList = freeVars.toList
       val args = freeVarsList.map(symMap)
@@ -279,7 +283,6 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private def bValue(v: Value)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bValue { $v } begin", x => s"bValue end: ${x.show}"):
       v match
-      // TODO: why?
       case Value.Ref(l: TermSymbol) if l.owner.nonEmpty =>
         k(l |> sr)
       case Value.Ref(sym) if sym.nme.isCapitalized =>
@@ -304,6 +307,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
           case args: Ls[TrivialExpr] =>
             val v: Local = newTemp
             Node.LetExpr(v, Expr.CtorApp(builtinTuple(elems.length), args), k(v |> sr))
+      case Value.Rcd(fields) => bErrStop(msg"Unsupported value: Rcd")
         
   
   private def getClassOfField(p: FieldSymbol)(using ctx: Ctx)(using Raise, Scope): Local =
@@ -332,7 +336,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
   private def bPath(p: Path)(k: TrivialExpr => Ctx ?=> Node)(using ctx: Ctx)(using Raise, Scope) : Node =
     trace[Node](s"bPath { $p } begin", x => s"bPath end: ${x.show}"):
       p match
-      case s @ Select(Value.Ref(sym), Tree.Ident("Unit")) if sym is ctx.runtimeSymbol =>
+      case s @ Select(Value.Ref(sym), Tree.Ident("Unit")) if sym is ctx.builtin_sym.runtimeSym.get =>
         bPath(Value.Lit(Tree.UnitLit(false)))(k)
       case s @ Select(Value.Ref(cls: ClassSymbol), name) if ctx.method_class.contains(cls) =>
         s.symbol match
@@ -444,9 +448,9 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
           case e: TrivialExpr =>
             val nextCont = Begin(rest, ct)
             val jp: Local = newNamedTemp("j")
-            val fvset = freeVarsFilter(nextCont.freeVars -- nextCont.definedVars -- ctx.fn_ctx.keySet)
+            val fvset = freeVarsFilter(nextCont.freeVarsLLIR -- nextCont.definedVars -- ctx.fn_ctx.keySet)
             val fvs1 = fvset.toList
-            log(s"Match free vars: $fvset ${nextCont.freeVars -- nextCont.definedVars} $fvs1")
+            log(s"Match free vars: $fvset ${nextCont.freeVarsLLIR -- nextCont.definedVars} $fvs1")
             val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, x))
             val fvs = fvs1.map(new_ctx.findName(_))
             def cont(x: TrivialExpr)(using ctx: Ctx) = Node.Jump(

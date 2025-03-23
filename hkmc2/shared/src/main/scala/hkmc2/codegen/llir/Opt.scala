@@ -59,6 +59,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   def newTemp = TempSymbol(N, "x")
   val placeHolderSym = TempSymbol(N, "<placeholder>")
 
+  class Status[T](var elem: T):
+    def get = elem
+    def set(newElem: T) = elem = newElem
+
   class RenameUtil():
     val map: MutHMap[Local, Local] = MutHMap.empty
     def subst(sym: Local): Local = map.getOrElseUpdate(sym, newTemp)
@@ -786,7 +790,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         fFunc(func)(using env)
 
   private class Simplify(info: ProgInfo):
-    def simplify =
+    def simplify(using Status[Bool]) =
       val newFuncs = info.func.map:
         case (name, func) =>
           val newBody = removeTrivialCallAndJump(func.body)(using MapUtil(Map.empty))
@@ -798,10 +802,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       log(s"unreachableFuncs: ${info.func.keys.filterNot(reachable.funcs.contains(_)).map(showSym).toList}")
       log(s"reachableClasses: ${reachable.classes.map(showSym).toList}")
       log(s"unreachableClasses: ${info.classes.keys.filterNot(reachable.classes.contains(_)).map(showSym).toList}")
+      if info.func.size != reachable.funcs.size then
+        summon[Status[Bool]].set(true)
       info.func.filterInPlace((k, _) => reachable.funcs.contains(k))
+      if info.classes.size != reachable.classes.size then
+        summon[Status[Bool]].set(true)
       info.classes.filterInPlace((k, _) => reachable.classes.contains(k))
 
-    private def removeTrivialCallAndJump(expr: Expr)(using m: MapUtil): Expr = expr match
+    private def removeTrivialCallAndJump(expr: Expr)(using m: MapUtil)(using Status[Bool]): Expr = expr match
       case Expr.Ref(name) => Expr.Ref(m.subst(name))
       case Expr.Literal(lit) => expr
       case Expr.CtorApp(cls, args) => Expr.CtorApp(cls, m.substT(args).toList)
@@ -810,18 +818,24 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Expr.AssignField(assignee, cls, field, value) => 
         Expr.AssignField(m.subst(assignee), cls, field, m.substT(value))
 
-    private def removeTrivialCallAndJump(node: Node)(using MapUtil): Node = node match
+    private def removeTrivialCallAndJump(node: Node)(using MapUtil)(using s: Status[Bool]): Node = node match
       case Node.Result(res) => Node.Result(summon[MapUtil].substT(res).toList)
       case Node.Jump(func, args) =>
         if notBuiltin(func) then
           val funcDefn = info.getFunc(func)
           val nuArgs = summon[MapUtil].substT(args).toList
           val m = SubstUtil(funcDefn.params.zip(nuArgs).toMap)
+          log(s"checking: ${funcDefn.name |> showSym}")
           funcDefn.body match
             case Node.Result(res) =>
+              s.set(true)
               Node.Result(res.map(_.foldRef(m.subst)))
             case Node.Jump(func, args) =>
+              s.set(true)
               Node.Jump(func, args.map(_.foldRef(m.subst)))
+            case p @ Node.Panic(_) => 
+              s.set(true)
+              p
             case _ => node
         else
           node
@@ -837,22 +851,31 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         val nuArgs = summon[MapUtil].substT(args).toList
         Node.LetMethodCall(names, cls, method, nuArgs, removeTrivialCallAndJump(body))
       case Node.LetCall(names, func, args, body) =>
+        val nuArgs = summon[MapUtil].substT(args).toList
         if notBuiltin(func) then
           val funcDefn = info.getFunc(func)
-          val nuArgs = summon[MapUtil].substT(args).toList
           val m = SubstUtil(funcDefn.params.zip(nuArgs).toMap)
+          log(s"checking: ${funcDefn.name |> showSym}")
           funcDefn.body match
             case Node.Jump(func, args) =>
+              s.set(true)
               Node.LetCall(names, func, args.map(_.foldRef(m.subst)), removeTrivialCallAndJump(body))
-            case _ => node
+            case p @ Node.Panic(_) =>
+              s.set(true)
+              p
+            case _ => 
+              Node.LetCall(names, func, nuArgs, removeTrivialCallAndJump(body))
         else
-          node
+          Node.LetCall(names, func, nuArgs, removeTrivialCallAndJump(body))
 
   def run(prog: LlirProgram) =
     val info = ProgInfo.fromProgram(prog)
     if flags.contains("simp") then
       val simp = Simplify(info)
-      simp.simplify
+      val changed = Status(true)
+      while changed.get do
+        changed.set(false)
+        simp.simplify(using changed)
     if flags.contains("!split") then
       ()
     else
@@ -860,7 +883,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       splitting.run()
     if flags.contains("simp2") then
       val simp = Simplify(info)
-      simp.simplify
+      val changed = Status(true)
+      while changed.get do
+        changed.set(false)
+        simp.simplify(using changed)
     info.toProgram
 
     

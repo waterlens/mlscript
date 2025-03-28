@@ -63,6 +63,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def get = elem
     def set(newElem: T) = elem = newElem
 
+  // We have 3 similar but different maps here:
+  // * RenameUtil: it's used when need rename without an existing mapping.
+  //     The term must be closed.
+  // * SubstUtil: it's used when need substitution with an existing mapping.
+  //     If there's no mapping of a name, it will raise an error.
+  // * MapUtil: it's used when need map with an existing mapping.
+  //     It only replace the name if there's a mapping for the name, left other names unchanged.
   class RenameUtil():
     val map: MutHMap[Local, Local] = MutHMap.empty
     def subst(sym: Local): Local = map.getOrElseUpdate(sym, newTemp)
@@ -70,7 +77,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def substT(sym: TrivialExpr): TrivialExpr = sym.foldRef(x => Expr.Ref(subst(x)))
     def substT(sym: IterableOnce[TrivialExpr]): Iterator[TrivialExpr] = sym.iterator.map(substT)
 
-  class SubstUtil[K, +V](val map: Map[K, V]):
+  class SubstUtil[K, V](val map: Map[K, V]):
     def subst(k: K) = map.getOrElse(k, oErrStop(s"Key $k not found"))
     def subst(k: IterableOnce[K]): Iterator[V] = k.iterator.map(subst)
 

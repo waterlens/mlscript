@@ -87,6 +87,32 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def substT(sym: TrivialExpr): TrivialExpr = sym.foldRef(x => Expr.Ref(subst(x)))
     def substT(sym: IterableOnce[TrivialExpr]): Iterator[TrivialExpr] = sym.iterator.map(substT)
 
+  def renameExpr(expr: Expr)(using s: RenameUtil): Expr = expr match
+    case Expr.Ref(sym) => Expr.Ref(s.subst(sym))
+    case Expr.Literal(lit) => expr
+    case Expr.CtorApp(cls, args) => Expr.CtorApp(cls, s.substT(args).toList)
+    case Expr.Select(name, cls, field) => Expr.Select(s.subst(name), cls, field)
+    case Expr.BasicOp(name, args) => Expr.BasicOp(name, s.substT(args).toList)
+    case Expr.AssignField(assignee, cls, field, value) => Expr.AssignField(s.subst(assignee), cls, field, s.substT(value))
+  
+  def renameNode(node: Node)(using s: RenameUtil): Node = node match
+    case Node.Result(res) => Node.Result(s.substT(res).toList)
+    case Node.Jump(func, args) => Node.Jump(func, s.substT(args).toList) 
+    case Node.Case(scrutinee, cases, default) =>
+      Node.Case(s.substT(scrutinee), cases.map:
+        case (pat, body) => pat -> renameNode(body),
+        default.map(renameNode(_)))
+    case Node.Panic(msg) => Node.Panic(msg)
+    case Node.LetExpr(name, expr, body) =>
+      val nuName = s.subst(name)
+      val nuExpr = renameExpr(expr)
+      Node.LetExpr(nuName, nuExpr, renameNode(body))
+    case Node.LetMethodCall(names, cls, method, args, body) =>
+      val nuNames = names.map(s.subst)
+      Node.LetMethodCall(nuNames, cls, method, s.substT(args).toList, renameNode(body))
+    case Node.LetCall(names, func, args, body) =>
+      val nuNames = names.map(s.subst)
+      Node.LetCall(nuNames, func, s.substT(args).toList, renameNode(body))    
   enum IInfo:
     case Ctor(c: Local)
     case Mixed(i: Set[I])
@@ -479,33 +505,6 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       invalidFunc: Func
     )
 
-    def renameExpr(expr: Expr)(using s: RenameUtil): Expr = expr match
-      case Expr.Ref(sym) => Expr.Ref(s.subst(sym))
-      case Expr.Literal(lit) => expr
-      case Expr.CtorApp(cls, args) => Expr.CtorApp(cls, s.substT(args).toList)
-      case Expr.Select(name, cls, field) => Expr.Select(s.subst(name), cls, field)
-      case Expr.BasicOp(name, args) => Expr.BasicOp(name, s.substT(args).toList)
-      case Expr.AssignField(assignee, cls, field, value) => Expr.AssignField(s.subst(assignee), cls, field, s.substT(value))
-    
-    def renameNode(node: Node)(using s: RenameUtil): Node = node match
-      case Node.Result(res) => Node.Result(s.substT(res).toList)
-      case Node.Jump(func, args) => Node.Jump(func, s.substT(args).toList) 
-      case Node.Case(scrutinee, cases, default) =>
-        Node.Case(s.substT(scrutinee), cases.map:
-          case (pat, body) => pat -> renameNode(body),
-          default.map(renameNode(_)))
-      case Node.Panic(msg) => Node.Panic(msg)
-      case Node.LetExpr(name, expr, body) =>
-        val nuName = s.subst(name)
-        val nuExpr = renameExpr(expr)
-        Node.LetExpr(nuName, nuExpr, renameNode(body))
-      case Node.LetMethodCall(names, cls, method, args, body) =>
-        val nuNames = names.map(s.subst)
-        Node.LetMethodCall(nuNames, cls, method, s.substT(args).toList, renameNode(body))
-      case Node.LetCall(names, func, args, body) =>
-        val nuNames = names.map(s.subst)
-        Node.LetCall(nuNames, func, s.substT(args).toList, renameNode(body))    
-
     def reComposePreFunc(subst: RenameUtil, preBody: Node => Node, origParams: Ls[Local], preSym: Local, results: Ls[Local]): Func =
       trace[Func](s"reComposePreFunc begin", f => s"reComposePreFunc end: $f"):
         val preParams = subst.subst(origParams)
@@ -843,6 +842,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             case p @ Node.Panic(_) => 
               s.set(true)
               p
+            case p @ Node.LetCall(xs, callee, args, node2: Terminator) =>
+              s.set(true)
+              val nuArgs = args.map(_.foldRef(m.subst))
+              val r = RenameUtil()
+              val renamed = renameNode(node2)(using r)
+              Node.LetCall(xs.map(r.subst), callee, nuArgs, node2)
             case _ => node
         else
           node

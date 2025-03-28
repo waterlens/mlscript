@@ -517,17 +517,6 @@ bar()
 //│   class A(w$1356,x$1357)
 //│   class B(y$1364)
 //│   class C(z$1369)
-//│   def j$1472(x$1805,x$1806,x$1807) =
-//│     let* (x$1832,x$1833,x$1831,x$1834,x$1835) = j_pre(x$1805,x$1806,x$1807) in
-//│     case x$1831 of
-//│       A$1354 =>
-//│         jump j_case0$1697(x$1834,x$1835,x$1831,x$1832,x$1833)
-//│       B$1362 =>
-//│         jump j_case1$1698(x$1834,x$1835,x$1831,x$1832,x$1833)
-//│       C$1367 =>
-//│         jump j_case2$1699(x$1834,x$1835,x$1831,x$1832,x$1833)
-//│       _ =>
-//│         panic "match error"
 //│   def bar$1352() =
 //│     let x$1507 = B$1362(10) in
 //│     let x$1508 = A$1354(9,x$1507) in
@@ -668,7 +657,16 @@ bar()
 //│   def complex_foo_case0$1865(x$1874,x$1876,x$1877) =
 //│     let x$1873 = x$1874.<A$1354:w> in
 //│     let x$1875 = x$1874.<A$1354:x> in
-//│     jump j$1472(x$1876,x$1877,x$1875)
+//│     let* (x$1941,x$1942,x$1940,x$1943,x$1944) = j_pre(x$1876,x$1877,x$1875) in
+//│     case x$1831 of
+//│       A$1354 =>
+//│         jump j_case0$1697(x$1834,x$1835,x$1831,x$1832,x$1833)
+//│       B$1362 =>
+//│         jump j_case1$1698(x$1834,x$1835,x$1831,x$1832,x$1833)
+//│       C$1367 =>
+//│         jump j_case2$1699(x$1834,x$1835,x$1831,x$1832,x$1833)
+//│       _ =>
+//│         panic "match error"
 //│   def complex_foo_case1$1866(x$1879,x$1888,x$1881) =
 //│     let x$1878 = x$1879.<B$1362:y> in
 //│     let x$1880 = +(x$1878,x$1881) in
@@ -708,22 +706,22 @@ fib(20)
 //│ 
 //│ Opt:
 //│   
-//│   def fib$1940(n$1942) =
-//│     let x$1962 = <(n$1942,2) in
-//│     case x$1962 of
+//│   def fib$1945(n$1947) =
+//│     let x$1967 = <(n$1947,2) in
+//│     case x$1967 of
 //│       BoolLit(true) =>
-//│         n$1942
+//│         n$1947
 //│       _ =>
-//│         let x$1964 = -(n$1942,1) in
-//│         let* (x$1965) = fib(x$1964) in
-//│         let x$1966 = -(n$1942,2) in
-//│         let* (x$1967) = fib(x$1966) in
-//│         let x$1968 = +(x$1965,x$1967) in
-//│         x$1968
-//│   def entry$1970() =
-//│     let* (x$1969) = fib(20) in
-//│     x$1969
-//│   entry = entry$1970
+//│         let x$1969 = -(n$1947,1) in
+//│         let* (x$1970) = fib(x$1969) in
+//│         let x$1971 = -(n$1947,2) in
+//│         let* (x$1972) = fib(x$1971) in
+//│         let x$1973 = +(x$1970,x$1972) in
+//│         x$1973
+//│   def entry$1975() =
+//│     let* (x$1974) = fib(20) in
+//│     x$1974
+//│   entry = entry$1975
 //│ 
 //│ Interpreted:
 //│ 6765
@@ -737,31 +735,31 @@ foo()
 //│ 
 //│ Opt:
 //│   
-//│   def odd$1974(x$1976) =
-//│     let x$1999 = ==(x$1976,0) in
-//│     case x$1999 of
+//│   def odd$1979(x$1981) =
+//│     let x$2004 = ==(x$1981,0) in
+//│     case x$2004 of
 //│       BoolLit(true) =>
 //│         false
 //│       _ =>
-//│         let x$2001 = -(x$1976,1) in
-//│         let* (x$2002) = even(x$2001) in
-//│         x$2002
-//│   def even$1972(x$1983) =
-//│     let x$2003 = ==(x$1983,0) in
-//│     case x$2003 of
+//│         let x$2006 = -(x$1981,1) in
+//│         let* (x$2007) = even(x$2006) in
+//│         x$2007
+//│   def even$1977(x$1988) =
+//│     let x$2008 = ==(x$1988,0) in
+//│     case x$2008 of
 //│       BoolLit(true) =>
 //│         true
 //│       _ =>
-//│         let x$2005 = -(x$1983,1) in
-//│         let* (x$2006) = odd(x$2005) in
-//│         x$2006
-//│   def foo$1973() =
-//│     let* (x$2007) = odd(10) in
-//│     x$2007
-//│   def entry$2009() =
-//│     let* (x$2008) = foo() in
-//│     x$2008
-//│   entry = entry$2009
+//│         let x$2010 = -(x$1988,1) in
+//│         let* (x$2011) = odd(x$2010) in
+//│         x$2011
+//│   def foo$1978() =
+//│     let* (x$2012) = odd(10) in
+//│     x$2012
+//│   def entry$2014() =
+//│     let* (x$2013) = foo() in
+//│     x$2013
+//│   entry = entry$2014
 //│ 
 //│ Interpreted:
 //│ false
@@ -781,31 +779,31 @@ main()
 //│ 
 //│ Opt:
 //│   class Option()
-//│   class Some(x$2023) extends Option
+//│   class Some(x$2028) extends Option
 //│   class None() extends Option
-//│   def not$2013(x$2029) =
-//│     case x$2029 of
+//│   def not$2018(x$2034) =
+//│     case x$2034 of
 //│       BoolLit(true) =>
 //│         false
 //│       _ =>
 //│         true
-//│   def foo$2016(x$2032) =
-//│     case x$2032 of
+//│   def foo$2021(x$2037) =
+//│     case x$2037 of
 //│       BoolLit(true) =>
-//│         let x$2050 = None$2026() in
-//│         x$2050
+//│         let x$2055 = None$2031() in
+//│         x$2055
 //│       _ =>
-//│         let* (x$2051) = not(x$2032) in
-//│         let* (x$2052) = foo(x$2051) in
-//│         let x$2053 = Some$2020(x$2052) in
-//│         x$2053
-//│   def main$2011() =
-//│     let* (x$2054) = foo(false) in
-//│     x$2054
-//│   def entry$2056() =
-//│     let* (x$2055) = main() in
-//│     x$2055
-//│   entry = entry$2056
+//│         let* (x$2056) = not(x$2037) in
+//│         let* (x$2057) = foo(x$2056) in
+//│         let x$2058 = Some$2025(x$2057) in
+//│         x$2058
+//│   def main$2016() =
+//│     let* (x$2059) = foo(false) in
+//│     x$2059
+//│   def entry$2061() =
+//│     let* (x$2060) = main() in
+//│     x$2060
+//│   entry = entry$2061
 //│ 
 //│ Interpreted:
 //│ Some(None())
@@ -842,54 +840,54 @@ main()
 //│ 
 //│ Opt:
 //│   class Option()
-//│   class Some(x$2076) extends Option
+//│   class Some(x$2081) extends Option
 //│   class None() extends Option
-//│   def aaa$2064() =
-//│     let x$2149 = 1 in
-//│     let x$2150 = 2 in
-//│     let x$2151 = 3 in
-//│     let x$2152 = 4 in
-//│     let x$2153 = +(x$2149,x$2150) in
-//│     let x$2154 = -(x$2153,x$2151) in
-//│     let x$2155 = +(x$2154,x$2152) in
-//│     x$2155
-//│   def bbb$2066() =
-//│     let* (x$2156) = aaa() in
-//│     let x$2157 = *(x$2156,100) in
-//│     let x$2158 = +(x$2157,4) in
-//│     x$2158
-//│   def not$2062(x$2111) =
-//│     case x$2111 of
+//│   def aaa$2069() =
+//│     let x$2154 = 1 in
+//│     let x$2155 = 2 in
+//│     let x$2156 = 3 in
+//│     let x$2157 = 4 in
+//│     let x$2158 = +(x$2154,x$2155) in
+//│     let x$2159 = -(x$2158,x$2156) in
+//│     let x$2160 = +(x$2159,x$2157) in
+//│     x$2160
+//│   def bbb$2071() =
+//│     let* (x$2161) = aaa() in
+//│     let x$2162 = *(x$2161,100) in
+//│     let x$2163 = +(x$2162,4) in
+//│     x$2163
+//│   def not$2067(x$2116) =
+//│     case x$2116 of
 //│       BoolLit(true) =>
 //│         false
 //│       _ =>
 //│         true
-//│   def foo$2069(x$2114) =
-//│     case x$2114 of
+//│   def foo$2074(x$2119) =
+//│     case x$2119 of
 //│       BoolLit(true) =>
-//│         let x$2161 = None$2079() in
-//│         x$2161
+//│         let x$2166 = None$2084() in
+//│         x$2166
 //│       _ =>
-//│         let* (x$2162) = not(x$2114) in
-//│         let* (x$2163) = foo(x$2162) in
-//│         let x$2164 = Some$2073(x$2163) in
-//│         x$2164
-//│   def main$2060() =
-//│     let* (x$2165) = foo(false) in
-//│     case x$2165 of
-//│       None$2079 =>
-//│         let* (x$2167) = aaa() in
-//│         x$2167
-//│       Some$2073 =>
-//│         let x$2168 = x$2165.<Some$2073:x> in
-//│         let* (x$2169) = bbb() in
+//│         let* (x$2167) = not(x$2119) in
+//│         let* (x$2168) = foo(x$2167) in
+//│         let x$2169 = Some$2078(x$2168) in
 //│         x$2169
+//│   def main$2065() =
+//│     let* (x$2170) = foo(false) in
+//│     case x$2170 of
+//│       None$2084 =>
+//│         let* (x$2172) = aaa() in
+//│         x$2172
+//│       Some$2078 =>
+//│         let x$2173 = x$2170.<Some$2078:x> in
+//│         let* (x$2174) = bbb() in
+//│         x$2174
 //│       _ =>
 //│         panic "match error"
-//│   def entry$2171() =
-//│     let* (x$2170) = main() in
-//│     x$2170
-//│   entry = entry$2171
+//│   def entry$2176() =
+//│     let* (x$2175) = main() in
+//│     x$2175
+//│   entry = entry$2176
 //│ 
 //│ Interpreted:
 //│ 404
@@ -912,54 +910,54 @@ foo()
 //│ 
 //│ Opt:
 //│   class Nat()
-//│   class S(s$2183) extends Nat
+//│   class S(s$2188) extends Nat
 //│   class O() extends Nat
-//│   def odd$2174(x$2235) =
-//│     let* (x$2241) = odd_pre(x$2235) in
-//│     case x$2241 of
-//│       O$2186 =>
+//│   def odd$2179(x$2240) =
+//│     let* (x$2246) = odd_pre(x$2240) in
+//│     case x$2246 of
+//│       O$2191 =>
 //│         false
-//│       S$2181 =>
-//│         jump odd_case1$2233(x$2241)
+//│       S$2186 =>
+//│         jump odd_case1$2238(x$2246)
 //│       _ =>
 //│         panic "match error"
-//│   def even$2175(x$2195) =
-//│     case x$2195 of
-//│       O$2186 =>
+//│   def even$2180(x$2200) =
+//│     case x$2200 of
+//│       O$2191 =>
 //│         true
-//│       S$2181 =>
-//│         let x$2221 = x$2195.<S$2181:s> in
-//│         let* (x$2222) = odd(x$2221) in
-//│         x$2222
+//│       S$2186 =>
+//│         let x$2226 = x$2200.<S$2186:s> in
+//│         let* (x$2227) = odd(x$2226) in
+//│         x$2227
 //│       _ =>
 //│         panic "match error"
-//│   def foo$2178() =
-//│     let x$2223 = O$2186() in
-//│     let x$2224 = S$2181(x$2223) in
-//│     let x$2225 = S$2181(x$2224) in
-//│     let x$2226 = S$2181(x$2225) in
-//│     let* (x$2249) = odd_pre(x$2226) in
-//│     case x$2249 of
-//│       O$2186 =>
-//│         let* (x$2250) = odd_case0(x$2249) in
-//│         x$2250
-//│       S$2181 =>
-//│         let* (x$2251) = odd_case1(x$2249) in
-//│         x$2251
+//│   def foo$2183() =
+//│     let x$2228 = O$2191() in
+//│     let x$2229 = S$2186(x$2228) in
+//│     let x$2230 = S$2186(x$2229) in
+//│     let x$2231 = S$2186(x$2230) in
+//│     let* (x$2254) = odd_pre(x$2231) in
+//│     case x$2254 of
+//│       O$2191 =>
+//│         let* (x$2255) = odd_case0(x$2254) in
+//│         x$2255
+//│       S$2186 =>
+//│         let* (x$2256) = odd_case1(x$2254) in
+//│         x$2256
 //│       _ =>
 //│         panic "match error"
-//│   def entry$2229() =
-//│     let* (x$2228) = foo() in
-//│     x$2228
-//│   def odd_pre$2231(x$2236) =
-//│     x$2236
-//│   def odd_case0$2232(x$2237) =
+//│   def entry$2234() =
+//│     let* (x$2233) = foo() in
+//│     x$2233
+//│   def odd_pre$2236(x$2241) =
+//│     x$2241
+//│   def odd_case0$2237(x$2242) =
 //│     false
-//│   def odd_case1$2233(x$2239) =
-//│     let x$2238 = x$2239.<S$2181:s> in
-//│     let* (x$2240) = even(x$2238) in
-//│     x$2240
-//│   entry = entry$2229
+//│   def odd_case1$2238(x$2244) =
+//│     let x$2243 = x$2244.<S$2186:s> in
+//│     let* (x$2245) = even(x$2243) in
+//│     x$2245
+//│   entry = entry$2234
 //│ 
 //│ Interpreted:
 //│ true
@@ -983,47 +981,47 @@ foo()
 //│ 
 //│ Opt:
 //│   class Nat()
-//│   class S(s$2264) extends Nat
+//│   class S(s$2269) extends Nat
 //│   class O() extends Nat
-//│   def odd$2254(x$2270) =
-//│     case x$2270 of
-//│       O$2267 =>
+//│   def odd$2259(x$2275) =
+//│     case x$2275 of
+//│       O$2272 =>
 //│         false
-//│       S$2262 =>
-//│         let x$2305 = x$2270.<S$2262:s> in
-//│         let* (x$2306) = even(x$2305) in
-//│         x$2306
+//│       S$2267 =>
+//│         let x$2310 = x$2275.<S$2267:s> in
+//│         let* (x$2311) = even(x$2310) in
+//│         x$2311
 //│       _ =>
 //│         panic "match error"
-//│   def even$2256(x$2276) =
-//│     case x$2276 of
-//│       O$2267 =>
+//│   def even$2261(x$2281) =
+//│     case x$2281 of
+//│       O$2272 =>
 //│         true
-//│       S$2262 =>
-//│         let x$2308 = x$2276.<S$2262:s> in
-//│         let* (x$2309) = odd(x$2308) in
-//│         x$2309
-//│       _ =>
-//│         panic "match error"
-//│   def mk$2255(n$2282) =
-//│     let x$2310 = >(n$2282,0) in
-//│     case x$2310 of
-//│       BoolLit(true) =>
-//│         let x$2312 = -(n$2282,1) in
-//│         let* (x$2313) = mk(x$2312) in
-//│         let x$2314 = S$2262(x$2313) in
+//│       S$2267 =>
+//│         let x$2313 = x$2281.<S$2267:s> in
+//│         let* (x$2314) = odd(x$2313) in
 //│         x$2314
 //│       _ =>
-//│         let x$2315 = O$2267() in
-//│         x$2315
-//│   def foo$2259() =
-//│     let* (x$2316) = mk(10) in
-//│     let* (x$2317) = odd(x$2316) in
-//│     x$2317
-//│   def entry$2319() =
-//│     let* (x$2318) = foo() in
-//│     x$2318
-//│   entry = entry$2319
+//│         panic "match error"
+//│   def mk$2260(n$2287) =
+//│     let x$2315 = >(n$2287,0) in
+//│     case x$2315 of
+//│       BoolLit(true) =>
+//│         let x$2317 = -(n$2287,1) in
+//│         let* (x$2318) = mk(x$2317) in
+//│         let x$2319 = S$2267(x$2318) in
+//│         x$2319
+//│       _ =>
+//│         let x$2320 = O$2272() in
+//│         x$2320
+//│   def foo$2264() =
+//│     let* (x$2321) = mk(10) in
+//│     let* (x$2322) = odd(x$2321) in
+//│     x$2322
+//│   def entry$2324() =
+//│     let* (x$2323) = foo() in
+//│     x$2323
+//│   entry = entry$2324
 //│ 
 //│ Interpreted:
 //│ false
@@ -1047,64 +1045,64 @@ foo()
 //│ 
 //│ Opt:
 //│   class Nat()
-//│   class S(s$2332) extends Nat
+//│   class S(s$2337) extends Nat
 //│   class O() extends Nat
-//│   def odd$2322(x$2401) =
-//│     let* (x$2407) = odd_pre(x$2401) in
-//│     case x$2407 of
-//│       O$2335 =>
+//│   def odd$2327(x$2406) =
+//│     let* (x$2412) = odd_pre(x$2406) in
+//│     case x$2412 of
+//│       O$2340 =>
 //│         false
-//│       S$2330 =>
-//│         jump odd_case1$2399(x$2407)
+//│       S$2335 =>
+//│         jump odd_case1$2404(x$2412)
 //│       _ =>
 //│         panic "match error"
-//│   def even$2324(x$2344) =
-//│     case x$2344 of
-//│       O$2335 =>
+//│   def even$2329(x$2349) =
+//│     case x$2349 of
+//│       O$2340 =>
 //│         true
-//│       S$2330 =>
-//│         let x$2382 = x$2344.<S$2330:s> in
-//│         let* (x$2383) = odd(x$2382) in
-//│         x$2383
-//│       _ =>
-//│         panic "match error"
-//│   def mk$2323(n$2350) =
-//│     let x$2384 = >(n$2350,0) in
-//│     case x$2384 of
-//│       BoolLit(true) =>
-//│         let x$2386 = -(n$2350,1) in
-//│         let* (x$2387) = mk(x$2386) in
-//│         let x$2388 = S$2330(x$2387) in
+//│       S$2335 =>
+//│         let x$2387 = x$2349.<S$2335:s> in
+//│         let* (x$2388) = odd(x$2387) in
 //│         x$2388
 //│       _ =>
-//│         let x$2389 = O$2335() in
-//│         x$2389
-//│   def foo$2327() =
-//│     let* (x$2390) = mk(10) in
-//│     let x$2391 = S$2330(x$2390) in
-//│     let x$2392 = S$2330(x$2391) in
-//│     let* (x$2415) = odd_pre(x$2392) in
-//│     case x$2415 of
-//│       O$2335 =>
-//│         let* (x$2416) = odd_case0(x$2415) in
-//│         x$2416
-//│       S$2330 =>
-//│         let* (x$2417) = odd_case1(x$2415) in
-//│         x$2417
+//│         panic "match error"
+//│   def mk$2328(n$2355) =
+//│     let x$2389 = >(n$2355,0) in
+//│     case x$2389 of
+//│       BoolLit(true) =>
+//│         let x$2391 = -(n$2355,1) in
+//│         let* (x$2392) = mk(x$2391) in
+//│         let x$2393 = S$2335(x$2392) in
+//│         x$2393
+//│       _ =>
+//│         let x$2394 = O$2340() in
+//│         x$2394
+//│   def foo$2332() =
+//│     let* (x$2395) = mk(10) in
+//│     let x$2396 = S$2335(x$2395) in
+//│     let x$2397 = S$2335(x$2396) in
+//│     let* (x$2420) = odd_pre(x$2397) in
+//│     case x$2420 of
+//│       O$2340 =>
+//│         let* (x$2421) = odd_case0(x$2420) in
+//│         x$2421
+//│       S$2335 =>
+//│         let* (x$2422) = odd_case1(x$2420) in
+//│         x$2422
 //│       _ =>
 //│         panic "match error"
-//│   def entry$2395() =
-//│     let* (x$2394) = foo() in
-//│     x$2394
-//│   def odd_pre$2397(x$2402) =
-//│     x$2402
-//│   def odd_case0$2398(x$2403) =
+//│   def entry$2400() =
+//│     let* (x$2399) = foo() in
+//│     x$2399
+//│   def odd_pre$2402(x$2407) =
+//│     x$2407
+//│   def odd_case0$2403(x$2408) =
 //│     false
-//│   def odd_case1$2399(x$2405) =
-//│     let x$2404 = x$2405.<S$2330:s> in
-//│     let* (x$2406) = even(x$2404) in
-//│     x$2406
-//│   entry = entry$2395
+//│   def odd_case1$2404(x$2410) =
+//│     let x$2409 = x$2410.<S$2335:s> in
+//│     let* (x$2411) = even(x$2409) in
+//│     x$2411
+//│   entry = entry$2400
 //│ 
 //│ Interpreted:
 //│ false
@@ -1131,85 +1129,110 @@ main()
 //│ 
 //│ Opt:
 //│   class Nat()
-//│   class S(s$2431) extends Nat
+//│   class S(s$2436) extends Nat
 //│   class O() extends Nat
-//│   def even$2422(x$2443) =
-//│     case x$2443 of
-//│       O$2434 =>
-//│         true
-//│       S$2429 =>
-//│         let x$2480 = x$2443.<S$2429:s> in
-//│         let* (x$2481) = odd(x$2480) in
-//│         x$2481
+//│   def odd$2425(x$2576) =
+//│     let* (x$2581) = odd_pre(x$2576) in
+//│     case x$2581 of
+//│       O$2439 =>
+//│         false
+//│       S$2434 =>
+//│         jump odd_case1$2509(x$2581)
 //│       _ =>
 //│         panic "match error"
-//│   def foo$2426() =
-//│     let x$2482 = >(10,0) in
-//│     case x$2482 of
-//│       BoolLit(true) =>
-//│         let x$2484 = O$2434() in
-//│         let x$2485 = S$2429(x$2484) in
-//│         let* (x$2550) = j_pre(x$2485) in
-//│         let* (x$2551) = odd(x$2550) in
-//│         x$2551
+//│   def even$2427(x$2448) =
+//│     case x$2448 of
+//│       O$2439 =>
+//│         true
+//│       S$2434 =>
+//│         let x$2485 = x$2448.<S$2434:s> in
+//│         let* (x$2486) = odd(x$2485) in
+//│         x$2486
 //│       _ =>
-//│         let x$2486 = O$2434() in
-//│         let* (x$2561) = j_pre(x$2486) in
-//│         x$2561
-//│   def bar$2423() =
-//│     let x$2488 = >(10,0) in
-//│     case x$2488 of
+//│         panic "match error"
+//│   def foo$2431() =
+//│     let x$2487 = >(10,0) in
+//│     case x$2487 of
 //│       BoolLit(true) =>
-//│         let x$2490 = O$2434() in
-//│         let x$2491 = S$2429(x$2490) in
-//│         let* (x$2518) = odd_pre(x$2491) in
-//│         case x$2518 of
-//│           O$2434 =>
-//│             let* (x$2519) = odd_case0(x$2518) in
-//│             x$2519
-//│           S$2429 =>
-//│             let* (x$2520) = odd_case1(x$2518) in
-//│             x$2520
+//│         let x$2489 = O$2439() in
+//│         let x$2490 = S$2434(x$2489) in
+//│         let* (x$2565) = odd_pre(x$2490) in
+//│         case x$2565 of
+//│           O$2439 =>
+//│             let* (x$2566) = odd_case0(x$2565) in
+//│             x$2567
+//│           S$2434 =>
+//│             let* (x$2568) = odd_case1(x$2565) in
+//│             x$2569
 //│           _ =>
 //│             panic "match error"
 //│       _ =>
-//│         let x$2494 = O$2434() in
-//│         let* (x$2538) = odd_pre(x$2494) in
-//│         case x$2538 of
-//│           O$2434 =>
-//│             let* (x$2539) = odd_case0(x$2538) in
-//│             x$2539
-//│           S$2429 =>
-//│             let* (x$2540) = odd_case1(x$2538) in
-//│             x$2540
+//│         let x$2491 = O$2439() in
+//│         let* (x$2588) = odd_pre(x$2491) in
+//│         case x$2588 of
+//│           O$2439 =>
+//│             let* (x$2589) = odd_case0(x$2588) in
+//│             x$2590
+//│           S$2434 =>
+//│             let* (x$2591) = odd_case1(x$2588) in
+//│             x$2592
 //│           _ =>
 //│             panic "match error"
-//│   def main$2421() =
-//│     let* (x$2495) = foo() in
-//│     let* (x$2496) = bar() in
-//│     x$2496
-//│   def entry$2498() =
-//│     let* (x$2497) = main() in
-//│     x$2497
-//│   def odd_pre$2500(x$2505) =
-//│     x$2505
-//│   def odd_case0$2501(x$2506) =
+//│   def bar$2428() =
+//│     let x$2493 = >(10,0) in
+//│     case x$2493 of
+//│       BoolLit(true) =>
+//│         let x$2495 = O$2439() in
+//│         let x$2496 = S$2434(x$2495) in
+//│         let* (x$2525) = odd_pre(x$2496) in
+//│         case x$2525 of
+//│           O$2439 =>
+//│             let* (x$2526) = odd_case0(x$2525) in
+//│             x$2526
+//│           S$2434 =>
+//│             let* (x$2527) = odd_case1(x$2525) in
+//│             x$2527
+//│           _ =>
+//│             panic "match error"
+//│       _ =>
+//│         let x$2499 = O$2439() in
+//│         let* (x$2545) = odd_pre(x$2499) in
+//│         case x$2545 of
+//│           O$2439 =>
+//│             let* (x$2546) = odd_case0(x$2545) in
+//│             x$2546
+//│           S$2434 =>
+//│             let* (x$2547) = odd_case1(x$2545) in
+//│             x$2547
+//│           _ =>
+//│             panic "match error"
+//│   def main$2426() =
+//│     let* (x$2500) = foo() in
+//│     let* (x$2501) = bar() in
+//│     x$2501
+//│   def entry$2503() =
+//│     let* (x$2502) = main() in
+//│     x$2502
+//│   def odd_pre$2507(x$2512) =
+//│     x$2512
+//│   def odd_case0$2508(x$2513) =
 //│     false
-//│   def odd_case1$2502(x$2508) =
-//│     let x$2507 = x$2508.<S$2429:s> in
-//│     let* (x$2509) = even(x$2507) in
-//│     x$2509
-//│   def odd_pre$2522(x$2528) =
-//│     let* (x$2527) = odd_pre(x$2528) in
-//│     x$2527
-//│   def j_pre$2542(x$2544) =
-//│     x$2544
-//│   def odd$2420(x$2545) =
-//│     x$2545
-//│   def j_pre$2552(x$2556) =
-//│     let* (x$2554) = odd(x$2555) in
+//│   def odd_case1$2509(x$2515) =
+//│     let x$2514 = x$2515.<S$2434:s> in
+//│     let* (x$2516) = even(x$2514) in
+//│     x$2516
+//│   def odd_pre$2529(x$2535) =
+//│     let* (x$2534) = odd_pre(x$2535) in
+//│     x$2534
+//│   def odd_case0$2530(x$2536) =
+//│     false
+//│   def odd_pre$2549(x$2555) =
+//│     let* (x$2554) = odd_pre(x$2555) in
 //│     x$2554
-//│   entry = entry$2498
+//│   def odd_pre$2572(x$2578) =
+//│     let* (x$2577) = odd_pre(x$2578) in
+//│     x$2577
+//│   entry = entry$2503
 //│ 
 //│ Interpreted:
 //│ true
@@ -1238,37 +1261,37 @@ main()
 //│ 
 //│ Opt:
 //│   class Option()
-//│   class Some(x$2578) extends Option
+//│   class Some(x$2611) extends Option
 //│   class None() extends Option
 //│   class List()
-//│   class Cons(head$2589,tail$2590) extends List
+//│   class Cons(head$2622,tail$2623) extends List
 //│   class Nil() extends List
-//│   def head_opt$2565(l$2598) =
-//│     case l$2598 of
-//│       Nil$2595 =>
-//│         let x$2635 = None$2581() in
-//│         x$2635
-//│       Cons$2586 =>
-//│         let x$2636 = l$2598.<Cons$2586:head> in
-//│         let x$2637 = l$2598.<Cons$2586:tail> in
-//│         let x$2638 = Some$2575(x$2636) in
-//│         x$2638
+//│   def head_opt$2598(l$2631) =
+//│     case l$2631 of
+//│       Nil$2628 =>
+//│         let x$2668 = None$2614() in
+//│         x$2668
+//│       Cons$2619 =>
+//│         let x$2669 = l$2631.<Cons$2619:head> in
+//│         let x$2670 = l$2631.<Cons$2619:tail> in
+//│         let x$2671 = Some$2608(x$2669) in
+//│         x$2671
 //│       _ =>
 //│         panic "match error"
-//│   def main$2563() =
-//│     let x$2643 = Nil$2595() in
-//│     let x$2644 = Cons$2586(2,x$2643) in
-//│     let x$2645 = Cons$2586(1,x$2644) in
-//│     let* (x$2662) = is_empty_pre(x$2645) in
-//│     let* (x$2663) = head_opt(x$2662) in
-//│     let* (x$2664) = head_opt(x$2663) in
-//│     x$2664
-//│   def entry$2648() =
-//│     let* (x$2647) = main() in
-//│     x$2647
-//│   def is_empty_pre$2650(x$2652) =
-//│     x$2652
-//│   entry = entry$2648
+//│   def main$2596() =
+//│     let x$2676 = Nil$2628() in
+//│     let x$2677 = Cons$2619(2,x$2676) in
+//│     let x$2678 = Cons$2619(1,x$2677) in
+//│     let* (x$2695) = is_empty_pre(x$2678) in
+//│     let* (x$2696) = head_opt(x$2695) in
+//│     let* (x$2697) = head_opt(x$2696) in
+//│     x$2697
+//│   def entry$2681() =
+//│     let* (x$2680) = main() in
+//│     x$2680
+//│   def is_empty_pre$2683(x$2685) =
+//│     x$2685
+//│   entry = entry$2681
 //│ 
 //│ Interpreted:
 //│ false
@@ -1299,55 +1322,55 @@ main()
 //│ 
 //│ Opt:
 //│   class Option()
-//│   class Some(x$2682) extends Option
+//│   class Some(x$2715) extends Option
 //│   class None() extends Option
 //│   class List()
-//│   class Cons(head$2693,tail$2694) extends List
+//│   class Cons(head$2726,tail$2727) extends List
 //│   class Nil() extends List
-//│   def mk_list$2666(n$2702) =
-//│     let x$2747 = ==(n$2702,0) in
-//│     case x$2747 of
+//│   def mk_list$2699(n$2735) =
+//│     let x$2780 = ==(n$2735,0) in
+//│     case x$2780 of
 //│       BoolLit(true) =>
-//│         let x$2749 = Nil$2699() in
-//│         x$2749
+//│         let x$2782 = Nil$2732() in
+//│         x$2782
 //│       _ =>
-//│         let x$2750 = -(n$2702,1) in
-//│         let* (x$2751) = mk_list(x$2750) in
-//│         let x$2752 = Cons$2690(n$2702,x$2751) in
-//│         x$2752
-//│   def head_opt$2669(l$2710) =
-//│     case l$2710 of
-//│       Nil$2699 =>
-//│         let x$2754 = None$2685() in
-//│         x$2754
-//│       Cons$2690 =>
-//│         let x$2755 = l$2710.<Cons$2690:head> in
-//│         let x$2756 = l$2710.<Cons$2690:tail> in
-//│         let x$2757 = Some$2679(x$2755) in
-//│         x$2757
+//│         let x$2783 = -(n$2735,1) in
+//│         let* (x$2784) = mk_list(x$2783) in
+//│         let x$2785 = Cons$2723(n$2735,x$2784) in
+//│         x$2785
+//│   def head_opt$2702(l$2743) =
+//│     case l$2743 of
+//│       Nil$2732 =>
+//│         let x$2787 = None$2718() in
+//│         x$2787
+//│       Cons$2723 =>
+//│         let x$2788 = l$2743.<Cons$2723:head> in
+//│         let x$2789 = l$2743.<Cons$2723:tail> in
+//│         let x$2790 = Some$2712(x$2788) in
+//│         x$2790
 //│       _ =>
 //│         panic "match error"
-//│   def is_none$2674(o$2718) =
-//│     case o$2718 of
-//│       None$2685 =>
+//│   def is_none$2707(o$2751) =
+//│     case o$2751 of
+//│       None$2718 =>
 //│         true
-//│       Some$2679 =>
-//│         let x$2759 = o$2718.<Some$2679:x> in
+//│       Some$2712 =>
+//│         let x$2792 = o$2751.<Some$2712:x> in
 //│         false
 //│       _ =>
 //│         panic "match error"
-//│   def is_empty$2675(l$2723) =
-//│     let* (x$2760) = head_opt(l$2723) in
-//│     let* (x$2761) = is_none(x$2760) in
-//│     x$2761
-//│   def main$2667() =
-//│     let* (x$2762) = mk_list(10) in
-//│     let* (x$2763) = is_empty(x$2762) in
-//│     x$2763
-//│   def entry$2765() =
-//│     let* (x$2764) = main() in
-//│     x$2764
-//│   entry = entry$2765
+//│   def is_empty$2708(l$2756) =
+//│     let* (x$2793) = head_opt(l$2756) in
+//│     let* (x$2794) = is_none(x$2793) in
+//│     x$2794
+//│   def main$2700() =
+//│     let* (x$2795) = mk_list(10) in
+//│     let* (x$2796) = is_empty(x$2795) in
+//│     x$2796
+//│   def entry$2798() =
+//│     let* (x$2797) = main() in
+//│     x$2797
+//│   entry = entry$2798
 //│ 
 //│ Interpreted:
 //│ false
@@ -1376,51 +1399,51 @@ main()
 //│ 
 //│ Opt:
 //│   class Option()
-//│   class Some(x$2782) extends Option
+//│   class Some(x$2815) extends Option
 //│   class None() extends Option
 //│   class List()
-//│   class Cons(head$2793,tail$2794) extends List
+//│   class Cons(head$2826,tail$2827) extends List
 //│   class Nil() extends List
-//│   def mk_list$2768(n$2802) =
-//│     let x$2839 = ==(n$2802,0) in
-//│     case x$2839 of
+//│   def mk_list$2801(n$2835) =
+//│     let x$2872 = ==(n$2835,0) in
+//│     case x$2872 of
 //│       BoolLit(true) =>
-//│         let x$2841 = Nil$2799() in
-//│         x$2841
+//│         let x$2874 = Nil$2832() in
+//│         x$2874
 //│       _ =>
-//│         let x$2842 = -(n$2802,1) in
-//│         let* (x$2843) = mk_list(x$2842) in
-//│         let x$2844 = Cons$2790(n$2802,x$2843) in
-//│         x$2844
-//│   def last_opt$2775(l$2810) =
-//│     case l$2810 of
-//│       Nil$2799 =>
-//│         let x$2846 = None$2785() in
-//│         x$2846
-//│       Cons$2790 =>
-//│         let x$2847 = l$2810.<Cons$2790:head> in
-//│         let x$2848 = l$2810.<Cons$2790:tail> in
-//│         case x$2848 of
-//│           Nil$2799 =>
-//│             let x$2850 = Some$2779(x$2847) in
-//│             x$2850
-//│           Cons$2790 =>
-//│             let x$2851 = x$2848.<Cons$2790:head> in
-//│             let x$2852 = x$2848.<Cons$2790:tail> in
-//│             let* (x$2853) = last_opt(x$2848) in
-//│             x$2853
+//│         let x$2875 = -(n$2835,1) in
+//│         let* (x$2876) = mk_list(x$2875) in
+//│         let x$2877 = Cons$2823(n$2835,x$2876) in
+//│         x$2877
+//│   def last_opt$2808(l$2843) =
+//│     case l$2843 of
+//│       Nil$2832 =>
+//│         let x$2879 = None$2818() in
+//│         x$2879
+//│       Cons$2823 =>
+//│         let x$2880 = l$2843.<Cons$2823:head> in
+//│         let x$2881 = l$2843.<Cons$2823:tail> in
+//│         case x$2881 of
+//│           Nil$2832 =>
+//│             let x$2883 = Some$2812(x$2880) in
+//│             x$2883
+//│           Cons$2823 =>
+//│             let x$2884 = x$2881.<Cons$2823:head> in
+//│             let x$2885 = x$2881.<Cons$2823:tail> in
+//│             let* (x$2886) = last_opt(x$2881) in
+//│             x$2886
 //│           _ =>
 //│             panic "match error"
 //│       _ =>
 //│         panic "match error"
-//│   def main$2774() =
-//│     let* (x$2854) = mk_list(10) in
-//│     let* (x$2855) = last_opt(x$2854) in
-//│     x$2855
-//│   def entry$2857() =
-//│     let* (x$2856) = main() in
-//│     x$2856
-//│   entry = entry$2857
+//│   def main$2807() =
+//│     let* (x$2887) = mk_list(10) in
+//│     let* (x$2888) = last_opt(x$2887) in
+//│     x$2888
+//│   def entry$2890() =
+//│     let* (x$2889) = main() in
+//│     x$2889
+//│   entry = entry$2890
 //│ 
 //│ Interpreted:
 //│ Some(1)
@@ -1459,76 +1482,87 @@ main()
 //│ 
 //│ Opt:
 //│   class Option()
-//│   class Some(x$2875) extends Option
+//│   class Some(x$2908) extends Option
 //│   class None() extends Option
-//│   def e0$2861(w$2886) =
-//│     let x$2978 = +(w$2886,8) in
-//│     let x$2979 = +(x$2978,9) in
-//│     let x$2980 = +(x$2979,10) in
-//│     x$2980
-//│   def e1$2859(a$2892,c$2893) =
-//│     let x$2981 = +(a$2892,1) in
-//│     let x$2982 = +(x$2981,2) in
-//│     let x$2983 = +(x$2982,3) in
-//│     let x$2984 = +(x$2983,4) in
-//│     x$2984
-//│   def e3$2863(c$2900) =
-//│     let x$2985 = 4 in
-//│     let x$2986 = 5 in
-//│     let x$2987 = 6 in
-//│     let x$2988 = 7 in
-//│     case c$2900 of
+//│   def e0$2894(w$2919) =
+//│     let x$3011 = +(w$2919,8) in
+//│     let x$3012 = +(x$3011,9) in
+//│     let x$3013 = +(x$3012,10) in
+//│     x$3013
+//│   def e1$2892(a$2925,c$2926) =
+//│     let x$3014 = +(a$2925,1) in
+//│     let x$3015 = +(x$3014,2) in
+//│     let x$3016 = +(x$3015,3) in
+//│     let x$3017 = +(x$3016,4) in
+//│     x$3017
+//│   def e3$2896(c$2933) =
+//│     let x$3018 = 4 in
+//│     let x$3019 = 5 in
+//│     let x$3020 = 6 in
+//│     let x$3021 = 7 in
+//│     case c$2933 of
 //│       BoolLit(true) =>
-//│         let x$2990 = +(x$2985,x$2986) in
-//│         let x$2991 = +(x$2990,x$2987) in
-//│         let x$2992 = +(x$2991,x$2988) in
-//│         x$2992
+//│         let x$3023 = +(x$3018,x$3019) in
+//│         let x$3024 = +(x$3023,x$3020) in
+//│         let x$3025 = +(x$3024,x$3021) in
+//│         x$3025
 //│       _ =>
-//│         let x$2993 = +(x$2985,x$2986) in
-//│         let x$2994 = -(x$2993,x$2987) in
-//│         let x$2995 = +(x$2994,x$2988) in
-//│         x$2995
-//│   def e2$2868(x$2913) =
-//│     let x$2996 = +(x$2913,12) in
-//│     let x$2997 = +(x$2996,13) in
-//│     let x$2998 = +(x$2997,14) in
-//│     x$2998
-//│   def f$2860(x$3015) =
-//│     let* (x$3023) = f_pre(x$3015) in
-//│     let* (x$3024) = is_some(x$3023) in
-//│     jump is_some$2867(x$3024)
-//│   def j$3001(tmp$2972) =
-//│     let* (x$3005) = e0(tmp$2972) in
-//│     x$3005
-//│   def main$2862() =
-//│     let x$3006 = Some$2872(2) in
-//│     let* (x$3037) = f_pre(x$3006) in
-//│     let* (x$3038) = is_some(x$3037) in
-//│     let* (x$3039) = is_some(x$3038) in
-//│     jump main_post$3032(x$3039)
-//│   def entry$3012() =
-//│     let* (x$3011) = main() in
-//│     x$3011
-//│   def f_pre$3014(x$3016) =
-//│     x$3016
-//│   def is_some$2867(x$3018) =
-//│     let* (x$3017) = e3(x$3018) in
-//│     case x$3019 of
-//│       Some$2872 =>
-//│         let x$3020 = x$3019.<Some$2872:x> in
-//│         let* (x$3021) = e1(x$3020,x$3017) in
-//│         jump j$3001(x$3021)
-//│       None$2878 =>
-//│         let* (x$3022) = e2(x$3017) in
-//│         jump j$3001(x$3022)
+//│         let x$3026 = +(x$3018,x$3019) in
+//│         let x$3027 = -(x$3026,x$3020) in
+//│         let x$3028 = +(x$3027,x$3021) in
+//│         x$3028
+//│   def e2$2901(x$2946) =
+//│     let x$3029 = +(x$2946,12) in
+//│     let x$3030 = +(x$3029,13) in
+//│     let x$3031 = +(x$3030,14) in
+//│     x$3031
+//│   def f$2893(x$3050) =
+//│     let* (x$3062,x$3063) = f_pre(x$3050) in
+//│     let* (x$3064) = is_some(x$3062) in
+//│     let* (x$3088) = e3(x$3064) in
+//│     case x$3055 of
+//│       Some$2905 =>
+//│         let x$3056 = x$3055.<Some$2905:x> in
+//│         let* (x$3057) = e1(x$3056,x$3053) in
+//│         let* (x$3058) = e0(x$3057) in
+//│         x$3059
+//│       None$2911 =>
+//│         let* (x$3060) = e2(x$3053) in
+//│         let* (x$3061) = e0(x$3060) in
+//│         x$3059
 //│       _ =>
 //│         panic "match error"
-//│   def main_post$3032(x$3036) =
-//│     let x$3033 = None$2878() in
-//│     let* (x$3034) = f(x$3033) in
-//│     let x$3035 = +(x$3036,x$3034) in
-//│     x$3035
-//│   entry = entry$3012
+//│   def main$2895() =
+//│     let x$3039 = Some$2905(2) in
+//│     let* (x$3081,x$3082) = f_pre(x$3039) in
+//│     let* (x$3083) = is_some(x$3081) in
+//│     let* (x$3084) = is_some(x$3083) in
+//│     jump main_post$3076(x$3084)
+//│   def entry$3045() =
+//│     let* (x$3044) = main() in
+//│     x$3044
+//│   def f_pre$3049(x$3051) =
+//│     x$3051,x$3052
+//│   def is_some$2900(x$3054) =
+//│     let* (x$3053) = e3(x$3054) in
+//│     case x$3055 of
+//│       Some$2905 =>
+//│         let x$3056 = x$3055.<Some$2905:x> in
+//│         let* (x$3057) = e1(x$3056,x$3053) in
+//│         let* (x$3058) = e0(x$3057) in
+//│         x$3059
+//│       None$2911 =>
+//│         let* (x$3060) = e2(x$3053) in
+//│         let* (x$3061) = e0(x$3060) in
+//│         x$3059
+//│       _ =>
+//│         panic "match error"
+//│   def main_post$3076(x$3080) =
+//│     let x$3077 = None$2911() in
+//│     let* (x$3078) = f(x$3077) in
+//│     let x$3079 = +(x$3080,x$3078) in
+//│     x$3079
+//│   entry = entry$3045
 //│ 
 //│ Interpreted:
 //│ 115
@@ -1566,73 +1600,73 @@ main()
 //│ 
 //│ Opt:
 //│   class Nat()
-//│   class S(s$3053) extends Nat
+//│   class S(s$3106) extends Nat
 //│   class O() extends Nat
-//│   def plus$3041(n1$3064,n2$3065) =
-//│     case n1$3064 of
-//│       O$3056 =>
-//│         n2$3065
-//│       S$3051 =>
-//│         let x$3128 = n1$3064.<S$3051:s> in
-//│         let* (x$3129) = plus(x$3128,n2$3065) in
-//│         let x$3130 = S$3051(x$3129) in
-//│         x$3130
+//│   def plus$3094(n1$3117,n2$3118) =
+//│     case n1$3117 of
+//│       O$3109 =>
+//│         n2$3118
+//│       S$3104 =>
+//│         let x$3181 = n1$3117.<S$3104:s> in
+//│         let* (x$3182) = plus(x$3181,n2$3118) in
+//│         let x$3183 = S$3104(x$3182) in
+//│         x$3183
 //│       _ =>
 //│         panic "match error"
-//│   def fib$3045(n$3072) =
-//│     case n$3072 of
-//│       O$3056 =>
-//│         let x$3132 = O$3056() in
-//│         let x$3133 = S$3051(x$3132) in
-//│         x$3133
-//│       S$3051 =>
-//│         let x$3134 = n$3072.<S$3051:s> in
-//│         case x$3134 of
-//│           O$3056 =>
-//│             let x$3136 = O$3056() in
-//│             let x$3137 = S$3051(x$3136) in
-//│             x$3137
-//│           S$3051 =>
-//│             let x$3138 = x$3134.<S$3051:s> in
-//│             let* (x$3139) = fib(x$3134) in
-//│             let* (x$3140) = fib(x$3138) in
-//│             let* (x$3141) = plus(x$3139,x$3140) in
-//│             x$3141
+//│   def fib$3098(n$3125) =
+//│     case n$3125 of
+//│       O$3109 =>
+//│         let x$3185 = O$3109() in
+//│         let x$3186 = S$3104(x$3185) in
+//│         x$3186
+//│       S$3104 =>
+//│         let x$3187 = n$3125.<S$3104:s> in
+//│         case x$3187 of
+//│           O$3109 =>
+//│             let x$3189 = O$3109() in
+//│             let x$3190 = S$3104(x$3189) in
+//│             x$3190
+//│           S$3104 =>
+//│             let x$3191 = x$3187.<S$3104:s> in
+//│             let* (x$3192) = fib(x$3187) in
+//│             let* (x$3193) = fib(x$3191) in
+//│             let* (x$3194) = plus(x$3192,x$3193) in
+//│             x$3194
 //│           _ =>
 //│             panic "match error"
 //│       _ =>
 //│         panic "match error"
-//│   def to_int$3047(n$3084) =
-//│     case n$3084 of
-//│       O$3056 =>
+//│   def to_int$3100(n$3137) =
+//│     case n$3137 of
+//│       O$3109 =>
 //│         0
-//│       S$3051 =>
-//│         let x$3143 = n$3084.<S$3051:s> in
-//│         let* (x$3144) = to_int(x$3143) in
-//│         let x$3145 = +(1,x$3144) in
-//│         x$3145
+//│       S$3104 =>
+//│         let x$3196 = n$3137.<S$3104:s> in
+//│         let* (x$3197) = to_int(x$3196) in
+//│         let x$3198 = +(1,x$3197) in
+//│         x$3198
 //│       _ =>
 //│         panic "match error"
-//│   def to_nat$3040(n$3091) =
-//│     let x$3146 = ==(n$3091,0) in
-//│     case x$3146 of
+//│   def to_nat$3093(n$3144) =
+//│     let x$3199 = ==(n$3144,0) in
+//│     case x$3199 of
 //│       BoolLit(true) =>
-//│         let x$3148 = O$3056() in
-//│         x$3148
+//│         let x$3201 = O$3109() in
+//│         x$3201
 //│       _ =>
-//│         let x$3149 = -(n$3091,1) in
-//│         let* (x$3150) = to_nat(x$3149) in
-//│         let x$3151 = S$3051(x$3150) in
-//│         x$3151
-//│   def main$3042() =
-//│     let* (x$3152) = to_nat(10) in
-//│     let* (x$3153) = fib(x$3152) in
-//│     let* (x$3154) = to_int(x$3153) in
-//│     x$3154
-//│   def entry$3156() =
-//│     let* (x$3155) = main() in
-//│     x$3155
-//│   entry = entry$3156
+//│         let x$3202 = -(n$3144,1) in
+//│         let* (x$3203) = to_nat(x$3202) in
+//│         let x$3204 = S$3104(x$3203) in
+//│         x$3204
+//│   def main$3095() =
+//│     let* (x$3205) = to_nat(10) in
+//│     let* (x$3206) = fib(x$3205) in
+//│     let* (x$3207) = to_int(x$3206) in
+//│     x$3207
+//│   def entry$3209() =
+//│     let* (x$3208) = main() in
+//│     x$3208
+//│   entry = entry$3209
 //│ 
 //│ Interpreted:
 //│ 89

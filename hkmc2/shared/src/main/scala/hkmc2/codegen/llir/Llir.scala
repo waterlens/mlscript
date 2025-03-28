@@ -163,12 +163,14 @@ enum Pat:
     case Lit(lit) => s"$lit"
     case Class(cls) => s"${{docSymWithUid(cls)}}"
 
+sealed trait Terminator
+  
 enum Node:
   // Terminal forms:
-  case Result(res: Ls[TrivialExpr])
-  case Jump(func: Local, args: Ls[TrivialExpr])
-  case Case(scrutinee: TrivialExpr, cases: Ls[(Pat, Node)], default: Opt[Node])
-  case Panic(msg: Str)
+  case Result(res: Ls[TrivialExpr]) extends Node, Terminator
+  case Jump(func: Local, args: Ls[TrivialExpr]) extends Node, Terminator
+  case Case(scrutinee: TrivialExpr, cases: Ls[(Pat, Node)], default: Opt[Node]) extends Node, Terminator
+  case Panic(msg: Str) extends Node, Terminator
   // Intermediate forms:
   case LetExpr(name: Local, expr: Expr, body: Node)
   case LetMethodCall(names: Ls[Local], cls: Local, method: Local, args: Ls[TrivialExpr], body: Node)

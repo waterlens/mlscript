@@ -800,7 +800,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val newFuncs = info.func.map:
         case (name, func) =>
           val newBody = removeTrivialCallAndJump(func.body)(using MapUtil(Map.empty))
-          func.name -> func.copy(body = newBody)
+          val newBody2 = removeTrivialDestruction(newBody)(using KnownCtors(Map.empty), MapUtil(Map.empty))
+          func.name -> func.copy(body = newBody2)
       info.func.clear()
       info.func.addAll(newFuncs)
       val reachable = ProgDfs(info).dfs(true)
@@ -822,6 +823,66 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case (name, expr) :: xs =>
           Node.LetExpr(name, expr, bindByOrder(xs, cont)) 
 
+    case class KnownCtors(map: Map[Local, (Local, Map[Str, TrivialExpr])])
+
+    private def removeTrivialDestruction(expr: Expr)(using kc: KnownCtors, m: MapUtil)(using s: Status[Bool]): Expr = expr match
+      case Expr.Ref(name) => Expr.Ref(m.subst(name))
+      case Expr.Literal(lit) => expr
+      case Expr.CtorApp(cls, args) => Expr.CtorApp(cls, m.substT(args).toList)
+      case Expr.Select(name, cls, field) => Expr.Select(m.subst(name), cls, field)
+      case Expr.BasicOp(name, args) => Expr.BasicOp(name, m.substT(args).toList)
+      case Expr.AssignField(assignee, cls, field, value) => 
+        Expr.AssignField(m.subst(assignee), cls, field, m.substT(value))
+    
+    private def removeTrivialDestruction(node: Node)(using kc: KnownCtors, m: MapUtil)(using s: Status[Bool]): Node = node match
+      case Node.Result(res) => Node.Result(res.map(m.substT))
+      case Node.Jump(func, args) => Node.Jump(func, m.substT(args).toList)
+      case Node.Panic(msg) => node
+      case Node.Case(Expr.Ref(scrutinee), cases, default) if kc.map.contains(m.subst(scrutinee)) =>
+        val (cls, args) = kc.map(m.subst(scrutinee))
+        (cases.find:
+          case (Pat.Class(cls2), _) if cls == cls2 => true
+          case _ => false) match
+            case None => 
+              val nuCases = cases.map:
+                case (pat, body) => pat -> removeTrivialDestruction(body)(using kc, m)
+              val nuDefault = default.map(removeTrivialDestruction(_)(using kc, m))
+              Node.Case(Expr.Ref(m.subst(scrutinee)), nuCases, nuDefault)
+            case Some((_pat, body)) => 
+              s.set(true)
+              removeTrivialDestruction(body)(using kc, m)
+      case Node.Case(scrutinee, cases, default) =>
+        val nuCases = cases.map:
+          case (pat, body) => pat -> removeTrivialDestruction(body)(using kc, m)
+        val nuDefault = default.map(removeTrivialDestruction(_)(using kc, m))
+        Node.Case(m.substT(scrutinee), nuCases, nuDefault)
+      case Node.LetExpr(name, Expr.Select(x, cls, field), body) if kc.map.contains(m.subst(x)) =>
+        val (cls2, args) = kc.map(m.subst(x))
+        assert(cls == cls2)
+        val value = args.get(if field.forall(_.isDigit) then s"field$field" else field)
+        value match
+          case Some(Expr.Ref(y)) =>
+            s.set(true)
+            val newM = MapUtil(m.map + (name -> y))
+            removeTrivialDestruction(body)(using kc, newM)
+          case Some(lit: Expr.Literal) =>
+            s.set(true)
+            Node.LetExpr(name, lit, removeTrivialDestruction(body)(using kc, m))
+          case None => oErrStop(s"removeTrivialDestruction: unknown field $field in $args")
+      case Node.LetExpr(name, Expr.CtorApp(cls, args), body) =>
+        val nuArgs = args.map(m.substT)
+        val fieldMap = info.getClass(cls).fields.iterator.map(_.nme).zip(nuArgs).toMap
+        val nuKC = kc.map + (name -> (cls, fieldMap))
+        Node.LetExpr(name, Expr.CtorApp(cls, nuArgs), removeTrivialDestruction(body)(using KnownCtors(nuKC), m))
+      case Node.LetExpr(name, expr, body) =>
+        val nuExpr = removeTrivialDestruction(expr)(using kc, m)
+        Node.LetExpr(name, nuExpr, removeTrivialDestruction(body)(using kc, m))
+      case Node.LetMethodCall(names, cls, method, args, body) =>
+        Node.LetMethodCall(names, cls, method, m.substT(args).toList, removeTrivialDestruction(body)(using kc, m))
+      case Node.LetCall(names, func, args, body) =>
+        Node.LetCall(names, func, m.substT(args).toList, removeTrivialDestruction(body)(using kc, m))
+    
+    
     private def removeTrivialCallAndJump(expr: Expr)(using m: MapUtil)(using Status[Bool]): Expr = expr match
       case Expr.Ref(name) => Expr.Ref(m.subst(name))
       case Expr.Literal(lit) => expr

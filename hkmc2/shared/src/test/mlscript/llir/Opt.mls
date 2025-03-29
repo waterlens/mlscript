@@ -2,7 +2,6 @@
 :llir
 :cpp
 :sopt
-:optf simp,simp2
 
 //│ 
 //│ Opt:
@@ -12,6 +11,7 @@
 //│   entry = entry$566
 
 :sllir
+:optf simp,simp2
 fun foo(x) =
   bar(x)
 fun bar(x) =
@@ -45,3 +45,46 @@ foo(10)
 //│     let* (x$594) = baz(10) in
 //│     x$594
 //│   entry = entry$590
+
+:optf simp,simp2
+fun foo(tup2) =
+  if tup2 is [x, y] then x + y
+fun bar(x, y) = foo([x, y])
+bar(1, 2)
+//│ = 3
+//│ 
+//│ Opt:
+//│   
+//│   def bar$595(x$606,y$607) =
+//│     let x$620 = Tuple2$614(x$606,y$607) in
+//│     let* (x$644) = foo_case0(x$620) in
+//│     x$644
+//│   def entry$622() =
+//│     let* (x$621) = bar(1,2) in
+//│     x$621
+//│   def foo_case0$627(x$632) =
+//│     let x$631 = x$632.<Tuple2$614:0> in
+//│     let x$633 = x$632.<Tuple2$614:1> in
+//│     let x$634 = +(x$631,x$633) in
+//│     x$634
+//│   entry = entry$622
+
+:optf simp,!split
+fun foo() =
+  let m = [1, 2]
+  if m is [x, y] then x + y
+foo() 
+//│ = 3
+//│ 
+//│ Opt:
+//│   
+//│   def foo$646() =
+//│     let x$658 = Tuple2$614(1,2) in
+//│     let x$660 = 1 in
+//│     let x$661 = 2 in
+//│     let x$662 = +(x$660,x$661) in
+//│     x$662
+//│   def entry$664() =
+//│     let* (x$663) = foo() in
+//│     x$663
+//│   entry = entry$664

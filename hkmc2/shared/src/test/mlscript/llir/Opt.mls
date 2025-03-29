@@ -1,0 +1,47 @@
+:js
+:llir
+:cpp
+:sopt
+:optf simp,simp2
+
+//│ 
+//│ Opt:
+//│   
+//│   def entry$566() =
+//│     undefined
+//│   entry = entry$566
+
+:sllir
+fun foo(x) =
+  bar(x)
+fun bar(x) =
+  baz(x)
+fun baz(x) =
+  x + 1
+foo(10)
+//│ = 11
+//│ LLIR:
+//│   
+//│   def foo$569(x$572) =
+//│     let* (x$586) = bar(x$572) in
+//│     x$586
+//│   def bar$568(x$576) =
+//│     let* (x$587) = baz(x$576) in
+//│     x$587
+//│   def baz$570(x$580) =
+//│     let x$588 = +(x$580,1) in
+//│     x$588
+//│   def entry$590() =
+//│     let* (x$589) = foo(10) in
+//│     x$589
+//│   entry = entry$590
+//│ 
+//│ Opt:
+//│   
+//│   def baz$570(x$580) =
+//│     let x$588 = +(x$580,1) in
+//│     x$588
+//│   def entry$590() =
+//│     let* (x$594) = baz(10) in
+//│     x$594
+//│   entry = entry$590

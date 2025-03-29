@@ -892,22 +892,24 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               Node.LetCall(names, func, args.map(_.foldRef(m.subst)), removeTrivialCallAndJump(body))
             case p @ Node.Panic(_) => s.set(true); p
             case Node.LetCall(xs, callee, args, p @ Node.Panic(_)) => s.set(true); p
-            case Node.LetCall(xs, callee, args2, node @ Node.Result(res)) =>
-              // s.set(true)
-              // val nuArgs = args.map(_.foldRef(m.subst))
-              // val r = RenameUtil()
-              // val nuRes = r.substT(res).toList
-              // val oldM = summon[MapUtil]
-              // val newM = MapUtil(oldM.map ++ names.iterator.zip(nuRes).flatMap:
-              //   case (name, Expr.Ref(res)) => Some(name -> res)
-              //   case (name, _) => None
-              // )
-              // val literals = names.iterator.zip(nuRes).flatMap:
-              //   case (name, Expr.Ref(res)) => None
-              //   case (name, expr) => Some(name -> expr.toExpr)
-              // Node.LetCall(xs.map(r.subst), callee, nuArgs, bindByOrder(literals.toList,
-              //   removeTrivialCallAndJump(node)(using newM)))
-              pass
+            case Node.LetCall(xs, callee, args2, Node.Result(res)) =>
+              s.set(true)
+              val r = RenameUtil()
+              val nuXs = r.subst(xs).toList
+              val nuSubst = SubstUtil[Local, TrivialExpr](m.map ++ r.map.iterator.map:
+                case (k, v) => k -> Expr.Ref(v))
+              val nuArgs2 = args2.map(_.foldRef(nuSubst.subst))
+              val nuRes = res.map(_.foldRef(nuSubst.subst))
+              val oldM = summon[MapUtil]
+              val newM = MapUtil(oldM.map ++ names.iterator.zip(nuRes).flatMap:
+                case (name, Expr.Ref(res)) => Some(name -> res)
+                case (name, _) => None
+              )
+              val literals = names.iterator.zip(nuRes).flatMap:
+                case (name, Expr.Ref(res)) => None
+                case (name, expr) => Some(name -> expr.toExpr)
+              Node.LetCall(nuXs, callee, nuArgs2, bindByOrder(literals.toList,
+                removeTrivialCallAndJump(body)(using newM)))
             case _ =>  
               pass
         else

@@ -815,6 +815,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         summon[Status[Bool]].set(true)
       info.classes.filterInPlace((k, _) => reachable.classes.contains(k))
 
+    private def bindByOrder(bindings: Ls[(Local, Expr)], cont: Node): Node = 
+      // more efficient using mutation, but anyway
+      bindings match
+        case Nil => cont
+        case (name, expr) :: xs =>
+          Node.LetExpr(name, expr, bindByOrder(xs, cont)) 
+
     private def removeTrivialCallAndJump(expr: Expr)(using m: MapUtil)(using Status[Bool]): Expr = expr match
       case Expr.Ref(name) => Expr.Ref(m.subst(name))
       case Expr.Literal(lit) => expr
@@ -839,15 +846,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             case Node.Jump(func, args) =>
               s.set(true)
               Node.Jump(func, args.map(_.foldRef(m.subst)))
-            case p @ Node.Panic(_) => 
-              s.set(true)
-              p
+            case p @ Node.Panic(_) => s.set(true); p
             case p @ Node.LetCall(xs, callee, args, node2: Terminator) =>
               s.set(true)
               val nuArgs = args.map(_.foldRef(m.subst))
               val r = RenameUtil()
               val renamed = renameNode(node2)(using r)
-              Node.LetCall(xs.map(r.subst), callee, nuArgs, node2)
+              Node.LetCall(xs.map(r.subst), callee, nuArgs, renamed)
             case _ => node
         else
           node
@@ -864,21 +869,49 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         Node.LetMethodCall(names, cls, method, nuArgs, removeTrivialCallAndJump(body))
       case Node.LetCall(names, func, args, body) =>
         val nuArgs = summon[MapUtil].substT(args).toList
+        def pass = Node.LetCall(names, func, nuArgs, removeTrivialCallAndJump(body))
         if notBuiltin(func) then
           val funcDefn = info.getFunc(func)
           val m = SubstUtil(funcDefn.params.zip(nuArgs).toMap)
           log(s"checking: ${funcDefn.name |> showSym}")
           funcDefn.body match
+            case Node.Result(res) =>
+              val nuRes = res.map(_.foldRef(m.subst))
+              val oldM = summon[MapUtil]
+              val newM = MapUtil(oldM.map ++ names.iterator.zip(nuRes).flatMap:
+                case (name, Expr.Ref(res)) => Some(name -> res)
+                case (name, _) => None
+              )
+              val literals = names.iterator.zip(nuRes).flatMap:
+                case (name, Expr.Ref(res)) => None
+                case (name, expr) => Some(name -> expr.toExpr)
+              bindByOrder(literals.toList,
+                 removeTrivialCallAndJump(body)(using newM))
             case Node.Jump(func, args) =>
               s.set(true)
               Node.LetCall(names, func, args.map(_.foldRef(m.subst)), removeTrivialCallAndJump(body))
-            case p @ Node.Panic(_) =>
-              s.set(true)
-              p
-            case _ => 
-              Node.LetCall(names, func, nuArgs, removeTrivialCallAndJump(body))
+            case p @ Node.Panic(_) => s.set(true); p
+            case Node.LetCall(xs, callee, args, p @ Node.Panic(_)) => s.set(true); p
+            case Node.LetCall(xs, callee, args2, node @ Node.Result(res)) =>
+              // s.set(true)
+              // val nuArgs = args.map(_.foldRef(m.subst))
+              // val r = RenameUtil()
+              // val nuRes = r.substT(res).toList
+              // val oldM = summon[MapUtil]
+              // val newM = MapUtil(oldM.map ++ names.iterator.zip(nuRes).flatMap:
+              //   case (name, Expr.Ref(res)) => Some(name -> res)
+              //   case (name, _) => None
+              // )
+              // val literals = names.iterator.zip(nuRes).flatMap:
+              //   case (name, Expr.Ref(res)) => None
+              //   case (name, expr) => Some(name -> expr.toExpr)
+              // Node.LetCall(xs.map(r.subst), callee, nuArgs, bindByOrder(literals.toList,
+              //   removeTrivialCallAndJump(node)(using newM)))
+              pass
+            case _ =>  
+              pass
         else
-          Node.LetCall(names, func, nuArgs, removeTrivialCallAndJump(body))
+          pass
 
   def run(prog: LlirProgram) =
     val info = ProgInfo.fromProgram(prog)

@@ -506,14 +506,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     )
 
     def reComposePreFunc(subst: RenameUtil, preBody: Node => Node, origParams: Ls[Local], preSym: Local, results: Ls[Local]): Func =
-      trace[Func](s"reComposePreFunc begin", f => s"reComposePreFunc end: $f"):
+      trace[Func](s"reComposePreFunc begin ${origParams.map(showSym)} ${results.map(showSym)}", f => s"reComposePreFunc end: $f"):
         val preParams = subst.subst(origParams)
         val preNode = renameNode(preBody(Node.Result(results.map(Expr.Ref(_)))))(using subst)
         val preFunc = Func(freshInt.make, preSym, preParams.toList, results.length, preNode)
         preFunc
 
     def reComposePostFunc(subst: RenameUtil, params: Ls[Local], postBody: Node, postSym: Local, resultNum: Int): Func =
-      trace[Func](s"reComposePostFunc begin: $params $postBody", f => s"reComposePostFunc end: $f"):
+      trace[Func](s"reComposePostFunc begin: ${params.map(showSym)} $postBody", f => s"reComposePostFunc end: $f"):
         val postParams = subst.subst(params)
         val postNode = renameNode(postBody)(using subst)
         val postFunc = Func(freshInt.make, postSym, postParams.toList, resultNum, postNode)
@@ -631,7 +631,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         sNode(func.body, splitPos, func)(identity)
 
     def sNode(node: Node, splitPos: Loc, thisFunc: Func)(acc: Node => Node): SplittingMode = 
-      trace[SplittingMode](s"sNode: $node"): 
+      trace[SplittingMode](s"sNode: ${acc(Node.Panic("placeholder"))} -> $node"): 
         node match
         case Node.Result(res) => oErrStop(s"sNode: unexpected Result $res")
         case Node.Jump(func, args) =>
@@ -653,7 +653,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           val cases2 = cases.zipWithIndex.map:
             case ((pat, body), i) =>
               val sym = newFunSym(s"${thisFunc.name.nme}_case$i")
-              val fvs = FreeVarAnalysis(info.func).run(node)
+              val fvs = FreeVarAnalysis(info.func).run(body)
               val pfBody = PostFuncBody(body)
               val pf = PostFunc(sym, fvs.toList, pfBody, thisFunc)
               (pat, pf)
@@ -667,9 +667,9 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           SplittingMode.C(pf, caseS)
         case Node.Panic(msg) => oErrStop("sNode: unexpected Panic")
         case Node.LetExpr(name, expr, body) =>
-          sNode(body, splitPos, thisFunc)(x => Node.LetExpr(name, expr, x))
+          sNode(body, splitPos, thisFunc)(x => acc(Node.LetExpr(name, expr, x)))
         case Node.LetMethodCall(names, cls, method, args, body) =>
-          sNode(body, splitPos, thisFunc)(x => Node.LetMethodCall(names, cls, method, args, x))
+          sNode(body, splitPos, thisFunc)(x => acc(Node.LetMethodCall(names, cls, method, args, x)))
         case Node.LetCall(names, func, args, body) =>
           if splitPos.matches(node) then
             // A mode
@@ -679,9 +679,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             val results = fvs.toList
             val pf = PreFunc(sym, results, pfBody, thisFunc)
             val cs = CallShape(func, some(names), args)
-            SplittingMode.A(pf, PostFunc(func, names, PostFuncBody(body), thisFunc), cs)
+            val postFvs = FreeVarAnalysis(info.func).run(body)
+            SplittingMode.A(pf, PostFunc(func, postFvs.toList, PostFuncBody(body), thisFunc), cs)
           else
-            sNode(body, splitPos, thisFunc)(x => Node.LetCall(names, func, args, x))
+            sNode(body, splitPos, thisFunc)(x => acc(Node.LetCall(names, func, args, x)))
     
     // yet another thing is to avoid duplication. once we split a function
     // the sub-components of the function will be wrapped into a new function
@@ -799,9 +800,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def simplify(using Status[Bool]) =
       val newFuncs = info.func.map:
         case (name, func) =>
-          val newBody = removeTrivialCallAndJump(func.body)(using MapUtil(Map.empty))
-          val newBody2 = removeTrivialDestruction(newBody)(using KnownCtors(Map.empty), MapUtil(Map.empty))
-          func.name -> func.copy(body = newBody2)
+          val uses = UsefulnessAnalysis()
+          uses.run(func)
+          var newBody = removeDeadBindings(func.body)(using uses.getUsed)
+          newBody = removeTrivialCallAndJump(newBody)(using MapUtil(Map.empty))
+          newBody = removeTrivialDestruction(newBody)(using KnownCtors(Map.empty), MapUtil(Map.empty))
+          func.name -> func.copy(body = newBody)
       info.func.clear()
       info.func.addAll(newFuncs)
       val reachable = ProgDfs(info).dfs(true)
@@ -825,6 +829,26 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
     case class KnownCtors(map: Map[Local, (Local, Map[Str, TrivialExpr])])
 
+    private def removeDeadBindings(node: Node)(using uses: Set[Local]): Node = node match
+      case Node.Result(res) => node
+      case Node.Jump(func, args) => node
+      case Node.Panic(msg) => node
+      case Node.Case(scrutinee, cases, default) =>
+        Node.Case(scrutinee,
+          cases.map:
+            case (pat, body) => pat -> removeDeadBindings(body),
+          default.map(removeDeadBindings(_)))
+      case Node.LetExpr(name, expr, body) =>
+        if uses.contains(name) then
+          Node.LetExpr(name, expr, removeDeadBindings(body))
+        else
+          log(s"removing dead binding: ${{showSym(name)}}")
+          removeDeadBindings(body)
+      case Node.LetMethodCall(names, cls, method, args, body) =>
+        Node.LetMethodCall(names, cls, method, args, removeDeadBindings(body))
+      case Node.LetCall(names, func, args, body) =>
+        Node.LetCall(names, func, args, removeDeadBindings(body))
+    
     private def removeTrivialDestruction(expr: Expr)(using kc: KnownCtors, m: MapUtil)(using s: Status[Bool]): Expr = expr match
       case Expr.Ref(name) => Expr.Ref(m.subst(name))
       case Expr.Literal(lit) => expr
@@ -895,6 +919,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     private def removeTrivialCallAndJump(node: Node)(using MapUtil)(using s: Status[Bool]): Node = node match
       case Node.Result(res) => Node.Result(summon[MapUtil].substT(res).toList)
       case Node.Jump(func, args) =>
+        def pass = Node.Jump(func, args.map(summon[MapUtil].substT))
         if notBuiltin(func) then
           val funcDefn = info.getFunc(func)
           val nuArgs = summon[MapUtil].substT(args).toList
@@ -914,9 +939,9 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               val r = RenameUtil()
               val renamed = renameNode(node2)(using r)
               Node.LetCall(xs.map(r.subst), callee, nuArgs, renamed)
-            case _ => node
+            case _ => pass
         else
-          node
+          pass
       case Node.Case(scrutinee, cases, default) =>
         Node.Case(summon[MapUtil].substT(scrutinee), cases.map:
           case (pat, body) => pat -> removeTrivialCallAndJump(body),

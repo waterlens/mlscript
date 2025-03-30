@@ -27,12 +27,15 @@ class UsefulnessAnalysis(verbose: Bool = false):
   val uses = MutHMap[(Local, Int), Int]()
   val defs = MutHMap[Local, Int]()
 
+  def getUsed: Set[Local] =
+    uses.keys.map(_._1).toSet
+
   private def addDef(x: Local) =
     defs.update(x, defs.getOrElse(x, 0) + 1)
   
   private def addUse(x: Local) =
     val def_count = defs.get(x) match
-      case None => throw Exception(s"Use of undefined variable $x")
+      case None => throw Exception(s"Use of undefined variable ${x.nme}$$${x.uid}")
       case Some(value) => value
     val key = (x, defs(x))
     uses.update(key, uses.getOrElse(key, 0) + 1)
@@ -59,7 +62,8 @@ class UsefulnessAnalysis(verbose: Bool = false):
         case Ref(name) => addUse(name)
         case _ => ()
       cases.foreach { case (cls, body) => f(body) }; default.foreach(f)
-    case LetMethodCall(names, cls, method, args, body) => addUse(method); args.foreach(f); names.foreach(addDef); f(body)
+    case Panic(msg) =>
+    case LetMethodCall(names, cls, method, args, body) => args.foreach(f); names.foreach(addDef); f(body)
     case LetExpr(name, expr, body) => f(expr); addDef(name); f(body)
     case LetCall(names, defn, args, body) => args.foreach(f); names.foreach(addDef); f(body)
   

@@ -24,6 +24,8 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val intl = NullaryCommand("intl")
   val lprelude = NullaryCommand("lpre")
 
+  val showWholeLlir = NullaryCommand("showWholeLlir")
+
   // C++ codegen generation commands for individual blocks
   val cpp = NullaryCommand("cpp")
   val scpp = NullaryCommand("scpp")
@@ -85,6 +87,9 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
         if sllir.isSet then
           output("LLIR:")
           output(llirProg.show())
+        if showWholeLlir.isSet then
+          output("Whole LLIR:")
+          output(mkWholeProgram.show())
         def optimize(name: String, prog: Program, opt: Bool, show: Bool, optFlags: Set[Str]): Program =
           given tl: TraceLogger with
             override def doTrace = dopt.isSet

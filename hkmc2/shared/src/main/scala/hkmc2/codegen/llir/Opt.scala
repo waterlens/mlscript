@@ -112,7 +112,36 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       Node.LetMethodCall(nuNames, cls, method, s.substT(args).toList, renameNode(body))
     case Node.LetCall(names, func, args, body) =>
       val nuNames = names.map(s.subst)
-      Node.LetCall(nuNames, func, s.substT(args).toList, renameNode(body))    
+      Node.LetCall(nuNames, func, s.substT(args).toList, renameNode(body))
+  
+  def mapExpr(expr: Expr)(using s: MapUtil): Expr = expr match
+    case Expr.Ref(sym) => Expr.Ref(s.subst(sym))
+    case Expr.Literal(lit) => expr
+    case Expr.CtorApp(cls, args) => Expr.CtorApp(cls, s.substT(args).toList)
+    case Expr.Select(name, cls, field) => Expr.Select(s.subst(name), cls, field)
+    case Expr.BasicOp(name, args) => Expr.BasicOp(name, s.substT(args).toList)
+    case Expr.AssignField(assignee, cls, field, value) => Expr.AssignField(s.subst(assignee), cls, field, s.substT(value))
+
+  def mapNode(node: Node)(using s: MapUtil): Node = node match
+    case Node.Result(res) => Node.Result(s.substT(res).toList)
+    case Node.Jump(func, args) => Node.Jump(func, s.substT(args).toList) 
+    case Node.Case(scrutinee, cases, default) =>
+      Node.Case(s.substT(scrutinee), cases.map:
+        case (pat, body) => pat -> mapNode(body),
+        default.map(mapNode(_)))
+    case Node.Panic(msg) => Node.Panic(msg)
+    case Node.LetExpr(name, expr, body) =>
+      val nuName = s.subst(name)
+      val nuExpr = mapExpr(expr)
+      Node.LetExpr(nuName, nuExpr, mapNode(body))
+    case Node.LetMethodCall(names, cls, method, args, body) =>
+      val nuNames = names.map(s.subst)
+      Node.LetMethodCall(nuNames, cls, method, s.substT(args).toList, mapNode(body))
+    case Node.LetCall(names, func, args, body) =>
+      val nuNames = names.map(s.subst)
+      Node.LetCall(nuNames, func, s.substT(args).toList, mapNode(body))
+  
+  
   enum IInfo:
     case Ctor(c: Local)
     case Mixed(i: Set[I])
@@ -519,8 +548,9 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         val postFunc = Func(freshInt.make, postSym, postParams.toList, resultNum, postNode)
         postFunc
 
-    def reComposeWithArgs(sm: SplittingMode, args: Ls[TrivialExpr], returns: Opt[Ls[Local]], knownClass: Opt[Local]): ComposeResult =
-      sm match
+    def reComposeWithArgs(
+      sm: SplittingMode, args: Ls[TrivialExpr],
+      returns: Opt[Ls[Local]], knownClass: Opt[Local]): ComposeResult = sm match
         case SplittingMode.A(
           PreFunc(preSym, results, PreFuncBody(preBody), orig),
           PostFunc(postSym, params, PostFuncBody(postBody), _),
@@ -542,7 +572,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
                 Node.Jump(postSym, nuParams.map(Expr.Ref(_)).toList)
               else
                 val nuReturns = subst.subst(returns.get)
-                Node.LetCall(nuReturns.toList, postSym, nuParams.map(Expr.Ref(_)).toList, renameNode(node)(using subst))))
+                Node.LetCall(nuReturns.toList, postSym, nuParams.map(Expr.Ref(_)).toList, mapNode(node)(using MapUtil(subst.map.toMap)))))
           ComposeResult(k, List(preFunc, postFunc), orig)
         case SplittingMode.B(
           PreFunc(preSym, results, PreFuncBody(preBody), orig),
@@ -559,7 +589,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
                 Node.Jump(func, nuNestedArgs.toList)
               else
                 val nuReturns = subst.subst(returns.get)
-                Node.LetCall(nuReturns.toList, func, nuNestedArgs.toList, renameNode(node)(using subst)))
+                Node.LetCall(nuReturns.toList, func, nuNestedArgs.toList, mapNode(node)(using MapUtil(subst.map.toMap))))
           ComposeResult(k, List(preFunc), orig)
         case SplittingMode.C(
           PreFunc(preSym, results, PreFuncBody(preBody), orig),
@@ -584,7 +614,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             val postArgs = subst.subst(postFvs).map(Expr.Ref(_)).toList
             val subst2 = RenameUtil()
             val nuReturns = subst2.subst(returns.get)
-            Node.LetCall(nuReturns.toList, postFunc.name, postArgs, renameNode(node)(using subst2))
+            Node.LetCall(nuReturns.toList, postFunc.name, postArgs, mapNode(node)(using MapUtil(subst2.map.toMap)))
           def tailNodeJump(postFunc: Func, postFvs: Ls[Local])(using subst: RenameUtil) = 
             val postArgs = subst.subst(postFvs).map(Expr.Ref(_)).toList
             Node.Jump(postFunc.name, postArgs)
@@ -705,14 +735,16 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       info.func.update(invalidFunc.name, nuFunc)
 
     def wrapPost(node: Node)(using env: Env, thisFunc: Func): Node =
-      val fvs = FreeVarAnalysis(info.func).run(node).toList
-      val sym = newFunSym(s"${thisFunc.name.nme}_post")
-      val s = RenameUtil()
-      val nuBody = renameNode(node)(using s)
-      val nuParams = s.subst(fvs).toList
-      val nuFunc = Func(freshInt.make, sym, nuParams, thisFunc.resultNum, nuBody)
-      info.func.update(sym, nuFunc)
-      Node.Jump(sym, fvs.map(Expr.Ref(_)))
+      trace[Node](s"wrapPost begin: $node", jump => s"wrapPost end: $jump"):
+        val fvs = FreeVarAnalysis(info.func).run(node).toList
+        val sym = newFunSym(s"${thisFunc.name.nme}_caller_post")
+        log(s"wrapPost: ${sym |> showSym} -> ${fvs.map(showSym)}")
+        val s = RenameUtil()
+        val nuBody = renameNode(node)(using s)
+        val nuParams = s.subst(fvs).toList
+        val nuFunc = Func(freshInt.make, sym, nuParams, thisFunc.resultNum, nuBody)
+        info.func.update(sym, nuFunc)
+        Node.Jump(sym, fvs.map(Expr.Ref(_)))
 
     def fNode(node: Node)(k: Node => Env ?=> Node)(using env: Env, thisFunc: Func): Node =
       trace[Node](s"split fNode: $node"):
@@ -772,6 +804,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
                 val cr = reComposeWithArgs(sm, args, S(names), N)
                 val tail = wrapPost(body)
                 val nuBody = cr.k(tail)
+                log(s"nuBody: $nuBody")
                 k(nuBody)
               // case (_, false) => ???
           else

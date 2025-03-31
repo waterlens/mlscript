@@ -98,8 +98,8 @@ public:
 
 #define _mls_assert(e)                                                         \
   (__builtin_expect(!(e), 0)                                                   \
-       ? _mlsUtil::panic_with("assertion failed", __func__,                    \
-                              __FILE__, __LINE__)                              \
+       ? _mlsUtil::panic_with("assertion failed", __func__, __FILE__,          \
+                              __LINE__)                                        \
        : (void)0)
 
 struct _mlsFloatShape : public _mlsObject {
@@ -229,6 +229,8 @@ public:
     if (isPtr())
       asObject()->incRef();
   }
+
+  template <typename... Tp> using tuple = std::tuple<Tp...>;
 
   _mlsValue &operator=(const _mlsValue &other) {
     if (value != nullptr && isPtr())

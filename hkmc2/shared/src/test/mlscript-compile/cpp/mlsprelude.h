@@ -13,6 +13,10 @@
 #include <tuple>
 #include <utility>
 
+#define STRINGIFY_DETAIL(x) #x
+#define STRINGIFY(x) STRINGIFY_DETAIL(x)
+#define LINE_STRING __FILE__ ":" STRINGIFY(__LINE__)
+
 constexpr std::size_t _mlsAlignment = 8;
 
 template <typename T, size_t N> class tuple_type {
@@ -273,6 +277,11 @@ public:
     return v.asObject()->tag == T::typeTag;
   }
 
+  uint32_t getTag() const {
+    _mls_assert(isPtr());
+    return asObject()->tag;
+  }
+
   static bool isIntLit(const _mlsValue &v, int64_t n) {
     return v.asInt63() == n;
   }
@@ -349,6 +358,9 @@ struct _mls_Callable : public _mlsObject {
     throw std::runtime_error("Not implemented");
   }
   virtual _mlsValue _mls_apply4(_mlsValue, _mlsValue, _mlsValue, _mlsValue) {
+    throw std::runtime_error("Not implemented");
+  }
+  virtual _mlsValue _mls_apply5(_mlsValue, _mlsValue, _mlsValue, _mlsValue, _mlsValue) {
     throw std::runtime_error("Not implemented");
   }
   virtual void destroy() override {}

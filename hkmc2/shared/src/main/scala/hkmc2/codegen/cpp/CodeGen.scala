@@ -82,7 +82,6 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   val mlsThis = Expr.Var("_mlsValue(this, _mlsValue::inc_ref_tag{})") // first construct a value, then incRef()
 
   case class Ctx(
-    defnCtx: Set[Local],
     fieldCtx: Set[Local],
   )
 
@@ -112,7 +111,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
       else
         val methods = cls.methods.map:
           case (name, defn) =>
-            val (cdef, decl) = codegenDefn(using Ctx(summon[Ctx].defnCtx + cls.name, summon[Ctx].fieldCtx ++ cls.fields))(defn)
+            val (cdef, decl) = codegenDefn(using Ctx(summon[Ctx].fieldCtx ++ cls.fields))(defn)
             val cdef2 = cdef match
               case x: Def.FuncDef if builtinApply.contains(defn.name.nme) => x.copy(name = defn.name |> directName, scope = Some(cls.name |> mapClsLikeName))
               case x: Def.FuncDef => x.copy(scope = Some(cls.name |> mapClsLikeName))
@@ -251,7 +250,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
         (decls, stmts2)
       case Node.Jump(defn, args) =>
         codegenJumpWithCall(defn, args, S(storeInto))
-      case Node.Panic(msg) => (decls, stmts :+ Stmt.Raw(s"throw std::runtime_error(\"$msg\");"))
+      case Node.Panic(msg) => (decls, stmts :+ Stmt.Raw(s"throw std::runtime_error(\"$msg\" LINE_STRING);"))
       case Node.LetExpr(name, expr, body) =>
         val stmts2 = stmts ++ Ls(Stmt.AutoBind(Ls(name |> allocIfNew), codegen(expr)))
         codegen(body, storeInto)(using decls, stmts2)
@@ -267,7 +266,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
         val stmts2 = stmts ++ Ls(Stmt.AutoBind(names.map(allocIfNew), call))
         codegen(body, storeInto)(using decls, stmts2)
       case Node.LetMethodCall(names, cls, method, args, body) =>
-        val call = mlsMethodCall(cls, method |> allocIfNew, args.map(toExpr))
+        val call = mlsMethodCall(cls, method |> directName, args.map(toExpr))
         val stmts2 = stmts ++ Ls(Stmt.AutoBind(names.map(allocIfNew), call))
         codegen(body, storeInto)(using decls, stmts2)
       case Node.LetCall(names, defn, args, body) =>
@@ -314,9 +313,8 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
 
   def codegen(prog: Program)(using Raise, Scope): CompilationUnit =
     val sortedClasses = sortClasses(prog)
-    val defnCtx = prog.defs.map(_.name)
     val fieldCtx = Set.empty[Local]
-    given Ctx = Ctx(defnCtx, fieldCtx)
+    given Ctx = Ctx(fieldCtx)
     val (defs, decls, methodsDef) = sortedClasses.map(codegenClassInfo).unzip3
     val (defs2, decls2) = prog.defs.map(codegenDefn).unzip
     CompilationUnit(Ls(mlsPrelude), decls ++ decls2, defs.flatten ++ defs2 ++ methodsDef.flatten :+ Def.RawDef(mlsCallEntry(prog.entry |> allocIfNew)) :+ Def.RawDef(mlsEntryPoint))

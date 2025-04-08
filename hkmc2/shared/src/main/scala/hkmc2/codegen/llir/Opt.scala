@@ -710,7 +710,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             val pf = PreFunc(sym, results, pfBody, thisFunc)
             val cs = CallShape(func, some(names), args)
             val postFvs = FreeVarAnalysis(info.func).run(body)
-            SplittingMode.A(pf, PostFunc(func, postFvs.toList, PostFuncBody(body), thisFunc), cs)
+            val sym2 = newFunSym(s"${thisFunc.name.nme}_post")
+            SplittingMode.A(pf, PostFunc(sym2, postFvs.toList, PostFuncBody(body), thisFunc), cs)
           else
             sNode(body, splitPos, thisFunc)(x => acc(Node.LetCall(names, func, args, x)))
     

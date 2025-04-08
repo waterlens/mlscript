@@ -327,7 +327,6 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       case ms: MemberSymbol[?] =>
         ms.defn match
         case Some(d: ClassLikeDef) => d.sym.asClsLike.getOrElse(bErrStop(msg"Class definition without symbol"))
-        case Some(d: TermDefinition) => d.sym
         case Some(value) => bErrStop(msg"Member symbol without class definition ${value.toString}")
         case None => bErrStop(msg"Member symbol without definition ${ms.toString}") 
       case _ => bErrStop(msg"Unsupported symbol kind ${m.toString}")
@@ -425,7 +424,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
               case args: Ls[TrivialExpr] =>
                 val v: Local = newTemp
                 log(s"Method Call Select: $r.$fld with ${s.symbol}")
-                Node.LetMethodCall(Ls(v), getClassOfField(s.symbol.get), fromMemToClass(s.symbol.get), r :: args, k(v |> sr))
+                Node.LetMethodCall(Ls(v), getClassOfField(s.symbol.get), s.symbol.get, r :: args, k(v |> sr))
       case Call(_, _) => bErrStop(msg"Unsupported kind of Call ${r.toString()}")
       case Instantiate(
         Select(Value.Ref(sym), Tree.Ident("class")), args) =>

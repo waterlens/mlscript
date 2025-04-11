@@ -49,6 +49,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val wholeOpt = NullaryCommand("wholeOpt")
   val sWholeOpt = NullaryCommand("showWholeOpt")
   val wholeOptFlags = Command[Set[Str]]("wholeOptFlags", false)(x => x.stripLeading().split(",").toSet)
+  val optStat = NullaryCommand("wholeOptStat")
 
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) =
     val p = new java.io.PrintWriter(f)
@@ -90,17 +91,20 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
         if showWholeLlir.isSet then
           output("Whole LLIR:")
           output(mkWholeProgram.show())
-        def optimize(name: String, prog: Program, opt: Bool, show: Bool, optFlags: Set[Str]): Program =
+        def optimize(name: String, prog: Program, opt: Bool, show: Bool, showStat: Bool, optFlags: Set[Str]): Program =
           given tl: TraceLogger with
             override def doTrace = dopt.isSet
             override def emitDbg(str: String): Unit = output(str)
           if opt || show then
             tl.log(s"Optimizing $name")
             val opt = codegen.llir.LlirOpt(tl, freshId, optFlags)
-            val optProg = opt.run(prog)
+            val (optProg, optStat) = opt.run(prog)
             if show then
               output(s"\n$name:")
               output(optProg.show())
+            if showStat then
+              output(s"\n$name stats:\n")
+              output(optStat.mkString("\n"))
             optProg
           else
             prog
@@ -128,10 +132,10 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
                 output("\n")
                 cppHost.compileAndRun(cpp.toDocument.toString)
         cppGen("Cpp", 
-          optimize("Opt", llirProg, opt.isSet, sopt.isSet, optFlags.get.getOrElse(Set.empty)), 
+          optimize("Opt", llirProg, opt.isSet, sopt.isSet, false, optFlags.get.getOrElse(Set.empty)), 
           cpp.isSet, scpp.isSet, rcpp.isSet, wcpp.get)
         cppGen("WholeProgramCpp",
-          optimize("WholeProgramOpt", mkWholeProgram, wholeOpt.isSet, sWholeOpt.isSet, wholeOptFlags.get.getOrElse(Set.empty)),
+          optimize("WholeProgramOpt", mkWholeProgram, wholeOpt.isSet, sWholeOpt.isSet, optStat.isSet, wholeOptFlags.get.getOrElse(Set.empty)),
           wholeCpp.isSet, sWholeCpp.isSet, rWholeCpp.isSet, wWholeCpp.get)
         if intl.isSet then
           val intr = codegen.llir.Interpreter(tl)

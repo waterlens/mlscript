@@ -170,6 +170,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         classes = MutHMap.from(prog.classes.map(c => c.name -> c)),
         entry = prog.entry
       )
+
+  case class ProgStat(
+    classes_size: Int,
+    func_size: Int
+  ):
+    override def toString(): String = s"class size: $classes_size func size: $func_size"
   
   case class ProgInfo(
     activeParams: MutHMap[Local, Ls[SortedSet[E]]],
@@ -198,6 +204,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
     def setActiveResults(func: Local, ars: Ls[Opt[I]]) =
       activeResults.update(func, ars)
+
+    def getStat =
+      ProgStat(
+        classes_size = classes.values.map(_.size).sum,
+        func_size = func.values.map(_.size).sum
+      )
 
   private object EliminationAnalysis:
     case class Env(
@@ -739,7 +751,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       trace[Node](s"wrapPost begin: $node", jump => s"wrapPost end: $jump"):
         val fvs = FreeVarAnalysis(info.func).run(node).toList
         val sym = newFunSym(s"${thisFunc.name.nme}_caller_post")
-        log(s"wrapPost: ${sym |> showSym} -> ${fvs.map(showSym)}")
+        log(s"wrapPost free vars: ${sym |> showSym} -> ${fvs.map(showSym)}")
         val s = RenameUtil()
         val nuBody = renameNode(node)(using s)
         val nuParams = s.subst(fvs).toList
@@ -1037,24 +1049,29 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
   def run(prog: LlirProgram) =
     val info = ProgInfo.fromProgram(prog)
+    val optStat = ListBuffer.empty[(Str, ProgStat)]
+    optStat.addOne(("orig", info.getStat))
     if flags.contains("simp") then
       val simp = Simplify(info)
       val changed = Status(true)
       while changed.get do
         changed.set(false)
         simp.simplify(using changed)
+      optStat.addOne(("simp", info.getStat))
     if flags.contains("!split") then
       ()
     else
       val splitting = Splitting(info)
       splitting.run()
+      optStat.addOne(("split", info.getStat))
     if flags.contains("simp2") then
       val simp = Simplify(info)
       val changed = Status(true)
       while changed.get do
         changed.set(false)
         simp.simplify(using changed)
-    info.toProgram
+      optStat.addOne(("simp2", info.getStat))
+    (info.toProgram, optStat.toList)
 
     
   class ProgDfs(info: ProgInfo):
@@ -1082,8 +1099,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           case Result(res) => acc
           case Jump(func, args) => if notBuiltin(func) then acc.addF(func) else acc
           case Case(scrutinee, cases, default) =>
+            val acc1 = cases.map(_._1).foldLeft(acc):
+              (acc, pat) => pat match
+                case Pat.Class(cls) => acc.addC(cls)
+                case Pat.Lit(lit) => acc
             val acc2 = cases.map(_._2) ++ default.toList
-            acc2.foldLeft(acc)((acc, x) => find(x)(using acc))
+            acc2.foldLeft(acc1)((acc, x) => find(x)(using acc))
           case Panic(msg) => acc
           case LetExpr(name, expr, body) => 
             val acc2 = find(expr)

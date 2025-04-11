@@ -65,6 +65,8 @@ case class ClassInfo(
   override def toString: String =
     s"ClassInfo($id, $name, [${fields mkString ","}], parents: ${parents mkString ","}, methods:\n${methods mkString ",\n"})"
 
+  val size = methods.values.map(_.size).sum
+  
   def show = toDocument.toString
   def toDocument: Document =
     given Conversion[String, Document] = raw
@@ -97,6 +99,8 @@ case class Func(
 ):
   var recBoundary: Opt[Int] = None
   override def hashCode: Int = id
+
+  val size = body.size
 
   override def toString: String =
     val ps = params.map(_.toString).mkString("[", ",", "]")
@@ -133,6 +137,14 @@ enum Expr:
   case AssignField(assignee: Local, cls: Local, field: Str, value: TrivialExpr)
   
   override def toString: String = show
+
+  lazy val size = this match
+    case Ref(sym) => 1
+    case Literal(lit) => 1
+    case CtorApp(cls, args) => 2
+    case Select(name, cls, field) => 1
+    case BasicOp(name, args) => 1
+    case AssignField(assignee, cls, field, value) => 1
 
   def show: String = toDocument.toString
   
@@ -180,6 +192,19 @@ enum Node:
 
   def show: String = toDocument.toString
 
+  lazy val size: Int = this match
+    case Result(res) => 1
+    case Jump(func, args) => 2
+    case Panic(msg) => 1
+    case Case(scrutinee, cases, default) =>
+      1 + cases.map(_._2.size).sum + default.map(_.size).getOrElse(0)
+    case LetExpr(name, expr, body) =>
+      1 + expr.size + body.size
+    case LetMethodCall(names, cls, method, args, body) =>
+      2 + body.size
+    case LetCall(names, func, args, body) =>
+      2 + body.size
+  
   def toDocument: Document =
     given Conversion[String, Document] = raw
     this match

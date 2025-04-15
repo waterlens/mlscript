@@ -760,9 +760,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         info.func.update(sym, nuFunc)
         Node.Jump(sym, fvs.map(Expr.Ref(_)))
 
-    def liftOutMixingProducer(sDesc: SDesc)(using env: Env, thisFunc: Func): Node =
-      val desc = sDesc.mixingProducer.head
-      val (sym, (loc, argI)) = desc
+    
+
+    // sym: the symbol of the mixing producer
+    // loc: the location of the call site where the mixing producer is called
+    // argI: the name bound to the return value of the mixing producer
+    def liftOutMixingProducer(sym: Symbol, loc: Loc, argI: Symbol)(using env: Env, thisFunc: Func): Node =
       if !env.possibleSplitting.contains(loc) then
         oErrStop(s"mixing producer not found: ${loc}")
       val (names, preBody, postBody) = env.possibleSplitting(loc)
@@ -797,7 +800,9 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case Node.Jump(func, args) =>
           val sDesc = checkSTarget(info.getFunc(func), args)
           (sDesc.argumentsDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
-            case (_, false) => liftOutMixingProducer(sDesc)
+            case (_, false) => 
+              val (sym, (loc, argI)) = sDesc.mixingProducer.head
+              liftOutMixingProducer(sym, loc, argI)
             case (true, _) => k(node)
             case (false, _) =>
               val desc = sDesc.argumentsDesc.head
@@ -810,20 +815,26 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               val nuBody = cr.k(Node.Panic("placeholder here"))
               k(nuBody)
         case Node.Case(scrutinee, cases, default) =>
+          def fallback = 
+            val nuCases = cases.map:
+              case (p @ Pat.Class(cls), body) =>
+                val old = env.i.intros.put(cls, I(Loc.CaseSite(scrutinee), IInfo.Ctor(cls)))
+                val nuBody = fNode(body)(identity)
+                for i <- old do env.i.intros.update(cls, i)
+                (p, nuBody)
+              case (p @ Pat.Lit(lit), body) => 
+                (p, fNode(body)(identity))
+            val dfltCase = default.map(fNode(_)(identity))
+            k(Node.Case(scrutinee, nuCases, dfltCase))
           symAndIntroOfTExpr(scrutinee) match
-            // case Some((scrutinee, I(loc, IInfo.Mixed(i)))) =>
-            //   ???
-            case _ =>
-              val nuCases = cases.map:
-                case (p @ Pat.Class(cls), body) =>
-                  val old = env.i.intros.put(cls, I(Loc.CaseSite(scrutinee), IInfo.Ctor(cls)))
-                  val nuBody = fNode(body)(identity)
-                  for i <- old do env.i.intros.update(cls, i)
-                  (p, nuBody)
-                case (p @ Pat.Lit(lit), body) => 
-                  (p, fNode(body)(identity))
-              val dfltCase = default.map(fNode(_)(identity))
-              k(Node.Case(scrutinee, nuCases, dfltCase))
+            case Some((scrutinee, I(loc, IInfo.Mixed(i)))) =>
+              // manual checkSTarget
+              val p = findProducer(loc)
+              p match
+                case Some(p) =>
+                  liftOutMixingProducer(p, loc, scrutinee)
+                case None => fallback
+            case _ => fallback
         case Node.Panic(msg) => node
         case Node.LetExpr(name, expr, body) =>
           fNode(body): inner =>
@@ -835,7 +846,9 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           if notBuiltin(func) then
             val sDesc = checkSTarget(info.getFunc(func), args)
             (sDesc.argumentsDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
-              case (_, false) => liftOutMixingProducer(sDesc)
+              case (_, false) => 
+                val (sym, (loc, argI)) = sDesc.mixingProducer.head
+                liftOutMixingProducer(sym, loc, argI)
               case (true, _) =>
                 memoCall(node)(k)
                 fNode(body): inner =>

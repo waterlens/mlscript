@@ -105,6 +105,16 @@ llist(1)
 //│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
+//│ _mlsValue _mls_force(_mlsValue _mls_x9) {
+//│   _mlsValue _mls_retval;
+//│   if (_mlsValue::isValueOf<_mls_Lazy>(_mls_x9)) {
+//│     auto _mls_x10 = _mlsMethodCall<_mls_Lazy>(_mls_x9)->_mls_get();
+//│     _mls_retval = _mls_x10;
+//│   } else {
+//│     throw std::runtime_error("match error" LINE_STRING);
+//│   }
+//│   return _mls_retval;
+//│ }
 //│ _mlsValue _mls_entry() {
 //│   _mlsValue _mls_retval;
 //│   _mls_retval = _mlsValue::create<_mls_Unit>();
@@ -114,6 +124,11 @@ llist(1)
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x6 = _mlsValue::create<_mls_Lazy>(_mls_x7);
 //│   _mls_retval = _mls_x6;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_entry2() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_llist(_mlsValue _mls_x12) {
@@ -127,21 +142,6 @@ llist(1)
 //│   _mlsValue _mls_retval;
 //│   auto _mls_x8 = _mls_llist(_mlsValue::fromIntLit(1));
 //│   _mls_retval = _mls_x8;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_entry2() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_force(_mlsValue _mls_x9) {
-//│   _mlsValue _mls_retval;
-//│   if (_mlsValue::isValueOf<_mls_Lazy>(_mls_x9)) {
-//│     auto _mls_x10 = _mlsMethodCall<_mls_Lazy>(_mls_x9)->_mls_get();
-//│     _mls_retval = _mls_x10;
-//│   } else {
-//│     throw std::runtime_error("match error");
-//│   }
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_Lambda_lambda::_mls_apply0() {

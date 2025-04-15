@@ -44,12 +44,13 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val opt = NullaryCommand("opt")
   val sopt = NullaryCommand("sopt")
   val optFlags = Command[Set[Str]]("optf", false)(x => x.stripLeading().split(",").toSet)
+  val optStat = NullaryCommand("opts")
 
   // Optimizer commands for the whole program
   val wholeOpt = NullaryCommand("wholeOpt")
   val sWholeOpt = NullaryCommand("showWholeOpt")
   val wholeOptFlags = Command[Set[Str]]("wholeOptFlags", false)(x => x.stripLeading().split(",").toSet)
-  val optStat = NullaryCommand("wholeOptStat")
+  val wholeOptStat = NullaryCommand("wholeOptStat")
 
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) =
     val p = new java.io.PrintWriter(f)
@@ -132,10 +133,10 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
                 output("\n")
                 cppHost.compileAndRun(cpp.toDocument.toString)
         cppGen("Cpp", 
-          optimize("Opt", llirProg, opt.isSet, sopt.isSet, false, optFlags.get.getOrElse(Set.empty)), 
+          optimize("Opt", llirProg, opt.isSet, sopt.isSet, optStat.isSet, optFlags.get.getOrElse(Set.empty)), 
           cpp.isSet, scpp.isSet, rcpp.isSet, wcpp.get)
         cppGen("WholeProgramCpp",
-          optimize("WholeProgramOpt", mkWholeProgram, wholeOpt.isSet, sWholeOpt.isSet, optStat.isSet, wholeOptFlags.get.getOrElse(Set.empty)),
+          optimize("WholeProgramOpt", mkWholeProgram, wholeOpt.isSet, sWholeOpt.isSet, wholeOptStat.isSet, wholeOptFlags.get.getOrElse(Set.empty)),
           wholeCpp.isSet, sWholeCpp.isSet, rWholeCpp.isSet, wWholeCpp.get)
         if intl.isSet then
           val intr = codegen.llir.Interpreter(tl)

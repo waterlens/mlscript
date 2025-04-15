@@ -415,7 +415,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     case class Env(
       i: IntroductionAnalysis.Env,
       e: EliminationAnalysis.Env,
-      possibleSplitting: MutHMap[Loc, (PreFuncBody, PostFuncBody)] = MutHMap.empty,
+      possibleSplitting: MutHMap[Loc, (Ls[Symbol], PreFuncBody, PostFuncBody)] = MutHMap.empty,
       workingList: MutLSet[Func] = MutLSet.empty,
     )
 
@@ -428,7 +428,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     case class SDesc(
       argumentsDesc: MutLMap[Local, SymDDesc] = MutLMap.empty,
       firstDestructedSym: Opt[Local] = N,
-      mixingProducer: MutLMap[Local, Loc] = MutLMap.empty,
+      mixingProducer: MutLMap[Local, (Loc, Symbol)] = MutLMap.empty, // producer -> (call_site, variable bound to the return value)
     )
 
     def symAndIntroOfTExpr(te: TrivialExpr)(using env: Env): Opt[(Local, I)] = te match
@@ -449,7 +449,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val argsIntros = args.iterator.map(symAndIntroOfTExpr)
       val firstD = DestructUtils.getFirstDestructed(func.body)
       var argumentsDesc = MutLMap.empty[Local, SymDDesc]
-      val mixingProducer = MutLMap.empty[Local, Loc]
+      val mixingProducer = MutLMap.empty[Local, (Loc, Symbol)]
       argsIntros.zip(params.iterator.zip(activeParams.iterator)).foreach:
         case ((S((arg, I(loc, IInfo.Ctor(cls))))), (param, elims)) =>
           for e <- elims do e match
@@ -493,15 +493,16 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               // it also indicates that yet another kind of context should be carefully maintained.
               // another point is worth noticing that we need to do alpha-renaming after using the pre-cont and post-cont!!!
               val producer = findProducer(loc)
+              // we store the arg, so we known which return value in the call site lead to the splitting
               for p <- producer do 
-                mixingProducer.update(p, loc)
+                mixingProducer.update(p, (loc, arg))
             case _ =>
         case _ => ()
       SDesc(argumentsDesc, firstD, mixingProducer)
 
     def memoCall(callNode: Node.LetCall)(k: Node => Env ?=> Node)(using env: Env): Unit =
       val Node.LetCall(names, func, args, body) = callNode
-      env.possibleSplitting.update(Loc.CallSite(func, args), (PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
+      env.possibleSplitting.update(Loc.CallSite(func, args), (names, PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
 
     // there's another strategy to split a callee of functions calls
     // they can be categorized into several kinds:
@@ -759,6 +760,36 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         info.func.update(sym, nuFunc)
         Node.Jump(sym, fvs.map(Expr.Ref(_)))
 
+    def liftOutMixingProducer(sDesc: SDesc)(using env: Env, thisFunc: Func): Node =
+      val desc = sDesc.mixingProducer.head
+      val (sym, (loc, argI)) = desc
+      if !env.possibleSplitting.contains(loc) then
+        oErrStop(s"mixing producer not found: ${loc}")
+      val (names, preBody, postBody) = env.possibleSplitting(loc)
+      val (func, args) = loc match
+        case Loc.CallSite(func, args) => (func, args)
+        case _ => oErrStop(s"unexpected loc: $loc")
+      
+      val n = names.indexOf(argI)
+      if n == -1 then
+        oErrStop(s"unexpected mixing producer: ${argI} not found in $names")
+      
+      // get the intro info of the mixing producer
+      // so we can find the correct splitting position
+      log(s"finding splitting pos of ${func |> showSym}")
+      val i_mix = info.getActiveResults(func)(n).getOrElse(oErrStop(s"unexpected mixing producer intro info: ${func}"))
+      val s_loc = i_mix match
+        case I(loc, info) => loc
+
+      val old = info.getFunc(func)
+      log(s"splitting mixing producer: ${old.name |> showSym}")
+      val sm = sFunc(info.getFunc(func), s_loc)
+
+      rFunc(old, sm)
+      val cr = reComposeWithArgs(sm, args, S(names), N)
+      val nuBody = wrapPost(postBody.body)
+      preBody.body(cr.k(nuBody))
+    
     def fNode(node: Node)(k: Node => Env ?=> Node)(using env: Env, thisFunc: Func): Node =
       trace[Node](s"split fNode: $node"):
         node match
@@ -766,6 +797,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case Node.Jump(func, args) =>
           val sDesc = checkSTarget(info.getFunc(func), args)
           (sDesc.argumentsDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
+            case (_, false) => liftOutMixingProducer(sDesc)
             case (true, _) => k(node)
             case (false, _) =>
               val desc = sDesc.argumentsDesc.head
@@ -803,6 +835,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           if notBuiltin(func) then
             val sDesc = checkSTarget(info.getFunc(func), args)
             (sDesc.argumentsDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
+              case (_, false) => liftOutMixingProducer(sDesc)
               case (true, _) =>
                 memoCall(node)(k)
                 fNode(body): inner =>
@@ -819,7 +852,6 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
                 val nuBody = cr.k(tail)
                 log(s"nuBody: $nuBody")
                 k(nuBody)
-              // case (_, false) => ???
           else
             fNode(body): inner =>
               k(Node.LetCall(names, func, args, inner))

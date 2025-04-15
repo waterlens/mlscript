@@ -1,6 +1,9 @@
 :llir
 
 :intl
+:opt
+:optf simp,simp2
+:opts
 abstract class Iter[T]
 object Done
 data class Yield(n)
@@ -20,12 +23,22 @@ fun fold(acc, it) =
   if next(it) is [n, it] then
     if done(it) then acc else fold(n + acc, it)
 fun map_sum(f, n) = let it = map(f, dec(n)) in fold(0, it)
-map_sum(x => x, 200)
+map_sum(x => x, 20)
+//│ 
+//│ Opt stats:
+//│ 
+//│ (orig,class size: 3 func size: 109)
+//│ (simp,class size: 3 func size: 98)
+//│ (split,class size: 3 func size: 142)
+//│ (simp2,class size: 3 func size: 125)
 //│ 
 //│ Interpreted:
-//│ 20100
+//│ 210
 
 :intl
+:opt
+:optf simp,simp2
+:opts
 abstract class Iter[T]
 object Done
 data class Yield(n)
@@ -49,7 +62,14 @@ fun fold(acc, iter) = if iter is
     if next(it) is [n, it] then
       if it is Done then acc else fold(f(n) + acc, Map(f, it))
 fun map_sum(f, n) = let it = map(f, dec(n)) in fold(0, it)
-map_sum(x => x, 200)
+map_sum(x => x, 20)
+//│ 
+//│ Opt stats:
+//│ 
+//│ (orig,class size: 3 func size: 138)
+//│ (simp,class size: 3 func size: 123)
+//│ (split,class size: 3 func size: 222)
+//│ (simp2,class size: 3 func size: 162)
 //│ 
 //│ Interpreted:
-//│ 20100
+//│ 210

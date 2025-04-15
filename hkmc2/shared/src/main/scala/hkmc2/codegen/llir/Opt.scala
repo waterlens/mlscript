@@ -81,6 +81,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def subst(k: K) = map.getOrElse(k, oErrStop(s"Key $k not found"))
     def subst(k: IterableOnce[K]): Iterator[V] = k.iterator.map(subst)
 
+  class MapTexprUtil(val map: Map[Local, TrivialExpr]):
+    def subst(k: Local) = map.getOrElse(k, Expr.Ref(k))
+    def subst(k: IterableOnce[Local]): Iterator[TrivialExpr] = k.iterator.map(subst)
+    def substT(sym: TrivialExpr): TrivialExpr = sym.foldRef(subst)
+    def substT(sym: IterableOnce[TrivialExpr]): Iterator[TrivialExpr] = sym.iterator.map(substT)
+
   class MapUtil(val map: Map[Local, Local]):
     def subst(k: Local) = map.getOrElse(k, k)
     def subst(k: IterableOnce[Local]): Iterator[Local] = k.iterator.map(subst)
@@ -831,8 +837,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               // manual checkSTarget
               val p = findProducer(loc)
               p match
-                case Some(p) =>
-                  liftOutMixingProducer(p, loc, scrutinee)
+                case Some(p) => liftOutMixingProducer(p, loc, scrutinee)
                 case None => fallback
             case _ => fallback
         case Node.Panic(msg) => node
@@ -1024,12 +1029,23 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               s.set(true)
               Node.Jump(func, args.map(_.foldRef(m.subst)))
             case p @ Node.Panic(_) => s.set(true); p
-            case p @ Node.LetCall(xs, callee, args, node2: Terminator) =>
+            case p @ Node.LetCall(xs, callee, args2, node2: Terminator) =>
               s.set(true)
-              val nuArgs = args.map(_.foldRef(m.subst))
               val r = RenameUtil()
-              val renamed = renameNode(node2)(using r)
-              Node.LetCall(xs.map(r.subst), callee, nuArgs, renamed)
+              val nuXs = r.subst(xs).toList
+              val nuArgs2 = args2.map(_.foldRef(m.subst))
+              val oldM = summon[MapUtil]
+              val tmpM = MapUtil(m.map.iterator.flatMap:
+                case (name, Expr.Ref(res)) => Some(name -> res)
+                case (name, _) => None
+              .toMap)
+              val newM = MapUtil(oldM.map ++ r.map.toMap)
+              val literals = m.map.iterator.flatMap:
+                case (name, Expr.Ref(res)) => None
+                case (name, expr) => Some(name -> expr.toExpr)
+              val nuNode = removeTrivialCallAndJump(node2)(using tmpM)
+              Node.LetCall(nuXs, callee, nuArgs2, bindByOrder(literals.toList,
+                removeTrivialCallAndJump(nuNode)(using newM)))
             case _ => pass
         else
           pass
@@ -1053,6 +1069,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           log(s"checking: ${funcDefn.name |> showSym}")
           funcDefn.body match
             case Node.Result(res) =>
+              s.set(true)
               val nuRes = res.map(_.foldRef(m.subst))
               val oldM = summon[MapUtil]
               val newM = MapUtil(oldM.map ++ names.iterator.zip(nuRes).flatMap:
@@ -1073,10 +1090,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               s.set(true)
               val r = RenameUtil()
               val nuXs = r.subst(xs).toList
-              val nuSubst = SubstUtil[Local, TrivialExpr](m.map ++ r.map.iterator.map:
-                case (k, v) => k -> Expr.Ref(v))
-              val nuArgs2 = args2.map(_.foldRef(nuSubst.subst))
-              val nuRes = res.map(_.foldRef(nuSubst.subst))
+              val nuSubst = MapTexprUtil((r.map.iterator.map:
+                case (k, v) => k -> Expr.Ref(v)).toMap)
+              val nuArgs2 = args2.map(_.foldRef(m.subst))
+              val nuRes = res.map(_.foldRef(MapTexprUtil(m.map).subst).foldRef(nuSubst.subst))
               val oldM = summon[MapUtil]
               val newM = MapUtil(oldM.map ++ names.iterator.zip(nuRes).flatMap:
                 case (name, Expr.Ref(res)) => Some(name -> res)
@@ -1101,7 +1118,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val changed = Status(true)
       while changed.get do
         changed.set(false)
-        simp.simplify(using changed)
+        val prev = info.toProgram
+        try 
+          simp.simplify(using changed)
+        catch case e: Exception =>
+          log(s"exception: $e")
+          log(s"last prog: ${prev.show()}")
+          throw e
       optStat.addOne(("simp", info.getStat))
     if flags.contains("!split") then
       ()
@@ -1114,7 +1137,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val changed = Status(true)
       while changed.get do
         changed.set(false)
-        simp.simplify(using changed)
+        val prev = info.toProgram
+        try 
+          simp.simplify(using changed)
+        catch case e: Exception =>
+          log(s"exception: $e")
+          log(s"last prog: ${prev.show()}")
+          throw e
       optStat.addOne(("simp2", info.getStat))
     (info.toProgram, optStat.toList)
 

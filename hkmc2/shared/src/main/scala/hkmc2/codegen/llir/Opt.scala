@@ -39,7 +39,7 @@ def notCallable(sym: Local) =
 def showSym(sym: Local) = s"${sym.nme}$$${sym.uid.toString()}"
 
 final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: FreshInt, flags: Set[Str]):
-  import tl.{log, trace}
+  import tl.{log, trace, traceNot}
 
   object DestructUtils:
     @tailrec
@@ -331,7 +331,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   private class IntroductionAnalysis(info: ProgInfo):
     import IntroductionAnalysis.Env
     def mergeIntros(xs: Ls[Ls[Opt[I]]], loc: Loc): Ls[Opt[I]] =
-      trace[Ls[Opt[I]]](s"mergeIntros: $xs"):
+      traceNot[Ls[Opt[I]]](s"mergeIntros: $xs"):
         val xst = xs.transpose
         xst.map: ys =>
           val z = ys.flatMap:
@@ -342,7 +342,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           if z.nonEmpty then S(I(loc, IInfo.Mixed(z))) else N
 
     def addI(sym: Local, i: I)(using env: Env) =
-      trace[Unit](s"addI: ${sym.nme}$$${sym.uid.toString()} -> $i"):
+      traceNot[Unit](s"addI: ${sym.nme}$$${sym.uid.toString()} -> $i"):
         if env.intros.contains(sym) then
           oErrStop(s"Multiple introductions of ${sym.nme}$$${sym.uid.toString()}")
         env.intros.update(sym, i)
@@ -368,7 +368,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case _ => N
 
     def fNode(node: Node)(using env: Env): Ls[Opt[I]] = 
-      trace[Ls[Opt[I]]](s"fNode: $node"):
+      traceNot[Ls[Opt[I]]](s"fNode: $node"):
         node match
         case Node.Result(res) => res.map(f => fTExprWithLoc(f, Loc.Other))
         case Node.Jump(func, args) => 
@@ -799,6 +799,28 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val nuBody = wrapPost(postBody.body)
       preBody.body(cr.k(nuBody))
     
+    def fNodeCases(arms: Ls[(Pat, Node)], oldI: Opt[I], dflt: Option[Node], scrutinee: TrivialExpr, acc: Ls[(Pat, Node)])
+                  (k: Node => Env ?=> Node)(using env: Env, thisFunc: Func): Node =
+      trace[Node](s"fNodeCases: ${if arms.isEmpty then "empty" else arms.head}"):
+        arms match
+          case Nil =>
+            dflt match
+              case None => k(Node.Case(scrutinee, acc.reverse, N))
+              case Some(d) =>
+                scrutinee.iterRef(x =>
+                  for i <- oldI do env.i.intros.update(x, i))
+                fNode(d): nuDflt =>
+                  k(Node.Case(scrutinee, acc.reverse, S(nuDflt)))
+          case (p @ Pat.Class(cls), body) :: rest =>
+            scrutinee.iterRef(x =>
+              env.i.intros.update(x, I(Loc.CaseSite(scrutinee), IInfo.Ctor(cls))))
+            fNode(body): nuBody =>
+              fNodeCases(rest, oldI, dflt, scrutinee, (p, nuBody) :: acc)(k)
+          case (p @ Pat.Lit(lit), body) :: rest =>
+            fNode(body): nuBody =>
+              fNodeCases(rest, oldI, dflt, scrutinee, (p, nuBody) :: acc)(k)
+
+    
     def fNode(node: Node)(k: Node => Env ?=> Node)(using env: Env, thisFunc: Func): Node =
       trace[Node](s"split fNode: $node"):
         node match
@@ -821,17 +843,11 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               val nuBody = cr.k(Node.Panic("placeholder here"))
               k(nuBody)
         case Node.Case(scrutinee, cases, default) =>
-          def fallback = 
-            val nuCases = cases.map:
-              case (p @ Pat.Class(cls), body) =>
-                val old = env.i.intros.put(cls, I(Loc.CaseSite(scrutinee), IInfo.Ctor(cls)))
-                val nuBody = fNode(body)(identity)
-                for i <- old do env.i.intros.update(cls, i)
-                (p, nuBody)
-              case (p @ Pat.Lit(lit), body) => 
-                (p, fNode(body)(identity))
-            val dfltCase = default.map(fNode(_)(identity))
-            k(Node.Case(scrutinee, nuCases, dfltCase))
+          def fallback =
+            val oldI = scrutinee match
+              case Expr.Ref(x) => env.i.intros.get(x)
+              case _ => N
+            fNodeCases(cases, oldI, default, scrutinee, Nil)(k)
           symAndIntroOfTExpr(scrutinee) match
             case Some((scrutinee, I(loc, IInfo.Mixed(i)))) =>
               // manual checkSTarget
@@ -840,7 +856,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
                 case Some(p) => liftOutMixingProducer(p, loc, scrutinee)
                 case None => fallback
             case _ => fallback
-        case Node.Panic(msg) => node
+        case Node.Panic(msg) => k(node)
         case Node.LetExpr(name, expr, body) =>
           fNode(body): inner =>
             k(Node.LetExpr(name, expr, inner))
@@ -875,7 +891,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               k(Node.LetCall(names, func, args, inner))
 
     def fFunc(func: Func)(using env: Env): Unit =
-      trace[Unit](s"split fFunc: ${func.name |> showSym}"):
+      traceNot[Unit](s"split fFunc: ${func.name |> showSym}"):
         val nuFunc = Func(func.id, func.name, func.params, func.resultNum, fNode(func.body)(identity)(using env, func))
         info.func.update(func.name, nuFunc)
             
@@ -1126,9 +1142,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           log(s"last prog: ${prev.show()}")
           throw e
       optStat.addOne(("simp", info.getStat))
-    if flags.contains("!split") then
-      ()
-    else
+    if !flags.contains("!split") then
       val splitting = Splitting(info)
       splitting.run()
       optStat.addOne(("split", info.getStat))

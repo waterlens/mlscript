@@ -27,7 +27,7 @@ add(1)(2)
 //│     let x$599 = Lambda$595(x$575) in
 //│     x$599
 //│   def entry$602() =
-//│     let* (x$600) = add(1) in
+//│     let* (x$600) = add$567(1) in
 //│     let x$601 = Callable.apply1$591(x$600,2) in
 //│     x$601
 //│   entry = entry$602
@@ -123,7 +123,7 @@ add4(1, 2)(3, 4)
 //│     let x$655 = Lambda$648(a$615,b$616) in
 //│     x$655
 //│   def entry$658() =
-//│     let* (x$656) = add4(1,2) in
+//│     let* (x$656) = add4$604(1,2) in
 //│     let x$657 = Callable.apply2$643(x$656,3,4) in
 //│     x$657
 //│   entry = entry$658
@@ -206,7 +206,7 @@ dummy()(1, 2)
 //│ LLIR:
 //│   class Lambda_add() extends Callable {
 //│     def apply2$643(arg$675,arg$676) =
-//│       let* (x$679) = add(arg$675,arg$676) in
+//│       let* (x$679) = add$659(arg$675,arg$676) in
 //│       x$679
 //│   }
 //│   def add$659(a$662,b$663) =
@@ -216,7 +216,7 @@ dummy()(1, 2)
 //│     let x$680 = Lambda_add$677() in
 //│     x$680
 //│   def entry$683() =
-//│     let* (x$681) = dummy() in
+//│     let* (x$681) = dummy$660() in
 //│     let x$682 = Callable.apply2$643(x$681,1,2) in
 //│     x$682
 //│   entry = entry$683
@@ -289,12 +289,12 @@ main()
 //│   class Nil() extends List
 //│   class Lambda_lambda() extends Callable {
 //│     def apply1$591(x$721) =
-//│       let* (x$764) = inc(x$721) in
+//│       let* (x$764) = inc$688(x$721) in
 //│       x$764
 //│   }
 //│   class Lambda_inc() extends Callable {
 //│     def apply1$591(arg$771) =
-//│       let* (x$774) = inc(arg$771) in
+//│       let* (x$774) = inc$688(arg$771) in
 //│       x$774
 //│   }
 //│   def map$685(f$705,l$706) =
@@ -303,7 +303,7 @@ main()
 //│         let x$752 = l$706.<Cons$693:head> in
 //│         let x$753 = l$706.<Cons$693:tail> in
 //│         let x$754 = Callable.apply1$591(f$705,x$752) in
-//│         let* (x$755) = map(f$705,x$753) in
+//│         let* (x$755) = map$685(f$705,x$753) in
 //│         let x$756 = Cons$693(x$754,x$755) in
 //│         x$756
 //│       Nil$702 =>
@@ -321,15 +321,15 @@ main()
 //│     let x$760 = Cons$693(2,x$759) in
 //│     let x$761 = Cons$693(1,x$760) in
 //│     let x$765 = Lambda_lambda$762() in
-//│     let* (x$766) = map(x$765,x$761) in
+//│     let* (x$766) = map$685(x$765,x$761) in
 //│     let x$767 = Nil$702() in
 //│     let x$768 = Cons$693(4,x$767) in
 //│     let x$769 = Cons$693(3,x$768) in
 //│     let x$775 = Lambda_inc$772() in
-//│     let* (x$770) = map(x$775,x$769) in
+//│     let* (x$770) = map$685(x$775,x$769) in
 //│     x$770
 //│   def entry$777() =
-//│     let* (x$776) = main() in
+//│     let* (x$776) = main$686() in
 //│     x$776
 //│   entry = entry$777
 //│ 
@@ -360,12 +360,12 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│   class Lambda_lambda(lam_arg0$877,lam_arg1$878) extends Callable {
 //│     def apply1$591(y$824) =
 //│       let x$879 = Callable.apply2$643(lam_arg0$877,lam_arg1$878,y$824) in
-//│       let* (x$880) = not(x$879) in
+//│       let* (x$880) = not$781(x$879) in
 //│       x$880
 //│   }
 //│   class Lambda_lambda() extends Callable {
 //│     def apply2$643(arg$892,arg$893) =
-//│       let* (x$896) = lambda(arg$892,arg$893) in
+//│       let* (x$896) = lambda$860(arg$892,arg$893) in
 //│       x$896
 //│   }
 //│   def not$781(c$799) =
@@ -387,11 +387,11 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│         let x$866 = Callable.apply1$591(f$802,x$864) in
 //│         case x$866 of
 //│           BoolLit(true) =>
-//│             let* (x$868) = filter(f$802,x$865) in
+//│             let* (x$868) = filter$780(f$802,x$865) in
 //│             let x$869 = Cons$787(x$864,x$868) in
 //│             x$869
 //│           _ =>
-//│             let* (x$870) = filter(f$802,x$865) in
+//│             let* (x$870) = filter$780(f$802,x$865) in
 //│             x$870
 //│       _ =>
 //│         panic "match error"
@@ -408,8 +408,8 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│         let x$873 = ls$816.<Cons$787:head> in
 //│         let x$874 = ls$816.<Cons$787:tail> in
 //│         let x$881 = Lambda_lambda$875(eq$815,x$873) in
-//│         let* (x$882) = filter(x$881,x$874) in
-//│         let* (x$883) = nubBy(eq$815,x$882) in
+//│         let* (x$882) = filter$780(x$881,x$874) in
+//│         let* (x$883) = nubBy$783(eq$815,x$882) in
 //│         let x$884 = Cons$787(x$873,x$883) in
 //│         x$884
 //│       _ =>
@@ -426,7 +426,7 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│     let x$888 = Cons$787(2,x$887) in
 //│     let x$889 = Cons$787(1,x$888) in
 //│     let x$897 = Lambda_lambda$894() in
-//│     let* (x$891) = nubBy(x$897,x$889) in
+//│     let* (x$891) = nubBy$783(x$897,x$889) in
 //│     x$891
 //│   entry = entry$898
 //│ 
@@ -629,7 +629,7 @@ f(3)
 //│   def j$923() =
 //│     undefined
 //│   def entry$930() =
-//│     let* (x$929) = f(3) in
+//│     let* (x$929) = f$900(3) in
 //│     x$929
 //│   entry = entry$930
 //│ 
@@ -746,7 +746,7 @@ f(3)
 //│   def j$976() =
 //│     undefined
 //│   def entry$984() =
-//│     let* (x$983) = f(3) in
+//│     let* (x$983) = f$933(3) in
 //│     x$983
 //│   entry = entry$984
 //│ 

@@ -228,5 +228,5 @@ enum Node:
     case LetMethodCall(xs, cls, method, args, body) =>
       doc"let ${xs.map(docSymWithUid).mkString(",")} = ${cls.nme}.${docSymWithUid(method)}(${args.map(_.toString).mkString(",")}) in # ${body.toDocument}"
     case LetCall(xs, func, args, body) => 
-      doc"let* (${xs.map(docSymWithUid).mkString(",")}) = ${func.nme}(${args.map(_.toString).mkString(",")}) in # ${body.toDocument}"
+      doc"let* (${xs.map(docSymWithUid).mkString(",")}) = ${func |> showSym}(${args.map(_.toString).mkString(",")}) in # ${body.toDocument}"
 

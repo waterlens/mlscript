@@ -2,6 +2,7 @@
 :llir
 :cpp
 :sopt
+:optf simp,simp2
 
 //│ 
 //│ Opt:
@@ -11,7 +12,6 @@
 //│   entry = entry$566
 
 :sllir
-:optf simp,simp2
 fun foo(x) =
   bar(x)
 fun bar(x) =
@@ -23,16 +23,16 @@ foo(10)
 //│ LLIR:
 //│   
 //│   def foo$569(x$572) =
-//│     let* (x$586) = bar(x$572) in
+//│     let* (x$586) = bar$568(x$572) in
 //│     x$586
 //│   def bar$568(x$576) =
-//│     let* (x$587) = baz(x$576) in
+//│     let* (x$587) = baz$570(x$576) in
 //│     x$587
 //│   def baz$570(x$580) =
 //│     let x$588 = +(x$580,1) in
 //│     x$588
 //│   def entry$590() =
-//│     let* (x$589) = foo(10) in
+//│     let* (x$589) = foo$569(10) in
 //│     x$589
 //│   entry = entry$590
 //│ 
@@ -42,11 +42,10 @@ foo(10)
 //│     let x$588 = +(x$580,1) in
 //│     x$588
 //│   def entry$590() =
-//│     let* (x$594) = baz(10) in
+//│     let* (x$594) = baz$570(10) in
 //│     x$594
 //│   entry = entry$590
 
-:optf simp,simp2
 fun foo(tup2) =
   if tup2 is [x, y] then x + y
 fun bar(x, y) = foo([x, y])
@@ -57,19 +56,38 @@ bar(1, 2)
 //│   
 //│   def bar$595(x$606,y$607) =
 //│     let x$620 = Tuple2$614(x$606,y$607) in
-//│     let* (x$644) = foo_case0(x$620) in
-//│     x$644
+//│     let* (x$639) = foo_case0$627(x$620) in
+//│     x$639
 //│   def entry$622() =
-//│     let* (x$621) = bar(1,2) in
+//│     let* (x$621) = bar$595(1,2) in
 //│     x$621
-//│   def foo_case0$627(x$632) =
-//│     let x$631 = x$632.<Tuple2$614:0> in
-//│     let x$633 = x$632.<Tuple2$614:1> in
-//│     let x$634 = +(x$631,x$633) in
-//│     x$634
+//│   def foo_case0$627(x$631) =
+//│     let x$630 = x$631.<Tuple2$614:0> in
+//│     let x$632 = x$631.<Tuple2$614:1> in
+//│     let x$633 = +(x$630,x$632) in
+//│     x$633
+//│   entry = entry$622
+//│ 
+//│ Opt:
+//│   
+//│   def entry$622() =
+//│     let* (x$653) = foo_case0_sr_post$641(1,2) in
+//│     x$653
+//│   def foo_case0_sr_post$641(x$643,x$644) =
+//│     let x$642 = +(x$643,x$644) in
+//│     x$642
+//│   entry = entry$622
+//│ 
+//│ Opt:
+//│   
+//│   def entry$622() =
+//│     let* (x$653) = foo_case0_sr_post$641(1,2) in
+//│     x$653
+//│   def foo_case0_sr_post$641(x$643,x$644) =
+//│     let x$642 = +(x$643,x$644) in
+//│     x$642
 //│   entry = entry$622
 
-:optf simp,simp2
 fun foo() =
   let m = [1, 2]
   if m is [x, y] then x + y
@@ -78,12 +96,126 @@ foo()
 //│ 
 //│ Opt:
 //│   
-//│   def foo$646() =
-//│     let x$660 = 1 in
-//│     let x$661 = 2 in
-//│     let x$662 = +(x$660,x$661) in
-//│     x$662
-//│   def entry$664() =
-//│     let* (x$663) = foo() in
-//│     x$663
-//│   entry = entry$664
+//│   def foo$654() =
+//│     let x$668 = 1 in
+//│     let x$669 = 2 in
+//│     let x$670 = +(x$668,x$669) in
+//│     x$670
+//│   def entry$672() =
+//│     let* (x$671) = foo$654() in
+//│     x$671
+//│   entry = entry$672
+
+// for argument flattening
+fun foo(m, n) =
+  if m is [x] then x + n
+foo([1], 2)
+//│ = 3
+//│ 
+//│ Opt:
+//│   
+//│   def entry$692() =
+//│     let x$691 = Tuple1$686(1) in
+//│     let x$710 = 2 in
+//│     let* (x$711) = foo_case0$695(x$691,x$710) in
+//│     x$711
+//│   def foo_case0$695(x$700,x$702) =
+//│     let x$699 = x$700.<Tuple1$686:0> in
+//│     let x$701 = +(x$699,x$702) in
+//│     x$701
+//│   entry = entry$692
+//│ 
+//│ Opt:
+//│   
+//│   def entry$692() =
+//│     let x$710 = 2 in
+//│     let x$723 = 1 in
+//│     let* (x$722) = foo_case0_sr_post$713(x$723,x$710) in
+//│     x$722
+//│   def foo_case0_sr_post$713(x$715,x$716) =
+//│     let x$714 = +(x$715,x$716) in
+//│     x$714
+//│   entry = entry$692
+//│ 
+//│ Opt:
+//│   
+//│   def entry$692() =
+//│     let x$710 = 2 in
+//│     let x$723 = 1 in
+//│     let* (x$722) = foo_case0_sr_post$713(x$723,x$710) in
+//│     x$722
+//│   def foo_case0_sr_post$713(x$715,x$716) =
+//│     let x$714 = +(x$715,x$716) in
+//│     x$714
+//│   entry = entry$692
+
+fun bar(x) =
+  if x is [a, b] then a + b
+fun foo(x) =
+  let m = [1, x]
+  bar(m)
+fun baz(x) =
+  bar(x)
+foo(2) + baz([3, 4])
+//│ = 10
+//│ 
+//│ Opt:
+//│   
+//│   def foo$725(x$736) =
+//│     let x$757 = Tuple2$614(1,x$736) in
+//│     let* (x$795) = bar_case0$768(x$757) in
+//│     x$795
+//│   def entry$764() =
+//│     let* (x$760) = foo$725(2) in
+//│     let x$762 = Tuple2$614(3,4) in
+//│     let* (x$782) = bar_case0$768(x$762) in
+//│     jump entry_caller_post$777(x$760,x$782)
+//│   def bar_case0$768(x$772) =
+//│     let x$771 = x$772.<Tuple2$614:0> in
+//│     let x$773 = x$772.<Tuple2$614:1> in
+//│     let x$774 = +(x$771,x$773) in
+//│     x$774
+//│   def entry_caller_post$777(x$779,x$780) =
+//│     let x$778 = +(x$779,x$780) in
+//│     x$778
+//│   entry = entry$764
+//│ 
+//│ Opt:
+//│   
+//│   def foo$725(x$736) =
+//│     let x$821 = 1 in
+//│     let* (x$820) = bar_case0_sr_post$799(x$821,x$736) in
+//│     x$820
+//│   def entry$764() =
+//│     let* (x$760) = foo$725(2) in
+//│     let x$810 = 3 in
+//│     let x$811 = 4 in
+//│     let* (x$809) = bar_case0_sr_post$799(x$810,x$811) in
+//│     jump entry_caller_post$777(x$760,x$809)
+//│   def entry_caller_post$777(x$779,x$780) =
+//│     let x$778 = +(x$779,x$780) in
+//│     x$778
+//│   def bar_case0_sr_post$799(x$801,x$802) =
+//│     let x$800 = +(x$801,x$802) in
+//│     x$800
+//│   entry = entry$764
+//│ 
+//│ Opt:
+//│   
+//│   def foo$725(x$736) =
+//│     let x$821 = 1 in
+//│     let* (x$820) = bar_case0_sr_post$799(x$821,x$736) in
+//│     x$820
+//│   def entry$764() =
+//│     let* (x$760) = foo$725(2) in
+//│     let x$810 = 3 in
+//│     let x$811 = 4 in
+//│     let* (x$809) = bar_case0_sr_post$799(x$810,x$811) in
+//│     jump entry_caller_post$777(x$760,x$809)
+//│   def entry_caller_post$777(x$779,x$780) =
+//│     let x$778 = +(x$779,x$780) in
+//│     x$778
+//│   def bar_case0_sr_post$799(x$801,x$802) =
+//│     let x$800 = +(x$801,x$802) in
+//│     x$800
+//│   entry = entry$764

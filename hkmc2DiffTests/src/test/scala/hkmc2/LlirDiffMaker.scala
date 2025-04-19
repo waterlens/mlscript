@@ -99,14 +99,21 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
           if opt || show then
             tl.log(s"Optimizing $name")
             val opt = codegen.llir.LlirOpt(tl, freshId, optFlags)
-            val (optProg, optStat) = opt.run(prog)
-            if show then
-              output(s"\n$name:")
-              output(optProg.show())
-            if showStat then
-              output(s"\n$name stats:\n")
-              output(optStat.mkString("\n"))
-            optProg
+            var changed = Status(true)
+            var outOptProg = prog
+            var count = 0
+            while changed.get && count <= 10 do 
+              changed.set(false)
+              val (optProg, optStat) = opt.run(outOptProg)(using changed)
+              if show then
+                output(s"\n$name:")
+                output(optProg.show())
+              if showStat then
+                output(s"\n$name stats:\n")
+                output(optStat.mkString("\n"))
+              outOptProg = optProg
+              count += 1
+            outOptProg
           else
             prog
         def cppGen(name: String, prog: Program, gen: Bool, show: Bool, run: Bool, write: Opt[Str]): Unit =

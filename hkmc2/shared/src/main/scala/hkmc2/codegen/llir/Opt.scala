@@ -153,6 +153,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   
   
   enum IInfo:
+    case Bool(b: Bool) // boolean literal as a special case
     case Ctor(c: Local)
     case Mixed(i: Set[I])
     case Tuple(n: Int)
@@ -334,6 +335,15 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   
   private class IntroductionAnalysis(info: ProgInfo):
     import IntroductionAnalysis.Env
+    def mergeIntroSet(loc: Loc, is: Set[I]): Opt[I] =
+      if is.nonEmpty then
+        val i = is.head
+        val iInfo = i.info
+        if is.forall(_.info == iInfo) then
+          S(I(loc, iInfo))
+        else
+          S(I(loc, IInfo.Mixed(is)))  
+      else N
     def mergeIntros(xs: Ls[Ls[Opt[I]]], loc: Loc): Ls[Opt[I]] =
       traceNot[Ls[Opt[I]]](s"mergeIntros: $xs"):
         val xst = xs.transpose
@@ -343,7 +353,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             case S(I(loc, IInfo.Mixed(i))) => i
             case S(i) => Set(i)
           .toSet
-          if z.nonEmpty then S(I(loc, IInfo.Mixed(z))) else N
+          mergeIntroSet(loc, z)
 
     def addI(sym: Local, i: I)(using env: Env) =
       traceNot[Unit](s"addI: ${sym.nme}$$${sym.uid.toString()} -> $i"):

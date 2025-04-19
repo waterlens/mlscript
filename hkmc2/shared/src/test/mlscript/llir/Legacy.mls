@@ -6292,12 +6292,12 @@ main()
 //│   class Nat()
 //│   class S(s$4620) extends Nat
 //│   class O() extends Nat
-//│   def plus$4608(x$5054,x$5055) =
-//│     case x$5054 of
+//│   def plus$4608(x$5080,x$5081) =
+//│     case x$5080 of
 //│       O$4623 =>
-//│         x$5055
+//│         x$5081
 //│       S$4618 =>
-//│         jump plus_case1$5044(x$5054,x$5055)
+//│         jump plus_case1$5034(x$5080,x$5081)
 //│       _ =>
 //│         panic "match error"
 //│   def fib$4612(x$4873) =
@@ -6309,13 +6309,12 @@ main()
 //│         jump fib_case1_sr_post$4910(x$4978)
 //│       _ =>
 //│         panic "match error"
-//│   def to_int$4614(x$4934) =
-//│     case x$4934 of
+//│   def to_int$4614(x$5024) =
+//│     case x$5024 of
 //│       O$4623 =>
 //│         0
 //│       S$4618 =>
-//│         let x$5085 = x$4934.<S$4618:s> in
-//│         jump to_int_case1_sr_post$4985(x$5085)
+//│         jump to_int_case1$4895(x$5024)
 //│       _ =>
 //│         panic "match error"
 //│   def to_nat$4607(x$4735) =
@@ -6345,15 +6344,14 @@ main()
 //│                 panic "match error"
 //│           S$4618 =>
 //│             let x$4926 = x$4744.<S$4618:s> in
-//│             case x$4926 of
+//│             let* (x$4925) = fib_case1_sr_post$4910(x$4926) in
+//│             case x$4925 of
 //│               O$4623 =>
-//│                 let* (x$5015) = fib_case1_sr_post_case0$4996() in
-//│                 let* (x$5086) = to_int$4614(x$5015) in
-//│                 x$5086
+//│                 let x$5006 = 0 in
+//│                 x$5006
 //│               S$4618 =>
-//│                 let* (x$5016) = fib_case1_sr_post_case1$4997(x$4926) in
-//│                 let* (x$5087) = to_int$4614(x$5016) in
-//│                 x$5087
+//│                 let* (x$5007) = to_int_case1$4895(x$4925) in
+//│                 x$5007
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
@@ -6368,22 +6366,217 @@ main()
 //│                 let x$4939 = 0 in
 //│                 x$4939
 //│               S$4618 =>
-//│                 let x$5025 = x$4863.<S$4618:s> in
-//│                 let* (x$5024) = to_int_case1_sr_post$4985(x$5025) in
-//│                 x$5024
+//│                 let x$5016 = x$4863.<S$4618:s> in
+//│                 let* (x$5015) = to_int_case1_sr_post$4985(x$5016) in
+//│                 x$5015
 //│               _ =>
 //│                 panic "match error"
 //│           S$4618 =>
 //│             let x$4950 = x$4745.<S$4618:s> in
-//│             case x$4950 of
+//│             let* (x$4949) = fib_case1_sr_post$4910(x$4950) in
+//│             case x$4949 of
 //│               O$4623 =>
-//│                 let* (x$5039) = fib_case1_sr_post_case0$4996() in
-//│                 let* (x$5089) = to_int$4614(x$5039) in
+//│                 let x$5029 = 0 in
+//│                 x$5029
+//│               S$4618 =>
+//│                 let* (x$5030) = to_int_case1$4895(x$4949) in
+//│                 x$5030
+//│               _ =>
+//│                 panic "match error"
+//│           _ =>
+//│             panic "match error"
+//│   def entry$4723() =
+//│     let* (x$4722) = main$4609() in
+//│     x$4722
+//│   def to_nat_pre$4725(x$4729) =
+//│     let x$4728 = ==(x$4729,0) in
+//│     x$4728,x$4729
+//│   def to_nat_case0$4726() =
+//│     let x$4730 = O$4623() in
+//│     x$4730
+//│   def to_nat_default$4727(x$4732) =
+//│     let x$4731 = -(x$4732,1) in
+//│     let* (x$4733) = to_nat$4607(x$4731) in
+//│     let x$4734 = S$4618(x$4733) in
+//│     x$4734
+//│   def fib_case0$4747() =
+//│     let x$4751 = O$4623() in
+//│     let x$4752 = S$4618(x$4751) in
+//│     x$4752
+//│   def fib_case1_sr_post$4803(x$4804) =
+//│     case x$4804 of
+//│       O$4623 =>
+//│         let x$4805 = O$4623() in
+//│         let x$4806 = S$4618(x$4805) in
+//│         x$4806
+//│       S$4618 =>
+//│         let x$4807 = x$4804.<S$4618:s> in
+//│         case x$4804 of
+//│           O$4623 =>
+//│             let* (x$4881) = fib_case0$4825() in
+//│             let* (x$4982) = fib$4612(x$4807) in
+//│             case x$4881 of
+//│               O$4623 =>
+//│                 x$4982
+//│               S$4618 =>
+//│                 let* (x$5053) = plus_case1$5034(x$4881,x$4982) in
+//│                 x$5053
+//│               _ =>
+//│                 panic "match error"
+//│           S$4618 =>
+//│             let x$4973 = x$4804.<S$4618:s> in
+//│             let* (x$4972) = fib_case1_sr_post$4910(x$4973) in
+//│             let* (x$5108) = fib$4612(x$4807) in
+//│             let* (x$5068) = plus$4608(x$4972,x$5108) in
+//│             x$5068
+//│           _ =>
+//│             panic "match error"
+//│       _ =>
+//│         panic "match error"
+//│   def fib_case0$4825() =
+//│     let x$4829 = O$4623() in
+//│     let x$4830 = S$4618(x$4829) in
+//│     x$4830
+//│   def to_int_case1$4895(x$5011) =
+//│     let x$5012 = x$5011.<S$4618:s> in
+//│     jump to_int_case1_sr_post$4985(x$5012)
+//│   def fib_case1_sr_post$4910(x$4911) =
+//│     case x$4911 of
+//│       O$4623 =>
+//│         let x$4912 = O$4623() in
+//│         let x$4913 = S$4618(x$4912) in
+//│         x$4913
+//│       S$4618 =>
+//│         let x$4914 = x$4911.<S$4618:s> in
+//│         case x$4911 of
+//│           O$4623 =>
+//│             let* (x$4915) = fib_case0$4747() in
+//│             let* (x$4916) = fib$4612(x$4914) in
+//│             case x$4915 of
+//│               O$4623 =>
+//│                 x$4916
+//│               S$4618 =>
+//│                 let* (x$5089) = plus_case1$5034(x$4915,x$4916) in
 //│                 x$5089
+//│               _ =>
+//│                 panic "match error"
+//│           S$4618 =>
+//│             let x$4918 = x$4911.<S$4618:s> in
+//│             let* (x$4919) = fib_case1_sr_post$4803(x$4918) in
+//│             let* (x$5114) = fib$4612(x$4914) in
+//│             let* (x$5104) = plus$4608(x$4919,x$5114) in
+//│             x$5104
+//│           _ =>
+//│             panic "match error"
+//│       _ =>
+//│         panic "match error"
+//│   def to_int_case1_sr_post$4985(x$4987) =
+//│     let* (x$4986) = to_int$4614(x$4987) in
+//│     let x$4988 = +(1,x$4986) in
+//│     x$4988
+//│   def plus_case1$5034(x$5040,x$5042) =
+//│     let x$5039 = x$5040.<S$4618:s> in
+//│     let* (x$5041) = plus$4608(x$5039,x$5042) in
+//│     let x$5043 = S$4618(x$5041) in
+//│     x$5043
+//│   entry = entry$4723
+//│ 
+//│ Opt:
+//│   class Nat()
+//│   class S(s$4620) extends Nat
+//│   class O() extends Nat
+//│   def plus$4608(x$5197,x$5198) =
+//│     case x$5197 of
+//│       O$4623 =>
+//│         x$5198
+//│       S$4618 =>
+//│         jump plus_case1$5152(x$5197,x$5198)
+//│       _ =>
+//│         panic "match error"
+//│   def fib$4612(x$4873) =
+//│     case x$4873 of
+//│       O$4623 =>
+//│         jump fib_case0$4825()
+//│       S$4618 =>
+//│         let x$4978 = x$4873.<S$4618:s> in
+//│         jump fib_case1_sr_post$4910(x$4978)
+//│       _ =>
+//│         panic "match error"
+//│   def to_int$4614(x$5024) =
+//│     case x$5024 of
+//│       O$4623 =>
+//│         0
+//│       S$4618 =>
+//│         let x$5175 = x$5024.<S$4618:s> in
+//│         jump to_int_case1_sr_post$4985(x$5175)
+//│       _ =>
+//│         panic "match error"
+//│   def to_nat$4607(x$4735) =
+//│     let* (x$4736,x$4737) = to_nat_pre$4725(x$4735) in
+//│     case x$4736 of
+//│       BoolLit(true) =>
+//│         jump to_nat_case0$4726()
+//│       _ =>
+//│         jump to_nat_default$4727(x$4737)
+//│   def main$4609() =
+//│     let* (x$4742,x$4743) = to_nat_pre$4725(10) in
+//│     case x$4742 of
+//│       BoolLit(true) =>
+//│         let* (x$4744) = to_nat_case0$4726() in
+//│         case x$4744 of
+//│           O$4623 =>
+//│             let* (x$4847) = fib_case0$4825() in
+//│             case x$4847 of
+//│               O$4623 =>
+//│                 let x$4907 = 0 in
+//│                 x$4907
 //│               S$4618 =>
-//│                 let* (x$5040) = fib_case1_sr_post_case1$4997(x$4950) in
-//│                 let* (x$5090) = to_int$4614(x$5040) in
-//│                 x$5090
+//│                 let x$4994 = x$4847.<S$4618:s> in
+//│                 let* (x$4993) = to_int_case1_sr_post$4985(x$4994) in
+//│                 x$4993
+//│               _ =>
+//│                 panic "match error"
+//│           S$4618 =>
+//│             let x$4926 = x$4744.<S$4618:s> in
+//│             let* (x$4925) = fib_case1_sr_post$4910(x$4926) in
+//│             case x$4925 of
+//│               O$4623 =>
+//│                 let x$5006 = 0 in
+//│                 x$5006
+//│               S$4618 =>
+//│                 let x$5131 = x$4925.<S$4618:s> in
+//│                 let* (x$5130) = to_int_case1_sr_post$4985(x$5131) in
+//│                 x$5130
+//│               _ =>
+//│                 panic "match error"
+//│           _ =>
+//│             panic "match error"
+//│       _ =>
+//│         let* (x$4745) = to_nat_default$4727(x$4743) in
+//│         case x$4745 of
+//│           O$4623 =>
+//│             let* (x$4863) = fib_case0$4825() in
+//│             case x$4863 of
+//│               O$4623 =>
+//│                 let x$4939 = 0 in
+//│                 x$4939
+//│               S$4618 =>
+//│                 let x$5016 = x$4863.<S$4618:s> in
+//│                 let* (x$5015) = to_int_case1_sr_post$4985(x$5016) in
+//│                 x$5015
+//│               _ =>
+//│                 panic "match error"
+//│           S$4618 =>
+//│             let x$4950 = x$4745.<S$4618:s> in
+//│             let* (x$4949) = fib_case1_sr_post$4910(x$4950) in
+//│             case x$4949 of
+//│               O$4623 =>
+//│                 let x$5029 = 0 in
+//│                 x$5029
+//│               S$4618 =>
+//│                 let x$5139 = x$4949.<S$4618:s> in
+//│                 let* (x$5138) = to_int_case1_sr_post$4985(x$5139) in
+//│                 x$5138
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
@@ -6406,10 +6599,6 @@ main()
 //│     let x$4751 = O$4623() in
 //│     let x$4752 = S$4618(x$4751) in
 //│     x$4752
-//│   def fib_caller_post$4763(x$4795,x$4796) =
-//│     let* (x$4822) = fib$4612(x$4795) in
-//│     let* (x$4799) = plus$4608(x$4796,x$4822) in
-//│     x$4799
 //│   def fib_case1_sr_post$4803(x$4804) =
 //│     case x$4804 of
 //│       O$4623 =>
@@ -6426,19 +6615,21 @@ main()
 //│               O$4623 =>
 //│                 x$4982
 //│               S$4618 =>
-//│                 let* (x$5063) = plus_case1$5044(x$4881,x$4982) in
-//│                 x$5063
+//│                 let x$5149 = x$4881.<S$4618:s> in
+//│                 let* (x$5148) = plus_case1_sr_post$5115(x$5149,x$4982) in
+//│                 x$5148
 //│               _ =>
 //│                 panic "match error"
 //│           S$4618 =>
 //│             let x$4973 = x$4804.<S$4618:s> in
-//│             case x$4973 of
+//│             let* (x$4972) = fib_case1_sr_post$4910(x$4973) in
+//│             let* (x$5108) = fib$4612(x$4807) in
+//│             case x$4972 of
 //│               O$4623 =>
-//│                 let* (x$5078) = fib_case1_sr_post_case0$4996() in
-//│                 jump fib_case1_sr_post_caller_post$4875(x$4807,x$5078)
+//│                 x$5108
 //│               S$4618 =>
-//│                 let* (x$5079) = fib_case1_sr_post_case1$4997(x$4973) in
-//│                 jump fib_case1_sr_post_caller_post$4875(x$4807,x$5079)
+//│                 let* (x$5169) = plus_case1$5152(x$4972,x$5108) in
+//│                 x$5169
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
@@ -6449,58 +6640,67 @@ main()
 //│     let x$4829 = O$4623() in
 //│     let x$4830 = S$4618(x$4829) in
 //│     x$4830
-//│   def fib_case1_sr_post_caller_post$4875(x$4957,x$4958) =
-//│     let* (x$4984) = fib$4612(x$4957) in
-//│     let* (x$4961) = plus$4608(x$4958,x$4984) in
-//│     x$4961
-//│   def fib_case1_sr_post$4910(x$5072) =
-//│     case x$5072 of
+//│   def fib_case1_sr_post$4910(x$4911) =
+//│     case x$4911 of
 //│       O$4623 =>
-//│         jump fib_case1_sr_post_case0$4996()
+//│         let x$4912 = O$4623() in
+//│         let x$4913 = S$4618(x$4912) in
+//│         x$4913
 //│       S$4618 =>
-//│         jump fib_case1_sr_post_case1$4997(x$5072)
+//│         let x$4914 = x$4911.<S$4618:s> in
+//│         case x$4911 of
+//│           O$4623 =>
+//│             let* (x$4915) = fib_case0$4747() in
+//│             let* (x$4916) = fib$4612(x$4914) in
+//│             case x$4915 of
+//│               O$4623 =>
+//│                 x$4916
+//│               S$4618 =>
+//│                 let x$5185 = x$4915.<S$4618:s> in
+//│                 let* (x$5184) = plus_case1_sr_post$5115(x$5185,x$4916) in
+//│                 x$5184
+//│               _ =>
+//│                 panic "match error"
+//│           S$4618 =>
+//│             let x$4918 = x$4911.<S$4618:s> in
+//│             let* (x$4919) = fib_case1_sr_post$4803(x$4918) in
+//│             let* (x$5114) = fib$4612(x$4914) in
+//│             case x$4919 of
+//│               O$4623 =>
+//│                 x$5114
+//│               S$4618 =>
+//│                 let* (x$5206) = plus_case1$5152(x$4919,x$5114) in
+//│                 x$5206
+//│               _ =>
+//│                 panic "match error"
+//│           _ =>
+//│             panic "match error"
 //│       _ =>
 //│         panic "match error"
 //│   def to_int_case1_sr_post$4985(x$4987) =
 //│     let* (x$4986) = to_int$4614(x$4987) in
 //│     let x$4988 = +(1,x$4986) in
 //│     x$4988
-//│   def fib_case1_sr_post_case0$4996() =
-//│     let x$5000 = O$4623() in
-//│     let x$5001 = S$4618(x$5000) in
-//│     x$5001
-//│   def fib_case1_sr_post_case1$4997(x$5003) =
-//│     let x$5002 = x$5003.<S$4618:s> in
-//│     case x$5003 of
-//│       O$4623 =>
-//│         let* (x$5004) = fib_case0$4747() in
-//│         let* (x$5005) = fib$4612(x$5002) in
-//│         let* (x$5006) = plus$4608(x$5004,x$5005) in
-//│         x$5006
-//│       S$4618 =>
-//│         let x$5007 = x$5003.<S$4618:s> in
-//│         let* (x$5008) = fib_case1_sr_post$4803(x$5007) in
-//│         jump fib_caller_post$4763(x$5002,x$5008)
-//│       _ =>
-//│         panic "match error"
-//│   def plus_case1$5044(x$5050,x$5052) =
-//│     let x$5049 = x$5050.<S$4618:s> in
-//│     let* (x$5051) = plus$4608(x$5049,x$5052) in
-//│     let x$5053 = S$4618(x$5051) in
-//│     x$5053
+//│   def plus_case1_sr_post$5115(x$5117,x$5118) =
+//│     let* (x$5116) = plus$4608(x$5117,x$5118) in
+//│     let x$5119 = S$4618(x$5116) in
+//│     x$5119
+//│   def plus_case1$5152(x$5158,x$5159) =
+//│     let x$5157 = x$5158.<S$4618:s> in
+//│     jump plus_case1_sr_post$5115(x$5157,x$5159)
 //│   entry = entry$4723
 //│ 
 //│ Opt:
 //│   class Nat()
 //│   class S(s$4620) extends Nat
 //│   class O() extends Nat
-//│   def plus$4608(x$5054,x$5055) =
-//│     case x$5054 of
+//│   def plus$4608(x$5197,x$5198) =
+//│     case x$5197 of
 //│       O$4623 =>
-//│         x$5055
+//│         x$5198
 //│       S$4618 =>
-//│         let x$5103 = x$5054.<S$4618:s> in
-//│         jump plus_case1_sr_post$5095(x$5103,x$5055)
+//│         let x$5218 = x$5197.<S$4618:s> in
+//│         jump plus_case1_sr_post$5115(x$5218,x$5198)
 //│       _ =>
 //│         panic "match error"
 //│   def fib$4612(x$4873) =
@@ -6512,12 +6712,13 @@ main()
 //│         jump fib_case1_sr_post$4910(x$4978)
 //│       _ =>
 //│         panic "match error"
-//│   def to_int$4614(x$5151) =
-//│     case x$5151 of
+//│   def to_int$4614(x$5024) =
+//│     case x$5024 of
 //│       O$4623 =>
 //│         0
 //│       S$4618 =>
-//│         jump to_int_case1$5106(x$5151)
+//│         let x$5175 = x$5024.<S$4618:s> in
+//│         jump to_int_case1_sr_post$4985(x$5175)
 //│       _ =>
 //│         panic "match error"
 //│   def to_nat$4607(x$4735) =
@@ -6547,31 +6748,15 @@ main()
 //│                 panic "match error"
 //│           S$4618 =>
 //│             let x$4926 = x$4744.<S$4618:s> in
-//│             case x$4926 of
+//│             let* (x$4925) = fib_case1_sr_post$4910(x$4926) in
+//│             case x$4925 of
 //│               O$4623 =>
-//│                 let* (x$5015) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5015 of
-//│                   O$4623 =>
-//│                     let x$5116 = 0 in
-//│                     x$5116
-//│                   S$4618 =>
-//│                     let* (x$5117) = to_int_case1$5106(x$5015) in
-//│                     x$5117
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5006 = 0 in
+//│                 x$5006
 //│               S$4618 =>
-//│                 let* (x$5139,x$5140) = fib_case1_sr_post_case1_pre$5119(x$4926) in
-//│                 case x$5139 of
-//│                   O$4623 =>
-//│                     let* (x$5141) = fib_case1_sr_post_case1_case0$5120(x$5140) in
-//│                     let* (x$5240) = to_int$4614(x$5141) in
-//│                     x$5240
-//│                   S$4618 =>
-//│                     let* (x$5142) = fib_case1_sr_post_case1_case1$5121(x$5139,x$5140) in
-//│                     let* (x$5241) = to_int$4614(x$5142) in
-//│                     x$5241
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5131 = x$4925.<S$4618:s> in
+//│                 let* (x$5130) = to_int_case1_sr_post$4985(x$5131) in
+//│                 x$5130
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
@@ -6586,38 +6771,22 @@ main()
 //│                 let x$4939 = 0 in
 //│                 x$4939
 //│               S$4618 =>
-//│                 let x$5025 = x$4863.<S$4618:s> in
-//│                 let* (x$5024) = to_int_case1_sr_post$4985(x$5025) in
-//│                 x$5024
+//│                 let x$5016 = x$4863.<S$4618:s> in
+//│                 let* (x$5015) = to_int_case1_sr_post$4985(x$5016) in
+//│                 x$5015
 //│               _ =>
 //│                 panic "match error"
 //│           S$4618 =>
 //│             let x$4950 = x$4745.<S$4618:s> in
-//│             case x$4950 of
+//│             let* (x$4949) = fib_case1_sr_post$4910(x$4950) in
+//│             case x$4949 of
 //│               O$4623 =>
-//│                 let* (x$5039) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5039 of
-//│                   O$4623 =>
-//│                     let x$5156 = 0 in
-//│                     x$5156
-//│                   S$4618 =>
-//│                     let* (x$5157) = to_int_case1$5106(x$5039) in
-//│                     x$5157
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5029 = 0 in
+//│                 x$5029
 //│               S$4618 =>
-//│                 let* (x$5243,x$5244) = fib_case1_sr_post_case1_pre$5119(x$4950) in
-//│                 case x$5243 of
-//│                   O$4623 =>
-//│                     let* (x$5177) = fib_case1_sr_post_case1_case0$5120(x$5244) in
-//│                     let* (x$5245) = to_int$4614(x$5177) in
-//│                     x$5245
-//│                   S$4618 =>
-//│                     let* (x$5178) = fib_case1_sr_post_case1_case1$5121(x$5243,x$5244) in
-//│                     let* (x$5246) = to_int$4614(x$5178) in
-//│                     x$5246
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5139 = x$4949.<S$4618:s> in
+//│                 let* (x$5138) = to_int_case1_sr_post$4985(x$5139) in
+//│                 x$5138
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
@@ -6640,10 +6809,6 @@ main()
 //│     let x$4751 = O$4623() in
 //│     let x$4752 = S$4618(x$4751) in
 //│     x$4752
-//│   def fib_caller_post$4763(x$4795,x$4796) =
-//│     let* (x$4822) = fib$4612(x$4795) in
-//│     let* (x$4799) = plus$4608(x$4796,x$4822) in
-//│     x$4799
 //│   def fib_case1_sr_post$4803(x$4804) =
 //│     case x$4804 of
 //│       O$4623 =>
@@ -6660,30 +6825,22 @@ main()
 //│               O$4623 =>
 //│                 x$4982
 //│               S$4618 =>
-//│                 let x$5189 = x$4881.<S$4618:s> in
-//│                 let* (x$5188) = plus_case1_sr_post$5095(x$5189,x$4982) in
-//│                 x$5188
+//│                 let x$5149 = x$4881.<S$4618:s> in
+//│                 let* (x$5148) = plus_case1_sr_post$5115(x$5149,x$4982) in
+//│                 x$5148
 //│               _ =>
 //│                 panic "match error"
 //│           S$4618 =>
 //│             let x$4973 = x$4804.<S$4618:s> in
-//│             case x$4973 of
+//│             let* (x$4972) = fib_case1_sr_post$4910(x$4973) in
+//│             let* (x$5108) = fib$4612(x$4807) in
+//│             case x$4972 of
 //│               O$4623 =>
-//│                 let* (x$5078) = fib_case1_sr_post_case0$4996() in
-//│                 let* (x$5254) = fib$4612(x$4807) in
-//│                 let* (x$5203) = plus$4608(x$5078,x$5254) in
-//│                 x$5203
+//│                 x$5108
 //│               S$4618 =>
-//│                 let* (x$5263,x$5264) = fib_case1_sr_post_case1_pre$5119(x$4973) in
-//│                 case x$5263 of
-//│                   O$4623 =>
-//│                     let* (x$5222) = fib_case1_sr_post_case1_case0$5120(x$5264) in
-//│                     jump fib_case1_sr_post_caller_post$4875(x$4807,x$5222)
-//│                   S$4618 =>
-//│                     let* (x$5223) = fib_case1_sr_post_case1_case1$5121(x$5263,x$5264) in
-//│                     jump fib_case1_sr_post_caller_post$4875(x$4807,x$5223)
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5228 = x$4972.<S$4618:s> in
+//│                 let* (x$5227) = plus_case1_sr_post$5115(x$5228,x$5108) in
+//│                 x$5227
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
@@ -6694,21 +6851,40 @@ main()
 //│     let x$4829 = O$4623() in
 //│     let x$4830 = S$4618(x$4829) in
 //│     x$4830
-//│   def fib_case1_sr_post_caller_post$4875(x$5196,x$5197) =
-//│     let* (x$5251) = fib$4612(x$5196) in
-//│     let* (x$5200) = plus$4608(x$5197,x$5251) in
-//│     x$5200
-//│   def fib_case1_sr_post$4910(x$5072) =
-//│     case x$5072 of
+//│   def fib_case1_sr_post$4910(x$4911) =
+//│     case x$4911 of
 //│       O$4623 =>
-//│         jump fib_case1_sr_post_case0$4996()
+//│         let x$4912 = O$4623() in
+//│         let x$4913 = S$4618(x$4912) in
+//│         x$4913
 //│       S$4618 =>
-//│         let* (x$5261,x$5262) = fib_case1_sr_post_case1_pre$5119(x$5072) in
-//│         case x$5261 of
+//│         let x$4914 = x$4911.<S$4618:s> in
+//│         case x$4911 of
 //│           O$4623 =>
-//│             jump fib_case1_sr_post_case1_case0$5120(x$5262)
+//│             let* (x$4915) = fib_case0$4747() in
+//│             let* (x$4916) = fib$4612(x$4914) in
+//│             case x$4915 of
+//│               O$4623 =>
+//│                 x$4916
+//│               S$4618 =>
+//│                 let x$5185 = x$4915.<S$4618:s> in
+//│                 let* (x$5184) = plus_case1_sr_post$5115(x$5185,x$4916) in
+//│                 x$5184
+//│               _ =>
+//│                 panic "match error"
 //│           S$4618 =>
-//│             jump fib_case1_sr_post_case1_case1$5121(x$5261,x$5262)
+//│             let x$4918 = x$4911.<S$4618:s> in
+//│             let* (x$4919) = fib_case1_sr_post$4803(x$4918) in
+//│             let* (x$5114) = fib$4612(x$4914) in
+//│             case x$4919 of
+//│               O$4623 =>
+//│                 x$5114
+//│               S$4618 =>
+//│                 let x$5238 = x$4919.<S$4618:s> in
+//│                 let* (x$5237) = plus_case1_sr_post$5115(x$5238,x$5114) in
+//│                 x$5237
+//│               _ =>
+//│                 panic "match error"
 //│           _ =>
 //│             panic "match error"
 //│       _ =>
@@ -6717,41 +6893,23 @@ main()
 //│     let* (x$4986) = to_int$4614(x$4987) in
 //│     let x$4988 = +(1,x$4986) in
 //│     x$4988
-//│   def fib_case1_sr_post_case0$4996() =
-//│     let x$5000 = O$4623() in
-//│     let x$5001 = S$4618(x$5000) in
-//│     x$5001
-//│   def plus_case1_sr_post$5095(x$5097,x$5098) =
-//│     let* (x$5096) = plus$4608(x$5097,x$5098) in
-//│     let x$5099 = S$4618(x$5096) in
-//│     x$5099
-//│   def to_int_case1$5106(x$5110) =
-//│     let x$5109 = x$5110.<S$4618:s> in
-//│     jump to_int_case1_sr_post$4985(x$5109)
-//│   def fib_case1_sr_post_case1_pre$5119(x$5124) =
-//│     let x$5123 = x$5124.<S$4618:s> in
-//│     x$5124,x$5123
-//│   def fib_case1_sr_post_case1_case0$5120(x$5127) =
-//│     let* (x$5125) = fib_case0$4747() in
-//│     let* (x$5126) = fib$4612(x$5127) in
-//│     let* (x$5128) = plus$4608(x$5125,x$5126) in
-//│     x$5128
-//│   def fib_case1_sr_post_case1_case1$5121(x$5130,x$5132) =
-//│     let x$5129 = x$5130.<S$4618:s> in
-//│     let* (x$5131) = fib_case1_sr_post$4803(x$5129) in
-//│     jump fib_caller_post$4763(x$5132,x$5131)
+//│   def plus_case1_sr_post$5115(x$5117,x$5118) =
+//│     let* (x$5116) = plus$4608(x$5117,x$5118) in
+//│     let x$5119 = S$4618(x$5116) in
+//│     x$5119
 //│   entry = entry$4723
 //│ 
 //│ Opt:
 //│   class Nat()
 //│   class S(s$4620) extends Nat
 //│   class O() extends Nat
-//│   def plus$4608(x$5275,x$5276) =
-//│     case x$5275 of
+//│   def plus$4608(x$5197,x$5198) =
+//│     case x$5197 of
 //│       O$4623 =>
-//│         x$5276
+//│         x$5198
 //│       S$4618 =>
-//│         jump plus_case1$5267(x$5275,x$5276)
+//│         let x$5218 = x$5197.<S$4618:s> in
+//│         jump plus_case1_sr_post$5115(x$5218,x$5198)
 //│       _ =>
 //│         panic "match error"
 //│   def fib$4612(x$4873) =
@@ -6763,13 +6921,13 @@ main()
 //│         jump fib_case1_sr_post$4910(x$4978)
 //│       _ =>
 //│         panic "match error"
-//│   def to_int$4614(x$5151) =
-//│     case x$5151 of
+//│   def to_int$4614(x$5024) =
+//│     case x$5024 of
 //│       O$4623 =>
 //│         0
 //│       S$4618 =>
-//│         let x$5336 = x$5151.<S$4618:s> in
-//│         jump to_int_case1_sr_post$4985(x$5336)
+//│         let x$5175 = x$5024.<S$4618:s> in
+//│         jump to_int_case1_sr_post$4985(x$5175)
 //│       _ =>
 //│         panic "match error"
 //│   def to_nat$4607(x$4735) =
@@ -6799,32 +6957,15 @@ main()
 //│                 panic "match error"
 //│           S$4618 =>
 //│             let x$4926 = x$4744.<S$4618:s> in
-//│             case x$4926 of
+//│             let* (x$4925) = fib_case1_sr_post$4910(x$4926) in
+//│             case x$4925 of
 //│               O$4623 =>
-//│                 let* (x$5015) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5015 of
-//│                   O$4623 =>
-//│                     let x$5116 = 0 in
-//│                     x$5116
-//│                   S$4618 =>
-//│                     let x$5293 = x$5015.<S$4618:s> in
-//│                     let* (x$5292) = to_int_case1_sr_post$4985(x$5293) in
-//│                     x$5292
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5006 = 0 in
+//│                 x$5006
 //│               S$4618 =>
-//│                 let* (x$5139,x$5140) = fib_case1_sr_post_case1_pre$5119(x$4926) in
-//│                 case x$5139 of
-//│                   O$4623 =>
-//│                     let* (x$5141) = fib_case1_sr_post_case1_case0$5120(x$5140) in
-//│                     let* (x$5240) = to_int$4614(x$5141) in
-//│                     x$5240
-//│                   S$4618 =>
-//│                     let* (x$5142) = fib_case1_sr_post_case1_case1$5121(x$5139,x$5140) in
-//│                     let* (x$5241) = to_int$4614(x$5142) in
-//│                     x$5241
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5131 = x$4925.<S$4618:s> in
+//│                 let* (x$5130) = to_int_case1_sr_post$4985(x$5131) in
+//│                 x$5130
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
@@ -6839,39 +6980,22 @@ main()
 //│                 let x$4939 = 0 in
 //│                 x$4939
 //│               S$4618 =>
-//│                 let x$5025 = x$4863.<S$4618:s> in
-//│                 let* (x$5024) = to_int_case1_sr_post$4985(x$5025) in
-//│                 x$5024
+//│                 let x$5016 = x$4863.<S$4618:s> in
+//│                 let* (x$5015) = to_int_case1_sr_post$4985(x$5016) in
+//│                 x$5015
 //│               _ =>
 //│                 panic "match error"
 //│           S$4618 =>
 //│             let x$4950 = x$4745.<S$4618:s> in
-//│             case x$4950 of
+//│             let* (x$4949) = fib_case1_sr_post$4910(x$4950) in
+//│             case x$4949 of
 //│               O$4623 =>
-//│                 let* (x$5039) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5039 of
-//│                   O$4623 =>
-//│                     let x$5156 = 0 in
-//│                     x$5156
-//│                   S$4618 =>
-//│                     let x$5301 = x$5039.<S$4618:s> in
-//│                     let* (x$5300) = to_int_case1_sr_post$4985(x$5301) in
-//│                     x$5300
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5029 = 0 in
+//│                 x$5029
 //│               S$4618 =>
-//│                 let* (x$5243,x$5244) = fib_case1_sr_post_case1_pre$5119(x$4950) in
-//│                 case x$5243 of
-//│                   O$4623 =>
-//│                     let* (x$5177) = fib_case1_sr_post_case1_case0$5120(x$5244) in
-//│                     let* (x$5245) = to_int$4614(x$5177) in
-//│                     x$5245
-//│                   S$4618 =>
-//│                     let* (x$5178) = fib_case1_sr_post_case1_case1$5121(x$5243,x$5244) in
-//│                     let* (x$5246) = to_int$4614(x$5178) in
-//│                     x$5246
-//│                   _ =>
-//│                     panic "match error"
+//│                 let x$5139 = x$4949.<S$4618:s> in
+//│                 let* (x$5138) = to_int_case1_sr_post$4985(x$5139) in
+//│                 x$5138
 //│               _ =>
 //│                 panic "match error"
 //│           _ =>
@@ -6894,29 +7018,82 @@ main()
 //│     let x$4751 = O$4623() in
 //│     let x$4752 = S$4618(x$4751) in
 //│     x$4752
-//│   def fib_caller_post$4763(x$4795,x$4796) =
-//│     let* (x$4822) = fib$4612(x$4795) in
-//│     let* (x$4799) = plus$4608(x$4796,x$4822) in
-//│     x$4799
+//│   def fib_case1_sr_post$4803(x$4804) =
+//│     case x$4804 of
+//│       O$4623 =>
+//│         let x$4805 = O$4623() in
+//│         let x$4806 = S$4618(x$4805) in
+//│         x$4806
+//│       S$4618 =>
+//│         let x$4807 = x$4804.<S$4618:s> in
+//│         case x$4804 of
+//│           O$4623 =>
+//│             let* (x$4881) = fib_case0$4825() in
+//│             let* (x$4982) = fib$4612(x$4807) in
+//│             case x$4881 of
+//│               O$4623 =>
+//│                 x$4982
+//│               S$4618 =>
+//│                 let x$5149 = x$4881.<S$4618:s> in
+//│                 let* (x$5148) = plus_case1_sr_post$5115(x$5149,x$4982) in
+//│                 x$5148
+//│               _ =>
+//│                 panic "match error"
+//│           S$4618 =>
+//│             let x$4973 = x$4804.<S$4618:s> in
+//│             let* (x$4972) = fib_case1_sr_post$4910(x$4973) in
+//│             let* (x$5108) = fib$4612(x$4807) in
+//│             case x$4972 of
+//│               O$4623 =>
+//│                 x$5108
+//│               S$4618 =>
+//│                 let x$5228 = x$4972.<S$4618:s> in
+//│                 let* (x$5227) = plus_case1_sr_post$5115(x$5228,x$5108) in
+//│                 x$5227
+//│               _ =>
+//│                 panic "match error"
+//│           _ =>
+//│             panic "match error"
+//│       _ =>
+//│         panic "match error"
 //│   def fib_case0$4825() =
 //│     let x$4829 = O$4623() in
 //│     let x$4830 = S$4618(x$4829) in
 //│     x$4830
-//│   def fib_case1_sr_post_caller_post$4875(x$5196,x$5197) =
-//│     let* (x$5251) = fib$4612(x$5196) in
-//│     let* (x$5200) = plus$4608(x$5197,x$5251) in
-//│     x$5200
-//│   def fib_case1_sr_post$4910(x$5072) =
-//│     case x$5072 of
+//│   def fib_case1_sr_post$4910(x$4911) =
+//│     case x$4911 of
 //│       O$4623 =>
-//│         jump fib_case1_sr_post_case0$4996()
+//│         let x$4912 = O$4623() in
+//│         let x$4913 = S$4618(x$4912) in
+//│         x$4913
 //│       S$4618 =>
-//│         let* (x$5261,x$5262) = fib_case1_sr_post_case1_pre$5119(x$5072) in
-//│         case x$5261 of
+//│         let x$4914 = x$4911.<S$4618:s> in
+//│         case x$4911 of
 //│           O$4623 =>
-//│             jump fib_case1_sr_post_case1_case0$5120(x$5262)
+//│             let* (x$4915) = fib_case0$4747() in
+//│             let* (x$4916) = fib$4612(x$4914) in
+//│             case x$4915 of
+//│               O$4623 =>
+//│                 x$4916
+//│               S$4618 =>
+//│                 let x$5185 = x$4915.<S$4618:s> in
+//│                 let* (x$5184) = plus_case1_sr_post$5115(x$5185,x$4916) in
+//│                 x$5184
+//│               _ =>
+//│                 panic "match error"
 //│           S$4618 =>
-//│             jump fib_case1_sr_post_case1_case1$5121(x$5261,x$5262)
+//│             let x$4918 = x$4911.<S$4618:s> in
+//│             let* (x$4919) = fib_case1_sr_post$4803(x$4918) in
+//│             let* (x$5114) = fib$4612(x$4914) in
+//│             case x$4919 of
+//│               O$4623 =>
+//│                 x$5114
+//│               S$4618 =>
+//│                 let x$5238 = x$4919.<S$4618:s> in
+//│                 let* (x$5237) = plus_case1_sr_post$5115(x$5238,x$5114) in
+//│                 x$5237
+//│               _ =>
+//│                 panic "match error"
 //│           _ =>
 //│             panic "match error"
 //│       _ =>
@@ -6925,1206 +7102,10 @@ main()
 //│     let* (x$4986) = to_int$4614(x$4987) in
 //│     let x$4988 = +(1,x$4986) in
 //│     x$4988
-//│   def fib_case1_sr_post_case0$4996() =
-//│     let x$5000 = O$4623() in
-//│     let x$5001 = S$4618(x$5000) in
-//│     x$5001
-//│   def plus_case1_sr_post$5095(x$5097,x$5098) =
-//│     let* (x$5096) = plus$4608(x$5097,x$5098) in
-//│     let x$5099 = S$4618(x$5096) in
-//│     x$5099
-//│   def fib_case1_sr_post_case1_pre$5119(x$5124) =
-//│     let x$5123 = x$5124.<S$4618:s> in
-//│     x$5124,x$5123
-//│   def fib_case1_sr_post_case1_case0$5120(x$5127) =
-//│     let* (x$5125) = fib_case0$4747() in
-//│     let* (x$5126) = fib$4612(x$5127) in
-//│     case x$5125 of
-//│       O$4623 =>
-//│         x$5126
-//│       S$4618 =>
-//│         let* (x$5284) = plus_case1$5267(x$5125,x$5126) in
-//│         x$5284
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5121(x$5130,x$5132) =
-//│     let x$5129 = x$5130.<S$4618:s> in
-//│     case x$5129 of
-//│       O$4623 =>
-//│         let* (x$5329) = fib_case1_sr_post_case0$5303() in
-//│         jump fib_caller_post$4763(x$5132,x$5329)
-//│       S$4618 =>
-//│         let* (x$5330) = fib_case1_sr_post_case1$5304(x$5129) in
-//│         jump fib_caller_post$4763(x$5132,x$5330)
-//│       _ =>
-//│         panic "match error"
-//│   def plus_case1$5267(x$5273,x$5274) =
-//│     let x$5272 = x$5273.<S$4618:s> in
-//│     jump plus_case1_sr_post$5095(x$5272,x$5274)
-//│   def fib_case1_sr_post_case0$5303() =
-//│     let x$5307 = O$4623() in
-//│     let x$5308 = S$4618(x$5307) in
-//│     x$5308
-//│   def fib_case1_sr_post_case1$5304(x$5310) =
-//│     let x$5309 = x$5310.<S$4618:s> in
-//│     case x$5310 of
-//│       O$4623 =>
-//│         let* (x$5311) = fib_case0$4825() in
-//│         let* (x$5312) = fib$4612(x$5309) in
-//│         case x$5311 of
-//│           O$4623 =>
-//│             x$5312
-//│           S$4618 =>
-//│             let x$5313 = x$5311.<S$4618:s> in
-//│             let* (x$5314) = plus_case1_sr_post$5095(x$5313,x$5312) in
-//│             x$5314
-//│           _ =>
-//│             panic "match error"
-//│       S$4618 =>
-//│         let x$5315 = x$5310.<S$4618:s> in
-//│         case x$5315 of
-//│           O$4623 =>
-//│             let* (x$5316) = fib_case1_sr_post_case0$4996() in
-//│             let* (x$5317) = fib$4612(x$5309) in
-//│             let* (x$5318) = plus$4608(x$5316,x$5317) in
-//│             x$5318
-//│           S$4618 =>
-//│             let* (x$5319,x$5320) = fib_case1_sr_post_case1_pre$5119(x$5315) in
-//│             case x$5319 of
-//│               O$4623 =>
-//│                 let* (x$5321) = fib_case1_sr_post_case1_case0$5120(x$5320) in
-//│                 jump fib_case1_sr_post_caller_post$4875(x$5309,x$5321)
-//│               S$4618 =>
-//│                 let* (x$5322) = fib_case1_sr_post_case1_case1$5121(x$5319,x$5320) in
-//│                 jump fib_case1_sr_post_caller_post$4875(x$5309,x$5322)
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   entry = entry$4723
-//│ 
-//│ Opt:
-//│   class Nat()
-//│   class S(s$4620) extends Nat
-//│   class O() extends Nat
-//│   def plus$4608(x$5275,x$5276) =
-//│     case x$5275 of
-//│       O$4623 =>
-//│         x$5276
-//│       S$4618 =>
-//│         let x$5343 = x$5275.<S$4618:s> in
-//│         jump plus_case1_sr_post$5095(x$5343,x$5276)
-//│       _ =>
-//│         panic "match error"
-//│   def fib$4612(x$4873) =
-//│     case x$4873 of
-//│       O$4623 =>
-//│         jump fib_case0$4825()
-//│       S$4618 =>
-//│         let x$4978 = x$4873.<S$4618:s> in
-//│         jump fib_case1_sr_post$4910(x$4978)
-//│       _ =>
-//│         panic "match error"
-//│   def to_int$4614(x$5151) =
-//│     case x$5151 of
-//│       O$4623 =>
-//│         0
-//│       S$4618 =>
-//│         let x$5336 = x$5151.<S$4618:s> in
-//│         jump to_int_case1_sr_post$4985(x$5336)
-//│       _ =>
-//│         panic "match error"
-//│   def to_nat$4607(x$4735) =
-//│     let* (x$4736,x$4737) = to_nat_pre$4725(x$4735) in
-//│     case x$4736 of
-//│       BoolLit(true) =>
-//│         jump to_nat_case0$4726()
-//│       _ =>
-//│         jump to_nat_default$4727(x$4737)
-//│   def main$4609() =
-//│     let* (x$4742,x$4743) = to_nat_pre$4725(10) in
-//│     case x$4742 of
-//│       BoolLit(true) =>
-//│         let* (x$4744) = to_nat_case0$4726() in
-//│         case x$4744 of
-//│           O$4623 =>
-//│             let* (x$4847) = fib_case0$4825() in
-//│             case x$4847 of
-//│               O$4623 =>
-//│                 let x$4907 = 0 in
-//│                 x$4907
-//│               S$4618 =>
-//│                 let x$4994 = x$4847.<S$4618:s> in
-//│                 let* (x$4993) = to_int_case1_sr_post$4985(x$4994) in
-//│                 x$4993
-//│               _ =>
-//│                 panic "match error"
-//│           S$4618 =>
-//│             let x$4926 = x$4744.<S$4618:s> in
-//│             case x$4926 of
-//│               O$4623 =>
-//│                 let* (x$5015) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5015 of
-//│                   O$4623 =>
-//│                     let x$5116 = 0 in
-//│                     x$5116
-//│                   S$4618 =>
-//│                     let x$5293 = x$5015.<S$4618:s> in
-//│                     let* (x$5292) = to_int_case1_sr_post$4985(x$5293) in
-//│                     x$5292
-//│                   _ =>
-//│                     panic "match error"
-//│               S$4618 =>
-//│                 let* (x$5139,x$5140) = fib_case1_sr_post_case1_pre$5119(x$4926) in
-//│                 case x$5139 of
-//│                   O$4623 =>
-//│                     let* (x$5141) = fib_case1_sr_post_case1_case0$5120(x$5140) in
-//│                     let* (x$5240) = to_int$4614(x$5141) in
-//│                     x$5240
-//│                   S$4618 =>
-//│                     let* (x$5142) = fib_case1_sr_post_case1_case1$5121(x$5139,x$5140) in
-//│                     let* (x$5241) = to_int$4614(x$5142) in
-//│                     x$5241
-//│                   _ =>
-//│                     panic "match error"
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         let* (x$4745) = to_nat_default$4727(x$4743) in
-//│         case x$4745 of
-//│           O$4623 =>
-//│             let* (x$4863) = fib_case0$4825() in
-//│             case x$4863 of
-//│               O$4623 =>
-//│                 let x$4939 = 0 in
-//│                 x$4939
-//│               S$4618 =>
-//│                 let x$5025 = x$4863.<S$4618:s> in
-//│                 let* (x$5024) = to_int_case1_sr_post$4985(x$5025) in
-//│                 x$5024
-//│               _ =>
-//│                 panic "match error"
-//│           S$4618 =>
-//│             let x$4950 = x$4745.<S$4618:s> in
-//│             case x$4950 of
-//│               O$4623 =>
-//│                 let* (x$5039) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5039 of
-//│                   O$4623 =>
-//│                     let x$5156 = 0 in
-//│                     x$5156
-//│                   S$4618 =>
-//│                     let x$5301 = x$5039.<S$4618:s> in
-//│                     let* (x$5300) = to_int_case1_sr_post$4985(x$5301) in
-//│                     x$5300
-//│                   _ =>
-//│                     panic "match error"
-//│               S$4618 =>
-//│                 let* (x$5243,x$5244) = fib_case1_sr_post_case1_pre$5119(x$4950) in
-//│                 case x$5243 of
-//│                   O$4623 =>
-//│                     let* (x$5177) = fib_case1_sr_post_case1_case0$5120(x$5244) in
-//│                     let* (x$5245) = to_int$4614(x$5177) in
-//│                     x$5245
-//│                   S$4618 =>
-//│                     let* (x$5178) = fib_case1_sr_post_case1_case1$5121(x$5243,x$5244) in
-//│                     let* (x$5246) = to_int$4614(x$5178) in
-//│                     x$5246
-//│                   _ =>
-//│                     panic "match error"
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│   def entry$4723() =
-//│     let* (x$4722) = main$4609() in
-//│     x$4722
-//│   def to_nat_pre$4725(x$4729) =
-//│     let x$4728 = ==(x$4729,0) in
-//│     x$4728,x$4729
-//│   def to_nat_case0$4726() =
-//│     let x$4730 = O$4623() in
-//│     x$4730
-//│   def to_nat_default$4727(x$4732) =
-//│     let x$4731 = -(x$4732,1) in
-//│     let* (x$4733) = to_nat$4607(x$4731) in
-//│     let x$4734 = S$4618(x$4733) in
-//│     x$4734
-//│   def fib_case0$4747() =
-//│     let x$4751 = O$4623() in
-//│     let x$4752 = S$4618(x$4751) in
-//│     x$4752
-//│   def fib_caller_post$4763(x$5360,x$5361) =
-//│     let* (x$5401) = fib$4612(x$5360) in
-//│     let* (x$5364) = plus$4608(x$5361,x$5401) in
-//│     x$5364
-//│   def fib_case0$4825() =
-//│     let x$4829 = O$4623() in
-//│     let x$4830 = S$4618(x$4829) in
-//│     x$4830
-//│   def fib_case1_sr_post_caller_post$4875(x$5196,x$5197) =
-//│     let* (x$5251) = fib$4612(x$5196) in
-//│     let* (x$5200) = plus$4608(x$5197,x$5251) in
-//│     x$5200
-//│   def fib_case1_sr_post$4910(x$5072) =
-//│     case x$5072 of
-//│       O$4623 =>
-//│         jump fib_case1_sr_post_case0$4996()
-//│       S$4618 =>
-//│         let* (x$5261,x$5262) = fib_case1_sr_post_case1_pre$5119(x$5072) in
-//│         case x$5261 of
-//│           O$4623 =>
-//│             jump fib_case1_sr_post_case1_case0$5120(x$5262)
-//│           S$4618 =>
-//│             jump fib_case1_sr_post_case1_case1$5121(x$5261,x$5262)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def to_int_case1_sr_post$4985(x$4987) =
-//│     let* (x$4986) = to_int$4614(x$4987) in
-//│     let x$4988 = +(1,x$4986) in
-//│     x$4988
-//│   def fib_case1_sr_post_case0$4996() =
-//│     let x$5000 = O$4623() in
-//│     let x$5001 = S$4618(x$5000) in
-//│     x$5001
-//│   def plus_case1_sr_post$5095(x$5097,x$5098) =
-//│     let* (x$5096) = plus$4608(x$5097,x$5098) in
-//│     let x$5099 = S$4618(x$5096) in
-//│     x$5099
-//│   def fib_case1_sr_post_case1_pre$5119(x$5124) =
-//│     let x$5123 = x$5124.<S$4618:s> in
-//│     x$5124,x$5123
-//│   def fib_case1_sr_post_case1_case0$5120(x$5127) =
-//│     let* (x$5125) = fib_case0$4747() in
-//│     let* (x$5126) = fib$4612(x$5127) in
-//│     case x$5125 of
-//│       O$4623 =>
-//│         x$5126
-//│       S$4618 =>
-//│         let x$5353 = x$5125.<S$4618:s> in
-//│         let* (x$5352) = plus_case1_sr_post$5095(x$5353,x$5126) in
-//│         x$5352
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5121(x$5130,x$5132) =
-//│     let x$5129 = x$5130.<S$4618:s> in
-//│     case x$5129 of
-//│       O$4623 =>
-//│         let* (x$5329) = fib_case1_sr_post_case0$5303() in
-//│         let* (x$5400) = fib$4612(x$5132) in
-//│         let* (x$5367) = plus$4608(x$5329,x$5400) in
-//│         x$5367
-//│       S$4618 =>
-//│         let* (x$5395,x$5396) = fib_case1_sr_post_case1_pre$5368(x$5129) in
-//│         case x$5395 of
-//│           O$4623 =>
-//│             let* (x$5397) = fib_case1_sr_post_case1_case0$5369(x$5396) in
-//│             jump fib_caller_post$4763(x$5132,x$5397)
-//│           S$4618 =>
-//│             let* (x$5398) = fib_case1_sr_post_case1_case1$5370(x$5395,x$5396) in
-//│             jump fib_caller_post$4763(x$5132,x$5398)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case0$5303() =
-//│     let x$5307 = O$4623() in
-//│     let x$5308 = S$4618(x$5307) in
-//│     x$5308
-//│   def fib_case1_sr_post_case1_pre$5368(x$5373) =
-//│     let x$5372 = x$5373.<S$4618:s> in
-//│     x$5373,x$5372
-//│   def fib_case1_sr_post_case1_case0$5369(x$5376) =
-//│     let* (x$5374) = fib_case0$4825() in
-//│     let* (x$5375) = fib$4612(x$5376) in
-//│     case x$5374 of
-//│       O$4623 =>
-//│         x$5375
-//│       S$4618 =>
-//│         let x$5377 = x$5374.<S$4618:s> in
-//│         let* (x$5378) = plus_case1_sr_post$5095(x$5377,x$5375) in
-//│         x$5378
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5370(x$5380,x$5383) =
-//│     let x$5379 = x$5380.<S$4618:s> in
-//│     case x$5379 of
-//│       O$4623 =>
-//│         let* (x$5381) = fib_case1_sr_post_case0$4996() in
-//│         let* (x$5382) = fib$4612(x$5383) in
-//│         let* (x$5384) = plus$4608(x$5381,x$5382) in
-//│         x$5384
-//│       S$4618 =>
-//│         let* (x$5385,x$5386) = fib_case1_sr_post_case1_pre$5119(x$5379) in
-//│         case x$5385 of
-//│           O$4623 =>
-//│             let* (x$5387) = fib_case1_sr_post_case1_case0$5120(x$5386) in
-//│             jump fib_case1_sr_post_caller_post$4875(x$5383,x$5387)
-//│           S$4618 =>
-//│             let* (x$5388) = fib_case1_sr_post_case1_case1$5121(x$5385,x$5386) in
-//│             jump fib_case1_sr_post_caller_post$4875(x$5383,x$5388)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   entry = entry$4723
-//│ 
-//│ Opt:
-//│   class Nat()
-//│   class S(s$4620) extends Nat
-//│   class O() extends Nat
-//│   def plus$4608(x$5434,x$5435) =
-//│     case x$5434 of
-//│       O$4623 =>
-//│         x$5435
-//│       S$4618 =>
-//│         jump plus_case1$5404(x$5434,x$5435)
-//│       _ =>
-//│         panic "match error"
-//│   def fib$4612(x$4873) =
-//│     case x$4873 of
-//│       O$4623 =>
-//│         jump fib_case0$4825()
-//│       S$4618 =>
-//│         let x$4978 = x$4873.<S$4618:s> in
-//│         jump fib_case1_sr_post$4910(x$4978)
-//│       _ =>
-//│         panic "match error"
-//│   def to_int$4614(x$5151) =
-//│     case x$5151 of
-//│       O$4623 =>
-//│         0
-//│       S$4618 =>
-//│         let x$5336 = x$5151.<S$4618:s> in
-//│         jump to_int_case1_sr_post$4985(x$5336)
-//│       _ =>
-//│         panic "match error"
-//│   def to_nat$4607(x$4735) =
-//│     let* (x$4736,x$4737) = to_nat_pre$4725(x$4735) in
-//│     case x$4736 of
-//│       BoolLit(true) =>
-//│         jump to_nat_case0$4726()
-//│       _ =>
-//│         jump to_nat_default$4727(x$4737)
-//│   def main$4609() =
-//│     let* (x$4742,x$4743) = to_nat_pre$4725(10) in
-//│     case x$4742 of
-//│       BoolLit(true) =>
-//│         let* (x$4744) = to_nat_case0$4726() in
-//│         case x$4744 of
-//│           O$4623 =>
-//│             let* (x$4847) = fib_case0$4825() in
-//│             case x$4847 of
-//│               O$4623 =>
-//│                 let x$4907 = 0 in
-//│                 x$4907
-//│               S$4618 =>
-//│                 let x$4994 = x$4847.<S$4618:s> in
-//│                 let* (x$4993) = to_int_case1_sr_post$4985(x$4994) in
-//│                 x$4993
-//│               _ =>
-//│                 panic "match error"
-//│           S$4618 =>
-//│             let x$4926 = x$4744.<S$4618:s> in
-//│             case x$4926 of
-//│               O$4623 =>
-//│                 let* (x$5015) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5015 of
-//│                   O$4623 =>
-//│                     let x$5116 = 0 in
-//│                     x$5116
-//│                   S$4618 =>
-//│                     let x$5293 = x$5015.<S$4618:s> in
-//│                     let* (x$5292) = to_int_case1_sr_post$4985(x$5293) in
-//│                     x$5292
-//│                   _ =>
-//│                     panic "match error"
-//│               S$4618 =>
-//│                 let* (x$5139,x$5140) = fib_case1_sr_post_case1_pre$5119(x$4926) in
-//│                 case x$5139 of
-//│                   O$4623 =>
-//│                     let* (x$5141) = fib_case1_sr_post_case1_case0$5120(x$5140) in
-//│                     let* (x$5240) = to_int$4614(x$5141) in
-//│                     x$5240
-//│                   S$4618 =>
-//│                     let* (x$5142) = fib_case1_sr_post_case1_case1$5121(x$5139,x$5140) in
-//│                     let* (x$5241) = to_int$4614(x$5142) in
-//│                     x$5241
-//│                   _ =>
-//│                     panic "match error"
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         let* (x$4745) = to_nat_default$4727(x$4743) in
-//│         case x$4745 of
-//│           O$4623 =>
-//│             let* (x$4863) = fib_case0$4825() in
-//│             case x$4863 of
-//│               O$4623 =>
-//│                 let x$4939 = 0 in
-//│                 x$4939
-//│               S$4618 =>
-//│                 let x$5025 = x$4863.<S$4618:s> in
-//│                 let* (x$5024) = to_int_case1_sr_post$4985(x$5025) in
-//│                 x$5024
-//│               _ =>
-//│                 panic "match error"
-//│           S$4618 =>
-//│             let x$4950 = x$4745.<S$4618:s> in
-//│             case x$4950 of
-//│               O$4623 =>
-//│                 let* (x$5039) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5039 of
-//│                   O$4623 =>
-//│                     let x$5156 = 0 in
-//│                     x$5156
-//│                   S$4618 =>
-//│                     let x$5301 = x$5039.<S$4618:s> in
-//│                     let* (x$5300) = to_int_case1_sr_post$4985(x$5301) in
-//│                     x$5300
-//│                   _ =>
-//│                     panic "match error"
-//│               S$4618 =>
-//│                 let* (x$5243,x$5244) = fib_case1_sr_post_case1_pre$5119(x$4950) in
-//│                 case x$5243 of
-//│                   O$4623 =>
-//│                     let* (x$5177) = fib_case1_sr_post_case1_case0$5120(x$5244) in
-//│                     let* (x$5245) = to_int$4614(x$5177) in
-//│                     x$5245
-//│                   S$4618 =>
-//│                     let* (x$5178) = fib_case1_sr_post_case1_case1$5121(x$5243,x$5244) in
-//│                     let* (x$5246) = to_int$4614(x$5178) in
-//│                     x$5246
-//│                   _ =>
-//│                     panic "match error"
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│   def entry$4723() =
-//│     let* (x$4722) = main$4609() in
-//│     x$4722
-//│   def to_nat_pre$4725(x$4729) =
-//│     let x$4728 = ==(x$4729,0) in
-//│     x$4728,x$4729
-//│   def to_nat_case0$4726() =
-//│     let x$4730 = O$4623() in
-//│     x$4730
-//│   def to_nat_default$4727(x$4732) =
-//│     let x$4731 = -(x$4732,1) in
-//│     let* (x$4733) = to_nat$4607(x$4731) in
-//│     let x$4734 = S$4618(x$4733) in
-//│     x$4734
-//│   def fib_case0$4747() =
-//│     let x$4751 = O$4623() in
-//│     let x$4752 = S$4618(x$4751) in
-//│     x$4752
-//│   def fib_caller_post$4763(x$5360,x$5361) =
-//│     let* (x$5401) = fib$4612(x$5360) in
-//│     let* (x$5364) = plus$4608(x$5361,x$5401) in
-//│     x$5364
-//│   def fib_case0$4825() =
-//│     let x$4829 = O$4623() in
-//│     let x$4830 = S$4618(x$4829) in
-//│     x$4830
-//│   def fib_case1_sr_post_caller_post$4875(x$5196,x$5197) =
-//│     let* (x$5251) = fib$4612(x$5196) in
-//│     let* (x$5200) = plus$4608(x$5197,x$5251) in
-//│     x$5200
-//│   def fib_case1_sr_post$4910(x$5072) =
-//│     case x$5072 of
-//│       O$4623 =>
-//│         jump fib_case1_sr_post_case0$4996()
-//│       S$4618 =>
-//│         let* (x$5261,x$5262) = fib_case1_sr_post_case1_pre$5119(x$5072) in
-//│         case x$5261 of
-//│           O$4623 =>
-//│             jump fib_case1_sr_post_case1_case0$5120(x$5262)
-//│           S$4618 =>
-//│             jump fib_case1_sr_post_case1_case1$5121(x$5261,x$5262)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def to_int_case1_sr_post$4985(x$4987) =
-//│     let* (x$4986) = to_int$4614(x$4987) in
-//│     let x$4988 = +(1,x$4986) in
-//│     x$4988
-//│   def fib_case1_sr_post_case0$4996() =
-//│     let x$5000 = O$4623() in
-//│     let x$5001 = S$4618(x$5000) in
-//│     x$5001
-//│   def plus_case1_sr_post$5095(x$5097,x$5098) =
-//│     let* (x$5096) = plus$4608(x$5097,x$5098) in
-//│     let x$5099 = S$4618(x$5096) in
-//│     x$5099
-//│   def fib_case1_sr_post_case1_pre$5119(x$5124) =
-//│     let x$5123 = x$5124.<S$4618:s> in
-//│     x$5124,x$5123
-//│   def fib_case1_sr_post_case1_case0$5120(x$5127) =
-//│     let* (x$5125) = fib_case0$4747() in
-//│     let* (x$5126) = fib$4612(x$5127) in
-//│     case x$5125 of
-//│       O$4623 =>
-//│         x$5126
-//│       S$4618 =>
-//│         let x$5353 = x$5125.<S$4618:s> in
-//│         let* (x$5352) = plus_case1_sr_post$5095(x$5353,x$5126) in
-//│         x$5352
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5121(x$5130,x$5132) =
-//│     let x$5129 = x$5130.<S$4618:s> in
-//│     case x$5129 of
-//│       O$4623 =>
-//│         let* (x$5329) = fib_case1_sr_post_case0$5303() in
-//│         let* (x$5400) = fib$4612(x$5132) in
-//│         case x$5329 of
-//│           O$4623 =>
-//│             x$5400
-//│           S$4618 =>
-//│             let* (x$5421) = plus_case1$5404(x$5329,x$5400) in
-//│             x$5421
-//│           _ =>
-//│             panic "match error"
-//│       S$4618 =>
-//│         let* (x$5395,x$5396) = fib_case1_sr_post_case1_pre$5368(x$5129) in
-//│         case x$5395 of
-//│           O$4623 =>
-//│             let* (x$5397) = fib_case1_sr_post_case1_case0$5369(x$5396) in
-//│             jump fib_caller_post$4763(x$5132,x$5397)
-//│           S$4618 =>
-//│             let* (x$5398) = fib_case1_sr_post_case1_case1$5370(x$5395,x$5396) in
-//│             jump fib_caller_post$4763(x$5132,x$5398)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case0$5303() =
-//│     let x$5307 = O$4623() in
-//│     let x$5308 = S$4618(x$5307) in
-//│     x$5308
-//│   def fib_case1_sr_post_case1_pre$5368(x$5373) =
-//│     let x$5372 = x$5373.<S$4618:s> in
-//│     x$5373,x$5372
-//│   def fib_case1_sr_post_case1_case0$5369(x$5376) =
-//│     let* (x$5374) = fib_case0$4825() in
-//│     let* (x$5375) = fib$4612(x$5376) in
-//│     case x$5374 of
-//│       O$4623 =>
-//│         x$5375
-//│       S$4618 =>
-//│         let x$5377 = x$5374.<S$4618:s> in
-//│         let* (x$5378) = plus_case1_sr_post$5095(x$5377,x$5375) in
-//│         x$5378
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5370(x$5380,x$5383) =
-//│     let x$5379 = x$5380.<S$4618:s> in
-//│     case x$5379 of
-//│       O$4623 =>
-//│         let* (x$5381) = fib_case1_sr_post_case0$4996() in
-//│         let* (x$5382) = fib$4612(x$5383) in
-//│         case x$5381 of
-//│           O$4623 =>
-//│             x$5382
-//│           S$4618 =>
-//│             let* (x$5443) = plus_case1$5404(x$5381,x$5382) in
-//│             x$5443
-//│           _ =>
-//│             panic "match error"
-//│       S$4618 =>
-//│         let* (x$5385,x$5386) = fib_case1_sr_post_case1_pre$5119(x$5379) in
-//│         case x$5385 of
-//│           O$4623 =>
-//│             let* (x$5387) = fib_case1_sr_post_case1_case0$5120(x$5386) in
-//│             jump fib_case1_sr_post_caller_post$4875(x$5383,x$5387)
-//│           S$4618 =>
-//│             let* (x$5388) = fib_case1_sr_post_case1_case1$5121(x$5385,x$5386) in
-//│             jump fib_case1_sr_post_caller_post$4875(x$5383,x$5388)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def plus_case1$5404(x$5410,x$5411) =
-//│     let x$5409 = x$5410.<S$4618:s> in
-//│     jump plus_case1_sr_post$5095(x$5409,x$5411)
-//│   entry = entry$4723
-//│ 
-//│ Opt:
-//│   class Nat()
-//│   class S(s$4620) extends Nat
-//│   class O() extends Nat
-//│   def plus$4608(x$5434,x$5435) =
-//│     case x$5434 of
-//│       O$4623 =>
-//│         x$5435
-//│       S$4618 =>
-//│         let x$5455 = x$5434.<S$4618:s> in
-//│         jump plus_case1_sr_post$5095(x$5455,x$5435)
-//│       _ =>
-//│         panic "match error"
-//│   def fib$4612(x$4873) =
-//│     case x$4873 of
-//│       O$4623 =>
-//│         jump fib_case0$4825()
-//│       S$4618 =>
-//│         let x$4978 = x$4873.<S$4618:s> in
-//│         jump fib_case1_sr_post$4910(x$4978)
-//│       _ =>
-//│         panic "match error"
-//│   def to_int$4614(x$5151) =
-//│     case x$5151 of
-//│       O$4623 =>
-//│         0
-//│       S$4618 =>
-//│         let x$5336 = x$5151.<S$4618:s> in
-//│         jump to_int_case1_sr_post$4985(x$5336)
-//│       _ =>
-//│         panic "match error"
-//│   def to_nat$4607(x$4735) =
-//│     let* (x$4736,x$4737) = to_nat_pre$4725(x$4735) in
-//│     case x$4736 of
-//│       BoolLit(true) =>
-//│         jump to_nat_case0$4726()
-//│       _ =>
-//│         jump to_nat_default$4727(x$4737)
-//│   def main$4609() =
-//│     let* (x$4742,x$4743) = to_nat_pre$4725(10) in
-//│     case x$4742 of
-//│       BoolLit(true) =>
-//│         let* (x$4744) = to_nat_case0$4726() in
-//│         case x$4744 of
-//│           O$4623 =>
-//│             let* (x$4847) = fib_case0$4825() in
-//│             case x$4847 of
-//│               O$4623 =>
-//│                 let x$4907 = 0 in
-//│                 x$4907
-//│               S$4618 =>
-//│                 let x$4994 = x$4847.<S$4618:s> in
-//│                 let* (x$4993) = to_int_case1_sr_post$4985(x$4994) in
-//│                 x$4993
-//│               _ =>
-//│                 panic "match error"
-//│           S$4618 =>
-//│             let x$4926 = x$4744.<S$4618:s> in
-//│             case x$4926 of
-//│               O$4623 =>
-//│                 let* (x$5015) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5015 of
-//│                   O$4623 =>
-//│                     let x$5116 = 0 in
-//│                     x$5116
-//│                   S$4618 =>
-//│                     let x$5293 = x$5015.<S$4618:s> in
-//│                     let* (x$5292) = to_int_case1_sr_post$4985(x$5293) in
-//│                     x$5292
-//│                   _ =>
-//│                     panic "match error"
-//│               S$4618 =>
-//│                 let* (x$5139,x$5140) = fib_case1_sr_post_case1_pre$5119(x$4926) in
-//│                 case x$5139 of
-//│                   O$4623 =>
-//│                     let* (x$5141) = fib_case1_sr_post_case1_case0$5120(x$5140) in
-//│                     let* (x$5240) = to_int$4614(x$5141) in
-//│                     x$5240
-//│                   S$4618 =>
-//│                     let* (x$5142) = fib_case1_sr_post_case1_case1$5121(x$5139,x$5140) in
-//│                     let* (x$5241) = to_int$4614(x$5142) in
-//│                     x$5241
-//│                   _ =>
-//│                     panic "match error"
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         let* (x$4745) = to_nat_default$4727(x$4743) in
-//│         case x$4745 of
-//│           O$4623 =>
-//│             let* (x$4863) = fib_case0$4825() in
-//│             case x$4863 of
-//│               O$4623 =>
-//│                 let x$4939 = 0 in
-//│                 x$4939
-//│               S$4618 =>
-//│                 let x$5025 = x$4863.<S$4618:s> in
-//│                 let* (x$5024) = to_int_case1_sr_post$4985(x$5025) in
-//│                 x$5024
-//│               _ =>
-//│                 panic "match error"
-//│           S$4618 =>
-//│             let x$4950 = x$4745.<S$4618:s> in
-//│             case x$4950 of
-//│               O$4623 =>
-//│                 let* (x$5039) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5039 of
-//│                   O$4623 =>
-//│                     let x$5156 = 0 in
-//│                     x$5156
-//│                   S$4618 =>
-//│                     let x$5301 = x$5039.<S$4618:s> in
-//│                     let* (x$5300) = to_int_case1_sr_post$4985(x$5301) in
-//│                     x$5300
-//│                   _ =>
-//│                     panic "match error"
-//│               S$4618 =>
-//│                 let* (x$5243,x$5244) = fib_case1_sr_post_case1_pre$5119(x$4950) in
-//│                 case x$5243 of
-//│                   O$4623 =>
-//│                     let* (x$5177) = fib_case1_sr_post_case1_case0$5120(x$5244) in
-//│                     let* (x$5245) = to_int$4614(x$5177) in
-//│                     x$5245
-//│                   S$4618 =>
-//│                     let* (x$5178) = fib_case1_sr_post_case1_case1$5121(x$5243,x$5244) in
-//│                     let* (x$5246) = to_int$4614(x$5178) in
-//│                     x$5246
-//│                   _ =>
-//│                     panic "match error"
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│   def entry$4723() =
-//│     let* (x$4722) = main$4609() in
-//│     x$4722
-//│   def to_nat_pre$4725(x$4729) =
-//│     let x$4728 = ==(x$4729,0) in
-//│     x$4728,x$4729
-//│   def to_nat_case0$4726() =
-//│     let x$4730 = O$4623() in
-//│     x$4730
-//│   def to_nat_default$4727(x$4732) =
-//│     let x$4731 = -(x$4732,1) in
-//│     let* (x$4733) = to_nat$4607(x$4731) in
-//│     let x$4734 = S$4618(x$4733) in
-//│     x$4734
-//│   def fib_case0$4747() =
-//│     let x$4751 = O$4623() in
-//│     let x$4752 = S$4618(x$4751) in
-//│     x$4752
-//│   def fib_caller_post$4763(x$5360,x$5361) =
-//│     let* (x$5401) = fib$4612(x$5360) in
-//│     let* (x$5364) = plus$4608(x$5361,x$5401) in
-//│     x$5364
-//│   def fib_case0$4825() =
-//│     let x$4829 = O$4623() in
-//│     let x$4830 = S$4618(x$4829) in
-//│     x$4830
-//│   def fib_case1_sr_post_caller_post$4875(x$5196,x$5197) =
-//│     let* (x$5251) = fib$4612(x$5196) in
-//│     let* (x$5200) = plus$4608(x$5197,x$5251) in
-//│     x$5200
-//│   def fib_case1_sr_post$4910(x$5072) =
-//│     case x$5072 of
-//│       O$4623 =>
-//│         jump fib_case1_sr_post_case0$4996()
-//│       S$4618 =>
-//│         let* (x$5261,x$5262) = fib_case1_sr_post_case1_pre$5119(x$5072) in
-//│         case x$5261 of
-//│           O$4623 =>
-//│             jump fib_case1_sr_post_case1_case0$5120(x$5262)
-//│           S$4618 =>
-//│             jump fib_case1_sr_post_case1_case1$5121(x$5261,x$5262)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def to_int_case1_sr_post$4985(x$4987) =
-//│     let* (x$4986) = to_int$4614(x$4987) in
-//│     let x$4988 = +(1,x$4986) in
-//│     x$4988
-//│   def fib_case1_sr_post_case0$4996() =
-//│     let x$5000 = O$4623() in
-//│     let x$5001 = S$4618(x$5000) in
-//│     x$5001
-//│   def plus_case1_sr_post$5095(x$5097,x$5098) =
-//│     let* (x$5096) = plus$4608(x$5097,x$5098) in
-//│     let x$5099 = S$4618(x$5096) in
-//│     x$5099
-//│   def fib_case1_sr_post_case1_pre$5119(x$5124) =
-//│     let x$5123 = x$5124.<S$4618:s> in
-//│     x$5124,x$5123
-//│   def fib_case1_sr_post_case1_case0$5120(x$5127) =
-//│     let* (x$5125) = fib_case0$4747() in
-//│     let* (x$5126) = fib$4612(x$5127) in
-//│     case x$5125 of
-//│       O$4623 =>
-//│         x$5126
-//│       S$4618 =>
-//│         let x$5353 = x$5125.<S$4618:s> in
-//│         let* (x$5352) = plus_case1_sr_post$5095(x$5353,x$5126) in
-//│         x$5352
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5121(x$5130,x$5132) =
-//│     let x$5129 = x$5130.<S$4618:s> in
-//│     case x$5129 of
-//│       O$4623 =>
-//│         let* (x$5329) = fib_case1_sr_post_case0$5303() in
-//│         let* (x$5400) = fib$4612(x$5132) in
-//│         case x$5329 of
-//│           O$4623 =>
-//│             x$5400
-//│           S$4618 =>
-//│             let x$5465 = x$5329.<S$4618:s> in
-//│             let* (x$5464) = plus_case1_sr_post$5095(x$5465,x$5400) in
-//│             x$5464
-//│           _ =>
-//│             panic "match error"
-//│       S$4618 =>
-//│         let* (x$5395,x$5396) = fib_case1_sr_post_case1_pre$5368(x$5129) in
-//│         case x$5395 of
-//│           O$4623 =>
-//│             let* (x$5397) = fib_case1_sr_post_case1_case0$5369(x$5396) in
-//│             jump fib_caller_post$4763(x$5132,x$5397)
-//│           S$4618 =>
-//│             let* (x$5398) = fib_case1_sr_post_case1_case1$5370(x$5395,x$5396) in
-//│             jump fib_caller_post$4763(x$5132,x$5398)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case0$5303() =
-//│     let x$5307 = O$4623() in
-//│     let x$5308 = S$4618(x$5307) in
-//│     x$5308
-//│   def fib_case1_sr_post_case1_pre$5368(x$5373) =
-//│     let x$5372 = x$5373.<S$4618:s> in
-//│     x$5373,x$5372
-//│   def fib_case1_sr_post_case1_case0$5369(x$5376) =
-//│     let* (x$5374) = fib_case0$4825() in
-//│     let* (x$5375) = fib$4612(x$5376) in
-//│     case x$5374 of
-//│       O$4623 =>
-//│         x$5375
-//│       S$4618 =>
-//│         let x$5377 = x$5374.<S$4618:s> in
-//│         let* (x$5378) = plus_case1_sr_post$5095(x$5377,x$5375) in
-//│         x$5378
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5370(x$5380,x$5383) =
-//│     let x$5379 = x$5380.<S$4618:s> in
-//│     case x$5379 of
-//│       O$4623 =>
-//│         let* (x$5381) = fib_case1_sr_post_case0$4996() in
-//│         let* (x$5382) = fib$4612(x$5383) in
-//│         case x$5381 of
-//│           O$4623 =>
-//│             x$5382
-//│           S$4618 =>
-//│             let x$5475 = x$5381.<S$4618:s> in
-//│             let* (x$5474) = plus_case1_sr_post$5095(x$5475,x$5382) in
-//│             x$5474
-//│           _ =>
-//│             panic "match error"
-//│       S$4618 =>
-//│         let* (x$5385,x$5386) = fib_case1_sr_post_case1_pre$5119(x$5379) in
-//│         case x$5385 of
-//│           O$4623 =>
-//│             let* (x$5387) = fib_case1_sr_post_case1_case0$5120(x$5386) in
-//│             jump fib_case1_sr_post_caller_post$4875(x$5383,x$5387)
-//│           S$4618 =>
-//│             let* (x$5388) = fib_case1_sr_post_case1_case1$5121(x$5385,x$5386) in
-//│             jump fib_case1_sr_post_caller_post$4875(x$5383,x$5388)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   entry = entry$4723
-//│ 
-//│ Opt:
-//│   class Nat()
-//│   class S(s$4620) extends Nat
-//│   class O() extends Nat
-//│   def plus$4608(x$5434,x$5435) =
-//│     case x$5434 of
-//│       O$4623 =>
-//│         x$5435
-//│       S$4618 =>
-//│         let x$5455 = x$5434.<S$4618:s> in
-//│         jump plus_case1_sr_post$5095(x$5455,x$5435)
-//│       _ =>
-//│         panic "match error"
-//│   def fib$4612(x$4873) =
-//│     case x$4873 of
-//│       O$4623 =>
-//│         jump fib_case0$4825()
-//│       S$4618 =>
-//│         let x$4978 = x$4873.<S$4618:s> in
-//│         jump fib_case1_sr_post$4910(x$4978)
-//│       _ =>
-//│         panic "match error"
-//│   def to_int$4614(x$5151) =
-//│     case x$5151 of
-//│       O$4623 =>
-//│         0
-//│       S$4618 =>
-//│         let x$5336 = x$5151.<S$4618:s> in
-//│         jump to_int_case1_sr_post$4985(x$5336)
-//│       _ =>
-//│         panic "match error"
-//│   def to_nat$4607(x$4735) =
-//│     let* (x$4736,x$4737) = to_nat_pre$4725(x$4735) in
-//│     case x$4736 of
-//│       BoolLit(true) =>
-//│         jump to_nat_case0$4726()
-//│       _ =>
-//│         jump to_nat_default$4727(x$4737)
-//│   def main$4609() =
-//│     let* (x$4742,x$4743) = to_nat_pre$4725(10) in
-//│     case x$4742 of
-//│       BoolLit(true) =>
-//│         let* (x$4744) = to_nat_case0$4726() in
-//│         case x$4744 of
-//│           O$4623 =>
-//│             let* (x$4847) = fib_case0$4825() in
-//│             case x$4847 of
-//│               O$4623 =>
-//│                 let x$4907 = 0 in
-//│                 x$4907
-//│               S$4618 =>
-//│                 let x$4994 = x$4847.<S$4618:s> in
-//│                 let* (x$4993) = to_int_case1_sr_post$4985(x$4994) in
-//│                 x$4993
-//│               _ =>
-//│                 panic "match error"
-//│           S$4618 =>
-//│             let x$4926 = x$4744.<S$4618:s> in
-//│             case x$4926 of
-//│               O$4623 =>
-//│                 let* (x$5015) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5015 of
-//│                   O$4623 =>
-//│                     let x$5116 = 0 in
-//│                     x$5116
-//│                   S$4618 =>
-//│                     let x$5293 = x$5015.<S$4618:s> in
-//│                     let* (x$5292) = to_int_case1_sr_post$4985(x$5293) in
-//│                     x$5292
-//│                   _ =>
-//│                     panic "match error"
-//│               S$4618 =>
-//│                 let* (x$5139,x$5140) = fib_case1_sr_post_case1_pre$5119(x$4926) in
-//│                 case x$5139 of
-//│                   O$4623 =>
-//│                     let* (x$5141) = fib_case1_sr_post_case1_case0$5120(x$5140) in
-//│                     let* (x$5240) = to_int$4614(x$5141) in
-//│                     x$5240
-//│                   S$4618 =>
-//│                     let* (x$5142) = fib_case1_sr_post_case1_case1$5121(x$5139,x$5140) in
-//│                     let* (x$5241) = to_int$4614(x$5142) in
-//│                     x$5241
-//│                   _ =>
-//│                     panic "match error"
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         let* (x$4745) = to_nat_default$4727(x$4743) in
-//│         case x$4745 of
-//│           O$4623 =>
-//│             let* (x$4863) = fib_case0$4825() in
-//│             case x$4863 of
-//│               O$4623 =>
-//│                 let x$4939 = 0 in
-//│                 x$4939
-//│               S$4618 =>
-//│                 let x$5025 = x$4863.<S$4618:s> in
-//│                 let* (x$5024) = to_int_case1_sr_post$4985(x$5025) in
-//│                 x$5024
-//│               _ =>
-//│                 panic "match error"
-//│           S$4618 =>
-//│             let x$4950 = x$4745.<S$4618:s> in
-//│             case x$4950 of
-//│               O$4623 =>
-//│                 let* (x$5039) = fib_case1_sr_post_case0$4996() in
-//│                 case x$5039 of
-//│                   O$4623 =>
-//│                     let x$5156 = 0 in
-//│                     x$5156
-//│                   S$4618 =>
-//│                     let x$5301 = x$5039.<S$4618:s> in
-//│                     let* (x$5300) = to_int_case1_sr_post$4985(x$5301) in
-//│                     x$5300
-//│                   _ =>
-//│                     panic "match error"
-//│               S$4618 =>
-//│                 let* (x$5243,x$5244) = fib_case1_sr_post_case1_pre$5119(x$4950) in
-//│                 case x$5243 of
-//│                   O$4623 =>
-//│                     let* (x$5177) = fib_case1_sr_post_case1_case0$5120(x$5244) in
-//│                     let* (x$5245) = to_int$4614(x$5177) in
-//│                     x$5245
-//│                   S$4618 =>
-//│                     let* (x$5178) = fib_case1_sr_post_case1_case1$5121(x$5243,x$5244) in
-//│                     let* (x$5246) = to_int$4614(x$5178) in
-//│                     x$5246
-//│                   _ =>
-//│                     panic "match error"
-//│               _ =>
-//│                 panic "match error"
-//│           _ =>
-//│             panic "match error"
-//│   def entry$4723() =
-//│     let* (x$4722) = main$4609() in
-//│     x$4722
-//│   def to_nat_pre$4725(x$4729) =
-//│     let x$4728 = ==(x$4729,0) in
-//│     x$4728,x$4729
-//│   def to_nat_case0$4726() =
-//│     let x$4730 = O$4623() in
-//│     x$4730
-//│   def to_nat_default$4727(x$4732) =
-//│     let x$4731 = -(x$4732,1) in
-//│     let* (x$4733) = to_nat$4607(x$4731) in
-//│     let x$4734 = S$4618(x$4733) in
-//│     x$4734
-//│   def fib_case0$4747() =
-//│     let x$4751 = O$4623() in
-//│     let x$4752 = S$4618(x$4751) in
-//│     x$4752
-//│   def fib_caller_post$4763(x$5360,x$5361) =
-//│     let* (x$5401) = fib$4612(x$5360) in
-//│     let* (x$5364) = plus$4608(x$5361,x$5401) in
-//│     x$5364
-//│   def fib_case0$4825() =
-//│     let x$4829 = O$4623() in
-//│     let x$4830 = S$4618(x$4829) in
-//│     x$4830
-//│   def fib_case1_sr_post_caller_post$4875(x$5196,x$5197) =
-//│     let* (x$5251) = fib$4612(x$5196) in
-//│     let* (x$5200) = plus$4608(x$5197,x$5251) in
-//│     x$5200
-//│   def fib_case1_sr_post$4910(x$5072) =
-//│     case x$5072 of
-//│       O$4623 =>
-//│         jump fib_case1_sr_post_case0$4996()
-//│       S$4618 =>
-//│         let* (x$5261,x$5262) = fib_case1_sr_post_case1_pre$5119(x$5072) in
-//│         case x$5261 of
-//│           O$4623 =>
-//│             jump fib_case1_sr_post_case1_case0$5120(x$5262)
-//│           S$4618 =>
-//│             jump fib_case1_sr_post_case1_case1$5121(x$5261,x$5262)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def to_int_case1_sr_post$4985(x$4987) =
-//│     let* (x$4986) = to_int$4614(x$4987) in
-//│     let x$4988 = +(1,x$4986) in
-//│     x$4988
-//│   def fib_case1_sr_post_case0$4996() =
-//│     let x$5000 = O$4623() in
-//│     let x$5001 = S$4618(x$5000) in
-//│     x$5001
-//│   def plus_case1_sr_post$5095(x$5097,x$5098) =
-//│     let* (x$5096) = plus$4608(x$5097,x$5098) in
-//│     let x$5099 = S$4618(x$5096) in
-//│     x$5099
-//│   def fib_case1_sr_post_case1_pre$5119(x$5124) =
-//│     let x$5123 = x$5124.<S$4618:s> in
-//│     x$5124,x$5123
-//│   def fib_case1_sr_post_case1_case0$5120(x$5127) =
-//│     let* (x$5125) = fib_case0$4747() in
-//│     let* (x$5126) = fib$4612(x$5127) in
-//│     case x$5125 of
-//│       O$4623 =>
-//│         x$5126
-//│       S$4618 =>
-//│         let x$5353 = x$5125.<S$4618:s> in
-//│         let* (x$5352) = plus_case1_sr_post$5095(x$5353,x$5126) in
-//│         x$5352
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5121(x$5130,x$5132) =
-//│     let x$5129 = x$5130.<S$4618:s> in
-//│     case x$5129 of
-//│       O$4623 =>
-//│         let* (x$5329) = fib_case1_sr_post_case0$5303() in
-//│         let* (x$5400) = fib$4612(x$5132) in
-//│         case x$5329 of
-//│           O$4623 =>
-//│             x$5400
-//│           S$4618 =>
-//│             let x$5465 = x$5329.<S$4618:s> in
-//│             let* (x$5464) = plus_case1_sr_post$5095(x$5465,x$5400) in
-//│             x$5464
-//│           _ =>
-//│             panic "match error"
-//│       S$4618 =>
-//│         let* (x$5395,x$5396) = fib_case1_sr_post_case1_pre$5368(x$5129) in
-//│         case x$5395 of
-//│           O$4623 =>
-//│             let* (x$5397) = fib_case1_sr_post_case1_case0$5369(x$5396) in
-//│             jump fib_caller_post$4763(x$5132,x$5397)
-//│           S$4618 =>
-//│             let* (x$5398) = fib_case1_sr_post_case1_case1$5370(x$5395,x$5396) in
-//│             jump fib_caller_post$4763(x$5132,x$5398)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case0$5303() =
-//│     let x$5307 = O$4623() in
-//│     let x$5308 = S$4618(x$5307) in
-//│     x$5308
-//│   def fib_case1_sr_post_case1_pre$5368(x$5373) =
-//│     let x$5372 = x$5373.<S$4618:s> in
-//│     x$5373,x$5372
-//│   def fib_case1_sr_post_case1_case0$5369(x$5376) =
-//│     let* (x$5374) = fib_case0$4825() in
-//│     let* (x$5375) = fib$4612(x$5376) in
-//│     case x$5374 of
-//│       O$4623 =>
-//│         x$5375
-//│       S$4618 =>
-//│         let x$5377 = x$5374.<S$4618:s> in
-//│         let* (x$5378) = plus_case1_sr_post$5095(x$5377,x$5375) in
-//│         x$5378
-//│       _ =>
-//│         panic "match error"
-//│   def fib_case1_sr_post_case1_case1$5370(x$5380,x$5383) =
-//│     let x$5379 = x$5380.<S$4618:s> in
-//│     case x$5379 of
-//│       O$4623 =>
-//│         let* (x$5381) = fib_case1_sr_post_case0$4996() in
-//│         let* (x$5382) = fib$4612(x$5383) in
-//│         case x$5381 of
-//│           O$4623 =>
-//│             x$5382
-//│           S$4618 =>
-//│             let x$5475 = x$5381.<S$4618:s> in
-//│             let* (x$5474) = plus_case1_sr_post$5095(x$5475,x$5382) in
-//│             x$5474
-//│           _ =>
-//│             panic "match error"
-//│       S$4618 =>
-//│         let* (x$5385,x$5386) = fib_case1_sr_post_case1_pre$5119(x$5379) in
-//│         case x$5385 of
-//│           O$4623 =>
-//│             let* (x$5387) = fib_case1_sr_post_case1_case0$5120(x$5386) in
-//│             jump fib_case1_sr_post_caller_post$4875(x$5383,x$5387)
-//│           S$4618 =>
-//│             let* (x$5388) = fib_case1_sr_post_case1_case1$5121(x$5385,x$5386) in
-//│             jump fib_case1_sr_post_caller_post$4875(x$5383,x$5388)
-//│           _ =>
-//│             panic "match error"
-//│       _ =>
-//│         panic "match error"
+//│   def plus_case1_sr_post$5115(x$5117,x$5118) =
+//│     let* (x$5116) = plus$4608(x$5117,x$5118) in
+//│     let x$5119 = S$4618(x$5116) in
+//│     x$5119
 //│   entry = entry$4723
 //│ 
 //│ Interpreted:

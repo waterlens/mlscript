@@ -212,3 +212,78 @@ not(true)
 //│   def entry$834() =
 //│     false
 //│   entry = entry$834
+
+:todo "optimize this"
+abstract class Option[out T]: Some[T] | None
+data class Some[out T](x: T) extends Option[T]
+object None extends Option
+fun mkSome(x) = Some(x)
+fun dSome(s) = if
+  s is Some(x) then x
+  else 0
+fun compose(x) = 
+  let y = mkSome(x)
+  let z = dSome(y)
+  z
+compose(1)
+//│ = 1
+//│ 
+//│ Opt:
+//│   class Option()
+//│   class Some(x$859) extends Option
+//│   def mkSome$850(x$865) =
+//│     let x$889 = Some$856(x$865) in
+//│     x$889
+//│   def compose$847(x$874) =
+//│     let* (x$892) = mkSome$850(x$874) in
+//│     case x$892 of
+//│       Some$856 =>
+//│         let* (x$908) = dSome_case0$898(x$892) in
+//│         x$908
+//│       _ =>
+//│         0
+//│   def entry$895() =
+//│     let* (x$894) = compose$847(1) in
+//│     x$894
+//│   def dSome_case0$898(x$902) =
+//│     let x$901 = x$902.<Some$856:x> in
+//│     x$901
+//│   entry = entry$895
+//│ 
+//│ Opt:
+//│   class Option()
+//│   class Some(x$859) extends Option
+//│   def mkSome$850(x$865) =
+//│     let x$889 = Some$856(x$865) in
+//│     x$889
+//│   def compose$847(x$874) =
+//│     let* (x$892) = mkSome$850(x$874) in
+//│     case x$892 of
+//│       Some$856 =>
+//│         let x$917 = x$892.<Some$856:x> in
+//│         x$917
+//│       _ =>
+//│         0
+//│   def entry$895() =
+//│     let* (x$894) = compose$847(1) in
+//│     x$894
+//│   entry = entry$895
+//│ 
+//│ Opt:
+//│   class Option()
+//│   class Some(x$859) extends Option
+//│   def mkSome$850(x$865) =
+//│     let x$889 = Some$856(x$865) in
+//│     x$889
+//│   def compose$847(x$874) =
+//│     let* (x$892) = mkSome$850(x$874) in
+//│     case x$892 of
+//│       Some$856 =>
+//│         let x$917 = x$892.<Some$856:x> in
+//│         x$917
+//│       _ =>
+//│         0
+//│   def entry$895() =
+//│     let* (x$894) = compose$847(1) in
+//│     x$894
+//│   entry = entry$895

@@ -30,13 +30,13 @@ private def oErrStop(msg: Message)(using Raise) =
   throw OptErr("stopped")
 
 def notBuiltinLetCall(node: Node.LetCall) =
-  node.func.nme != "<builtin>"
+  node.func.nme =/= "<builtin>"
 
 def notBuiltin(sym: Local) =
-  sym.nme != "<builtin>"
+  sym.nme =/= "<builtin>"
 
 def notCallable(sym: Local) =
-  sym.nme != "Callable"
+  sym.nme =/= "Callable"
 
 def showSym(sym: Local) = s"${sym.nme}$$${sym.uid.toString()}"
 
@@ -239,10 +239,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     case Other
 
     def matches(node: Node) = (node, this) match
-      case (Node.Jump(func, args), CallSite(f, a)) => func == f && args == a
-      case (Node.LetCall(_, func, args, _), CallSite(f, a)) => func == f && args == a
-      case (Node.Case(scrutinee, _, _), CaseSite(s)) => scrutinee == s
-      case (Node.LetExpr(assignee, _, _), ExprBinder(a)) => assignee == a
+      case (Node.Jump(func, args), CallSite(f, a)) => func === f && args === a
+      case (Node.LetCall(_, func, args, _), CallSite(f, a)) => func === f && args === a
+      case (Node.Case(scrutinee, _, _), CaseSite(s)) => scrutinee === s
+      case (Node.LetExpr(assignee, _, _), ExprBinder(a)) => assignee === a
       case _ => false
   
   private class EliminationAnalysis(info: ProgInfo):
@@ -325,7 +325,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           func.params.foreach(addDef(_)(using env))
           fNode(func.body)(using env)
           val nu = func.params.iterator.map(p => env.elims.getOrElse(p, MutHSet.empty).toSortedSet).toList
-          changed |= old != nu
+          changed |= old =/= nu
           info.setActiveParams(func.name, nu)
       env
 
@@ -341,7 +341,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       if is.nonEmpty then
         val i = is.head
         val iInfo = i.info
-        if is.forall(_.info == iInfo) then
+        if is.forall(_.info === iInfo) then
           S(I(loc, iInfo))
         else
           S(I(loc, IInfo.Mixed(is)))  
@@ -426,8 +426,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         info.func.values.foreach: func =>
           val old = info.getActiveResults(func.name)
           val nu = fNode(func.body)(using env.copy(default_intro = List.fill(func.resultNum)(N)))
-          assert(old.length == nu.length, s"old: $old, nu: $nu")
-          changed |= old != nu
+          assert(old.length === nu.length, s"old: $old, nu: $nu")
+          changed |= old =/= nu
           info.setActiveResults(func.name, nu)
       env
 
@@ -437,6 +437,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Nil => cont
       case (name, expr) :: xs =>
         Node.LetExpr(name, expr, bindByOrder(xs, cont)) 
+
+  enum KnownClass:
+    case Ctor(cls: Local)
+    case BoolCtor(b: Bool)
 
   private class Splitting(info: ProgInfo):
     case class PreFunc(sym: Local, results: Ls[Local], body: PreFuncBody, orig: Func)
@@ -451,10 +455,6 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       possibleSplitting: MutHMap[Loc, (Ls[Symbol], PreFuncBody, PostFuncBody)] = MutHMap.empty,
       workingList: MutLSet[Func] = MutLSet.empty,
     )
-
-    enum KnownClass:
-      case Ctor(cls: Local)
-      case BoolCtor(b: Bool)
 
     // symbol destruction descriptor
     case class SymDDesc(
@@ -708,7 +708,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             case (pat, PostFunc(postSym, params, PostFuncBody(postBody), _)) =>
               val postFunc = reComposePostFunc(RenameUtil(), params, postBody, postSym, orig.resultNum)
               (pat, knownClass) match
-                case (Pat.Class(cls), S(cls2)) if cls == cls2 => matchedPat = some(pat)
+                case (Pat.Class(cls), S(cls2)) if cls === cls2 => matchedPat = some(pat)
                 case _ =>
               (params, pat, postFunc)
           val defaultPostFunc = default.map:
@@ -758,7 +758,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             case (Some(_), Some(matched)) =>
               Node.LetCall(nuResults.toList, preSym, args,
                 allPostFunc.flatMap:
-                  case (args, pat, postFunc) => if pat == matched then
+                  case (args, pat, postFunc) => if pat === matched then
                     S(tailNodeChoose(args, postFunc, tailNode)) else N
                 .head)
           ComposeResult(k, preFunc :: allPostFunc.map(_._3) ++ defaultPostFunc.map(_._2).toList, orig)
@@ -834,7 +834,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         node match
         case Node.LetExpr(name, Expr.Select(sym, cls, fld), body) =>
           val selectedPos = thisFunc.params.indexOf(sym)
-          assert(selected.contains(fld) && selectedPos != -1, s"srNode: unexpected selected: $fld, $selected")
+          assert(selected.contains(fld) && selectedPos =/= -1, s"srNode: unexpected selected: $fld, $selected")
           srNode(body, selected, thisFunc)(Selection(name, selectedPos, cls, fld) :: acc)
         case _ =>
           val fvs = FreeVarAnalysis(info.func).run(node)
@@ -851,7 +851,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val nuParams = s.subst(orig.params).toList
       val nuArgs = nuParams.map(Expr.Ref(_)).toList
       val ComposeResult(k, newFuncs, invalidFunc) = cr
-      assert(orig.name == invalidFunc.name, s"rFunc: invalidFunc: $invalidFunc, orig: $orig")
+      assert(orig.name === invalidFunc.name, s"rFunc: invalidFunc: $invalidFunc, orig: $orig")
       env.workingList.remove(invalidFunc)
       val nuFunc = Func(
         orig.id,
@@ -1072,14 +1072,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       log(s"unreachableFuncs: ${info.func.keys.filterNot(reachable.funcs.contains(_)).map(showSym).toList}")
       log(s"reachableClasses: ${reachable.classes.map(showSym).toList}")
       log(s"unreachableClasses: ${info.classes.keys.filterNot(reachable.classes.contains(_)).map(showSym).toList}")
-      if info.func.size != reachable.funcs.size then
+      if info.func.size =/= reachable.funcs.size then
         summon[Status[Bool]].set(true)
       info.func.filterInPlace((k, _) => reachable.funcs.contains(k))
-      if info.classes.size != reachable.classes.size then
+      if info.classes.size =/= reachable.classes.size then
         summon[Status[Bool]].set(true)
       info.classes.filterInPlace((k, _) => reachable.classes.contains(k))
 
-    case class KnownCtors(map: Map[Local, (Local, Map[Str, TrivialExpr])])
+    case class KnownCtors(map: Map[Local, (KnownClass, Map[Str, TrivialExpr])])
 
     private def removeDeadBindings(node: Node)(using uses: Set[Local]): Node = node match
       case Node.Result(res) => node
@@ -1114,10 +1114,27 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Node.Result(res) => Node.Result(res.map(m.substT))
       case Node.Jump(func, args) => Node.Jump(func, m.substT(args).toList)
       case Node.Panic(msg) => node
-      case Node.Case(Expr.Ref(scrutinee), cases, default) if kc.map.contains(m.subst(scrutinee)) =>
-        val (cls, args) = kc.map(m.subst(scrutinee))
+      case Node.Case(Expr.Literal(Tree.BoolLit(b)), cases, default) =>
         (cases.find:
-          case (Pat.Class(cls2), _) if cls == cls2 => true
+          case (Pat.Lit(Tree.BoolLit(b2)), _) => b === b2
+          case _ => false) match
+            case None => 
+              val nuCases = cases.map:
+                case (pat, body) => pat -> removeTrivialDestruction(body)(using kc, m)
+              val nuDefault = default.map(removeTrivialDestruction(_)(using kc, m))
+              Node.Case(Expr.Literal(Tree.BoolLit(b)), nuCases, nuDefault)
+            case Some((_pat, body)) => 
+              s.set(true)
+              removeTrivialDestruction(body)(using kc, m)
+      case Node.Case(Expr.Ref(scrutinee), cases, default) if kc.map.contains(m.subst(scrutinee)) =>
+        val (knownCls, args) = kc.map(m.subst(scrutinee))
+        (cases.find:
+          case (Pat.Class(cls2), _) => knownCls match
+            case KnownClass.Ctor(cls) => cls === cls2
+            case KnownClass.BoolCtor(b) => false
+          case (Pat.Lit(Tree.BoolLit(b)), _) => knownCls match
+            case KnownClass.Ctor(cls) => false
+            case KnownClass.BoolCtor(b2) => b === b2
           case _ => false) match
             case None => 
               val nuCases = cases.map:
@@ -1134,7 +1151,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         Node.Case(m.substT(scrutinee), nuCases, nuDefault)
       case Node.LetExpr(name, Expr.Select(x, cls, field), body) if kc.map.contains(m.subst(x)) =>
         val (cls2, args) = kc.map(m.subst(x))
-        assert(cls == cls2)
+        assert(cls2 match
+          case KnownClass.Ctor(cls2) => cls === cls2
+          case KnownClass.BoolCtor(b) => false 
+        )
         val value = args.get(if field.forall(_.isDigit) then s"field$field" else field)
         value match
           case Some(Expr.Ref(y)) =>
@@ -1148,7 +1168,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Node.LetExpr(name, Expr.CtorApp(cls, args), body) =>
         val nuArgs = args.map(m.substT)
         val fieldMap = info.getClass(cls).fields.iterator.map(_.nme).zip(nuArgs).toMap
-        val nuKC = kc.map + (name -> (cls, fieldMap))
+        val nuKC = kc.map + (name -> (KnownClass.Ctor(cls), fieldMap))
         Node.LetExpr(name, Expr.CtorApp(cls, nuArgs), removeTrivialDestruction(body)(using KnownCtors(nuKC), m))
       case Node.LetExpr(name, expr, body) =>
         val nuExpr = removeTrivialDestruction(expr)(using kc, m)
@@ -1173,8 +1193,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case ("*", List(L(IL(x)), L(IL(y)))) => Some(L(IL(x * y)))
         case ("/", List(L(IL(x)), L(IL(y)))) => Some(L(IL(x / y)))
         case ("%", List(L(IL(x)), L(IL(y)))) => Some(L(IL(x % y)))
-        case ("==" | "===", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x == y)))
-        case ("!=" | "!==", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x != y)))
+        case ("==" | "===", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x === y)))
+        case ("!=" | "!==", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x =/= y)))
         case ("<", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x < y)))
         case ("<=", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x <= y)))
         case (">", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x > y)))
@@ -1184,8 +1204,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case ("-", List(L(DL(x)), L(DL(y)))) => Some(L(DL(x - y)))
         case ("*", List(L(DL(x)), L(DL(y)))) => Some(L(DL(x * y)))
         case ("/", List(L(DL(x)), L(DL(y)))) => Some(L(DL(x % y)))
-        case ("==" | "===", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x == y)))
-        case ("!=" | "!==", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x != y)))
+        case ("==" | "===", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x === y)))
+        case ("!=" | "!==", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x =/= y)))
         case ("<", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x < y)))
         case ("<=", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x <= y)))
         case (">", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x > y)))
@@ -1206,7 +1226,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Expr.AssignField(assignee, cls, field, value) =>
         Expr.AssignField(assignee, cls, field, constantFolding(value))
     
-    private def constantFolding(node: Node)(using m: Map[Local, Literal]): Node = node match
+    private def constantFolding(node: Node)(using m: Map[Local, Literal])(using s: Status[Bool]): Node = node match
       case Node.Result(res) => Node.Result(res.map(constantFolding(_)))
       case Node.Jump(func, args) => Node.Jump(func, args.map(constantFolding(_)))
       case Node.Panic(msg) => node
@@ -1217,7 +1237,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Node.LetExpr(name, expr, body) =>
         val nuExpr = constantFolding(expr)
         nuExpr match
-          case Expr.Literal(lit) => 
+          case Expr.Literal(lit) =>
+            s.set(true)
             val newM = m + (name -> lit)
             Node.LetExpr(name, nuExpr, constantFolding(body)(using newM))
           case _ =>

@@ -19,6 +19,8 @@ import annotation.tailrec
 import collection.immutable._
 import collection.mutable.{HashMap => MutHMap, HashSet => MutHSet, LinkedHashMap => MutLMap, LinkedHashSet => MutLSet}
 import scala.collection.mutable.ListBuffer
+import hkmc2.syntax.Literal
+import hkmc2.syntax.Tree.IntLit
 
 final case class OptErr(message: String) extends Exception(message)
 
@@ -1047,6 +1049,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           var newBody = removeDeadBindings(func.body)(using uses.getUsed)
           newBody = removeTrivialCallAndJump(newBody)(using MapUtil(Map.empty))
           newBody = removeTrivialDestruction(newBody)(using KnownCtors(Map.empty), MapUtil(Map.empty))
+          newBody = constantFolding(newBody)(using Map.empty)
           func.name -> func.copy(body = newBody)
       info.func.clear()
       info.func.addAll(newFuncs)
@@ -1141,6 +1144,76 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Node.LetCall(names, func, args, body) =>
         Node.LetCall(names, func, m.substT(args).toList, removeTrivialDestruction(body)(using kc, m))
     
+    private def constantFolding(texpr: TrivialExpr)(using m: Map[Local, Literal]): TrivialExpr =
+      texpr match
+      case Expr.Ref(sym) => m.get(sym).fold(texpr)(x => Expr.Literal(x))
+      case Expr.Literal(lit) => texpr
+    
+    private def opFold(op: Str, xs: Ls[TrivialExpr]): Opt[Expr] =
+      import Expr.{Literal => L}
+      import Tree.{IntLit => IL, BoolLit => BL, DecLit => DL}
+      (op, xs) match
+        // for int
+        case ("+", List(L(IL(x)), L(IL(y)))) => Some(L(IL(x + y)))
+        case ("-", List(L(IL(x)), L(IL(y)))) => Some(L(IL(x - y)))
+        case ("*", List(L(IL(x)), L(IL(y)))) => Some(L(IL(x * y)))
+        case ("/", List(L(IL(x)), L(IL(y)))) => Some(L(IL(x / y)))
+        case ("%", List(L(IL(x)), L(IL(y)))) => Some(L(IL(x % y)))
+        case ("==" | "===", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x == y)))
+        case ("!=" | "!==", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x != y)))
+        case ("<", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x < y)))
+        case ("<=", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x <= y)))
+        case (">", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x > y)))
+        case (">=", List(L(IL(x)), L(IL(y)))) => Some(L(BL(x >= y)))
+        // for decimal
+        case ("+", List(L(DL(x)), L(DL(y)))) => Some(L(DL(x + y)))
+        case ("-", List(L(DL(x)), L(DL(y)))) => Some(L(DL(x - y)))
+        case ("*", List(L(DL(x)), L(DL(y)))) => Some(L(DL(x * y)))
+        case ("/", List(L(DL(x)), L(DL(y)))) => Some(L(DL(x % y)))
+        case ("==" | "===", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x == y)))
+        case ("!=" | "!==", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x != y)))
+        case ("<", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x < y)))
+        case ("<=", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x <= y)))
+        case (">", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x > y)))
+        case (">=", List(L(DL(x)), L(DL(y)))) => Some(L(BL(x >= y)))
+        //
+        case _ => N
+
+    private def constantFolding(expr: Expr)(using m: Map[Local, Literal]): Expr = expr match
+      case Expr.Ref(sym) => m.get(sym).fold(expr)(x => Expr.Literal(x))
+      case Expr.Literal(lit) => expr
+      case Expr.CtorApp(cls, args) => Expr.CtorApp(cls, args.map(constantFolding(_)))
+      case Expr.Select(name, cls, field) => Expr.Select(name, cls, field)
+      case Expr.BasicOp(name, args) =>
+        val args2 = args.map(constantFolding(_))
+        opFold(name.nme, args2) match
+          case Some(res) => res
+          case None => Expr.BasicOp(name, args2)
+      case Expr.AssignField(assignee, cls, field, value) =>
+        Expr.AssignField(assignee, cls, field, constantFolding(value))
+    
+    private def constantFolding(node: Node)(using m: Map[Local, Literal]): Node = node match
+      case Node.Result(res) => Node.Result(res.map(constantFolding(_)))
+      case Node.Jump(func, args) => Node.Jump(func, args.map(constantFolding(_)))
+      case Node.Panic(msg) => node
+      case Node.Case(scrutinee, cases, default) =>
+        Node.Case(constantFolding(scrutinee), cases.map:
+          case (pat, body) => pat -> constantFolding(body),
+          default.map(constantFolding(_)))
+      case Node.LetExpr(name, expr, body) =>
+        val nuExpr = constantFolding(expr)
+        nuExpr match
+          case Expr.Literal(lit) => 
+            val newM = m + (name -> lit)
+            Node.LetExpr(name, nuExpr, constantFolding(body)(using newM))
+          case _ =>
+            Node.LetExpr(name, nuExpr, constantFolding(body))
+      case Node.LetMethodCall(names, cls, method, args, body) =>
+        val nuArgs = args.map(constantFolding(_))
+        Node.LetMethodCall(names, cls, method, nuArgs, constantFolding(body))
+      case Node.LetCall(names, func, args, body) =>
+        val nuArgs = args.map(constantFolding(_))
+        Node.LetCall(names, func, nuArgs, constantFolding(body))
     
     private def removeTrivialCallAndJump(expr: Expr)(using m: MapUtil)(using Status[Bool]): Expr = expr match
       case Expr.Ref(name) => Expr.Ref(m.subst(name))

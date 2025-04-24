@@ -96,14 +96,8 @@ foo()
 //│ 
 //│ Opt:
 //│   
-//│   def foo$654() =
-//│     let x$668 = 1 in
-//│     let x$669 = 2 in
-//│     let x$670 = +(x$668,x$669) in
-//│     x$670
 //│   def entry$672() =
-//│     let* (x$671) = foo$654() in
-//│     x$671
+//│     3
 //│   entry = entry$672
 
 // for argument flattening
@@ -116,8 +110,7 @@ foo([1], 2)
 //│   
 //│   def entry$692() =
 //│     let x$691 = Tuple1$686(1) in
-//│     let x$710 = 2 in
-//│     let* (x$711) = foo_case0$695(x$691,x$710) in
+//│     let* (x$711) = foo_case0$695(x$691,2) in
 //│     x$711
 //│   def foo_case0$695(x$700,x$702) =
 //│     let x$699 = x$700.<Tuple1$686:0> in
@@ -128,9 +121,7 @@ foo([1], 2)
 //│ Opt:
 //│   
 //│   def entry$692() =
-//│     let x$710 = 2 in
-//│     let x$723 = 1 in
-//│     let* (x$722) = foo_case0_sr_post$713(x$723,x$710) in
+//│     let* (x$722) = foo_case0_sr_post$713(1,2) in
 //│     x$722
 //│   def foo_case0_sr_post$713(x$715,x$716) =
 //│     let x$714 = +(x$715,x$716) in
@@ -140,9 +131,7 @@ foo([1], 2)
 //│ Opt:
 //│   
 //│   def entry$692() =
-//│     let x$710 = 2 in
-//│     let x$723 = 1 in
-//│     let* (x$722) = foo_case0_sr_post$713(x$723,x$710) in
+//│     let* (x$722) = foo_case0_sr_post$713(1,2) in
 //│     x$722
 //│   def foo_case0_sr_post$713(x$715,x$716) =
 //│     let x$714 = +(x$715,x$716) in
@@ -161,61 +150,49 @@ foo(2) + baz([3, 4])
 //│ 
 //│ Opt:
 //│   
-//│   def foo$725(x$736) =
-//│     let x$757 = Tuple2$614(1,x$736) in
-//│     let* (x$795) = bar_case0$768(x$757) in
-//│     x$795
-//│   def entry$764() =
-//│     let* (x$760) = foo$725(2) in
-//│     let x$762 = Tuple2$614(3,4) in
-//│     let* (x$782) = bar_case0$768(x$762) in
-//│     jump entry_caller_post$777(x$760,x$782)
-//│   def bar_case0$768(x$772) =
-//│     let x$771 = x$772.<Tuple2$614:0> in
-//│     let x$773 = x$772.<Tuple2$614:1> in
-//│     let x$774 = +(x$771,x$773) in
-//│     x$774
-//│   def entry_caller_post$777(x$779,x$780) =
-//│     let x$778 = +(x$779,x$780) in
-//│     x$778
-//│   entry = entry$764
+//│   def foo$726(x$737) =
+//│     let x$758 = Tuple2$614(1,x$737) in
+//│     let* (x$796) = bar_case0$769(x$758) in
+//│     x$796
+//│   def entry$765() =
+//│     let* (x$761) = foo$726(2) in
+//│     let x$763 = Tuple2$614(3,4) in
+//│     let* (x$783) = bar_case0$769(x$763) in
+//│     jump entry_caller_post$778(x$761,x$783)
+//│   def bar_case0$769(x$773) =
+//│     let x$772 = x$773.<Tuple2$614:0> in
+//│     let x$774 = x$773.<Tuple2$614:1> in
+//│     let x$775 = +(x$772,x$774) in
+//│     x$775
+//│   def entry_caller_post$778(x$780,x$781) =
+//│     let x$779 = +(x$780,x$781) in
+//│     x$779
+//│   entry = entry$765
 //│ 
 //│ Opt:
 //│   
-//│   def foo$725(x$736) =
-//│     let x$821 = 1 in
-//│     let* (x$820) = bar_case0_sr_post$799(x$821,x$736) in
-//│     x$820
-//│   def entry$764() =
-//│     let* (x$760) = foo$725(2) in
-//│     let x$810 = 3 in
-//│     let x$811 = 4 in
-//│     let* (x$809) = bar_case0_sr_post$799(x$810,x$811) in
-//│     jump entry_caller_post$777(x$760,x$809)
-//│   def entry_caller_post$777(x$779,x$780) =
-//│     let x$778 = +(x$779,x$780) in
-//│     x$778
-//│   def bar_case0_sr_post$799(x$801,x$802) =
-//│     let x$800 = +(x$801,x$802) in
-//│     x$800
-//│   entry = entry$764
+//│   def entry$765() =
+//│     let* (x$824) = bar_case0_sr_post$800(1,2) in
+//│     let* (x$810) = bar_case0_sr_post$800(3,4) in
+//│     jump entry_caller_post$778(x$824,x$810)
+//│   def entry_caller_post$778(x$780,x$781) =
+//│     let x$779 = +(x$780,x$781) in
+//│     x$779
+//│   def bar_case0_sr_post$800(x$802,x$803) =
+//│     let x$801 = +(x$802,x$803) in
+//│     x$801
+//│   entry = entry$765
 //│ 
 //│ Opt:
 //│   
-//│   def foo$725(x$736) =
-//│     let x$821 = 1 in
-//│     let* (x$820) = bar_case0_sr_post$799(x$821,x$736) in
-//│     x$820
-//│   def entry$764() =
-//│     let* (x$760) = foo$725(2) in
-//│     let x$810 = 3 in
-//│     let x$811 = 4 in
-//│     let* (x$809) = bar_case0_sr_post$799(x$810,x$811) in
-//│     jump entry_caller_post$777(x$760,x$809)
-//│   def entry_caller_post$777(x$779,x$780) =
-//│     let x$778 = +(x$779,x$780) in
-//│     x$778
-//│   def bar_case0_sr_post$799(x$801,x$802) =
-//│     let x$800 = +(x$801,x$802) in
-//│     x$800
-//│   entry = entry$764
+//│   def entry$765() =
+//│     let* (x$824) = bar_case0_sr_post$800(1,2) in
+//│     let* (x$810) = bar_case0_sr_post$800(3,4) in
+//│     jump entry_caller_post$778(x$824,x$810)
+//│   def entry_caller_post$778(x$780,x$781) =
+//│     let x$779 = +(x$780,x$781) in
+//│     x$779
+//│   def bar_case0_sr_post$800(x$802,x$803) =
+//│     let x$801 = +(x$802,x$803) in
+//│     x$801
+//│   entry = entry$765

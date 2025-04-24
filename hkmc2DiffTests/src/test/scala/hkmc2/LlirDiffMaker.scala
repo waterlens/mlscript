@@ -16,7 +16,16 @@ import hkmc2.utils.Scope
 import hkmc2.codegen.llir._
 import hkmc2.codegen.cpp._
 import hkmc2.semantics.Elaborator
+
 import scala.collection.mutable.ListBuffer
+import scala.concurrent._
+import scala.concurrent.duration._
+
+def runWithTimeout[T](timeout: Long)(f: => T) : Option[T] =
+  try
+    Some(Await.result(Future(f)(ExecutionContext.global), timeout.seconds))
+  catch
+    case e: TimeoutException => None
 
 abstract class LlirDiffMaker extends BbmlDiffMaker:
   val llir = NullaryCommand("llir")
@@ -104,15 +113,19 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             var count = 0
             while changed.get && count <= 5 do 
               changed.set(false)
-              val (optProg, optStat) = opt.run(outOptProg)(using changed)
-              if show then
-                output(s"\n$name:")
-                output(optProg.show())
-              if showStat then
-                output(s"\n$name stats:\n")
-                output(optStat.mkString("\n"))
-              outOptProg = optProg
-              count += 1
+              runWithTimeout(5)(opt.run(outOptProg)(using changed)) match
+                case Some((optProg, optStat)) =>
+                  if show then
+                    output(s"\n$name:")
+                    output(optProg.show())
+                  if showStat then
+                    output(s"\n$name stats:\n")
+                    output(optStat.mkString("\n"))
+                  outOptProg = optProg
+                  count += 1
+                case None =>
+                  count += 1
+                  output("Optimization timed out")
             outOptProg
           else
             prog

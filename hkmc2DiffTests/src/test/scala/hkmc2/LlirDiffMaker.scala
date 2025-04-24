@@ -102,7 +102,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             var changed = Status(true)
             var outOptProg = prog
             var count = 0
-            while changed.get && count <= 10 do 
+            while changed.get && count <= 5 do 
               changed.set(false)
               val (optProg, optStat) = opt.run(outOptProg)(using changed)
               if show then

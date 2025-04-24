@@ -196,3 +196,27 @@ foo(2) + baz([3, 4])
 //│     let x$801 = +(x$802,x$803) in
 //│     x$801
 //│   entry = entry$765
+
+fun not(x) = if x then false else true
+not(true)
+//│ = false
+//│ 
+//│ Opt:
+//│   
+//│   def entry$834() =
+//│     case true of
+//│       BoolLit(true) =>
+//│         false
+//│       _ =>
+//│         true
+//│   entry = entry$834
+//│ 
+//│ Opt:
+//│   
+//│   def entry$834() =
+//│     case true of
+//│       BoolLit(true) =>
+//│         false
+//│       _ =>
+//│         true
+//│   entry = entry$834

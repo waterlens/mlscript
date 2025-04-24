@@ -155,7 +155,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   
   
   enum IInfo:
-    case Bool(b: Bool) // boolean literal as a special case
+    case BoolCtor(b: Bool) // boolean literal as a special case
     case Ctor(c: Local)
     case Mixed(i: Set[I])
     case Tuple(n: Int)
@@ -372,15 +372,18 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def bindIInfo(args: Ls[TrivialExpr], params: Ls[Symbol])(using env: Env) =
       args.iterator.zip(params).foreach:
         case (Expr.Ref(x), p) if env.intros.contains(x) => env.intros.addOne(p -> env.intros(x))
+        case (Expr.Literal(Tree.BoolLit(b)), p) => env.intros.addOne(p -> I(Loc.Other, IInfo.BoolCtor(b)))
         case _ => ()
     
     def fTExprWithLoc(x: TrivialExpr, loc: Loc)(using env: Env): Opt[I] = x match
       case Expr.Ref(name) => env.intros.get(name)
+      case Expr.Literal(Tree.BoolLit(b)) => S(I(loc, IInfo.BoolCtor(b)))
       case _ => N
 
     def fExprWithLoc(e: Expr, loc: Loc)(using env: Env): Opt[I] = e match
       case Expr.Ref(sym) => env.intros.get(sym)
       case Expr.CtorApp(cls, args) => S(I(loc, IInfo.Ctor(cls)))
+      case Expr.Literal(Tree.BoolLit(b)) => S(I(loc, IInfo.BoolCtor(b)))
       case _ => N
 
     def fNode(node: Node)(using env: Env): Ls[Opt[I]] = 
@@ -449,9 +452,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       workingList: MutLSet[Func] = MutLSet.empty,
     )
 
+    enum KnownClass:
+      case Ctor(cls: Local)
+      case BoolCtor(b: Bool)
+
     // symbol destruction descriptor
     case class SymDDesc(
-      knownClass: Local,
+      knownClass: KnownClass,
       isIndirect: Bool,
       e: E
     )
@@ -474,8 +481,9 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         s"firstDestructedSym: ${firstDestructedSym.map(_.toString()).getOrElse("N")}, " +
         s"mixingProducer: ${mixingProducer.map(_.toString()).mkString(",")}"
 
-    def symAndIntroOfTExpr(te: TrivialExpr)(using env: Env): Opt[(Local, I)] = te match
-      case Expr.Ref(x) => for i <- env.i.intros.get(x) yield (x, i)
+    def symAndIntroOfTExpr(te: TrivialExpr)(using env: Env): Opt[(Opt[Local], I)] = te match
+      case Expr.Ref(x) => for i <- env.i.intros.get(x) yield (S(x), i)
+      case Expr.Literal(Tree.BoolLit(b)) => S((N, I(Loc.Other, IInfo.BoolCtor(b))))
       case _ => none
     
     def findProducer(loc: Loc) = loc match
@@ -496,20 +504,26 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         val argumentsSDesc = MutLMap.empty[Local, SymSDesc]
         val mixingProducer = MutLMap.empty[Local, (Loc, Symbol)]
         argsIntros.zip(params.iterator.zip(activeParams.iterator)).foreach:
-          case ((S((arg, I(loc, IInfo.Ctor(cls))))), (param, elims)) =>
+          case ((S((S(arg), I(loc, IInfo.Ctor(cls))))), (param, elims)) =>
             var allElimsSelOrPass = true
             val selected = MutLSet.empty[Str]
             var hasPass = false
             for e <- elims do e match
-              case E(loc, EInfo.Des) => allElimsSelOrPass = false; argumentsDDesc.update(param, SymDDesc(cls, false, e))
-              case E(loc, EInfo.IndDes) => allElimsSelOrPass = false; argumentsDDesc.update(param, SymDDesc(cls, true, e))
+              case E(loc, EInfo.Des) => allElimsSelOrPass = false; argumentsDDesc.update(param, SymDDesc(KnownClass.Ctor(cls), false, e))
+              case E(loc, EInfo.IndDes) => allElimsSelOrPass = false; argumentsDDesc.update(param, SymDDesc(KnownClass.Ctor(cls), true, e))
               case E(loc, EInfo.Sel(cls, field)) => selected.add(field)
               case E(loc, EInfo.Pass) => hasPass = true
             if allElimsSelOrPass && selected.nonEmpty then
               // if this flag is true, it means that we can probably do arguments flattening
               log(s"selected: $selected, allElimsSelOrPass: $allElimsSelOrPass")
               argumentsSDesc.update(param, SymSDesc(hasPass, selected.toSortedSet))
-          case (S((arg, I(loc, IInfo.Mixed(is)))), (param, elims)) =>
+          
+          case ((S((_, I(loc, IInfo.BoolCtor(b))))), (param, elims)) =>
+            for e <- elims do e match
+              case E(loc, EInfo.Des) => argumentsDDesc.update(param, SymDDesc(KnownClass.BoolCtor(b), false, e))
+              case E(loc, EInfo.IndDes) => argumentsDDesc.update(param, SymDDesc(KnownClass.BoolCtor(b), true, e))
+              case _ => ()
+          case (S((S(arg), I(loc, IInfo.Mixed(is)))), (param, elims)) =>
             for e <- elims do e match
               case E(_, EInfo.Des | EInfo.IndDes) =>
                 // what to do with a mixing producer?
@@ -960,7 +974,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               case _ => N
             fNodeCases(cases, oldI, default, scrutinee, Nil)(k)
           symAndIntroOfTExpr(scrutinee) match
-            case Some((scrutinee, I(loc, IInfo.Mixed(i)))) =>
+            case Some((S(scrutinee), I(loc, IInfo.Mixed(i)))) =>
               // manual checkSTarget
               val p = findProducer(loc)
               p match

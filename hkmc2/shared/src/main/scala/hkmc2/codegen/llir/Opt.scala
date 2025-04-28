@@ -24,6 +24,8 @@ import hkmc2.syntax.Tree.IntLit
 
 final case class OptErr(message: String) extends Exception(message)
 
+// TODO: add recursive boundary stuff back
+
 private def oErrStop(msg: Message)(using Raise) =
   raise(ErrorReport(msg -> N :: Nil,
     source = Diagnostic.Source.Compilation))
@@ -363,10 +365,17 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           oErrStop(s"Multiple introductions of ${sym.nme}$$${sym.uid.toString()}")
         env.intros.update(sym, i)
     
+    def repI(sym: Local, i: I)(using env: Env) =
+      traceNot[Opt[I]](s"repI: ${sym.nme}$$${sym.uid.toString()} -> $i"):
+        env.intros.put(sym, i)
     
     def addITExpr(te: TrivialExpr, i: I)(using env: Env) = te match
       case Expr.Ref(x) => addI(x, i)
       case _ => ()
+
+    def replaceITExpr(te: TrivialExpr, i: I)(using env: Env) = te match
+      case Expr.Ref(x) => repI(x, i)
+      case _ => N
 
     // given the arguments of a function call, we find their intro-info and propagate them to the function's parameters
     def bindIInfo(args: Ls[TrivialExpr], params: Ls[Symbol])(using env: Env) =
@@ -397,8 +406,15 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case Node.Case(scrutinee, cases, default) =>
           val casesIntros = cases.map:
             case (Pat.Class(cls), body) =>
-              // addITExpr(scrutinee, I(node, IInfo.Ctor(cls)))
-              fNode(body)
+              val old = replaceITExpr(scrutinee, I(Loc.Other, IInfo.Ctor(cls)))
+              val intros = fNode(body)
+              old.foreach(i => replaceITExpr(scrutinee, i))
+              intros
+            case (Pat.Lit(Tree.BoolLit(b)), body) =>
+              val old = replaceITExpr(scrutinee, I(Loc.Other, IInfo.BoolCtor(b)))
+              val intros = fNode(body)
+              old.foreach(i => replaceITExpr(scrutinee, i))
+              intros
             case (Pat.Lit(lit), body) => fNode(body)
           default match
             case N => mergeIntros(casesIntros, Loc.CaseSite(scrutinee))
@@ -441,6 +457,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   enum KnownClass:
     case Ctor(cls: Local)
     case BoolCtor(b: Bool)
+    case NotBoolCtor(b: Bool)
 
   private class Splitting(info: ProgInfo):
     case class PreFunc(sym: Local, results: Ls[Local], body: PreFuncBody, orig: Func)
@@ -1079,7 +1096,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         summon[Status[Bool]].set(true)
       info.classes.filterInPlace((k, _) => reachable.classes.contains(k))
 
-    case class KnownCtors(map: Map[Local, (KnownClass, Map[Str, TrivialExpr])])
+    case class KnownCtors(
+      known: Map[Local, (KnownClass, Map[Str, TrivialExpr])]
+    ):
+      def addKnownTag(sym: Local, cls: KnownClass) =
+        this.copy(known = known + (sym -> (cls, Map.empty)))
+      def addKnownAllFields(sym: Local, cls: KnownClass, fields: Map[Str, TrivialExpr]) =
+        this.copy(known = known + (sym -> (cls, fields)))
 
     private def removeDeadBindings(node: Node)(using uses: Set[Local]): Node = node match
       case Node.Result(res) => node
@@ -1110,66 +1133,85 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Expr.AssignField(assignee, cls, field, value) => 
         Expr.AssignField(m.subst(assignee), cls, field, m.substT(value))
     
+    private def insertKnown(scrut: TrivialExpr, pat: Pat, kc: KnownCtors): KnownCtors =
+      scrut match
+        case Expr.Ref(sym) => pat match
+          case Pat.Class(cls) => kc.addKnownTag(sym, KnownClass.Ctor(cls))
+          case Pat.Lit(Tree.BoolLit(b)) => kc.addKnownTag(sym, KnownClass.BoolCtor(b))
+          case _ => kc
+        case _ => kc
+
+    // TODO: handle case | true | false | true | _ 
+    private def getClauseNegation(pats: Ls[Pat], scrut: TrivialExpr, kc: KnownCtors): KnownCtors =
+      scrut match
+        case Expr.Ref(sym) =>
+          pats.foldLeft(kc):
+            case (kc, pat) => pat match
+              case Pat.Lit(Tree.BoolLit(b)) => kc.addKnownTag(sym, KnownClass.NotBoolCtor(b))
+              case _ => kc
+        case _ => kc
+    
     private def removeTrivialDestruction(node: Node)(using kc: KnownCtors, m: MapUtil)(using s: Status[Bool]): Node = node match
       case Node.Result(res) => Node.Result(res.map(m.substT))
       case Node.Jump(func, args) => Node.Jump(func, m.substT(args).toList)
       case Node.Panic(msg) => node
-      case Node.Case(Expr.Literal(Tree.BoolLit(b)), cases, default) =>
-        (cases.find:
-          case (Pat.Lit(Tree.BoolLit(b2)), _) => b === b2
-          case _ => false) match
-            case None => 
-              val nuCases = cases.map:
-                case (pat, body) => pat -> removeTrivialDestruction(body)(using kc, m)
-              val nuDefault = default.map(removeTrivialDestruction(_)(using kc, m))
-              Node.Case(Expr.Literal(Tree.BoolLit(b)), nuCases, nuDefault)
-            case Some((_pat, body)) => 
-              s.set(true)
-              removeTrivialDestruction(body)(using kc, m)
-      case Node.Case(Expr.Ref(scrutinee), cases, default) if kc.map.contains(m.subst(scrutinee)) =>
-        val (knownCls, args) = kc.map(m.subst(scrutinee))
-        (cases.find:
-          case (Pat.Class(cls2), _) => knownCls match
-            case KnownClass.Ctor(cls) => cls === cls2
-            case KnownClass.BoolCtor(b) => false
-          case (Pat.Lit(Tree.BoolLit(b)), _) => knownCls match
-            case KnownClass.Ctor(cls) => false
-            case KnownClass.BoolCtor(b2) => b === b2
-          case _ => false) match
-            case None => 
-              val nuCases = cases.map:
-                case (pat, body) => pat -> removeTrivialDestruction(body)(using kc, m)
-              val nuDefault = default.map(removeTrivialDestruction(_)(using kc, m))
-              Node.Case(Expr.Ref(m.subst(scrutinee)), nuCases, nuDefault)
-            case Some((_pat, body)) => 
-              s.set(true)
-              removeTrivialDestruction(body)(using kc, m)
-      case Node.Case(scrutinee, cases, default) =>
-        val nuCases = cases.map:
-          case (pat, body) => pat -> removeTrivialDestruction(body)(using kc, m)
-        val nuDefault = default.map(removeTrivialDestruction(_)(using kc, m))
-        Node.Case(m.substT(scrutinee), nuCases, nuDefault)
-      case Node.LetExpr(name, Expr.Select(x, cls, field), body) if kc.map.contains(m.subst(x)) =>
-        val (cls2, args) = kc.map(m.subst(x))
-        assert(cls2 match
-          case KnownClass.Ctor(cls2) => cls === cls2
-          case KnownClass.BoolCtor(b) => false 
-        )
-        val value = args.get(if field.forall(_.isDigit) then s"field$field" else field)
-        value match
-          case Some(Expr.Ref(y)) =>
-            s.set(true)
-            val newM = MapUtil(m.map + (name -> y))
-            removeTrivialDestruction(body)(using kc, newM)
-          case Some(lit: Expr.Literal) =>
-            s.set(true)
-            Node.LetExpr(name, lit, removeTrivialDestruction(body)(using kc, m))
-          case None => oErrStop(s"removeTrivialDestruction: unknown field $field in $args")
+      case Node.Case(scrut2, cases, default) =>
+        val scrut = m.substT(scrut2)
+        val known = scrut match
+          case Expr.Ref(x) => kc.known.get(x).map(_._1)
+          case Expr.Literal(Tree.BoolLit(b)) => S(KnownClass.BoolCtor(b))
+          case _ => N
+        if known.nonEmpty then
+          val knownCls = known.get
+          (cases.find:
+            case (Pat.Class(cls2), _) => knownCls match
+              case KnownClass.Ctor(cls) => cls === cls2
+              case _ => false
+            case (Pat.Lit(Tree.BoolLit(b)), _) => knownCls match
+              case KnownClass.BoolCtor(b2) => b === b2
+              case KnownClass.NotBoolCtor(b2) => b === !b2
+              case _ => false
+            case _ => false) match
+              case None =>
+                default match
+                  case None => 
+                    val nuCases = cases.map:
+                      case (pat, body) => pat -> removeTrivialDestruction(body)(using insertKnown(scrut, pat, kc), m)
+                    Node.Case(m.substT(scrut), nuCases, None)
+                  case Some(dflt) =>
+                    s.set(true)
+                    removeTrivialDestruction(dflt)(using getClauseNegation(cases.map(_._1), scrut, kc), m)
+              case Some((_pat, body)) => 
+                s.set(true)
+                removeTrivialDestruction(body)(using kc, m)
+        else
+          val nuCases = cases.map:
+            case (pat, body) => pat -> removeTrivialDestruction(body)(using insertKnown(scrut, pat, kc), m)
+          val nuDefault = default.map(removeTrivialDestruction(_)(using getClauseNegation(cases.map(_._1), scrut, kc), m))
+          Node.Case(m.substT(scrut), nuCases, nuDefault)
+      case Node.LetExpr(name, expr @ Expr.Select(x, cls, field), body) if kc.known.contains(m.subst(x)) =>
+        def fallback = 
+          val nuExpr = removeTrivialDestruction(expr)(using kc, m)
+          Node.LetExpr(name, nuExpr, removeTrivialDestruction(body)(using kc, m))
+        kc.known.get(m.subst(x)) match
+          case None => fallback
+          case Some((cls, args)) if args.nonEmpty =>
+            val value = args.get(if field.forall(_.isDigit) then s"field$field" else field)
+            value match
+              case Some(Expr.Ref(y)) =>
+                s.set(true)
+                val newM = MapUtil(m.map + (name -> y))
+                removeTrivialDestruction(body)(using kc, newM)
+              case Some(lit: Expr.Literal) =>
+                s.set(true)
+                Node.LetExpr(name, lit, removeTrivialDestruction(body)(using kc, m))
+              case None => oErrStop(s"removeTrivialDestruction: unknown field $field in $args")
+          case _ => fallback
       case Node.LetExpr(name, Expr.CtorApp(cls, args), body) =>
         val nuArgs = args.map(m.substT)
         val fieldMap = info.getClass(cls).fields.iterator.map(_.nme).zip(nuArgs).toMap
-        val nuKC = kc.map + (name -> (KnownClass.Ctor(cls), fieldMap))
-        Node.LetExpr(name, Expr.CtorApp(cls, nuArgs), removeTrivialDestruction(body)(using KnownCtors(nuKC), m))
+        val nuKC = kc.addKnownAllFields(name, KnownClass.Ctor(cls), fieldMap)
+        Node.LetExpr(name, Expr.CtorApp(cls, nuArgs), removeTrivialDestruction(body)(using nuKC, m))
       case Node.LetExpr(name, expr, body) =>
         val nuExpr = removeTrivialDestruction(expr)(using kc, m)
         Node.LetExpr(name, nuExpr, removeTrivialDestruction(body)(using kc, m))

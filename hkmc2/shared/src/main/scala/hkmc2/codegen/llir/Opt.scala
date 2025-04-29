@@ -161,6 +161,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     case Ctor(c: Local)
     case Mixed(i: Set[I])
     case Tuple(n: Int)
+    case Top
+    case Bot
 
   enum EInfo:
     case Pass
@@ -180,7 +182,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def fromProgram(prog: LlirProgram) =
       ProgInfo(
         activeParams = MutHMap.from(prog.defs.iterator.map(f => f.name -> f.params.map(_ => SortedSet.empty[E]))),
-        activeResults = MutHMap.from(prog.defs.iterator.map(f => f.name -> List.fill(f.resultNum)(N))),
+        activeResults = MutHMap.from(prog.defs.iterator.map(f => f.name -> List.fill(f.resultNum)(I(Loc.Other, IInfo.Top)))),
         func = MutHMap.from(prog.defs.map(f => f.name -> f)),
         classes = MutHMap.from(prog.classes.map(c => c.name -> c)),
         entry = prog.entry
@@ -194,11 +196,15 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   
   case class ProgInfo(
     activeParams: MutHMap[Local, Ls[SortedSet[E]]],
-    activeResults: MutHMap[Local, Ls[Opt[I]]],
+    activeResults: MutHMap[Local, Ls[I]],
     func: MutHMap[Local, Func],
     classes: MutHMap[Local, ClassInfo],
     entry: Local,
   ):
+    override def toString(): String =
+      s"activeParams: ${activeParams.map(_.toString()).mkString(",")}, \n" +
+      s"activeResults: ${activeResults.map(_.toString()).mkString(",")}, "
+
     def toProgram =
       LlirProgram(classes.values.toSet, func.values.toSet, entry = entry)
 
@@ -217,7 +223,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def setActiveParams(func: Local, aps: Ls[SortedSet[E]]) = 
       activeParams.update(func, aps)
 
-    def setActiveResults(func: Local, ars: Ls[Opt[I]]) =
+    def setActiveResults(func: Local, ars: Ls[I]) =
       activeResults.update(func, ars)
 
     def getStat =
@@ -235,14 +241,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     )
 
   enum Loc:
-    case CallSite(func: Local, args: Ls[TrivialExpr])
+    case CallSite(func: Local, args: Ls[TrivialExpr], n: Int)
     case CaseSite(scrutinee: TrivialExpr)
     case ExprBinder(assignee: Local)
     case Other
 
     def matches(node: Node) = (node, this) match
-      case (Node.Jump(func, args), CallSite(f, a)) => func === f && args === a
-      case (Node.LetCall(_, func, args, _), CallSite(f, a)) => func === f && args === a
+      case (Node.Jump(func, args), CallSite(f, a, _)) => func === f && args === a
+      case (Node.LetCall(_, func, args, _), CallSite(f, a, _)) => func === f && args === a
       case (Node.Case(scrutinee, _, _), CaseSite(s)) => scrutinee === s
       case (Node.LetExpr(assignee, _, _), ExprBinder(a)) => assignee === a
       case _ => false
@@ -277,8 +283,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def fNode(node: Node)(using env: Env): Unit = 
       def fDef(func: Local, args: Ls[TrivialExpr], funcDefn: Func)(using env: Env) =
         val aps = info.getActiveParams(func)
-        args.iterator.zip(aps).foreach:
-          case (Expr.Ref(x), ys) => ys.foreach(y => addBackwardE(x, y, Loc.CallSite(func, args)))
+        args.iterator.zip(aps).zipWithIndex.foreach:
+          case ((Expr.Ref(x), ys), i) => ys.foreach(y => addBackwardE(x, y, Loc.CallSite(func, args, i)))
           case _ =>
         if !env.visited.contains(func) && notBuiltin(func) then
           env.visited.add(func)
@@ -334,28 +340,29 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   private object IntroductionAnalysis:
     case class Env(
       intros: MutHMap[Local, I] = MutHMap.empty,
-      default_intro: Ls[Opt[I]], // the intro of panic
+      default_intro: Ls[I], // the intro of panic
     )
   
   private class IntroductionAnalysis(info: ProgInfo):
     import IntroductionAnalysis.Env
-    def mergeIntroSet(loc: Loc, is: Set[I]): Opt[I] =
+    def mergeIntroSet(loc: Loc, is: Set[I]): I =
       if is.nonEmpty then
         val i = is.head
         val iInfo = i.info
         if is.forall(_.info === iInfo) then
-          S(I(loc, iInfo))
+          I(loc, iInfo)
         else
-          S(I(loc, IInfo.Mixed(is)))  
-      else N
-    def mergeIntros(xs: Ls[Ls[Opt[I]]], loc: Loc): Ls[Opt[I]] =
-      traceNot[Ls[Opt[I]]](s"mergeIntros: $xs"):
+          I(loc, IInfo.Mixed(is))  
+      else
+        I(loc, IInfo.Bot)
+    def mergeIntros(xs: Ls[Ls[I]], loc: Loc): Ls[I] =
+      traceNot[Ls[I]](s"mergeIntros: $xs"):
         val xst = xs.transpose
         xst.map: ys =>
           val z = ys.flatMap:
-            case N => Set.empty[I]
-            case S(I(loc, IInfo.Mixed(i))) => i
-            case S(i) => Set(i)
+            case I(loc, IInfo.Bot) => Set.empty[I]
+            case I(loc, IInfo.Mixed(i)) => i
+            case i => Set(i)
           .toSet
           mergeIntroSet(loc, z)
 
@@ -384,25 +391,28 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case (Expr.Literal(Tree.BoolLit(b)), p) => env.intros.addOne(p -> I(Loc.Other, IInfo.BoolCtor(b)))
         case _ => ()
     
-    def fTExprWithLoc(x: TrivialExpr, loc: Loc)(using env: Env): Opt[I] = x match
-      case Expr.Ref(name) => env.intros.get(name)
-      case Expr.Literal(Tree.BoolLit(b)) => S(I(loc, IInfo.BoolCtor(b)))
-      case _ => N
+    def fTExprWithLoc(x: TrivialExpr, loc: Loc)(using env: Env): I = x match
+      case Expr.Ref(name) => env.intros.get(name) match
+        case Some(i) => I(loc, i.info)
+        case None => I(loc, IInfo.Top)
+      case Expr.Literal(Tree.BoolLit(b)) => I(loc, IInfo.BoolCtor(b))
+      case _ => I(loc, IInfo.Top)
 
-    def fExprWithLoc(e: Expr, loc: Loc)(using env: Env): Opt[I] = e match
-      case Expr.Ref(sym) => env.intros.get(sym)
-      case Expr.CtorApp(cls, args) => S(I(loc, IInfo.Ctor(cls)))
-      case Expr.Literal(Tree.BoolLit(b)) => S(I(loc, IInfo.BoolCtor(b)))
-      case _ => N
+    def fExprWithLoc(e: Expr, loc: Loc)(using env: Env): I = e match
+      case Expr.Ref(sym) => env.intros.get(sym) match
+        case Some(i) => I(loc, i.info)
+        case None => I(loc, IInfo.Top)
+      case Expr.CtorApp(cls, args) => I(loc, IInfo.Ctor(cls))
+      case Expr.Literal(Tree.BoolLit(b)) => I(loc, IInfo.BoolCtor(b))
+      case _ => I(loc, IInfo.Top)
 
-    def fNode(node: Node)(using env: Env): Ls[Opt[I]] = 
-      traceNot[Ls[Opt[I]]](s"fNode: $node"):
+    def fNode(node: Node)(using env: Env): Ls[I] = 
+      traceNot[Ls[I]](s"fNode: $node"):
         node match
         case Node.Result(res) => res.map(f => fTExprWithLoc(f, Loc.Other))
         case Node.Jump(func, args) => 
-          info.getActiveResults(func).map:
-            case N => N
-            case S(I(loc, i)) => S(I(Loc.CallSite(func, args), i))
+          info.getActiveResults(func).zipWithIndex.map:
+            case (I(loc, i), nth) => I(Loc.CallSite(func, args, nth), i)
         case Node.Case(scrutinee, cases, default) =>
           val casesIntros = cases.map:
             case (Pat.Class(cls), body) =>
@@ -421,16 +431,17 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             case S(x) => mergeIntros(casesIntros :+ fNode(x), Loc.CaseSite(scrutinee))
         case Node.Panic(msg) => env.default_intro
         case Node.LetExpr(name, expr, body) =>
-          for i <- fExprWithLoc(expr, Loc.ExprBinder(name)) do addI(name, i)
+          addI(name, fExprWithLoc(expr, Loc.ExprBinder(name)))
           fNode(body)
-        case Node.LetMethodCall(names, cls, method, args, body) => fNode(body)
+        case Node.LetMethodCall(names, cls, method, args, body) => 
+          names.foreach(name => addI(name, I(Loc.Other, IInfo.Top)))
+          fNode(body)
         case Node.LetCall(names, func, args, body) =>
           if notBuiltin(func) then
             val funcDefn = info.getFunc(func)
             val ars = info.getActiveResults(func)
-            names.iterator.zip(ars).foreach:
-              case (rv, S(I(oldLoc, i))) => addI(rv, I(Loc.CallSite(func, args), i))
-              case _ => ()
+            names.iterator.zip(ars).zipWithIndex.foreach:
+              case ((rv, I(oldLoc, i)), nth) => addI(rv, I(Loc.CallSite(func, args, nth), i))
           fNode(body)
       
     def run() =
@@ -441,7 +452,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         env = Env(default_intro = Nil)
         info.func.values.foreach: func =>
           val old = info.getActiveResults(func.name)
-          val nu = fNode(func.body)(using env.copy(default_intro = List.fill(func.resultNum)(N)))
+          val nu = fNode(func.body)(using env.copy(default_intro = List.fill(func.resultNum)(I(Loc.Other, IInfo.Top))))
           assert(old.length === nu.length, s"old: $old, nu: $nu")
           changed |= old =/= nu
           info.setActiveResults(func.name, nu)
@@ -469,7 +480,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     case class Env(
       i: IntroductionAnalysis.Env,
       e: EliminationAnalysis.Env,
-      possibleSplitting: MutHMap[Loc, (Ls[Symbol], PreFuncBody, PostFuncBody)] = MutHMap.empty,
+      // call site -> ...
+      possibleSplitting: MutHMap[(Local, Ls[TrivialExpr]), (Ls[Symbol], PreFuncBody, PostFuncBody)] = MutHMap.empty,
       workingList: MutLSet[Func] = MutLSet.empty,
     )
 
@@ -504,7 +516,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case _ => none
     
     def findProducer(loc: Loc) = loc match
-      case Loc.CallSite(producer, _) => some(producer)
+      case Loc.CallSite(producer, _, nth) => some((producer, nth))
       case _ => none
     
     // how this function reflects the splitting decision?
@@ -541,6 +553,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               case E(loc, EInfo.IndDes) => argumentsDDesc.update(param, SymDDesc(KnownClass.BoolCtor(b), true, e))
               case _ => ()
           case (S((S(arg), I(loc, IInfo.Mixed(is)))), (param, elims)) =>
+            log(s"mixed: $loc $is")
             for e <- elims do e match
               case E(_, EInfo.Des | EInfo.IndDes) =>
                 // what to do with a mixing producer?
@@ -578,15 +591,20 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
                 // another point is worth noticing that we need to do alpha-renaming after using the pre-cont and post-cont!!!
                 val producer = findProducer(loc)
                 // we store the arg, so we known which return value in the call site lead to the splitting
-                for p <- producer do 
-                  mixingProducer.update(p, (loc, arg))
+                
+                producer.foreach: (p, nth) =>
+                  info.getActiveResults(p)(nth) match
+                    case I(Loc.CaseSite(_), info) =>
+                      mixingProducer.update(p, (loc, arg))
+                    case _ =>
               case _ =>
           case _ => ()
         SDesc(argumentsDDesc, argumentsSDesc, firstD, mixingProducer)
 
     def memoCall(callNode: Node.LetCall)(k: Node => Env ?=> Node)(using env: Env): Unit =
       val Node.LetCall(names, func, args, body) = callNode
-      env.possibleSplitting.update(Loc.CallSite(func, args), (names, PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
+      // TODO: speed up here
+      env.possibleSplitting.update((func, args), (names, PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
 
     // there's another strategy to split a callee of functions calls
     // they can be categorized into several kinds:
@@ -782,7 +800,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
     
     def sFunc(func: Func, splitPos: Loc): SplittingMode =
-      traceNot[SplittingMode](s"sFunc: ${func.name |> showSym}, $splitPos"):
+      trace[SplittingMode](s"sFunc: ${func.name |> showSym}, $splitPos"):
         sNode(func.body, splitPos, func)(identity)
 
     def sNode(node: Node, splitPos: Loc, thisFunc: Func)(acc: Node => Node): SplittingMode = 
@@ -898,12 +916,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     // loc: the location of the call site where the mixing producer is called
     // argI: the name bound to the return value of the mixing producer
     def liftOutMixingProducer(sym: Symbol, loc: Loc, argI: Symbol)(using env: Env, thisFunc: Func): Node =
-      if !env.possibleSplitting.contains(loc) then
-        oErrStop(s"mixing producer not found: ${loc}")
-      val (names, preBody, postBody) = env.possibleSplitting(loc)
       val (func, args) = loc match
-        case Loc.CallSite(func, args) => (func, args)
+        case Loc.CallSite(func, args, nth) => (func, args)
         case _ => oErrStop(s"unexpected loc: $loc")
+      val (names, preBody, postBody) = env.possibleSplitting((func, args))
       
       val n = names.indexOf(argI)
       if n == -1 then
@@ -912,7 +928,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       // get the intro info of the mixing producer
       // so we can find the correct splitting position
       log(s"finding splitting pos of ${func |> showSym}")
-      val i_mix = info.getActiveResults(func)(n).getOrElse(oErrStop(s"unexpected mixing producer intro info: ${func}"))
+      val i_mix = info.getActiveResults(func)(n)
       val s_loc = i_mix match
         case I(loc, info) => loc
 
@@ -995,7 +1011,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               // manual checkSTarget
               val p = findProducer(loc)
               p match
-                case Some(p) => 
+                case Some((p, nth)) => 
                   changed.set(true)
                   liftOutMixingProducer(p, loc, scrutinee)
                 case None => fallback
@@ -1073,13 +1089,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
   private class Simplify(info: ProgInfo):
     def simplify(using Status[Bool]) =
+      log(info.toString())
       val newFuncs = info.func.map:
         case (name, func) =>
           val uses = UsefulnessAnalysis()
           uses.run(func)
           var newBody = removeDeadBindings(func.body)(using uses.getUsed)
           newBody = removeTrivialCallAndJump(newBody)(using MapUtil(Map.empty))
-          newBody = removeTrivialDestruction(newBody)(using KnownCtors(Map.empty), MapUtil(Map.empty))
+          newBody = removeTrivialDestruction(newBody)(using KnownCtors(Map.empty), MapUtil(Map.empty))(using info)
           newBody = constantFolding(newBody)(using Map.empty)
           func.name -> func.copy(body = newBody)
       info.func.clear()
@@ -1151,7 +1168,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               case _ => kc
         case _ => kc
     
-    private def removeTrivialDestruction(node: Node)(using kc: KnownCtors, m: MapUtil)(using s: Status[Bool]): Node = node match
+    private def removeTrivialDestruction(node: Node)(using kc: KnownCtors, m: MapUtil)(using info: ProgInfo)(using s: Status[Bool]): Node = node match
       case Node.Result(res) => Node.Result(res.map(m.substT))
       case Node.Jump(func, args) => Node.Jump(func, m.substT(args).toList)
       case Node.Panic(msg) => node
@@ -1218,7 +1235,22 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       case Node.LetMethodCall(names, cls, method, args, body) =>
         Node.LetMethodCall(names, cls, method, m.substT(args).toList, removeTrivialDestruction(body)(using kc, m))
       case Node.LetCall(names, func, args, body) =>
-        Node.LetCall(names, func, m.substT(args).toList, removeTrivialDestruction(body)(using kc, m))
+        def introToKnown(intro: I): Opt[KnownClass] = intro.info match
+          case IInfo.BoolCtor(b) => S(KnownClass.BoolCtor(b))
+          case IInfo.Ctor(c) => S(KnownClass.Ctor(c))
+          case IInfo.Mixed(i) => N
+          case IInfo.Tuple(n) => N // TODO: tuple symbol
+          case IInfo.Top => N
+          case IInfo.Bot => N
+        info.activeResults.get(func) match
+          case None =>
+            Node.LetCall(names, func, m.substT(args).toList, removeTrivialDestruction(body)(using kc, m))
+          case Some(intros) =>
+            val nuKc = intros.iterator.zip(names).foldLeft(kc):
+              case (kc, (i, name)) =>
+                val known = introToKnown(i)
+                known.fold(kc)(kc.addKnownTag(name, _))
+            Node.LetCall(names, func, m.substT(args).toList, removeTrivialDestruction(body)(using nuKc, m))
     
     private def constantFolding(texpr: TrivialExpr)(using m: Map[Local, Literal]): TrivialExpr =
       texpr match

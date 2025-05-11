@@ -49,6 +49,8 @@ class Status[T](var elem: T):
 final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: FreshInt, flags: Set[Str]):
   import tl.{log, trace, traceNot}
 
+  val mtFlag = flags.contains("mt")
+
   object DestructUtils:
     @tailrec
     def getFirstDestructed(node: Node): Opt[Local] = node match
@@ -182,7 +184,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def fromProgram(prog: LlirProgram) =
       ProgInfo(
         activeParams = MutHMap.from(prog.defs.iterator.map(f => f.name -> f.params.map(_ => SortedSet.empty[E]))),
-        activeResults = MutHMap.from(prog.defs.iterator.map(f => f.name -> List.fill(f.resultNum)(I(Loc.Other, IInfo.Top)))),
+        activeResults = MutHMap.from(prog.defs.iterator.map(f => f.name -> List.fill(f.resultNum)(iTop))),
         func = MutHMap.from(prog.defs.map(f => f.name -> f)),
         classes = MutHMap.from(prog.classes.map(c => c.name -> c)),
         entry = prog.entry
@@ -343,8 +345,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       default_intro: Ls[I], // the intro of panic
     )
   
+  val iTop = I(Loc.Other, IInfo.Top)
+
   private class IntroductionAnalysis(info: ProgInfo):
     import IntroductionAnalysis.Env
+
+
     def mergeIntroSet(loc: Loc, is: Set[I]): I =
       if is.nonEmpty then
         val i = is.head
@@ -394,17 +400,17 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def fTExprWithLoc(x: TrivialExpr, loc: Loc)(using env: Env): I = x match
       case Expr.Ref(name) => env.intros.get(name) match
         case Some(i) => I(loc, i.info)
-        case None => I(loc, IInfo.Top)
+        case None => iTop
       case Expr.Literal(Tree.BoolLit(b)) => I(loc, IInfo.BoolCtor(b))
-      case _ => I(loc, IInfo.Top)
+      case _ => iTop
 
     def fExprWithLoc(e: Expr, loc: Loc)(using env: Env): I = e match
       case Expr.Ref(sym) => env.intros.get(sym) match
         case Some(i) => I(loc, i.info)
-        case None => I(loc, IInfo.Top)
+        case None => iTop
       case Expr.CtorApp(cls, args) => I(loc, IInfo.Ctor(cls))
       case Expr.Literal(Tree.BoolLit(b)) => I(loc, IInfo.BoolCtor(b))
-      case _ => I(loc, IInfo.Top)
+      case _ => iTop
 
     def fNode(node: Node)(using env: Env): Ls[I] = 
       traceNot[Ls[I]](s"fNode: $node"):
@@ -412,6 +418,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case Node.Result(res) => res.map(f => fTExprWithLoc(f, Loc.Other))
         case Node.Jump(func, args) => 
           info.getActiveResults(func).zipWithIndex.map:
+            case (I(_, IInfo.Top), _) => iTop
             case (I(loc, i), nth) => I(Loc.CallSite(func, args, nth), i)
         case Node.Case(scrutinee, cases, default) =>
           val casesIntros = cases.map:
@@ -434,13 +441,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           addI(name, fExprWithLoc(expr, Loc.ExprBinder(name)))
           fNode(body)
         case Node.LetMethodCall(names, cls, method, args, body) => 
-          names.foreach(name => addI(name, I(Loc.Other, IInfo.Top)))
+          names.foreach(name => addI(name, iTop))
           fNode(body)
         case Node.LetCall(names, func, args, body) =>
           if notBuiltin(func) then
             val funcDefn = info.getFunc(func)
             val ars = info.getActiveResults(func)
             names.iterator.zip(ars).zipWithIndex.foreach:
+              case ((rv, I(_, IInfo.Top)), _) => addI(rv, iTop)
               case ((rv, I(oldLoc, i)), nth) => addI(rv, I(Loc.CallSite(func, args, nth), i))
           fNode(body)
       
@@ -452,7 +460,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         env = Env(default_intro = Nil)
         info.func.values.foreach: func =>
           val old = info.getActiveResults(func.name)
-          val nu = fNode(func.body)(using env.copy(default_intro = List.fill(func.resultNum)(I(Loc.Other, IInfo.Top))))
+          val nu = measureTime(s"intro analysis: ${func.name |> showSym}", fNode(func.body)(using env.copy(default_intro = List.fill(func.resultNum)(iTop))))
           assert(old.length === nu.length, s"old: $old, nu: $nu")
           changed |= old =/= nu
           info.setActiveResults(func.name, nu)
@@ -603,7 +611,6 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
     def memoCall(callNode: Node.LetCall)(k: Node => Env ?=> Node)(using env: Env): Unit =
       val Node.LetCall(names, func, args, body) = callNode
-      // TODO: speed up here
       env.possibleSplitting.update((func, args), (names, PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
 
     // there's another strategy to split a callee of functions calls
@@ -1076,16 +1083,16 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             
     def run(using changed: Status[Bool]) =
       val i = IntroductionAnalysis(info)
-      val iEnv = i.run()
+      val iEnv = measureTime("intro analysis", i.run())
       val e = EliminationAnalysis(info)
-      val eEnv = e.run()
+      val eEnv = measureTime("elim analysis", e.run())
       val env = Env(iEnv, eEnv)
       env.workingList.addAll(info.func.values)
       log(s"workingList: ${env.workingList.iterator.map(_.name).toList}")
       while env.workingList.nonEmpty do
         val func = env.workingList.head
         env.workingList.remove(func)
-        fFunc(func)(using env)
+        measureTime(s"fFunc: ${func.name |> showSym}", fFunc(func)(using env))
 
   private class Simplify(info: ProgInfo):
     def simplify(using Status[Bool]) =
@@ -1429,7 +1436,18 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               pass
         else
           pass
-
+  
+  def measureTime[T](msg: Str, x: => T): T =
+    if mtFlag then
+      println(s"start $msg")
+      val start = System.currentTimeMillis()
+      val res = x
+      val end = System.currentTimeMillis()
+      println(s"end $msg, time: ${end - start} ms")
+      res
+    else
+      x
+  
   def run(prog: LlirProgram)(using Status[Bool]) =
     val info = ProgInfo.fromProgram(prog)
     val optStat = ListBuffer.empty[(Str, ProgStat)]
@@ -1441,7 +1459,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         changed.set(false)
         val prev = info.toProgram
         try 
-          simp.simplify(using changed)
+          measureTime("simp", simp.simplify(using changed))
         catch case e: Exception =>
           log(s"exception: $e")
           log(s"last prog: ${prev.show()}")
@@ -1449,7 +1467,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       optStat.addOne(("simp", info.getStat))
     if !flags.contains("!split") then
       val splitting = Splitting(info)
-      splitting.run(using summon[Status[Bool]])
+      measureTime("split", splitting.run(using summon[Status[Bool]]))
       optStat.addOne(("split", info.getStat))
     if flags.contains("simp2") then
       val simp = Simplify(info)
@@ -1458,7 +1476,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         changed.set(false)
         val prev = info.toProgram
         try 
-          simp.simplify(using changed)
+          measureTime("simp2", simp.simplify(using changed))
         catch case e: Exception =>
           log(s"exception: $e")
           log(s"last prog: ${prev.show()}")

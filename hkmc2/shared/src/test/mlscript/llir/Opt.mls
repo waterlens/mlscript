@@ -274,3 +274,68 @@ compose(1)
 //│     let* (x$894) = compose$847(1) in
 //│     x$894
 //│   entry = entry$895
+
+fun isZ(x) = if x == 0 then true else false
+fun not(x) = if x then false else true
+fun notZ(x) = not(isZ(x))
+notZ(0)
+//│ = false
+//│ 
+//│ Opt:
+//│   
+//│   def not$919(x$927) =
+//│     case x$927 of
+//│       BoolLit(true) =>
+//│         false
+//│       _ =>
+//│         true
+//│   def notZ$920(x$930) =
+//│     let* (x$957) = isZ_pre$947(x$930) in
+//│     case x$957 of
+//│       BoolLit(true) =>
+//│         let* (x$960) = not$919(true) in
+//│         x$960
+//│       _ =>
+//│         let* (x$961) = not$919(false) in
+//│         x$961
+//│   def entry$945() =
+//│     let* (x$944) = notZ$920(0) in
+//│     x$944
+//│   def isZ_pre$947(x$951) =
+//│     let x$950 = ==(x$951,0) in
+//│     x$950
+//│   entry = entry$945
+//│ 
+//│ Opt:
+//│   
+//│   def notZ$920(x$930) =
+//│     let* (x$957) = isZ_pre$947(x$930) in
+//│     case x$957 of
+//│       BoolLit(true) =>
+//│         false
+//│       _ =>
+//│         true
+//│   def entry$945() =
+//│     let* (x$944) = notZ$920(0) in
+//│     x$944
+//│   def isZ_pre$947(x$951) =
+//│     let x$950 = ==(x$951,0) in
+//│     x$950
+//│   entry = entry$945
+//│ 
+//│ Opt:
+//│   
+//│   def notZ$920(x$930) =
+//│     let* (x$957) = isZ_pre$947(x$930) in
+//│     case x$957 of
+//│       BoolLit(true) =>
+//│         false
+//│       _ =>
+//│         true
+//│   def entry$945() =
+//│     let* (x$944) = notZ$920(0) in
+//│     x$944
+//│   def isZ_pre$947(x$951) =
+//│     let x$950 = ==(x$951,0) in
+//│     x$950
+//│   entry = entry$945

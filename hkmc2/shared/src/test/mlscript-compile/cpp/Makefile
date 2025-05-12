@@ -5,7 +5,7 @@ LDLIBS := -lmimalloc -lgmp
 SRC :=
 INCLUDES := mlsprelude.h
 DST :=
-DEFAULT_TARGET := mls
+DEFAULT_TARGET := mls.out
 TARGET := $(or $(DST),$(DEFAULT_TARGET))
 
 .PHONY: pre all run clean auto
@@ -19,7 +19,9 @@ pre: $(SRC)
 	sed -i '' 's#^//│ ##g' $(SRC)
 
 clean:
-	rm -r $(TARGET) $(TARGET).dSYM
+	rm -r $(TARGET) $(TARGET).dSYM 2> /dev/null || true
+	rm -r *.out 2> /dev/null || true
+	rm -r *.o 2> /dev/null || true
 
 auto: $(TARGET)
 

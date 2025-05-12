@@ -61,6 +61,8 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val wholeOptFlags = Command[Set[Str]]("wholeOptFlags", false)(x => x.stripLeading().split(",").toSet)
   val wholeOptStat = NullaryCommand("wholeOptStat")
 
+  val benchPrep = Command[Str]("benchPrep", false)(x => x.stripLeading())
+
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) =
     val p = new java.io.PrintWriter(f)
     try { op(p) } finally { p.close() }
@@ -155,9 +157,20 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
         cppGen("Cpp", 
           optimize("Opt", llirProg, opt.isSet, sopt.isSet, optStat.isSet, optFlags.get.getOrElse(Set.empty)), 
           cpp.isSet, scpp.isSet, rcpp.isSet, wcpp.get)
+        val prog = mkWholeProgram
         cppGen("WholeProgramCpp",
-          optimize("WholeProgramOpt", mkWholeProgram, wholeOpt.isSet, sWholeOpt.isSet, wholeOptStat.isSet, wholeOptFlags.get.getOrElse(Set.empty)),
+          optimize("WholeProgramOpt", prog, wholeOpt.isSet, sWholeOpt.isSet, wholeOptStat.isSet, wholeOptFlags.get.getOrElse(Set.empty)),
           wholeCpp.isSet, sWholeCpp.isSet, rWholeCpp.isSet, wWholeCpp.get)
+        def baseName(last: String): String =
+          val li = last.lastIndexOf('.')
+          if (li == -1) last
+          else last.slice(0, li)
+        if benchPrep.isSet then
+          val benchCppName = benchPrep.get.get
+          val onlySimp = optimize("OnlySimplify", prog, true, false, true, Set("simp"))
+          val fullOpt = optimize("FullOpt", prog, true, false, true, wholeOptFlags.get.getOrElse(Set.empty))
+          cppGen("OnlySimplifyCpp", onlySimp, false, false, false, Some(baseName(benchCppName) + ".simp.cxx"))
+          cppGen("FullOptCpp", fullOpt, false, false, false, Some(baseName(benchCppName) + ".opt.cxx"))
         if intl.isSet then
           val intr = codegen.llir.Interpreter(tl)
           output("\nInterpreted:")

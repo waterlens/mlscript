@@ -167,7 +167,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
           else last.slice(0, li)
         if benchPrep.isSet then
           val benchCppName = benchPrep.get.get
-          val onlySimp = optimize("OnlySimplify", prog, true, false, true, Set("simp"))
+          val onlySimp = optimize("OnlySimplify", prog, true, false, true, Set("simp", "!split"))
           val fullOpt = optimize("FullOpt", prog, true, false, true, wholeOptFlags.get.getOrElse(Set.empty))
           cppGen("OnlySimplifyCpp", onlySimp, false, false, false, Some(baseName(benchCppName) + ".simp.cxx"))
           cppGen("FullOptCpp", fullOpt, false, false, false, Some(baseName(benchCppName) + ".opt.cxx"))

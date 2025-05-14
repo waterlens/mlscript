@@ -12,6 +12,7 @@
 #include <sys/resource.h>
 #include <tuple>
 #include <utility>
+#include <cstdarg>
 
 #define STRINGIFY_DETAIL(x) #x
 #define STRINGIFY(x) STRINGIFY_DETAIL(x)
@@ -73,13 +74,23 @@ struct _mlsObject {
       return true;
     return false;
   }
+  template <typename T> T *cast() {
+    return static_cast<T *>(this);
+  }
+  template <typename T> const T *cast() const {
+    return static_cast<const T *>(this);
+  }
 
+  virtual bool operator==(const _mlsObject &other) const = 0;
   virtual void print() const = 0;
   virtual void destroy() = 0;
 };
 
 #define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 #include <boost/stacktrace.hpp>
+
+#define MLS_RAND_MAX 1000000
+int _mlsRand();
 
 class _mlsUtil {
 public:
@@ -93,6 +104,16 @@ public:
   [[noreturn]] static void panic_with(const char *msg, const char *func,
                                       const char *file, int line) {
     std::fprintf(stderr, "Panic: %s at %s %s:%d\n", msg, func, file, line);
+    std::string st =
+        boost::stacktrace::to_string(boost::stacktrace::stacktrace());
+    std::fprintf(stderr, "%s\n", st.c_str());
+    std::abort();
+  }
+  [[noreturn]] static void panic_msg(const char *msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    vfprintf(stderr, msg, args);
+    va_end(args);
     std::string st =
         boost::stacktrace::to_string(boost::stacktrace::stacktrace());
     std::fprintf(stderr, "%s\n", st.c_str());
@@ -133,16 +154,6 @@ class _mlsValue {
 
   static _mlsValue fromInt63(int64_t i) {
     return _mlsValue(reinterpret_cast<void *>((i << 1) | 1));
-  }
-
-  void *asPtr() const {
-    _mls_assert(!isInt63());
-    return value;
-  }
-
-  _mlsObject *asObject() const {
-    _mls_assert(isPtr());
-    return static_cast<_mlsObject *>(value);
   }
 
   bool eqInt63(const _mlsValue &other) const {
@@ -232,6 +243,16 @@ public:
   _mlsValue(const _mlsValue &other) : value(other.value) {
     if (isPtr())
       asObject()->incRef();
+  }
+
+  void *asPtr() const {
+    _mls_assert(!isInt63());
+    return value;
+  }
+
+  _mlsObject *asObject() const {
+    _mls_assert(isPtr());
+    return static_cast<_mlsObject *>(value);
   }
 
   template <typename... Tp> using tuple = std::tuple<Tp...>;
@@ -346,22 +367,27 @@ public:
 
 struct _mls_Callable : public _mlsObject {
   virtual _mlsValue _mls_apply0() {
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("_mls_apply0 not implemented");
   }
   virtual _mlsValue _mls_apply1(_mlsValue) {
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("_mls_apply1 not implemented");
   }
   virtual _mlsValue _mls_apply2(_mlsValue, _mlsValue) {
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("_mls_apply2 not implemented");
   }
   virtual _mlsValue _mls_apply3(_mlsValue, _mlsValue, _mlsValue) {
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("_mls_apply3 not implemented");
   }
   virtual _mlsValue _mls_apply4(_mlsValue, _mlsValue, _mlsValue, _mlsValue) {
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("_mls_apply4 not implemented");
   }
   virtual _mlsValue _mls_apply5(_mlsValue, _mlsValue, _mlsValue, _mlsValue, _mlsValue) {
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("_mls_apply5 not implemented");
+  }
+  virtual bool operator==(const _mlsObject &other) const override {
+    (void)other;
+    // closures are not comparable
+    return false;
   }
   virtual void destroy() override {}
 };
@@ -424,6 +450,9 @@ struct _mls_Unit final : public _mlsObject {
   constexpr static inline const char *typeName = "Unit";
   constexpr static inline uint32_t typeTag = unitTag;
   virtual void print() const override { std::printf(typeName); }
+  virtual bool operator==(const _mlsObject &other) const override {
+    return typeTag == other.tag;
+  }
   static _mlsValue create() {
     static _mls_Unit mlsUnit alignas(_mlsAlignment);
     mlsUnit.refCount = stickyRefCount;
@@ -441,6 +470,9 @@ struct _mls_Float final : public _mlsFloatShape {
     std::printf("(");
     std::printf("%f", f);
     std::printf(")");
+  }
+  virtual bool operator==(const _mlsObject &other) const override {
+    return typeTag == other.tag && f == other.cast<_mls_Float>()->f;
   }
   static _mlsValue create(double f) {
     auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Float;
@@ -488,6 +520,9 @@ struct _mls_Str final : public _mlsObject {
   std::string str;
   constexpr static inline const char *typeName = "Str";
   constexpr static inline uint32_t typeTag = strTag;
+  virtual bool operator==(const _mlsObject &other) const override {
+    return typeTag == other.tag && str == other.cast<_mls_Str>()->str;
+  }
   virtual void print() const override {
     std::printf("\"");
     for (const auto c : str) {
@@ -564,6 +599,11 @@ struct _mls_Lazy final : public _mlsObject {
   constexpr static inline const char *typeName = "Lazy";
   constexpr static inline uint32_t typeTag = lazyTag;
   virtual void print() const override { std::printf(typeName); }
+  virtual bool operator==(const _mlsObject &other) const override {
+    (void)other;
+    // Lazy is not comparable
+    return false;
+  }
   static _mlsValue create(_mlsValue init) {
     auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lazy;
     _mlsVal->refCount = 1;
@@ -598,6 +638,9 @@ struct _mls_ZInt final : public _mlsObject {
     std::printf("(");
     std::printf("%s", z.str().c_str());
     std::printf(")");
+  }
+  virtual bool operator==(const _mlsObject &other) const override {
+    return typeTag == other.tag && z == other.cast<_mls_ZInt>()->z;
   }
   virtual void destroy() override {
     z.~number();
@@ -677,6 +720,10 @@ struct _mls_ZInt final : public _mlsObject {
 
 [[noreturn, gnu::noinline]] inline void _mlsNonExhaustiveMatch() {
   _mlsUtil::panic("Non-exhaustive match");
+}
+
+inline _mlsValue _mls_builtin_rand() {
+  return _mlsValue::fromIntLit(_mlsRand());
 }
 
 inline _mlsValue _mls_builtin_pow(_mlsValue a, _mlsValue b) { return a.pow(b); }
@@ -852,23 +899,15 @@ inline _mlsValue _mlsValue::operator==(const _mlsValue &other) const {
     return _mlsValue::fromBoolLit(eqInt63(other));
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) == *as<_mls_Float>(other);
-  bool sameTag =
-      isPtr() && other.isPtr() && asObject()->tag == other.asObject()->tag;
-  if (!sameTag)
-    return _mlsValue::fromBoolLit(false);
-  _mls_assert(false);
+  return _mlsValue::fromBoolLit(isPtr() && other.isPtr() && asObject()->operator==(*other.asObject()));
 }
 
 inline _mlsValue _mlsValue::operator!=(const _mlsValue &other) const {
   if (isInt63() && other.isInt63())
     return _mlsValue::fromBoolLit(!eqInt63(other));
   if (isFloat() && other.isFloat())
-    return *as<_mls_Float>(*this) != *as<_mls_Float>(other);
-  bool sameTag =
-      isPtr() && other.isPtr() && asObject()->tag == other.asObject()->tag;
-  if (!sameTag)
-    return _mlsValue::fromBoolLit(true);
-  _mls_assert(false);
+      return *as<_mls_Float>(*this) != *as<_mls_Float>(other);
+  return _mlsValue::fromBoolLit(!(isPtr() && other.isPtr() && asObject()->operator==(*other.asObject())));
 }
 
 inline _mlsValue _mlsValue::operator&&(const _mlsValue &other) const {

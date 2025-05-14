@@ -1,0 +1,224 @@
+:llir
+
+:import NofibPrelude.mls
+//│ Imported 104 member(s)
+
+
+fun retURN(a) = s => [s, a]
+
+fun bind(m, f) = s => if m(s) is [s_, a] then f(a)(s_)
+
+fun join(m) = s => if m(s) is [s_, ma] then ma(s_)
+
+fun mmap(f, m) = s => if m(s) is [s_, a] then [s_, f(a)]
+
+fun mmapl(f, aas) = if aas is
+  Nil then retURN(Nil)
+  a :: as_ then
+    bind of
+      f(a)
+      b => bind of
+        mmapl(f, as_)
+        bs => retURN(b :: bs)
+
+fun mmapr(f, xs) = if xs is
+  Nil then retURN(Nil)
+  x :: xs then
+    bind of
+      mmapr(f, xs)
+      ys => bind of
+        f(x)
+        y => retURN(y :: ys)
+    
+fun mfoldl(f, a, xs) = if xs is
+  Nil then retURN(a)
+  x :: xs then
+    bind(f(a, x), fax => mfoldl(f, fax, xs))
+    
+fun mfoldr(f, a, xs) = if xs is
+  Nil then retURN(a)
+  x :: xs then
+    bind(mfoldr(f, a, xs), y => f(x, y))
+
+fun mif(c, t, f) = bind(c, cond => if cond then t else f)
+
+fun startingWith(m, v) = if m(v) is [final, answer] then answer
+
+fun fetch(s) = [s, s]
+
+fun fetchWith(f) = s => [s, f(s)]
+
+fun update(f) = s => [f(s), s]
+
+fun set_(s_) = s => [s_, s]
+
+fun incr() = update(x => x + 1)
+
+data class Node[T](a: T, b: List[Node[T]])
+
+fun labelTree(t) =
+  fun label(t) = if t is Node(x, xs) then
+    bind of
+      incr()
+      n => bind of
+        mmapl(label, xs)
+        ts => retURN(Node([n, x], ts))
+  startingWith(label(t), 0)
+
+fun ltGraph(t) =
+  fun labelOf(t) = if t is Node([n, x], xs) then n
+  if t is Node([n, x], xs) then
+    [n, x, map(labelOf, xs)] :: concat(map(ltGraph, xs))
+
+fun visited(n) = bind of
+  fetch
+  us => if inList(n, us) then retURN(true) else bind(set_(n :: us), _p => retURN(false))
+
+fun newlyDefined(x, fx, f, y) = if x === y then fx else f(y)
+
+fun findCommon(ls) =
+  fun sim(n_s_cs, r_lg) = if n_s_cs is [n, s, cs] and r_lg is [r, lg] then
+    fun lscomp(ls, rcs) = if ls is
+      Nil then Nil
+      [m, s_, cs_] :: t and
+        s === s_ and listEq(cs_, rcs) then m :: lscomp(t, rcs)
+        else lscomp(t, rcs)
+    let rcs = map(r, cs)
+    let ms = lscomp(lg, rcs)
+    if null_(ms)
+    then [r, [n, s, rcs] :: lg]
+    else [x => newlyDefined(n, head(ms), r, x), lg]
+  if foldr(sim, [x => x, Nil], ls) is [a, b] then b
+
+fun cse(t) = findCommon(ltGraph(labelTree(t)))
+
+fun plus_(x, y) = Node("+", x :: y :: Nil)
+
+fun mult_(x, y) = Node("*", x :: y :: Nil)
+
+fun prod(xs) = Node("X", xs)
+
+fun zerO() = Node("0", Nil)
+
+fun a() = Node("a", Nil)
+
+fun b() = Node("b", Nil)
+
+fun c() = Node("c", Nil)
+
+fun d() = Node("d", Nil)
+
+fun example0() = a()
+
+fun example1() = plus_(a(), a())
+
+fun example2() = plus_(mult_(a(), b()), mult_(a(), b()))
+
+fun example3() = plus_(mult_(plus_(a(), b()), c()), plus_(a(), b()))
+
+fun example4() = prod(scanl(plus_, zerO(), a() :: b() :: c() :: d() :: Nil))
+
+fun example5() = prod(scanr(plus_, zerO(), a() :: b() :: c() :: d() :: Nil))
+
+fun testCse_nofib(n) = map(
+  i => map(
+    cse,
+    take(intMod(i, 6), example0() :: example1() :: example2() :: example3() :: example4() :: example5() :: Nil)
+  ),
+  enumFromTo(1, n)
+)
+
+:wholeOpt
+:wholeOptFlags simp,simp2
+:wholeOptStat
+:benchPrep cse.cxx
+testCse_nofib(4000)
+//│ 
+//│ WholeProgramOpt stats:
+//│ 
+//│ (orig,class size: 665 func size: 1780)
+//│ (simp,class size: 222 func size: 485)
+//│ (split,class size: 222 func size: 604)
+//│ (simp2,class size: 222 func size: 553)
+//│ 
+//│ WholeProgramOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 553)
+//│ (simp,class size: 222 func size: 553)
+//│ (split,class size: 222 func size: 659)
+//│ (simp2,class size: 222 func size: 557)
+//│ 
+//│ WholeProgramOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 557)
+//│ (simp,class size: 222 func size: 557)
+//│ (split,class size: 222 func size: 698)
+//│ (simp2,class size: 222 func size: 600)
+//│ 
+//│ WholeProgramOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 600)
+//│ (simp,class size: 222 func size: 600)
+//│ (split,class size: 222 func size: 662)
+//│ (simp2,class size: 222 func size: 611)
+//│ 
+//│ WholeProgramOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 611)
+//│ (simp,class size: 222 func size: 611)
+//│ (split,class size: 222 func size: 714)
+//│ (simp2,class size: 222 func size: 651)
+//│ 
+//│ WholeProgramOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 651)
+//│ (simp,class size: 222 func size: 651)
+//│ (split,class size: 222 func size: 741)
+//│ (simp2,class size: 222 func size: 675)
+//│ 
+//│ OnlySimplify stats:
+//│ 
+//│ (orig,class size: 665 func size: 1780)
+//│ (simp,class size: 222 func size: 485)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 665 func size: 1780)
+//│ (simp,class size: 222 func size: 485)
+//│ (split,class size: 222 func size: 604)
+//│ (simp2,class size: 222 func size: 553)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 553)
+//│ (simp,class size: 222 func size: 553)
+//│ (split,class size: 222 func size: 659)
+//│ (simp2,class size: 222 func size: 557)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 557)
+//│ (simp,class size: 222 func size: 557)
+//│ (split,class size: 222 func size: 692)
+//│ (simp2,class size: 222 func size: 600)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 600)
+//│ (simp,class size: 222 func size: 600)
+//│ (split,class size: 222 func size: 646)
+//│ (simp2,class size: 222 func size: 607)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 607)
+//│ (simp,class size: 222 func size: 607)
+//│ (split,class size: 222 func size: 697)
+//│ (simp2,class size: 222 func size: 642)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 222 func size: 642)
+//│ (simp,class size: 222 func size: 642)
+//│ (split,class size: 222 func size: 698)
+//│ (simp2,class size: 222 func size: 661)

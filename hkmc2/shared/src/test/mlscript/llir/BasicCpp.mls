@@ -86,3 +86,58 @@ foo(1)
 //│ }
 //│ _mlsValue _mlsMain() { return _mls_entry2(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
+
+:scpp
+class A(x: Int, y: Int)
+class B(z: Int)
+fun main() =
+  let a = A(1, 2)
+  let b = B(3)
+  a == b
+main()
+//│ = false
+//│ 
+//│ Cpp:
+//│ #include "mlsprelude.h"
+//│ struct _mls_A;
+//│ struct _mls_B;
+//│ _mlsValue _mls_main();
+//│ _mlsValue _mls_entry3();
+//│ struct _mls_A: public _mlsObject {
+//│   _mlsValue _mls_x;
+//│   _mlsValue _mls_y;
+//│   constexpr static inline const char *typeName = "A";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->_mls_x.print(); std::printf(", "); this->_mls_y.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->_mls_x); _mlsValue::destroy(this->_mls_y);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   virtual bool operator==(const _mlsObject &other) const override { return typeTag == other.tag && this->_mls_x.asObject()->operator==(*other.cast<_mls_A>()->_mls_x.asObject()) && this->_mls_y.asObject()->operator==(*other.cast<_mls_A>()->_mls_y.asObject()); }
+//│   static _mlsValue create(_mlsValue _mls_x, _mlsValue _mls_y) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_A; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->_mls_x = _mls_x; _mlsVal->_mls_y = _mls_y;  return _mlsValue(_mlsVal); }
+//│   
+//│ };
+//│ struct _mls_B: public _mlsObject {
+//│   _mlsValue _mls_z;
+//│   constexpr static inline const char *typeName = "B";
+//│   constexpr static inline uint32_t typeTag = nextTypeTag();
+//│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->_mls_z.print();  std::printf(")"); }
+//│   virtual void destroy() override { _mlsValue::destroy(this->_mls_z);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   virtual bool operator==(const _mlsObject &other) const override { return typeTag == other.tag && this->_mls_z.asObject()->operator==(*other.cast<_mls_B>()->_mls_z.asObject()); }
+//│   static _mlsValue create(_mlsValue _mls_z) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_B; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->_mls_z = _mls_z;  return _mlsValue(_mlsVal); }
+//│   
+//│ };
+//│ _mlsValue _mls_main() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x11 = _mlsValue::create<_mls_A>(_mlsValue::fromIntLit(1), _mlsValue::fromIntLit(2));
+//│   auto _mls_x12 = _mlsValue::create<_mls_B>(_mlsValue::fromIntLit(3));
+//│   auto _mls_x13 = (_mls_x11 == _mls_x12);
+//│   _mls_retval = _mls_x13;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_entry3() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x14 = _mls_main();
+//│   _mls_retval = _mls_x14;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mlsMain() { return _mls_entry3(); }
+//│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
+

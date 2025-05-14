@@ -1,5 +1,5 @@
 CXX := g++
-CFLAGS += -O3 -Wall -Wextra -std=c++20 -I. -Wno-inconsistent-missing-override -I/opt/homebrew/include
+CFLAGS += -O3 -Wall -Wextra -std=c++20 -I. -Wno-inconsistent-missing-override -I/opt/homebrew/include -g
 LDFLAGS += -L/opt/homebrew/lib
 LDLIBS := -lmimalloc -lgmp
 SRC :=
@@ -26,4 +26,6 @@ clean:
 auto: $(TARGET)
 
 $(TARGET): $(SRC) $(INCLUDES)
-	$(CXX) $(CFLAGS) $(LDFLAGS) mlsaux.cxx $(SRC) $(LDLIBS) -o $(TARGET)
+	$(CXX) -c $(CFLAGS) $(SRC) -o $(TARGET).o
+	$(CXX) -c $(CFLAGS) mlsaux.cxx -o $(TARGET).aux.o
+	$(CXX) $(CFLAGS) $(LDFLAGS) $(TARGET).aux.o $(TARGET).o $(LDLIBS) -o $(TARGET)

@@ -58,6 +58,11 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   def mlsObjectNameMethod(name: Str) = s"constexpr static inline const char *typeName = \"${name}\";"
   def mlsTypeTag() = s"constexpr static inline uint32_t typeTag = nextTypeTag();"
   def mlsTypeTag(n: Int) = s"constexpr static inline uint32_t typeTag = $n;"
+  def mlsCommonOperatorEq(cls: Str, fields: Ls[Str]) =
+    if fields.isEmpty then s"virtual bool operator==(const _mlsObject &other) const override { return typeTag == other.tag; }"
+    else
+      val fieldsEq = fields.map(x => s"this->$x.asObject()->operator==(*other.cast<$cls>()->$x.asObject())").mkString(" && ")
+      s"virtual bool operator==(const _mlsObject &other) const override { return typeTag == other.tag && $fieldsEq; }"
   def mlsCommonCreateMethod(cls: Str, fields: Ls[Str], id: Int) =
     val parameters = fields.map{x => s"_mlsValue $x"}.mkString(", ")
     val fieldsAssignment = fields.map{x => s"_mlsVal->$x = $x; "}.mkString
@@ -129,6 +134,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
             Def.RawDef(mlsTypeTag()),
             Def.RawDef(mlsCommonPrintMethod(cls.fields.map(directName))),
             Def.RawDef(mlsCommonDestructorMethod(cls.name |> mapClsLikeName, cls.fields.map(directName))),
+            Def.RawDef(mlsCommonOperatorEq(cls.name |> mapClsLikeName, cls.fields.map(directName))),
             Def.RawDef(mlsCommonCreateMethod(cls.name |> mapClsLikeName, cls.fields.map(directName), cls.id))),
           methods.iterator.map(_._2).toList
         )

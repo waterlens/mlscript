@@ -1,0 +1,1620 @@
+:llir
+
+:import prelude.mls
+//│ Imported 16 member(s)
+
+abstract class Expr
+data class Var(x: String) extends Expr
+data class Val(n: Int) extends Expr
+data class Add(e1: Expr, e2: Expr) extends Expr
+data class Mul(e1: Expr, e2: Expr) extends Expr
+data class Pow(e1: Expr, e2: Expr) extends Expr
+data class Ln(e: Expr) extends Expr
+
+fun pown(x, n) = if n is
+  0 then 1
+  1 then x
+  else
+    let y = pown(x, n / 2)
+    y * y * (if n % 2 == 0 then 1 else x)
+
+fun add(e1, e2) = if [e1, e2] is
+  [Val(n1), Val(n2)] then Val(n1 + n2)
+  [Val(0), f] then f
+  [f, Val(0)] then f
+  [f, Val(n)] then add(Val(n), f)
+  [Val(n), Add(Val(m), f)] then add(Val(n + m), f)
+  [f, Add(Val(n), g)] then add(Val(n), add(f, g))
+  [Add(f, g), h] then add(f, add(g, h))
+  [f, g] then Add(f, g)
+
+fun mul(e1, e2) = if [e1, e2] is
+  [Val(n1), Val(n2)] then Val(n1 * n2)
+  [Val(0), _] then Val(0)
+  [_, Val(0)] then Val(0)
+  [Val(1), f] then f
+  [f, Val(1)] then f
+  [f, Val(n)] then mul(Val(n), f)
+  [Val(n), Mul(Val(m), f)] then mul(Val(n * m), f)
+  [f     , Mul(Val(n), g)] then mul(Val(n), mul(f, g))
+  [Mul(f, g), h] then mul(f, mul(g, h))
+  [f, g]      then Mul(f, g)
+
+fun pow(e1, e2) = if [e1, e2] is
+  [Val(m), Val(n)] then Val(pown(m, n))
+  [f, Val(0)] then Val(1)
+  [f, Val(1)] then f
+  [Val(0), _] then Val(0)
+  [f, g]      then Pow(f, g)
+
+fun ln(e) = if e is
+  Val(1) then Val(0)
+  f then Ln(f)
+
+fun d(x, e) = if e is
+  Val(_) then Val(0)
+  Var(y) then (if x == y then Val(1) else Val(0))
+  Add(f, g) then add(d(x, f), d(x, g))
+  Mul(f, g) then add(mul(f, d(x, g)), mul(g, d(x, f)))
+  Pow(f, g) then mul(pow(f, g), add(mul(mul(g, d(x, f)), pow(f, Val(-1))), mul(ln(f), d(x, g))))
+  Ln(f) then mul(d(x, f), pow(f, Val(-1)))
+
+fun count(e) = if e is
+  Val(_) then 1
+  Var(_) then 1
+  Add(f, g) then count(f) + count(g)
+  Mul(f, g) then count(f) + count(g)
+  Pow(f, g) then count(f) + count(g)
+  Ln(f) then count(f)
+
+// fun exprToString(e) = if e is
+//   Val(n) then str_of_int(n)
+//   Var(x) then x
+//   Add(f, g) then "(" +++ exprToString(f) +++ " + " +++ exprToString(g) +++ ")"
+//   Mul(f, g) then "(" +++ exprToString(f) +++ " * " +++ exprToString(g) +++ ")"
+//   Pow(f, g) then "(" +++ exprToString(f) +++ " ^ " +++ exprToString(g) +++ ")"
+//   Ln(f) then "ln(" +++ exprToString(f) +++ ")"
+
+fun nestAux(s, f, n, e) = if [n, e] is
+  [0, x] then x
+  [m, x] then
+    let r = f((s - m), x)
+    nestAux(s, f, n - 1, r)
+
+fun nest(f, n, e) = nestAux(n, f, n, e)
+
+fun deriv(i, f) =
+  let r = d("x", f)
+  // print(str_of_int(i + 1) +++ " count: " +++ str_of_int(count(r)))
+  r
+
+fun main(n) =
+  let x = Var("x")
+  let f = pow(x, x)
+  count(nest(deriv, n, f))
+
+:showWholeOpt
+:wholeOptFlags simp,split,simp2
+:benchPrep deriv.cxx
+main(9)
+//│ 
+//│ WholeProgramOpt:
+//│   class Expr()
+//│   class Var(x$672) extends Expr
+//│   class Val(n$677) extends Expr
+//│   class Add(e1$682,e2$683) extends Expr
+//│   class Mul(e1$690,e2$691) extends Expr
+//│   class Pow(e1$698,e2$699) extends Expr
+//│   class Ln(e$706) extends Expr
+//│   class Lambda_deriv() extends Callable {
+//│     def apply2$1206(arg$1245,arg$1246) =
+//│       let* (x$1249) = deriv$1219(arg$1245,arg$1246) in
+//│       x$1249
+//│   }
+//│   def pown$710(x$712,n$713) =
+//│     case n$713 of
+//│       IntLit(0) =>
+//│         1
+//│       IntLit(1) =>
+//│         x$712
+//│       _ =>
+//│         let x$729 = /(n$713,2) in
+//│         let* (x$730) = pown$710(x$712,x$729) in
+//│         let x$731 = *(x$730,x$730) in
+//│         let x$732 = %(n$713,2) in
+//│         let x$733 = ==(x$732,0) in
+//│         case x$733 of
+//│           BoolLit(true) =>
+//│             jump j$734(x$731,1)
+//│           _ =>
+//│             jump j$734(x$731,x$712)
+//│   def j$734(tmp$725,tmp$727) =
+//│     let x$736 = *(tmp$725,tmp$727) in
+//│     x$736
+//│   def add$738(e1$740,e2$741) =
+//│     case e1$740 of
+//│       Val$675 =>
+//│         let x$799 = e1$740.<Val$675:n> in
+//│         case e2$741 of
+//│           Val$675 =>
+//│             let x$801 = e2$741.<Val$675:n> in
+//│             let x$802 = +(x$799,x$801) in
+//│             let x$803 = Val$675(x$802) in
+//│             x$803
+//│           _ =>
+//│             case x$799 of
+//│               IntLit(0) =>
+//│                 e2$741
+//│               _ =>
+//│                 case e2$741 of
+//│                   Add$680 =>
+//│                     let x$806 = e2$741.<Add$680:e1> in
+//│                     let x$807 = e2$741.<Add$680:e2> in
+//│                     case x$806 of
+//│                       Val$675 =>
+//│                         let x$809 = x$806.<Val$675:n> in
+//│                         let x$810 = +(x$799,x$809) in
+//│                         let x$811 = Val$675(x$810) in
+//│                         let* (x$1481) = add_case0$1434(x$811,x$807) in
+//│                         x$1481
+//│                       _ =>
+//│                         let x$813 = Add$680(e1$740,e2$741) in
+//│                         x$813
+//│                   _ =>
+//│                     let x$814 = Add$680(e1$740,e2$741) in
+//│                     x$814
+//│       _ =>
+//│         case e2$741 of
+//│           Val$675 =>
+//│             let x$816 = e2$741.<Val$675:n> in
+//│             case x$816 of
+//│               IntLit(0) =>
+//│                 e1$740
+//│               _ =>
+//│                 let x$818 = Val$675(x$816) in
+//│                 let* (x$1502) = add_case0$1434(x$818,e1$740) in
+//│                 x$1502
+//│           Add$680 =>
+//│             let x$820 = e2$741.<Add$680:e1> in
+//│             let x$821 = e2$741.<Add$680:e2> in
+//│             case x$820 of
+//│               Val$675 =>
+//│                 let x$823 = x$820.<Val$675:n> in
+//│                 let x$824 = Val$675(x$823) in
+//│                 case e1$740 of
+//│                   Val$675 =>
+//│                     let* (x$1525) = add_case0$1434(e1$740,x$821) in
+//│                     let* (x$1797) = add$738(x$824,x$1525) in
+//│                     x$1797
+//│                   _ =>
+//│                     let* (x$1526) = add_default$1435(x$821,e1$740) in
+//│                     let* (x$1798) = add$738(x$824,x$1526) in
+//│                     x$1798
+//│               _ =>
+//│                 case e1$740 of
+//│                   Add$680 =>
+//│                     let x$828 = e1$740.<Add$680:e1> in
+//│                     let x$829 = e1$740.<Add$680:e2> in
+//│                     case x$829 of
+//│                       Val$675 =>
+//│                         let* (x$1548) = add_case0$1434(x$829,e2$741) in
+//│                         let* (x$1801) = add$738(x$828,x$1548) in
+//│                         x$1801
+//│                       _ =>
+//│                         let* (x$1549) = add_default$1435(e2$741,x$829) in
+//│                         let* (x$1802) = add$738(x$828,x$1549) in
+//│                         x$1802
+//│                   _ =>
+//│                     let x$832 = Add$680(e1$740,e2$741) in
+//│                     x$832
+//│           _ =>
+//│             case e1$740 of
+//│               Add$680 =>
+//│                 let x$834 = e1$740.<Add$680:e1> in
+//│                 let x$835 = e1$740.<Add$680:e2> in
+//│                 case x$835 of
+//│                   Val$675 =>
+//│                     let* (x$1571) = add_case0$1434(x$835,e2$741) in
+//│                     let* (x$1805) = add$738(x$834,x$1571) in
+//│                     x$1805
+//│                   _ =>
+//│                     let* (x$1572) = add_default$1435(e2$741,x$835) in
+//│                     let* (x$1806) = add$738(x$834,x$1572) in
+//│                     x$1806
+//│               _ =>
+//│                 let x$838 = Add$680(e1$740,e2$741) in
+//│                 x$838
+//│   def mul$840(e1$842,e2$843) =
+//│     case e1$842 of
+//│       Val$675 =>
+//│         let x$902 = e1$842.<Val$675:n> in
+//│         case e2$843 of
+//│           Val$675 =>
+//│             let x$904 = e2$843.<Val$675:n> in
+//│             let x$905 = *(x$902,x$904) in
+//│             let x$906 = Val$675(x$905) in
+//│             x$906
+//│           _ =>
+//│             case x$902 of
+//│               IntLit(0) =>
+//│                 let x$908 = Val$675(0) in
+//│                 x$908
+//│               IntLit(1) =>
+//│                 e2$843
+//│               _ =>
+//│                 case e2$843 of
+//│                   Mul$688 =>
+//│                     let x$910 = e2$843.<Mul$688:e1> in
+//│                     let x$911 = e2$843.<Mul$688:e2> in
+//│                     case x$910 of
+//│                       Val$675 =>
+//│                         let x$913 = x$910.<Val$675:n> in
+//│                         let x$914 = *(x$902,x$913) in
+//│                         let x$915 = Val$675(x$914) in
+//│                         let* (x$1308) = mul_case0$1259(x$915,x$911) in
+//│                         x$1308
+//│                       _ =>
+//│                         let x$917 = Mul$688(e1$842,e2$843) in
+//│                         x$917
+//│                   _ =>
+//│                     let x$918 = Mul$688(e1$842,e2$843) in
+//│                     x$918
+//│       _ =>
+//│         case e2$843 of
+//│           Val$675 =>
+//│             let x$920 = e2$843.<Val$675:n> in
+//│             case x$920 of
+//│               IntLit(0) =>
+//│                 let x$922 = Val$675(0) in
+//│                 x$922
+//│               IntLit(1) =>
+//│                 e1$842
+//│               _ =>
+//│                 let x$923 = Val$675(x$920) in
+//│                 let* (x$1329) = mul_case0$1259(x$923,e1$842) in
+//│                 x$1329
+//│           Mul$688 =>
+//│             let x$925 = e2$843.<Mul$688:e1> in
+//│             let x$926 = e2$843.<Mul$688:e2> in
+//│             case x$925 of
+//│               Val$675 =>
+//│                 let x$928 = x$925.<Val$675:n> in
+//│                 let x$929 = Val$675(x$928) in
+//│                 case e1$842 of
+//│                   Val$675 =>
+//│                     let* (x$1352) = mul_case0$1259(e1$842,x$926) in
+//│                     let* (x$1777) = mul$840(x$929,x$1352) in
+//│                     x$1777
+//│                   _ =>
+//│                     let* (x$1353) = mul_default$1260(x$926,e1$842) in
+//│                     let* (x$1778) = mul$840(x$929,x$1353) in
+//│                     x$1778
+//│               _ =>
+//│                 case e1$842 of
+//│                   Mul$688 =>
+//│                     let x$933 = e1$842.<Mul$688:e1> in
+//│                     let x$934 = e1$842.<Mul$688:e2> in
+//│                     case x$934 of
+//│                       Val$675 =>
+//│                         let* (x$1375) = mul_case0$1259(x$934,e2$843) in
+//│                         let* (x$1781) = mul$840(x$933,x$1375) in
+//│                         x$1781
+//│                       _ =>
+//│                         let* (x$1376) = mul_default$1260(e2$843,x$934) in
+//│                         let* (x$1782) = mul$840(x$933,x$1376) in
+//│                         x$1782
+//│                   _ =>
+//│                     let x$937 = Mul$688(e1$842,e2$843) in
+//│                     x$937
+//│           _ =>
+//│             case e1$842 of
+//│               Mul$688 =>
+//│                 let x$939 = e1$842.<Mul$688:e1> in
+//│                 let x$940 = e1$842.<Mul$688:e2> in
+//│                 case x$940 of
+//│                   Val$675 =>
+//│                     let* (x$1398) = mul_case0$1259(x$940,e2$843) in
+//│                     let* (x$1785) = mul$840(x$939,x$1398) in
+//│                     x$1785
+//│                   _ =>
+//│                     let* (x$1399) = mul_default$1260(e2$843,x$940) in
+//│                     let* (x$1786) = mul$840(x$939,x$1399) in
+//│                     x$1786
+//│               _ =>
+//│                 let x$943 = Mul$688(e1$842,e2$843) in
+//│                 x$943
+//│   def pow$945(x$1753,x$1754) =
+//│     case x$1753 of
+//│       Val$675 =>
+//│         jump pow_case0$1401(x$1753,x$1754)
+//│       _ =>
+//│         jump pow_default$1402(x$1754,x$1753)
+//│   def ln$987(e$989) =
+//│     case e$989 of
+//│       Val$675 =>
+//│         let x$996 = e$989.<Val$675:n> in
+//│         case x$996 of
+//│           IntLit(1) =>
+//│             let x$998 = Val$675(0) in
+//│             x$998
+//│           _ =>
+//│             let x$999 = Ln$704(e$989) in
+//│             x$999
+//│       _ =>
+//│         let x$1000 = Ln$704(e$989) in
+//│         x$1000
+//│   def d$1002(x$1004,e$1005) =
+//│     case e$1005 of
+//│       Val$675 =>
+//│         let x$1081 = Val$675(0) in
+//│         x$1081
+//│       Var$670 =>
+//│         let x$1082 = e$1005.<Var$670:x> in
+//│         let x$1083 = ==(x$1004,x$1082) in
+//│         case x$1083 of
+//│           BoolLit(true) =>
+//│             let x$1085 = Val$675(1) in
+//│             x$1085
+//│           _ =>
+//│             let x$1086 = Val$675(0) in
+//│             x$1086
+//│       Add$680 =>
+//│         let x$1087 = e$1005.<Add$680:e1> in
+//│         let x$1088 = e$1005.<Add$680:e2> in
+//│         let* (x$1089) = d$1002(x$1004,x$1087) in
+//│         case x$1088 of
+//│           Val$675 =>
+//│             let* (x$1640) = d_case0$1574() in
+//│             let* (x$1807) = add$738(x$1089,x$1640) in
+//│             x$1807
+//│           Var$670 =>
+//│             let* (x$1641) = d_case1$1575(x$1088,x$1004) in
+//│             let* (x$1808) = add$738(x$1089,x$1641) in
+//│             x$1808
+//│           Add$680 =>
+//│             let* (x$1642) = d_case2$1576(x$1088,x$1004) in
+//│             let* (x$1809) = add$738(x$1089,x$1642) in
+//│             x$1809
+//│           Mul$688 =>
+//│             let* (x$1643) = d_case3$1577(x$1088,x$1004) in
+//│             let* (x$1810) = add$738(x$1089,x$1643) in
+//│             x$1810
+//│           Pow$696 =>
+//│             let* (x$1644) = d_case4$1578(x$1088,x$1004) in
+//│             let* (x$1811) = add$738(x$1089,x$1644) in
+//│             x$1811
+//│           Ln$704 =>
+//│             let* (x$1645) = d_case5$1579(x$1088,x$1004) in
+//│             let* (x$1812) = add$738(x$1089,x$1645) in
+//│             x$1812
+//│           _ =>
+//│             panic "match error"
+//│       Mul$688 =>
+//│         let x$1092 = e$1005.<Mul$688:e1> in
+//│         let x$1093 = e$1005.<Mul$688:e2> in
+//│         case x$1093 of
+//│           Val$675 =>
+//│             let* (x$1684) = d_case0$1574() in
+//│             jump d_caller_post$1673(x$1092,x$1684,x$1004,x$1093)
+//│           Var$670 =>
+//│             let* (x$1685) = d_case1$1575(x$1093,x$1004) in
+//│             jump d_caller_post$1673(x$1092,x$1685,x$1004,x$1093)
+//│           Add$680 =>
+//│             let* (x$1686) = d_case2$1576(x$1093,x$1004) in
+//│             jump d_caller_post$1673(x$1092,x$1686,x$1004,x$1093)
+//│           Mul$688 =>
+//│             let* (x$1687) = d_case3$1577(x$1093,x$1004) in
+//│             jump d_caller_post$1673(x$1092,x$1687,x$1004,x$1093)
+//│           Pow$696 =>
+//│             let* (x$1688) = d_case4$1578(x$1093,x$1004) in
+//│             jump d_caller_post$1673(x$1092,x$1688,x$1004,x$1093)
+//│           Ln$704 =>
+//│             let* (x$1689) = d_case5$1579(x$1093,x$1004) in
+//│             jump d_caller_post$1673(x$1092,x$1689,x$1004,x$1093)
+//│           _ =>
+//│             panic "match error"
+//│       Pow$696 =>
+//│         let x$1099 = e$1005.<Pow$696:e1> in
+//│         let x$1100 = e$1005.<Pow$696:e2> in
+//│         let* (x$1101) = pow$945(x$1099,x$1100) in
+//│         case x$1099 of
+//│           Val$675 =>
+//│             let* (x$1735) = d_case0$1574() in
+//│             jump d_caller_post$1717(x$1100,x$1099,x$1735,x$1101,x$1004)
+//│           Var$670 =>
+//│             let* (x$1736) = d_case1$1575(x$1099,x$1004) in
+//│             jump d_caller_post$1717(x$1100,x$1099,x$1736,x$1101,x$1004)
+//│           Add$680 =>
+//│             let* (x$1737) = d_case2$1576(x$1099,x$1004) in
+//│             jump d_caller_post$1717(x$1100,x$1099,x$1737,x$1101,x$1004)
+//│           Mul$688 =>
+//│             let* (x$1738) = d_case3$1577(x$1099,x$1004) in
+//│             jump d_caller_post$1717(x$1100,x$1099,x$1738,x$1101,x$1004)
+//│           Pow$696 =>
+//│             let* (x$1739) = d_case4$1578(x$1099,x$1004) in
+//│             jump d_caller_post$1717(x$1100,x$1099,x$1739,x$1101,x$1004)
+//│           Ln$704 =>
+//│             let* (x$1740) = d_case5$1579(x$1099,x$1004) in
+//│             jump d_caller_post$1717(x$1100,x$1099,x$1740,x$1101,x$1004)
+//│           _ =>
+//│             panic "match error"
+//│       Ln$704 =>
+//│         let x$1113 = e$1005.<Ln$704:e> in
+//│         let* (x$1114) = d$1002(x$1004,x$1113) in
+//│         let x$1115 = -(1) in
+//│         let x$1116 = Val$675(x$1115) in
+//│         case x$1113 of
+//│           Val$675 =>
+//│             let* (x$1763) = pow_case0$1401(x$1113,x$1116) in
+//│             let* (x$1819) = mul$840(x$1114,x$1763) in
+//│             x$1819
+//│           _ =>
+//│             let* (x$1764) = pow_default$1402(x$1116,x$1113) in
+//│             let* (x$1820) = mul$840(x$1114,x$1764) in
+//│             x$1820
+//│       _ =>
+//│         panic "match error"
+//│   def count$1120(e$1122) =
+//│     case e$1122 of
+//│       Val$675 =>
+//│         1
+//│       Var$670 =>
+//│         1
+//│       Add$680 =>
+//│         let x$1159 = e$1122.<Add$680:e1> in
+//│         let x$1160 = e$1122.<Add$680:e2> in
+//│         let* (x$1161) = count$1120(x$1159) in
+//│         let* (x$1162) = count$1120(x$1160) in
+//│         let x$1163 = +(x$1161,x$1162) in
+//│         x$1163
+//│       Mul$688 =>
+//│         let x$1164 = e$1122.<Mul$688:e1> in
+//│         let x$1165 = e$1122.<Mul$688:e2> in
+//│         let* (x$1166) = count$1120(x$1164) in
+//│         let* (x$1167) = count$1120(x$1165) in
+//│         let x$1168 = +(x$1166,x$1167) in
+//│         x$1168
+//│       Pow$696 =>
+//│         let x$1169 = e$1122.<Pow$696:e1> in
+//│         let x$1170 = e$1122.<Pow$696:e2> in
+//│         let* (x$1171) = count$1120(x$1169) in
+//│         let* (x$1172) = count$1120(x$1170) in
+//│         let x$1173 = +(x$1171,x$1172) in
+//│         x$1173
+//│       Ln$704 =>
+//│         let x$1174 = e$1122.<Ln$704:e> in
+//│         let* (x$1175) = count$1120(x$1174) in
+//│         x$1175
+//│       _ =>
+//│         panic "match error"
+//│   def nestAux$1177(s$1179,f$1180,n$1181,e$1182) =
+//│     case n$1181 of
+//│       IntLit(0) =>
+//│         e$1182
+//│       _ =>
+//│         let x$1203 = -(s$1179,n$1181) in
+//│         let x$1204 = Callable.apply2$1206(f$1180,x$1203,e$1182) in
+//│         let x$1207 = -(n$1181,1) in
+//│         let* (x$1208) = nestAux$1177(s$1179,f$1180,x$1207,x$1204) in
+//│         x$1208
+//│   def deriv$1219(i$1221,f$1222) =
+//│     let* (x$1227) = d$1002("x",f$1222) in
+//│     x$1227
+//│   def main$1229(n$1231) =
+//│     let x$1242 = Var$670("x") in
+//│     let* (x$1432) = pow_default$1402(x$1242,x$1242) in
+//│     jump main_caller_post$1423(n$1231,x$1432)
+//│   def entry$1255() =
+//│     let* (x$1254) = main$1229(9) in
+//│     x$1254
+//│   def mul_case0$1259(x$1264,x$1265) =
+//│     let x$1263 = x$1264.<Val$675:n> in
+//│     case x$1265 of
+//│       Val$675 =>
+//│         let x$1266 = x$1265.<Val$675:n> in
+//│         let x$1267 = *(x$1263,x$1266) in
+//│         let x$1268 = Val$675(x$1267) in
+//│         x$1268
+//│       _ =>
+//│         case x$1263 of
+//│           IntLit(0) =>
+//│             let x$1269 = Val$675(0) in
+//│             x$1269
+//│           IntLit(1) =>
+//│             x$1265
+//│           _ =>
+//│             case x$1265 of
+//│               Mul$688 =>
+//│                 let x$1270 = x$1265.<Mul$688:e1> in
+//│                 let x$1271 = x$1265.<Mul$688:e2> in
+//│                 case x$1270 of
+//│                   Val$675 =>
+//│                     let x$1272 = x$1270.<Val$675:n> in
+//│                     let x$1273 = *(x$1263,x$1272) in
+//│                     let x$1274 = Val$675(x$1273) in
+//│                     let* (x$1275) = mul$840(x$1274,x$1271) in
+//│                     x$1275
+//│                   _ =>
+//│                     let x$1276 = Mul$688(x$1264,x$1265) in
+//│                     x$1276
+//│               _ =>
+//│                 let x$1277 = Mul$688(x$1264,x$1265) in
+//│                 x$1277
+//│   def mul_default$1260(x$1278,x$1281) =
+//│     case x$1278 of
+//│       Val$675 =>
+//│         let x$1279 = x$1278.<Val$675:n> in
+//│         case x$1279 of
+//│           IntLit(0) =>
+//│             let x$1280 = Val$675(0) in
+//│             x$1280
+//│           IntLit(1) =>
+//│             x$1281
+//│           _ =>
+//│             let x$1282 = Val$675(x$1279) in
+//│             let* (x$1283) = mul$840(x$1282,x$1281) in
+//│             x$1283
+//│       Mul$688 =>
+//│         let x$1284 = x$1278.<Mul$688:e1> in
+//│         let x$1285 = x$1278.<Mul$688:e2> in
+//│         case x$1284 of
+//│           Val$675 =>
+//│             let x$1286 = x$1284.<Val$675:n> in
+//│             let x$1287 = Val$675(x$1286) in
+//│             let* (x$1288) = mul$840(x$1281,x$1285) in
+//│             let* (x$1289) = mul$840(x$1287,x$1288) in
+//│             x$1289
+//│           _ =>
+//│             case x$1281 of
+//│               Mul$688 =>
+//│                 let x$1290 = x$1281.<Mul$688:e1> in
+//│                 let x$1291 = x$1281.<Mul$688:e2> in
+//│                 let* (x$1292) = mul$840(x$1291,x$1278) in
+//│                 let* (x$1293) = mul$840(x$1290,x$1292) in
+//│                 x$1293
+//│               _ =>
+//│                 let x$1294 = Mul$688(x$1281,x$1278) in
+//│                 x$1294
+//│       _ =>
+//│         case x$1281 of
+//│           Mul$688 =>
+//│             let x$1295 = x$1281.<Mul$688:e1> in
+//│             let x$1296 = x$1281.<Mul$688:e2> in
+//│             let* (x$1297) = mul$840(x$1296,x$1278) in
+//│             let* (x$1298) = mul$840(x$1295,x$1297) in
+//│             x$1298
+//│           _ =>
+//│             let x$1299 = Mul$688(x$1281,x$1278) in
+//│             x$1299
+//│   def pow_case0$1401(x$1406,x$1407) =
+//│     let x$1405 = x$1406.<Val$675:n> in
+//│     case x$1407 of
+//│       Val$675 =>
+//│         let x$1408 = x$1407.<Val$675:n> in
+//│         let* (x$1409) = pown$710(x$1405,x$1408) in
+//│         let x$1410 = Val$675(x$1409) in
+//│         x$1410
+//│       _ =>
+//│         case x$1405 of
+//│           IntLit(0) =>
+//│             let x$1411 = Val$675(0) in
+//│             x$1411
+//│           _ =>
+//│             let x$1412 = Pow$696(x$1406,x$1407) in
+//│             x$1412
+//│   def pow_default$1402(x$1413,x$1416) =
+//│     case x$1413 of
+//│       Val$675 =>
+//│         let x$1414 = x$1413.<Val$675:n> in
+//│         case x$1414 of
+//│           IntLit(0) =>
+//│             let x$1415 = Val$675(1) in
+//│             x$1415
+//│           IntLit(1) =>
+//│             x$1416
+//│           _ =>
+//│             let x$1417 = Pow$696(x$1416,x$1413) in
+//│             x$1417
+//│       _ =>
+//│         let x$1418 = Pow$696(x$1416,x$1413) in
+//│         x$1418
+//│   def main_caller_post$1423(x$1426,x$1427) =
+//│     let x$1424 = Lambda_deriv$1247() in
+//│     let* (x$1425) = nestAux$1177(x$1426,x$1424,x$1426,x$1427) in
+//│     let* (x$1428) = count$1120(x$1425) in
+//│     x$1428
+//│   def add_case0$1434(x$1439,x$1440) =
+//│     let x$1438 = x$1439.<Val$675:n> in
+//│     case x$1440 of
+//│       Val$675 =>
+//│         let x$1441 = x$1440.<Val$675:n> in
+//│         let x$1442 = +(x$1438,x$1441) in
+//│         let x$1443 = Val$675(x$1442) in
+//│         x$1443
+//│       _ =>
+//│         case x$1438 of
+//│           IntLit(0) =>
+//│             x$1440
+//│           _ =>
+//│             case x$1440 of
+//│               Add$680 =>
+//│                 let x$1444 = x$1440.<Add$680:e1> in
+//│                 let x$1445 = x$1440.<Add$680:e2> in
+//│                 case x$1444 of
+//│                   Val$675 =>
+//│                     let x$1446 = x$1444.<Val$675:n> in
+//│                     let x$1447 = +(x$1438,x$1446) in
+//│                     let x$1448 = Val$675(x$1447) in
+//│                     let* (x$1449) = add$738(x$1448,x$1445) in
+//│                     x$1449
+//│                   _ =>
+//│                     let x$1450 = Add$680(x$1439,x$1440) in
+//│                     x$1450
+//│               _ =>
+//│                 let x$1451 = Add$680(x$1439,x$1440) in
+//│                 x$1451
+//│   def add_default$1435(x$1452,x$1454) =
+//│     case x$1452 of
+//│       Val$675 =>
+//│         let x$1453 = x$1452.<Val$675:n> in
+//│         case x$1453 of
+//│           IntLit(0) =>
+//│             x$1454
+//│           _ =>
+//│             let x$1455 = Val$675(x$1453) in
+//│             let* (x$1456) = add$738(x$1455,x$1454) in
+//│             x$1456
+//│       Add$680 =>
+//│         let x$1457 = x$1452.<Add$680:e1> in
+//│         let x$1458 = x$1452.<Add$680:e2> in
+//│         case x$1457 of
+//│           Val$675 =>
+//│             let x$1459 = x$1457.<Val$675:n> in
+//│             let x$1460 = Val$675(x$1459) in
+//│             let* (x$1461) = add$738(x$1454,x$1458) in
+//│             let* (x$1462) = add$738(x$1460,x$1461) in
+//│             x$1462
+//│           _ =>
+//│             case x$1454 of
+//│               Add$680 =>
+//│                 let x$1463 = x$1454.<Add$680:e1> in
+//│                 let x$1464 = x$1454.<Add$680:e2> in
+//│                 let* (x$1465) = add$738(x$1464,x$1452) in
+//│                 let* (x$1466) = add$738(x$1463,x$1465) in
+//│                 x$1466
+//│               _ =>
+//│                 let x$1467 = Add$680(x$1454,x$1452) in
+//│                 x$1467
+//│       _ =>
+//│         case x$1454 of
+//│           Add$680 =>
+//│             let x$1468 = x$1454.<Add$680:e1> in
+//│             let x$1469 = x$1454.<Add$680:e2> in
+//│             let* (x$1470) = add$738(x$1469,x$1452) in
+//│             let* (x$1471) = add$738(x$1468,x$1470) in
+//│             x$1471
+//│           _ =>
+//│             let x$1472 = Add$680(x$1454,x$1452) in
+//│             x$1472
+//│   def d_case0$1574() =
+//│     let x$1583 = Val$675(0) in
+//│     x$1583
+//│   def d_case1$1575(x$1585,x$1587) =
+//│     let x$1584 = x$1585.<Var$670:x> in
+//│     let x$1586 = ==(x$1587,x$1584) in
+//│     case x$1586 of
+//│       BoolLit(true) =>
+//│         let x$1588 = Val$675(1) in
+//│         x$1588
+//│       _ =>
+//│         let x$1589 = Val$675(0) in
+//│         x$1589
+//│   def d_case2$1576(x$1591,x$1594) =
+//│     let x$1590 = x$1591.<Add$680:e1> in
+//│     let x$1592 = x$1591.<Add$680:e2> in
+//│     let* (x$1593) = d$1002(x$1594,x$1590) in
+//│     let* (x$1595) = d$1002(x$1594,x$1592) in
+//│     let* (x$1596) = add$738(x$1593,x$1595) in
+//│     x$1596
+//│   def d_case3$1577(x$1598,x$1601) =
+//│     let x$1597 = x$1598.<Mul$688:e1> in
+//│     let x$1599 = x$1598.<Mul$688:e2> in
+//│     let* (x$1600) = d$1002(x$1601,x$1599) in
+//│     let* (x$1602) = mul$840(x$1597,x$1600) in
+//│     let* (x$1603) = d$1002(x$1601,x$1597) in
+//│     let* (x$1604) = mul$840(x$1599,x$1603) in
+//│     let* (x$1605) = add$738(x$1602,x$1604) in
+//│     x$1605
+//│   def d_case4$1578(x$1607,x$1611) =
+//│     let x$1606 = x$1607.<Pow$696:e1> in
+//│     let x$1608 = x$1607.<Pow$696:e2> in
+//│     let* (x$1609) = pow$945(x$1606,x$1608) in
+//│     let* (x$1610) = d$1002(x$1611,x$1606) in
+//│     let* (x$1612) = mul$840(x$1608,x$1610) in
+//│     let x$1613 = -(1) in
+//│     let x$1614 = Val$675(x$1613) in
+//│     let* (x$1615) = pow$945(x$1606,x$1614) in
+//│     let* (x$1616) = mul$840(x$1612,x$1615) in
+//│     let* (x$1617) = ln$987(x$1606) in
+//│     let* (x$1618) = d$1002(x$1611,x$1608) in
+//│     let* (x$1619) = mul$840(x$1617,x$1618) in
+//│     let* (x$1620) = add$738(x$1616,x$1619) in
+//│     let* (x$1621) = mul$840(x$1609,x$1620) in
+//│     x$1621
+//│   def d_case5$1579(x$1623,x$1625) =
+//│     let x$1622 = x$1623.<Ln$704:e> in
+//│     let* (x$1624) = d$1002(x$1625,x$1622) in
+//│     let x$1626 = -(1) in
+//│     let x$1627 = Val$675(x$1626) in
+//│     let* (x$1628) = pow$945(x$1622,x$1627) in
+//│     let* (x$1629) = mul$840(x$1624,x$1628) in
+//│     x$1629
+//│   def d_caller_post$1673(x$1675,x$1676,x$1678,x$1680) =
+//│     let* (x$1674) = mul$840(x$1675,x$1676) in
+//│     let* (x$1677) = d$1002(x$1678,x$1675) in
+//│     let* (x$1679) = mul$840(x$1680,x$1677) in
+//│     let* (x$1681) = add$738(x$1674,x$1679) in
+//│     x$1681
+//│   def d_caller_post$1717(x$1719,x$1724,x$1720,x$1732,x$1728) =
+//│     let* (x$1718) = mul$840(x$1719,x$1720) in
+//│     let x$1721 = -(1) in
+//│     let x$1722 = Val$675(x$1721) in
+//│     let* (x$1723) = pow$945(x$1724,x$1722) in
+//│     let* (x$1725) = mul$840(x$1718,x$1723) in
+//│     let* (x$1726) = ln$987(x$1724) in
+//│     let* (x$1727) = d$1002(x$1728,x$1719) in
+//│     let* (x$1729) = mul$840(x$1726,x$1727) in
+//│     let* (x$1730) = add$738(x$1725,x$1729) in
+//│     let* (x$1731) = mul$840(x$1732,x$1730) in
+//│     x$1731
+//│   entry = entry$1255
+//│ 
+//│ WholeProgramOpt:
+//│   class Expr()
+//│   class Var(x$672) extends Expr
+//│   class Val(n$677) extends Expr
+//│   class Add(e1$682,e2$683) extends Expr
+//│   class Mul(e1$690,e2$691) extends Expr
+//│   class Pow(e1$698,e2$699) extends Expr
+//│   class Ln(e$706) extends Expr
+//│   class Lambda_deriv() extends Callable {
+//│     def apply2$1206(arg$1245,arg$1246) =
+//│       let* (x$1249) = deriv$1219(arg$1245,arg$1246) in
+//│       x$1249
+//│   }
+//│   def pown$710(x$712,n$713) =
+//│     case n$713 of
+//│       IntLit(0) =>
+//│         1
+//│       IntLit(1) =>
+//│         x$712
+//│       _ =>
+//│         let x$729 = /(n$713,2) in
+//│         let* (x$730) = pown$710(x$712,x$729) in
+//│         let x$731 = *(x$730,x$730) in
+//│         let x$732 = %(n$713,2) in
+//│         let x$733 = ==(x$732,0) in
+//│         case x$733 of
+//│           BoolLit(true) =>
+//│             jump j$734(x$731,1)
+//│           _ =>
+//│             jump j$734(x$731,x$712)
+//│   def j$734(tmp$725,tmp$727) =
+//│     let x$736 = *(tmp$725,tmp$727) in
+//│     x$736
+//│   def add$738(x$2172,x$2173) =
+//│     case x$2172 of
+//│       Val$675 =>
+//│         jump add_case0$2039(x$2172,x$2173)
+//│       _ =>
+//│         jump add_default$2040(x$2173,x$2172)
+//│   def mul$840(x$2375,x$2376) =
+//│     case x$2375 of
+//│       Val$675 =>
+//│         jump mul_case0$2319(x$2375,x$2376)
+//│       _ =>
+//│         jump mul_default$2320(x$2376,x$2375)
+//│   def pow$945(x$2417,x$2418) =
+//│     case x$2417 of
+//│       Val$675 =>
+//│         jump pow_case0$1401(x$2417,x$2418)
+//│       _ =>
+//│         jump pow_default$1402(x$2418,x$2417)
+//│   def ln$987(e$989) =
+//│     case e$989 of
+//│       Val$675 =>
+//│         let x$996 = e$989.<Val$675:n> in
+//│         case x$996 of
+//│           IntLit(1) =>
+//│             let x$998 = Val$675(0) in
+//│             x$998
+//│           _ =>
+//│             let x$999 = Ln$704(e$989) in
+//│             x$999
+//│       _ =>
+//│         let x$1000 = Ln$704(e$989) in
+//│         x$1000
+//│   def d$1002(x$2289,x$2290) =
+//│     case x$2290 of
+//│       Val$675 =>
+//│         jump d_case0$1931()
+//│       Var$670 =>
+//│         jump d_case1$1932(x$2290,x$2289)
+//│       Add$680 =>
+//│         jump d_case2$1933(x$2290,x$2289)
+//│       Mul$688 =>
+//│         jump d_case3$1934(x$2290,x$2289)
+//│       Pow$696 =>
+//│         jump d_case4$1935(x$2290,x$2289)
+//│       Ln$704 =>
+//│         jump d_case5$1936(x$2290,x$2289)
+//│       _ =>
+//│         panic "match error"
+//│   def count$1120(e$1122) =
+//│     case e$1122 of
+//│       Val$675 =>
+//│         1
+//│       Var$670 =>
+//│         1
+//│       Add$680 =>
+//│         let x$1159 = e$1122.<Add$680:e1> in
+//│         let x$1160 = e$1122.<Add$680:e2> in
+//│         let* (x$1161) = count$1120(x$1159) in
+//│         let* (x$1162) = count$1120(x$1160) in
+//│         let x$1163 = +(x$1161,x$1162) in
+//│         x$1163
+//│       Mul$688 =>
+//│         let x$1164 = e$1122.<Mul$688:e1> in
+//│         let x$1165 = e$1122.<Mul$688:e2> in
+//│         let* (x$1166) = count$1120(x$1164) in
+//│         let* (x$1167) = count$1120(x$1165) in
+//│         let x$1168 = +(x$1166,x$1167) in
+//│         x$1168
+//│       Pow$696 =>
+//│         let x$1169 = e$1122.<Pow$696:e1> in
+//│         let x$1170 = e$1122.<Pow$696:e2> in
+//│         let* (x$1171) = count$1120(x$1169) in
+//│         let* (x$1172) = count$1120(x$1170) in
+//│         let x$1173 = +(x$1171,x$1172) in
+//│         x$1173
+//│       Ln$704 =>
+//│         let x$1174 = e$1122.<Ln$704:e> in
+//│         let* (x$1175) = count$1120(x$1174) in
+//│         x$1175
+//│       _ =>
+//│         panic "match error"
+//│   def nestAux$1177(s$1179,f$1180,n$1181,e$1182) =
+//│     case n$1181 of
+//│       IntLit(0) =>
+//│         e$1182
+//│       _ =>
+//│         let x$1203 = -(s$1179,n$1181) in
+//│         let x$1204 = Callable.apply2$1206(f$1180,x$1203,e$1182) in
+//│         let x$1207 = -(n$1181,1) in
+//│         let* (x$1208) = nestAux$1177(s$1179,f$1180,x$1207,x$1204) in
+//│         x$1208
+//│   def deriv$1219(i$1221,f$1222) =
+//│     let* (x$1227) = d$1002("x",f$1222) in
+//│     x$1227
+//│   def main$1229(n$1231) =
+//│     let x$1242 = Var$670("x") in
+//│     let* (x$2037) = pow_default_default$2016(x$1242,x$1242) in
+//│     jump main_caller_post$1423(n$1231,x$2037)
+//│   def entry$1255() =
+//│     let* (x$1254) = main$1229(9) in
+//│     x$1254
+//│   def mul_case0$1259(x$1264,x$1265) =
+//│     let x$1263 = x$1264.<Val$675:n> in
+//│     case x$1265 of
+//│       Val$675 =>
+//│         let x$1266 = x$1265.<Val$675:n> in
+//│         let x$1267 = *(x$1263,x$1266) in
+//│         let x$1268 = Val$675(x$1267) in
+//│         x$1268
+//│       _ =>
+//│         case x$1263 of
+//│           IntLit(0) =>
+//│             let x$1269 = Val$675(0) in
+//│             x$1269
+//│           IntLit(1) =>
+//│             x$1265
+//│           _ =>
+//│             case x$1265 of
+//│               Mul$688 =>
+//│                 let x$1270 = x$1265.<Mul$688:e1> in
+//│                 let x$1271 = x$1265.<Mul$688:e2> in
+//│                 case x$1270 of
+//│                   Val$675 =>
+//│                     let x$1272 = x$1270.<Val$675:n> in
+//│                     let x$1273 = *(x$1263,x$1272) in
+//│                     let x$1274 = Val$675(x$1273) in
+//│                     let* (x$2383) = mul_case0$2319(x$1274,x$1271) in
+//│                     x$2383
+//│                   _ =>
+//│                     let x$1276 = Mul$688(x$1264,x$1265) in
+//│                     x$1276
+//│               _ =>
+//│                 let x$1277 = Mul$688(x$1264,x$1265) in
+//│                 x$1277
+//│   def pow_case0$1401(x$1406,x$1407) =
+//│     let x$1405 = x$1406.<Val$675:n> in
+//│     case x$1407 of
+//│       Val$675 =>
+//│         let x$1408 = x$1407.<Val$675:n> in
+//│         let* (x$1409) = pown$710(x$1405,x$1408) in
+//│         let x$1410 = Val$675(x$1409) in
+//│         x$1410
+//│       _ =>
+//│         case x$1405 of
+//│           IntLit(0) =>
+//│             let x$1411 = Val$675(0) in
+//│             x$1411
+//│           _ =>
+//│             let x$1412 = Pow$696(x$1406,x$1407) in
+//│             x$1412
+//│   def pow_default$1402(x$2027,x$2028) =
+//│     case x$2027 of
+//│       Val$675 =>
+//│         jump pow_default_case0$2015(x$2027,x$2028)
+//│       _ =>
+//│         jump pow_default_default$2016(x$2028,x$2027)
+//│   def main_caller_post$1423(x$1426,x$1427) =
+//│     let x$1424 = Lambda_deriv$1247() in
+//│     let* (x$1425) = nestAux$1177(x$1426,x$1424,x$1426,x$1427) in
+//│     let* (x$1428) = count$1120(x$1425) in
+//│     x$1428
+//│   def add_case0$1434(x$1439,x$1440) =
+//│     let x$1438 = x$1439.<Val$675:n> in
+//│     case x$1440 of
+//│       Val$675 =>
+//│         let x$1441 = x$1440.<Val$675:n> in
+//│         let x$1442 = +(x$1438,x$1441) in
+//│         let x$1443 = Val$675(x$1442) in
+//│         x$1443
+//│       _ =>
+//│         case x$1438 of
+//│           IntLit(0) =>
+//│             x$1440
+//│           _ =>
+//│             case x$1440 of
+//│               Add$680 =>
+//│                 let x$1444 = x$1440.<Add$680:e1> in
+//│                 let x$1445 = x$1440.<Add$680:e2> in
+//│                 case x$1444 of
+//│                   Val$675 =>
+//│                     let x$1446 = x$1444.<Val$675:n> in
+//│                     let x$1447 = +(x$1438,x$1446) in
+//│                     let x$1448 = Val$675(x$1447) in
+//│                     let* (x$2092) = add_case0$2039(x$1448,x$1445) in
+//│                     x$2092
+//│                   _ =>
+//│                     let x$1450 = Add$680(x$1439,x$1440) in
+//│                     x$1450
+//│               _ =>
+//│                 let x$1451 = Add$680(x$1439,x$1440) in
+//│                 x$1451
+//│   def add_default$1435(x$1452,x$1454) =
+//│     case x$1452 of
+//│       Val$675 =>
+//│         let x$1453 = x$1452.<Val$675:n> in
+//│         case x$1453 of
+//│           IntLit(0) =>
+//│             x$1454
+//│           _ =>
+//│             let x$1455 = Val$675(x$1453) in
+//│             let* (x$2113) = add_case0$2039(x$1455,x$1454) in
+//│             x$2113
+//│       Add$680 =>
+//│         let x$1457 = x$1452.<Add$680:e1> in
+//│         let x$1458 = x$1452.<Add$680:e2> in
+//│         case x$1457 of
+//│           Val$675 =>
+//│             let x$1459 = x$1457.<Val$675:n> in
+//│             let x$1460 = Val$675(x$1459) in
+//│             case x$1454 of
+//│               Val$675 =>
+//│                 let* (x$2136) = add_case0$2039(x$1454,x$1458) in
+//│                 let* (x$2478) = add$738(x$1460,x$2136) in
+//│                 x$2478
+//│               _ =>
+//│                 let* (x$2137) = add_default$2040(x$1458,x$1454) in
+//│                 let* (x$2479) = add$738(x$1460,x$2137) in
+//│                 x$2479
+//│           _ =>
+//│             case x$1454 of
+//│               Add$680 =>
+//│                 let x$1463 = x$1454.<Add$680:e1> in
+//│                 let x$1464 = x$1454.<Add$680:e2> in
+//│                 case x$1464 of
+//│                   Val$675 =>
+//│                     let* (x$2159) = add_case0$2039(x$1464,x$1452) in
+//│                     let* (x$2482) = add$738(x$1463,x$2159) in
+//│                     x$2482
+//│                   _ =>
+//│                     let* (x$2160) = add_default$2040(x$1452,x$1464) in
+//│                     let* (x$2483) = add$738(x$1463,x$2160) in
+//│                     x$2483
+//│               _ =>
+//│                 let x$1467 = Add$680(x$1454,x$1452) in
+//│                 x$1467
+//│       _ =>
+//│         case x$1454 of
+//│           Add$680 =>
+//│             let x$1468 = x$1454.<Add$680:e1> in
+//│             let x$1469 = x$1454.<Add$680:e2> in
+//│             case x$1469 of
+//│               Val$675 =>
+//│                 let* (x$2182) = add_case0$2039(x$1469,x$1452) in
+//│                 let* (x$2486) = add$738(x$1468,x$2182) in
+//│                 x$2486
+//│               _ =>
+//│                 let* (x$2183) = add_default$2040(x$1452,x$1469) in
+//│                 let* (x$2487) = add$738(x$1468,x$2183) in
+//│                 x$2487
+//│           _ =>
+//│             let x$1472 = Add$680(x$1454,x$1452) in
+//│             x$1472
+//│   def d_case0$1574() =
+//│     let x$1583 = Val$675(0) in
+//│     x$1583
+//│   def d_case1$1575(x$1585,x$1587) =
+//│     let x$1584 = x$1585.<Var$670:x> in
+//│     let x$1586 = ==(x$1587,x$1584) in
+//│     case x$1586 of
+//│       BoolLit(true) =>
+//│         let x$1588 = Val$675(1) in
+//│         x$1588
+//│       _ =>
+//│         let x$1589 = Val$675(0) in
+//│         x$1589
+//│   def d_case2$1576(x$1591,x$1594) =
+//│     let x$1590 = x$1591.<Add$680:e1> in
+//│     let x$1592 = x$1591.<Add$680:e2> in
+//│     let* (x$1593) = d$1002(x$1594,x$1590) in
+//│     case x$1592 of
+//│       Val$675 =>
+//│         let* (x$2216) = d_case0$1931() in
+//│         let* (x$2453) = add$738(x$1593,x$2216) in
+//│         x$2453
+//│       Var$670 =>
+//│         let* (x$2217) = d_case1$1932(x$1592,x$1594) in
+//│         let* (x$2454) = add$738(x$1593,x$2217) in
+//│         x$2454
+//│       Add$680 =>
+//│         let* (x$2218) = d_case2$1933(x$1592,x$1594) in
+//│         let* (x$2455) = add$738(x$1593,x$2218) in
+//│         x$2455
+//│       Mul$688 =>
+//│         let* (x$2219) = d_case3$1934(x$1592,x$1594) in
+//│         let* (x$2456) = add$738(x$1593,x$2219) in
+//│         x$2456
+//│       Pow$696 =>
+//│         let* (x$2220) = d_case4$1935(x$1592,x$1594) in
+//│         let* (x$2457) = add$738(x$1593,x$2220) in
+//│         x$2457
+//│       Ln$704 =>
+//│         let* (x$2221) = d_case5$1936(x$1592,x$1594) in
+//│         let* (x$2458) = add$738(x$1593,x$2221) in
+//│         x$2458
+//│       _ =>
+//│         panic "match error"
+//│   def d_case3$1577(x$1598,x$1601) =
+//│     let x$1597 = x$1598.<Mul$688:e1> in
+//│     let x$1599 = x$1598.<Mul$688:e2> in
+//│     case x$1599 of
+//│       Val$675 =>
+//│         let* (x$2260) = d_case0$1931() in
+//│         jump d_case3_caller_post$2249(x$1597,x$2260,x$1601,x$1599)
+//│       Var$670 =>
+//│         let* (x$2261) = d_case1$1932(x$1599,x$1601) in
+//│         jump d_case3_caller_post$2249(x$1597,x$2261,x$1601,x$1599)
+//│       Add$680 =>
+//│         let* (x$2262) = d_case2$1933(x$1599,x$1601) in
+//│         jump d_case3_caller_post$2249(x$1597,x$2262,x$1601,x$1599)
+//│       Mul$688 =>
+//│         let* (x$2263) = d_case3$1934(x$1599,x$1601) in
+//│         jump d_case3_caller_post$2249(x$1597,x$2263,x$1601,x$1599)
+//│       Pow$696 =>
+//│         let* (x$2264) = d_case4$1935(x$1599,x$1601) in
+//│         jump d_case3_caller_post$2249(x$1597,x$2264,x$1601,x$1599)
+//│       Ln$704 =>
+//│         let* (x$2265) = d_case5$1936(x$1599,x$1601) in
+//│         jump d_case3_caller_post$2249(x$1597,x$2265,x$1601,x$1599)
+//│       _ =>
+//│         panic "match error"
+//│   def d_case4$1578(x$1607,x$1611) =
+//│     let x$1606 = x$1607.<Pow$696:e1> in
+//│     let x$1608 = x$1607.<Pow$696:e2> in
+//│     let* (x$1609) = pow$945(x$1606,x$1608) in
+//│     case x$1606 of
+//│       Val$675 =>
+//│         let* (x$2311) = d_case0$1931() in
+//│         jump d_case4_caller_post$2293(x$1608,x$1609,x$1611,x$2311,x$1606)
+//│       Var$670 =>
+//│         let* (x$2312) = d_case1$1932(x$1606,x$1611) in
+//│         jump d_case4_caller_post$2293(x$1608,x$1609,x$1611,x$2312,x$1606)
+//│       Add$680 =>
+//│         let* (x$2313) = d_case2$1933(x$1606,x$1611) in
+//│         jump d_case4_caller_post$2293(x$1608,x$1609,x$1611,x$2313,x$1606)
+//│       Mul$688 =>
+//│         let* (x$2314) = d_case3$1934(x$1606,x$1611) in
+//│         jump d_case4_caller_post$2293(x$1608,x$1609,x$1611,x$2314,x$1606)
+//│       Pow$696 =>
+//│         let* (x$2315) = d_case4$1935(x$1606,x$1611) in
+//│         jump d_case4_caller_post$2293(x$1608,x$1609,x$1611,x$2315,x$1606)
+//│       Ln$704 =>
+//│         let* (x$2316) = d_case5$1936(x$1606,x$1611) in
+//│         jump d_case4_caller_post$2293(x$1608,x$1609,x$1611,x$2316,x$1606)
+//│       _ =>
+//│         panic "match error"
+//│   def d_case5$1579(x$1623,x$1625) =
+//│     let x$1622 = x$1623.<Ln$704:e> in
+//│     let* (x$1624) = d$1002(x$1625,x$1622) in
+//│     let x$1626 = -(1) in
+//│     let x$1627 = Val$675(x$1626) in
+//│     case x$1622 of
+//│       Val$675 =>
+//│         let* (x$2404) = pow_case0$1401(x$1622,x$1627) in
+//│         let* (x$2464) = mul$840(x$1624,x$2404) in
+//│         x$2464
+//│       _ =>
+//│         let* (x$2405) = pow_default$1402(x$1627,x$1622) in
+//│         let* (x$2465) = mul$840(x$1624,x$2405) in
+//│         x$2465
+//│   def d_caller_post$1673(x$1675,x$1676,x$1678,x$1680) =
+//│     let* (x$1674) = mul$840(x$1675,x$1676) in
+//│     case x$1675 of
+//│       Val$675 =>
+//│         let* (x$2007) = d_case0$1931() in
+//│         jump d_caller_post_caller_post$1999(x$1680,x$2007,x$1674)
+//│       Var$670 =>
+//│         let* (x$2008) = d_case1$1932(x$1675,x$1678) in
+//│         jump d_caller_post_caller_post$1999(x$1680,x$2008,x$1674)
+//│       Add$680 =>
+//│         let* (x$2009) = d_case2$1933(x$1675,x$1678) in
+//│         jump d_caller_post_caller_post$1999(x$1680,x$2009,x$1674)
+//│       Mul$688 =>
+//│         let* (x$2010) = d_case3$1934(x$1675,x$1678) in
+//│         jump d_caller_post_caller_post$1999(x$1680,x$2010,x$1674)
+//│       Pow$696 =>
+//│         let* (x$2011) = d_case4$1935(x$1675,x$1678) in
+//│         jump d_caller_post_caller_post$1999(x$1680,x$2011,x$1674)
+//│       Ln$704 =>
+//│         let* (x$2012) = d_case5$1936(x$1675,x$1678) in
+//│         jump d_caller_post_caller_post$1999(x$1680,x$2012,x$1674)
+//│       _ =>
+//│         panic "match error"
+//│   def d_caller_post$1717(x$1719,x$1724,x$1720,x$1732,x$1728) =
+//│     let* (x$1718) = mul$840(x$1719,x$1720) in
+//│     let x$1721 = -(1) in
+//│     let x$1722 = Val$675(x$1721) in
+//│     case x$1724 of
+//│       Val$675 =>
+//│         let* (x$2436) = pow_case0$1401(x$1724,x$1722) in
+//│         jump d_caller_post_caller_post$2421(x$1718,x$1728,x$1724,x$2436,x$1719,x$1732)
+//│       _ =>
+//│         let* (x$2437) = pow_default$1402(x$1722,x$1724) in
+//│         jump d_caller_post_caller_post$2421(x$1718,x$1728,x$1724,x$2437,x$1719,x$1732)
+//│   def mul_default_case0$1832(x$1838,x$1840) =
+//│     let x$1837 = x$1838.<Val$675:n> in
+//│     case x$1837 of
+//│       IntLit(0) =>
+//│         let x$1839 = Val$675(0) in
+//│         x$1839
+//│       IntLit(1) =>
+//│         x$1840
+//│       _ =>
+//│         let x$1841 = Val$675(x$1837) in
+//│         let* (x$1842) = mul$840(x$1841,x$1840) in
+//│         x$1842
+//│   def mul_default_case1$1833(x$1844,x$1849) =
+//│     let x$1843 = x$1844.<Mul$688:e1> in
+//│     let x$1845 = x$1844.<Mul$688:e2> in
+//│     case x$1843 of
+//│       Val$675 =>
+//│         let x$1846 = x$1843.<Val$675:n> in
+//│         let x$1847 = Val$675(x$1846) in
+//│         let* (x$1848) = mul$840(x$1849,x$1845) in
+//│         let* (x$1850) = mul$840(x$1847,x$1848) in
+//│         x$1850
+//│       _ =>
+//│         case x$1849 of
+//│           Mul$688 =>
+//│             let x$1851 = x$1849.<Mul$688:e1> in
+//│             let x$1852 = x$1849.<Mul$688:e2> in
+//│             let* (x$1853) = mul$840(x$1852,x$1844) in
+//│             let* (x$1854) = mul$840(x$1851,x$1853) in
+//│             x$1854
+//│           _ =>
+//│             let x$1855 = Mul$688(x$1849,x$1844) in
+//│             x$1855
+//│   def mul_default_default$1834(x$1856,x$1860) =
+//│     case x$1856 of
+//│       Mul$688 =>
+//│         let x$1857 = x$1856.<Mul$688:e1> in
+//│         let x$1858 = x$1856.<Mul$688:e2> in
+//│         let* (x$1859) = mul$840(x$1858,x$1860) in
+//│         let* (x$1861) = mul$840(x$1857,x$1859) in
+//│         x$1861
+//│       _ =>
+//│         let x$1862 = Mul$688(x$1856,x$1860) in
+//│         x$1862
+//│   def d_case0$1931() =
+//│     let x$1940 = Val$675(0) in
+//│     x$1940
+//│   def d_case1$1932(x$1942,x$1944) =
+//│     let x$1941 = x$1942.<Var$670:x> in
+//│     let x$1943 = ==(x$1944,x$1941) in
+//│     case x$1943 of
+//│       BoolLit(true) =>
+//│         let x$1945 = Val$675(1) in
+//│         x$1945
+//│       _ =>
+//│         let x$1946 = Val$675(0) in
+//│         x$1946
+//│   def d_case2$1933(x$1948,x$1951) =
+//│     let x$1947 = x$1948.<Add$680:e1> in
+//│     let x$1949 = x$1948.<Add$680:e2> in
+//│     let* (x$1950) = d$1002(x$1951,x$1947) in
+//│     case x$1949 of
+//│       Val$675 =>
+//│         let* (x$1952) = d_case0$1574() in
+//│         let* (x$1953) = add$738(x$1950,x$1952) in
+//│         x$1953
+//│       Var$670 =>
+//│         let* (x$1954) = d_case1$1575(x$1949,x$1951) in
+//│         let* (x$1955) = add$738(x$1950,x$1954) in
+//│         x$1955
+//│       Add$680 =>
+//│         let* (x$1956) = d_case2$1576(x$1949,x$1951) in
+//│         let* (x$1957) = add$738(x$1950,x$1956) in
+//│         x$1957
+//│       Mul$688 =>
+//│         let* (x$1958) = d_case3$1577(x$1949,x$1951) in
+//│         let* (x$1959) = add$738(x$1950,x$1958) in
+//│         x$1959
+//│       Pow$696 =>
+//│         let* (x$1960) = d_case4$1578(x$1949,x$1951) in
+//│         let* (x$1961) = add$738(x$1950,x$1960) in
+//│         x$1961
+//│       Ln$704 =>
+//│         let* (x$1962) = d_case5$1579(x$1949,x$1951) in
+//│         let* (x$1963) = add$738(x$1950,x$1962) in
+//│         x$1963
+//│       _ =>
+//│         panic "match error"
+//│   def d_case3$1934(x$1965,x$1968) =
+//│     let x$1964 = x$1965.<Mul$688:e1> in
+//│     let x$1966 = x$1965.<Mul$688:e2> in
+//│     case x$1966 of
+//│       Val$675 =>
+//│         let* (x$1967) = d_case0$1574() in
+//│         jump d_caller_post$1673(x$1964,x$1967,x$1968,x$1966)
+//│       Var$670 =>
+//│         let* (x$1969) = d_case1$1575(x$1966,x$1968) in
+//│         jump d_caller_post$1673(x$1964,x$1969,x$1968,x$1966)
+//│       Add$680 =>
+//│         let* (x$1970) = d_case2$1576(x$1966,x$1968) in
+//│         jump d_caller_post$1673(x$1964,x$1970,x$1968,x$1966)
+//│       Mul$688 =>
+//│         let* (x$1971) = d_case3$1577(x$1966,x$1968) in
+//│         jump d_caller_post$1673(x$1964,x$1971,x$1968,x$1966)
+//│       Pow$696 =>
+//│         let* (x$1972) = d_case4$1578(x$1966,x$1968) in
+//│         jump d_caller_post$1673(x$1964,x$1972,x$1968,x$1966)
+//│       Ln$704 =>
+//│         let* (x$1973) = d_case5$1579(x$1966,x$1968) in
+//│         jump d_caller_post$1673(x$1964,x$1973,x$1968,x$1966)
+//│       _ =>
+//│         panic "match error"
+//│   def d_case4$1935(x$1975,x$1979) =
+//│     let x$1974 = x$1975.<Pow$696:e1> in
+//│     let x$1976 = x$1975.<Pow$696:e2> in
+//│     let* (x$1977) = pow$945(x$1974,x$1976) in
+//│     case x$1974 of
+//│       Val$675 =>
+//│         let* (x$1978) = d_case0$1574() in
+//│         jump d_caller_post$1717(x$1976,x$1974,x$1978,x$1977,x$1979)
+//│       Var$670 =>
+//│         let* (x$1980) = d_case1$1575(x$1974,x$1979) in
+//│         jump d_caller_post$1717(x$1976,x$1974,x$1980,x$1977,x$1979)
+//│       Add$680 =>
+//│         let* (x$1981) = d_case2$1576(x$1974,x$1979) in
+//│         jump d_caller_post$1717(x$1976,x$1974,x$1981,x$1977,x$1979)
+//│       Mul$688 =>
+//│         let* (x$1982) = d_case3$1577(x$1974,x$1979) in
+//│         jump d_caller_post$1717(x$1976,x$1974,x$1982,x$1977,x$1979)
+//│       Pow$696 =>
+//│         let* (x$1983) = d_case4$1578(x$1974,x$1979) in
+//│         jump d_caller_post$1717(x$1976,x$1974,x$1983,x$1977,x$1979)
+//│       Ln$704 =>
+//│         let* (x$1984) = d_case5$1579(x$1974,x$1979) in
+//│         jump d_caller_post$1717(x$1976,x$1974,x$1984,x$1977,x$1979)
+//│       _ =>
+//│         panic "match error"
+//│   def d_case5$1936(x$1986,x$1988) =
+//│     let x$1985 = x$1986.<Ln$704:e> in
+//│     let* (x$1987) = d$1002(x$1988,x$1985) in
+//│     let x$1989 = -(1) in
+//│     let x$1990 = Val$675(x$1989) in
+//│     case x$1985 of
+//│       Val$675 =>
+//│         let* (x$1991) = pow_case0$1401(x$1985,x$1990) in
+//│         let* (x$1992) = mul$840(x$1987,x$1991) in
+//│         x$1992
+//│       _ =>
+//│         let* (x$1993) = pow_default$1402(x$1990,x$1985) in
+//│         let* (x$1994) = mul$840(x$1987,x$1993) in
+//│         x$1994
+//│   def d_caller_post_caller_post$1999(x$2001,x$2002,x$2004) =
+//│     let* (x$2000) = mul$840(x$2001,x$2002) in
+//│     let* (x$2003) = add$738(x$2004,x$2000) in
+//│     x$2003
+//│   def pow_default_case0$2015(x$2020,x$2022) =
+//│     let x$2019 = x$2020.<Val$675:n> in
+//│     case x$2019 of
+//│       IntLit(0) =>
+//│         let x$2021 = Val$675(1) in
+//│         x$2021
+//│       IntLit(1) =>
+//│         x$2022
+//│       _ =>
+//│         let x$2023 = Pow$696(x$2022,x$2020) in
+//│         x$2023
+//│   def pow_default_default$2016(x$2025,x$2026) =
+//│     let x$2024 = Pow$696(x$2025,x$2026) in
+//│     x$2024
+//│   def add_case0$2039(x$2044,x$2045) =
+//│     let x$2043 = x$2044.<Val$675:n> in
+//│     case x$2045 of
+//│       Val$675 =>
+//│         let x$2046 = x$2045.<Val$675:n> in
+//│         let x$2047 = +(x$2043,x$2046) in
+//│         let x$2048 = Val$675(x$2047) in
+//│         x$2048
+//│       _ =>
+//│         case x$2043 of
+//│           IntLit(0) =>
+//│             x$2045
+//│           _ =>
+//│             case x$2045 of
+//│               Add$680 =>
+//│                 let x$2049 = x$2045.<Add$680:e1> in
+//│                 let x$2050 = x$2045.<Add$680:e2> in
+//│                 case x$2049 of
+//│                   Val$675 =>
+//│                     let x$2051 = x$2049.<Val$675:n> in
+//│                     let x$2052 = +(x$2043,x$2051) in
+//│                     let x$2053 = Val$675(x$2052) in
+//│                     let* (x$2054) = add_case0$1434(x$2053,x$2050) in
+//│                     x$2054
+//│                   _ =>
+//│                     let x$2055 = Add$680(x$2044,x$2045) in
+//│                     x$2055
+//│               _ =>
+//│                 let x$2056 = Add$680(x$2044,x$2045) in
+//│                 x$2056
+//│   def add_default$2040(x$2057,x$2059) =
+//│     case x$2057 of
+//│       Val$675 =>
+//│         let x$2058 = x$2057.<Val$675:n> in
+//│         case x$2058 of
+//│           IntLit(0) =>
+//│             x$2059
+//│           _ =>
+//│             let x$2060 = Val$675(x$2058) in
+//│             let* (x$2061) = add_case0$1434(x$2060,x$2059) in
+//│             x$2061
+//│       Add$680 =>
+//│         let x$2062 = x$2057.<Add$680:e1> in
+//│         let x$2063 = x$2057.<Add$680:e2> in
+//│         case x$2062 of
+//│           Val$675 =>
+//│             let x$2064 = x$2062.<Val$675:n> in
+//│             let x$2065 = Val$675(x$2064) in
+//│             case x$2059 of
+//│               Val$675 =>
+//│                 let* (x$2066) = add_case0$1434(x$2059,x$2063) in
+//│                 let* (x$2067) = add$738(x$2065,x$2066) in
+//│                 x$2067
+//│               _ =>
+//│                 let* (x$2068) = add_default$1435(x$2063,x$2059) in
+//│                 let* (x$2069) = add$738(x$2065,x$2068) in
+//│                 x$2069
+//│           _ =>
+//│             case x$2059 of
+//│               Add$680 =>
+//│                 let x$2070 = x$2059.<Add$680:e1> in
+//│                 let x$2071 = x$2059.<Add$680:e2> in
+//│                 case x$2071 of
+//│                   Val$675 =>
+//│                     let* (x$2072) = add_case0$1434(x$2071,x$2057) in
+//│                     let* (x$2073) = add$738(x$2070,x$2072) in
+//│                     x$2073
+//│                   _ =>
+//│                     let* (x$2074) = add_default$1435(x$2057,x$2071) in
+//│                     let* (x$2075) = add$738(x$2070,x$2074) in
+//│                     x$2075
+//│               _ =>
+//│                 let x$2076 = Add$680(x$2059,x$2057) in
+//│                 x$2076
+//│       _ =>
+//│         case x$2059 of
+//│           Add$680 =>
+//│             let x$2077 = x$2059.<Add$680:e1> in
+//│             let x$2078 = x$2059.<Add$680:e2> in
+//│             case x$2078 of
+//│               Val$675 =>
+//│                 let* (x$2079) = add_case0$1434(x$2078,x$2057) in
+//│                 let* (x$2080) = add$738(x$2077,x$2079) in
+//│                 x$2080
+//│               _ =>
+//│                 let* (x$2081) = add_default$1435(x$2057,x$2078) in
+//│                 let* (x$2082) = add$738(x$2077,x$2081) in
+//│                 x$2082
+//│           _ =>
+//│             let x$2083 = Add$680(x$2059,x$2057) in
+//│             x$2083
+//│   def d_case3_caller_post$2249(x$2251,x$2252,x$2254,x$2256) =
+//│     let* (x$2250) = mul$840(x$2251,x$2252) in
+//│     let* (x$2253) = d$1002(x$2254,x$2251) in
+//│     let* (x$2255) = mul$840(x$2256,x$2253) in
+//│     let* (x$2257) = add$738(x$2250,x$2255) in
+//│     x$2257
+//│   def d_case4_caller_post$2293(x$2295,x$2308,x$2304,x$2296,x$2300) =
+//│     let* (x$2294) = mul$840(x$2295,x$2296) in
+//│     let x$2297 = -(1) in
+//│     let x$2298 = Val$675(x$2297) in
+//│     let* (x$2299) = pow$945(x$2300,x$2298) in
+//│     let* (x$2301) = mul$840(x$2294,x$2299) in
+//│     let* (x$2302) = ln$987(x$2300) in
+//│     let* (x$2303) = d$1002(x$2304,x$2295) in
+//│     let* (x$2305) = mul$840(x$2302,x$2303) in
+//│     let* (x$2306) = add$738(x$2301,x$2305) in
+//│     let* (x$2307) = mul$840(x$2308,x$2306) in
+//│     x$2307
+//│   def mul_case0$2319(x$2324,x$2325) =
+//│     let x$2323 = x$2324.<Val$675:n> in
+//│     case x$2325 of
+//│       Val$675 =>
+//│         let x$2326 = x$2325.<Val$675:n> in
+//│         let x$2327 = *(x$2323,x$2326) in
+//│         let x$2328 = Val$675(x$2327) in
+//│         x$2328
+//│       _ =>
+//│         case x$2323 of
+//│           IntLit(0) =>
+//│             let x$2329 = Val$675(0) in
+//│             x$2329
+//│           IntLit(1) =>
+//│             x$2325
+//│           _ =>
+//│             case x$2325 of
+//│               Mul$688 =>
+//│                 let x$2330 = x$2325.<Mul$688:e1> in
+//│                 let x$2331 = x$2325.<Mul$688:e2> in
+//│                 case x$2330 of
+//│                   Val$675 =>
+//│                     let x$2332 = x$2330.<Val$675:n> in
+//│                     let x$2333 = *(x$2323,x$2332) in
+//│                     let x$2334 = Val$675(x$2333) in
+//│                     let* (x$2335) = mul_case0$1259(x$2334,x$2331) in
+//│                     x$2335
+//│                   _ =>
+//│                     let x$2336 = Mul$688(x$2324,x$2325) in
+//│                     x$2336
+//│               _ =>
+//│                 let x$2337 = Mul$688(x$2324,x$2325) in
+//│                 x$2337
+//│   def mul_default$2320(x$2338,x$2341) =
+//│     case x$2338 of
+//│       Val$675 =>
+//│         let x$2339 = x$2338.<Val$675:n> in
+//│         case x$2339 of
+//│           IntLit(0) =>
+//│             let x$2340 = Val$675(0) in
+//│             x$2340
+//│           IntLit(1) =>
+//│             x$2341
+//│           _ =>
+//│             let x$2342 = Val$675(x$2339) in
+//│             let* (x$2343) = mul_case0$1259(x$2342,x$2341) in
+//│             x$2343
+//│       Mul$688 =>
+//│         let x$2344 = x$2338.<Mul$688:e1> in
+//│         let x$2345 = x$2338.<Mul$688:e2> in
+//│         case x$2344 of
+//│           Val$675 =>
+//│             let x$2346 = x$2344.<Val$675:n> in
+//│             let x$2347 = Val$675(x$2346) in
+//│             case x$2341 of
+//│               Val$675 =>
+//│                 let* (x$2348) = mul_case0$1259(x$2341,x$2345) in
+//│                 let* (x$2349) = mul$840(x$2347,x$2348) in
+//│                 x$2349
+//│               _ =>
+//│                 case x$2345 of
+//│                   Val$675 =>
+//│                     let* (x$2352) = mul_default_case0$1832(x$2345,x$2341) in
+//│                     let* (x$2438) = mul$840(x$2347,x$2352) in
+//│                     x$2438
+//│                   Mul$688 =>
+//│                     let* (x$2353) = mul_default_case1$1833(x$2345,x$2341) in
+//│                     let* (x$2439) = mul$840(x$2347,x$2353) in
+//│                     x$2439
+//│                   _ =>
+//│                     let* (x$2354) = mul_default_default$1834(x$2341,x$2345) in
+//│                     let* (x$2440) = mul$840(x$2347,x$2354) in
+//│                     x$2440
+//│           _ =>
+//│             case x$2341 of
+//│               Mul$688 =>
+//│                 let x$2355 = x$2341.<Mul$688:e1> in
+//│                 let x$2356 = x$2341.<Mul$688:e2> in
+//│                 case x$2356 of
+//│                   Val$675 =>
+//│                     let* (x$2357) = mul_case0$1259(x$2356,x$2338) in
+//│                     let* (x$2358) = mul$840(x$2355,x$2357) in
+//│                     x$2358
+//│                   _ =>
+//│                     let* (x$2362) = mul_default_case1$1833(x$2338,x$2356) in
+//│                     let* (x$2444) = mul$840(x$2355,x$2362) in
+//│                     x$2444
+//│               _ =>
+//│                 let x$2364 = Mul$688(x$2341,x$2338) in
+//│                 x$2364
+//│       _ =>
+//│         case x$2341 of
+//│           Mul$688 =>
+//│             let x$2365 = x$2341.<Mul$688:e1> in
+//│             let x$2366 = x$2341.<Mul$688:e2> in
+//│             case x$2366 of
+//│               Val$675 =>
+//│                 let* (x$2367) = mul_case0$1259(x$2366,x$2338) in
+//│                 let* (x$2368) = mul$840(x$2365,x$2367) in
+//│                 x$2368
+//│               _ =>
+//│                 case x$2338 of
+//│                   Val$675 =>
+//│                     let* (x$2371) = mul_default_case0$1832(x$2338,x$2366) in
+//│                     let* (x$2448) = mul$840(x$2365,x$2371) in
+//│                     x$2448
+//│                   Mul$688 =>
+//│                     let* (x$2372) = mul_default_case1$1833(x$2338,x$2366) in
+//│                     let* (x$2449) = mul$840(x$2365,x$2372) in
+//│                     x$2449
+//│                   _ =>
+//│                     let* (x$2373) = mul_default_default$1834(x$2366,x$2338) in
+//│                     let* (x$2450) = mul$840(x$2365,x$2373) in
+//│                     x$2450
+//│           _ =>
+//│             let x$2374 = Mul$688(x$2341,x$2338) in
+//│             x$2374
+//│   def d_caller_post_caller_post$2421(x$2423,x$2428,x$2426,x$2424,x$2429,x$2433) =
+//│     let* (x$2422) = mul$840(x$2423,x$2424) in
+//│     let* (x$2425) = ln$987(x$2426) in
+//│     let* (x$2427) = d$1002(x$2428,x$2429) in
+//│     let* (x$2430) = mul$840(x$2425,x$2427) in
+//│     let* (x$2431) = add$738(x$2422,x$2430) in
+//│     let* (x$2432) = mul$840(x$2433,x$2431) in
+//│     x$2432
+//│   entry = entry$1255
+//│ 
+//│ OnlySimplify stats:
+//│ 
+//│ (orig,class size: 3 func size: 588)
+//│ (simp,class size: 3 func size: 428)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 3 func size: 588)
+//│ (simp,class size: 3 func size: 428)
+//│ (split,class size: 3 func size: 1008)
+//│ (simp2,class size: 3 func size: 828)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 3 func size: 828)
+//│ (simp,class size: 3 func size: 828)
+//│ (split,class size: 3 func size: 1222)
+//│ (simp2,class size: 3 func size: 1003)

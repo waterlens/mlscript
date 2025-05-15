@@ -1,0 +1,19 @@
+fun not(c) = if c then false else true
+
+abstract class Option[out T]: Some[T] | None
+data class Some[out T](x: T) extends Option[T]
+object None extends Option
+
+abstract class List[out T]: Cons[T] | Nil
+data class (::) Cons[out T](head: T, tail: List[T]) extends List[T]
+object Nil extends List
+
+fun snd(x) = if x is [f, s] then s
+fun fst(x) = if x is [f, s] then f
+
+fun (+++) str_concat(s1, s2) = globalThis.builtin("str_concat", s1, s2)
+fun str_of_int(x) = globalThis.builtin("int2str", x)
+fun str_of_float(x) = globalThis.builtin("float2str", x)
+fun print(x) = globalThis.builtin("println", x)
+fun rand() = globalThis.builtin("rand")
+

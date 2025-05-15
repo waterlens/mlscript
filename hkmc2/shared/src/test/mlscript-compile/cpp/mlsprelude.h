@@ -753,7 +753,7 @@ inline _mlsValue _mls_builtin_trunc_mod(_mlsValue a, _mlsValue b) {
 inline _mlsValue _mls_builtin_int2str(_mlsValue a) {
   _mls_assert(_mlsValue::isInt(a));
   char buf[32];
-  std::snprintf(buf, sizeof(buf), "%" PRIu64, a.asInt());
+  std::snprintf(buf, sizeof(buf), "%" PRIi64, a.asInt());
   return _mlsValue::create<_mls_Str>(buf);
 }
 

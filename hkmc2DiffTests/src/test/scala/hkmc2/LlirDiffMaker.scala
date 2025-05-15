@@ -113,7 +113,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             var changed = Status(true)
             var outOptProg = prog
             var count = 0
-            while changed.get && count <= 5 do 
+            while changed.get && count <= 1 do 
               changed.set(false)
               runWithTimeout(5)(opt.run(outOptProg)(using changed)) match
                 case Some((optProg, optStat)) =>

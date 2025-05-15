@@ -51,6 +51,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
   val mtFlag = flags.contains("mt")
 
+  val splitCache = MutHMap.empty[(Local, Loc), SplittingMode]
+
   object DestructUtils:
     @tailrec
     def getFirstDestructed(node: Node): Opt[Local] = node match
@@ -478,12 +480,35 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     case BoolCtor(b: Bool)
     case NotBoolCtor(b: Bool)
 
+  
+  case class CallShape(
+    func: Local,
+    returns: Opt[Ls[Local]],
+    args: Ls[TrivialExpr],
+  )
+
+  case class CaseShape(
+    scrutinee: TrivialExpr,
+    cases: Ls[(Pat, PostFunc)],
+    default: Opt[PostFunc],
+  )
+
+  enum SplittingMode:
+    case A(pre: PreFunc, post: PostFunc, callS: CallShape)
+    case B(pre: PreFunc, callS: CallShape)
+    case C(pre: PreFunc, caseS: CaseShape)
+    case D(pre: PreSelections, post: PostFunc)
+  
+
+  case class Selection(binder: Local, nthParam: Int, cls: Local, field: Str)
+
+  case class PreFunc(sym: Local, results: Ls[Local], body: PreFuncBody, orig: Func)
+  case class PreSelections(selections: Ls[Selection], results: Ls[Local], orig: Func)
+  case class PostFunc(sym: Local, params: Ls[Local], body: PostFuncBody, orig: Func)
+  case class PreFuncBody(body: Node => Node)
+  case class PostFuncBody(body: Node)
+
   private class Splitting(info: ProgInfo):
-    case class PreFunc(sym: Local, results: Ls[Local], body: PreFuncBody, orig: Func)
-    case class PreSelections(selections: Ls[Selection], results: Ls[Local], orig: Func)
-    case class PostFunc(sym: Local, params: Ls[Local], body: PostFuncBody, orig: Func)
-    case class PreFuncBody(body: Node => Node)
-    case class PostFuncBody(body: Node)
   
     case class Env(
       i: IntroductionAnalysis.Env,
@@ -632,24 +657,6 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     // 
     // In any case and sub-case above, it should be guaranteed that the node contains at least one let-call,
     // jump, or case node. Otherwise, the splitting is problematic, which implies a bug in the algorithm.
-    
-    case class CallShape(
-      func: Local,
-      returns: Opt[Ls[Local]],
-      args: Ls[TrivialExpr],
-    )
-
-    case class CaseShape(
-      scrutinee: TrivialExpr,
-      cases: Ls[(Pat, PostFunc)],
-      default: Opt[PostFunc],
-    )
-
-    enum SplittingMode:
-      case A(pre: PreFunc, post: PostFunc, callS: CallShape)
-      case B(pre: PreFunc, callS: CallShape)
-      case C(pre: PreFunc, caseS: CaseShape)
-      case D(pre: PreSelections, post: PostFunc)
 
     case class ComposeResult(
       // args * (a tail node * returns by the node before the hole) -> node 
@@ -807,8 +814,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
     
     def sFunc(func: Func, splitPos: Loc): SplittingMode =
-      trace[SplittingMode](s"sFunc: ${func.name |> showSym}, $splitPos"):
-        sNode(func.body, splitPos, func)(identity)
+      if splitCache.contains((func.name, splitPos)) then
+        trace[SplittingMode](s"sFunc hit cache: ${func.name |> showSym},"):
+          splitCache((func.name, splitPos))
+      else 
+        trace[SplittingMode](s"sFunc: ${func.name |> showSym}, $splitPos"):
+          val sm = sNode(func.body, splitPos, func)(identity)
+          splitCache.addOne((func.name, splitPos), sm)
+          sm
 
     def sNode(node: Node, splitPos: Loc, thisFunc: Func)(acc: Node => Node): SplittingMode = 
       trace[SplittingMode](s"sNode: ${acc(Node.Panic("placeholder"))} -> $node"): 
@@ -868,8 +881,6 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def srFunc(func: Func, selected: Set[Str]): SplittingMode =
       traceNot[SplittingMode](s"srFunc: ${func.name |> showSym}, $selected"):
         srNode(func.body, selected, func)(Nil)
-
-    case class Selection(binder: Local, nthParam: Int, cls: Local, field: Str)
     
     def srNode(node: Node, selected: Set[Str], thisFunc: Func)(acc: Ls[Selection]): SplittingMode =
       trace[SplittingMode](s"srNode: ${acc} -> $node"):

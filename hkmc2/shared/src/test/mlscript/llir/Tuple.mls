@@ -43,6 +43,7 @@ mkTup(1, 2)
 //│   constexpr static inline uint32_t typeTag = nextTypeTag();
 //│   virtual void print() const override { std::printf("%s", typeName); std::printf("("); this->_mls_field0.print(); std::printf(", "); this->_mls_field1.print();  std::printf(")"); }
 //│   virtual void destroy() override { _mlsValue::destroy(this->_mls_field0); _mlsValue::destroy(this->_mls_field1);  operator delete (this, std::align_val_t(_mlsAlignment)); }
+//│   virtual bool operator==(const _mlsObject &other) const override { return typeTag == other.tag && this->_mls_field0.asObject()->operator==(*other.cast<_mls_Tuple2>()->_mls_field0.asObject()) && this->_mls_field1.asObject()->operator==(*other.cast<_mls_Tuple2>()->_mls_field1.asObject()); }
 //│   static _mlsValue create(_mlsValue _mls_field0, _mlsValue _mls_field1) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Tuple2; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->_mls_field0 = _mls_field0; _mlsVal->_mls_field1 = _mls_field1;  return _mlsValue(_mlsVal); }
 //│   
 //│ };

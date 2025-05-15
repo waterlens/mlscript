@@ -8,10 +8,14 @@ import numpy as np
 benchmarks = [
     "atom", # only list and lazy list
     "awards", # only sorting on lists
-    "constraints", # too many HoFs
     "gcd",
     "scc", # no optimizations
     "secretary", # only sorting on lists
+    "cse",
+    "deriv",
+    "arith_eval",
+    "rbmap",
+    "const_fold",
 ]
 
 plt.figure(figsize=(10, 6))

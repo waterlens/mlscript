@@ -61,6 +61,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   val wholeOptFlags = Command[Set[Str]]("wholeOptFlags", false)(x => x.stripLeading().split(",").toSet)
   val wholeOptStat = NullaryCommand("wholeOptStat")
 
+  val dumpWholeOpt = Command[Str]("dumpBench", false)(x => x.stripLeading())
   val benchPrep = Command[Str]("benchPrep", false)(x => x.stripLeading())
 
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) =
@@ -113,7 +114,7 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             var changed = Status(true)
             var outOptProg = prog
             var count = 0
-            while changed.get && count <= 1 do 
+            while changed.get && count <= 2 do 
               changed.set(false)
               runWithTimeout(5)(opt.run(outOptProg)(using changed)) match
                 case Some((optProg, optStat)) =>
@@ -131,6 +132,12 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             outOptProg
           else
             prog
+        val rPath = os.Path(rootPath)
+        val auxPath =  
+          if rPath.last == "mlscript" then 
+            rPath/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
+          else
+            rPath/"src"/"test"/"mlscript-compile"/"cpp"
         def cppGen(name: String, prog: Program, gen: Bool, show: Bool, run: Bool, write: Opt[Str]): Unit =
           tl.log(s"Generating $name")
           if gen || show || run || write.isDefined then
@@ -138,12 +145,6 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             if show then
               output(s"\n$name:")
               output(cpp.toDocument.toString)
-            val rPath = os.Path(rootPath)
-            val auxPath =  
-              if rPath.last == "mlscript" then 
-                rPath/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
-              else
-                rPath/"src"/"test"/"mlscript-compile"/"cpp"
             if write.isDefined then
               printToFile(java.io.File((auxPath / s"${write.get}").toString)):
                 p => p.println(cpp.toDocument.toString)
@@ -169,6 +170,12 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
           val benchCppName = benchPrep.get.get
           val onlySimp = optimize("OnlySimplify", prog, true, false, true, Set("simp", "!split"))
           val fullOpt = optimize("FullOpt", prog, true, false, true, wholeOptFlags.get.getOrElse(Set.empty))
+          if dumpWholeOpt.isSet then
+            val dumpName = baseName(dumpWholeOpt.get.get)
+            printToFile(java.io.File((auxPath / s"${dumpName}.simp.llir").toString)):
+              p => p.println(onlySimp.show())
+            printToFile(java.io.File((auxPath / s"${dumpName}.opt.llir").toString)):
+              p => p.println(fullOpt.show())
           cppGen("OnlySimplifyCpp", onlySimp, false, false, false, Some(baseName(benchCppName) + ".simp.cxx"))
           cppGen("FullOptCpp", fullOpt, false, false, false, Some(baseName(benchCppName) + ".opt.cxx"))
         if intl.isSet then

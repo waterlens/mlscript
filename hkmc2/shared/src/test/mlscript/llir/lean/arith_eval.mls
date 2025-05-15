@@ -1,0 +1,55 @@
+:llir
+
+:import prelude.mls
+//│ Imported 16 member(s)
+
+abstract class Expr
+data class Var(x: Int) extends Expr
+data class Val(n: Int) extends Expr
+data class Add(e1: Expr, e2: Expr) extends Expr
+
+fun dec(n) = if n == 0 then 0 else n - 1
+
+fun mk_expr(n, v) = if n == 0
+  then Val(v)
+  else Add(mk_expr(n - 1, v + 1), mk_expr(n - 1, dec(v)))
+
+fun eeval(e) = if e is
+  Val(n) then n
+  Var(x) then 0
+  Add(l, r) then eeval(l) + eeval(r)
+
+fun main() =
+  let e = mk_expr(25, 1)
+  eeval(e)
+
+:wholeOptFlags simp,simp2
+:dumpBench arith_eval
+:benchPrep arith_eval.cxx
+main()
+//│ 
+//│ OnlySimplify stats:
+//│ 
+//│ (orig,class size: 0 func size: 102)
+//│ (simp,class size: 0 func size: 55)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 0 func size: 102)
+//│ (simp,class size: 0 func size: 55)
+//│ (split,class size: 0 func size: 71)
+//│ (simp2,class size: 0 func size: 70)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 0 func size: 70)
+//│ (simp,class size: 0 func size: 70)
+//│ (split,class size: 0 func size: 115)
+//│ (simp2,class size: 0 func size: 74)
+//│ 
+//│ FullOpt stats:
+//│ 
+//│ (orig,class size: 0 func size: 74)
+//│ (simp,class size: 0 func size: 74)
+//│ (split,class size: 0 func size: 98)
+//│ (simp2,class size: 0 func size: 76)

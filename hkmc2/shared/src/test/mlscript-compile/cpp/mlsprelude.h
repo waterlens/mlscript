@@ -121,11 +121,15 @@ public:
   }
 };
 
+#if 0
 #define _mls_assert(e)                                                         \
   (__builtin_expect(!(e), 0)                                                   \
        ? _mlsUtil::panic_with("assertion failed", __func__, __FILE__,          \
                               __LINE__)                                        \
        : (void)0)
+#else
+#define _mls_assert(e) (void)0
+#endif
 
 struct _mlsFloatShape : public _mlsObject {
   double f;
@@ -233,17 +237,19 @@ class _mlsValue {
   }
 
 public:
+  template <typename... Tp> using tuple = std::tuple<Tp...>;
   struct inc_ref_tag {};
   explicit _mlsValue() : value(nullptr) {}
   explicit _mlsValue(void *value) : value(value) {}
   explicit _mlsValue(void *value, inc_ref_tag) : value(value) {
-    if (isPtr())
-      asObject()->incRef();
+    // if (isPtr())
+    //   asObject()->incRef();
   }
-  _mlsValue(const _mlsValue &other) : value(other.value) {
-    if (isPtr())
-      asObject()->incRef();
-  }
+  _mlsValue(const _mlsValue &other) = default;
+  // _mlsValue(const _mlsValue &other) : value(other.value) {
+  //   if (isPtr())
+  //     asObject()->incRef();
+  // }
 
   void *asPtr() const {
     _mls_assert(!isInt63());
@@ -255,24 +261,25 @@ public:
     return static_cast<_mlsObject *>(value);
   }
 
-  template <typename... Tp> using tuple = std::tuple<Tp...>;
+  _mlsValue &operator=(const _mlsValue &other) = default;
+  // _mlsValue &operator=(const _mlsValue &other) {
+  //   if (value != nullptr && isPtr())
+  //     asObject()->decRef();
+  //   value = other.value;
+  //   if (isPtr())
+  //     asObject()->incRef();
+  //   return *this;
+  // }
 
-  _mlsValue &operator=(const _mlsValue &other) {
-    if (value != nullptr && isPtr())
-      asObject()->decRef();
-    value = other.value;
-    if (isPtr())
-      asObject()->incRef();
-    return *this;
-  }
+  ~_mlsValue() = default;
 
-  ~_mlsValue() {
-    if (isPtr())
-      if (asObject()->decRef()) {
-        asObject()->destroy();
-        value = nullptr;
-      }
-  }
+  // ~_mlsValue() {
+  //   if (isPtr())
+  //     if (asObject()->decRef()) {
+  //       asObject()->destroy();
+  //       value = nullptr;
+  //     }
+  // }
 
   int64_t asInt() const {
     _mls_assert(isInt63());
@@ -866,13 +873,13 @@ inline _mlsValue _mls_builtin_debug(_mlsValue a) {
 inline _mlsValue _mlsValue::floorDiv(const _mlsValue &other) const {
   if (isInt63() && other.isInt63())
     return floorDivInt63(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("floorDiv: expected int", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::floorMod(const _mlsValue &other) const {
   if (isInt63() && other.isInt63())
     return floorModInt63(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("floorMod: expected int", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::pow(const _mlsValue &other) const {
@@ -881,7 +888,7 @@ inline _mlsValue _mlsValue::pow(const _mlsValue &other) const {
   if (isFloat() && other.isFloat())
     return _mlsValue::create<_mls_Float>(
         std::pow(as<_mls_Float>(*this)->f, as<_mls_Float>(other)->f));
-  _mls_assert(false);
+  _mlsUtil::panic_with("pow: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::abs() const {
@@ -889,7 +896,7 @@ inline _mlsValue _mlsValue::abs() const {
     return absInt63();
   if (isFloat())
     return _mlsValue::create<_mls_Float>(std::abs(as<_mls_Float>(*this)->f));
-  _mls_assert(false);
+  _mlsUtil::panic_with("abs: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 // Operators
@@ -913,13 +920,13 @@ inline _mlsValue _mlsValue::operator!=(const _mlsValue &other) const {
 inline _mlsValue _mlsValue::operator&&(const _mlsValue &other) const {
   if (isInt63() && other.isInt63())
     return _mlsValue::fromBoolLit(asInt63() && other.asInt63());
-  _mls_assert(false);
+  _mlsUtil::panic_with("&&: expected int", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator||(const _mlsValue &other) const {
   if (isInt63() && other.isInt63())
     return _mlsValue::fromBoolLit(asInt63() || other.asInt63());
-  _mls_assert(false);
+  _mlsUtil::panic_with("||: expected int", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator+(const _mlsValue &other) const {
@@ -927,7 +934,7 @@ inline _mlsValue _mlsValue::operator+(const _mlsValue &other) const {
     return addInt63(other);
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) + *as<_mls_Float>(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("+: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator-(const _mlsValue &other) const {
@@ -935,7 +942,7 @@ inline _mlsValue _mlsValue::operator-(const _mlsValue &other) const {
     return subInt63(other);
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) - *as<_mls_Float>(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("-: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator-() const {
@@ -943,7 +950,7 @@ inline _mlsValue _mlsValue::operator-() const {
     return fromInt63(-asInt63());
   if (isFloat())
     return _mlsValue::create<_mls_Float>(-as<_mls_Float>(*this)->f);
-  _mls_assert(false);
+  _mlsUtil::panic_with("-: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator*(const _mlsValue &other) const {
@@ -951,7 +958,7 @@ inline _mlsValue _mlsValue::operator*(const _mlsValue &other) const {
     return mulInt63(other);
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) * *as<_mls_Float>(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("*: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator/(const _mlsValue &other) const {
@@ -959,13 +966,13 @@ inline _mlsValue _mlsValue::operator/(const _mlsValue &other) const {
     return divInt63(other);
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) / *as<_mls_Float>(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("/: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator%(const _mlsValue &other) const {
   if (isInt63() && other.isInt63())
     return modInt63(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("%: expected int", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator>(const _mlsValue &other) const {
@@ -973,7 +980,7 @@ inline _mlsValue _mlsValue::operator>(const _mlsValue &other) const {
     return gtInt63(other);
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) > *as<_mls_Float>(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with(">: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator<(const _mlsValue &other) const {
@@ -981,7 +988,7 @@ inline _mlsValue _mlsValue::operator<(const _mlsValue &other) const {
     return ltInt63(other);
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) < *as<_mls_Float>(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("<: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator>=(const _mlsValue &other) const {
@@ -989,7 +996,7 @@ inline _mlsValue _mlsValue::operator>=(const _mlsValue &other) const {
     return geInt63(other);
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) >= *as<_mls_Float>(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with(">=: expected int or float", __func__, __FILE__, __LINE__);
 }
 
 inline _mlsValue _mlsValue::operator<=(const _mlsValue &other) const {
@@ -997,5 +1004,5 @@ inline _mlsValue _mlsValue::operator<=(const _mlsValue &other) const {
     return leInt63(other);
   if (isFloat() && other.isFloat())
     return *as<_mls_Float>(*this) <= *as<_mls_Float>(other);
-  _mls_assert(false);
+  _mlsUtil::panic_with("<=: expected int or float", __func__, __FILE__, __LINE__);
 }

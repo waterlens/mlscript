@@ -1,4 +1,29 @@
-bench target:
-  make SRC={{target}}.simp.cxx DST={{target}}.simp.out
-  make SRC={{target}}.opt.cxx DST={{target}}.opt.out
-  hyperfine --warmup 2 ./{{target}}.simp.out ./{{target}}.opt.out --export-csv {{target}}.csv
+make-with-rc target:
+  make SRC={{target}}.nosimp.cxx DST={{target}}.rc1.nosimp.out USE_RC=1
+  make SRC={{target}}.simp.cxx DST={{target}}.rc1.simp.out USE_RC=1
+  make SRC={{target}}.opt.cxx DST={{target}}.rc1.opt.out USE_RC=1
+
+make-wo-rc target:
+  make SRC={{target}}.nosimp.cxx DST={{target}}.rc0.nosimp.out USE_RC=0
+  make SRC={{target}}.simp.cxx DST={{target}}.rc0.simp.out USE_RC=0
+  make SRC={{target}}.opt.cxx DST={{target}}.rc0.opt.out USE_RC=0
+
+bench-with-rc target: (make-with-rc target)
+  hyperfine --warmup 5 \
+      ./{{target}}.rc1.simp.out \
+      ./{{target}}.rc1.opt.out \
+      ./{{target}}.rc1.nosimp.out \
+      --export-csv {{target}}.rc1.csv
+
+bench-wo-rc target: (make-wo-rc target)
+  hyperfine --warmup 5 \
+      ./{{target}}.rc0.simp.out \
+      ./{{target}}.rc0.opt.out \
+      ./{{target}}.rc0.nosimp.out \
+      --export-csv {{target}}.rc0.csv
+
+clean:
+  rm -rf *.out *.csv *.o
+
+dist-clean: clean
+  rm -rf *.simp.cxx *.opt.cxx *.nosimp.cxx *.llir

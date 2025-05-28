@@ -168,14 +168,18 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
           else last.slice(0, li)
         if benchPrep.isSet then
           val benchCppName = benchPrep.get.get
+          val noSimp = optimize("NoSimplify", prog, false, false, true, Set.empty)
           val onlySimp = optimize("OnlySimplify", prog, true, false, true, Set("simp", "!split"))
           val fullOpt = optimize("FullOpt", prog, true, false, true, wholeOptFlags.get.getOrElse(Set.empty))
           if dumpWholeOpt.isSet then
             val dumpName = baseName(dumpWholeOpt.get.get)
+            printToFile(java.io.File((auxPath / s"${dumpName}.nosimp.llir").toString)):
+              p => p.println(noSimp.show())
             printToFile(java.io.File((auxPath / s"${dumpName}.simp.llir").toString)):
               p => p.println(onlySimp.show())
             printToFile(java.io.File((auxPath / s"${dumpName}.opt.llir").toString)):
               p => p.println(fullOpt.show())
+          cppGen("NoSimplifyCpp", noSimp, false, false, false, Some(baseName(benchCppName) + ".nosimp.cxx"))
           cppGen("OnlySimplifyCpp", onlySimp, false, false, false, Some(baseName(benchCppName) + ".simp.cxx"))
           cppGen("FullOptCpp", fullOpt, false, false, false, Some(baseName(benchCppName) + ".opt.cxx"))
         if intl.isSet then

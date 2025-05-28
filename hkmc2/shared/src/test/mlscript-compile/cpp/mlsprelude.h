@@ -241,15 +241,37 @@ public:
   struct inc_ref_tag {};
   explicit _mlsValue() : value(nullptr) {}
   explicit _mlsValue(void *value) : value(value) {}
+
+#ifdef MLS_ENABLE_RC
   explicit _mlsValue(void *value, inc_ref_tag) : value(value) {
-    // if (isPtr())
-    //   asObject()->incRef();
+    if (isPtr())
+      asObject()->incRef();
   }
+  _mlsValue(const _mlsValue &other) : value(other.value) {
+    if (isPtr())
+      asObject()->incRef();
+  }
+  _mlsValue &operator=(const _mlsValue &other) {
+    if (value != nullptr && isPtr())
+      asObject()->decRef();
+    value = other.value;
+    if (isPtr())
+      asObject()->incRef();
+    return *this;
+  }
+  ~_mlsValue() {
+    if (isPtr())
+      if (asObject()->decRef()) {
+        asObject()->destroy();
+        value = nullptr;
+      }
+  }
+#else
+  explicit _mlsValue(void *value, inc_ref_tag) : value(value) {}
   _mlsValue(const _mlsValue &other) = default;
-  // _mlsValue(const _mlsValue &other) : value(other.value) {
-  //   if (isPtr())
-  //     asObject()->incRef();
-  // }
+  _mlsValue &operator=(const _mlsValue &other) = default;
+  ~_mlsValue() = default;
+#endif
 
   void *asPtr() const {
     _mls_assert(!isInt63());
@@ -260,26 +282,6 @@ public:
     _mls_assert(isPtr());
     return static_cast<_mlsObject *>(value);
   }
-
-  _mlsValue &operator=(const _mlsValue &other) = default;
-  // _mlsValue &operator=(const _mlsValue &other) {
-  //   if (value != nullptr && isPtr())
-  //     asObject()->decRef();
-  //   value = other.value;
-  //   if (isPtr())
-  //     asObject()->incRef();
-  //   return *this;
-  // }
-
-  ~_mlsValue() = default;
-
-  // ~_mlsValue() {
-  //   if (isPtr())
-  //     if (asObject()->decRef()) {
-  //       asObject()->destroy();
-  //       value = nullptr;
-  //     }
-  // }
 
   int64_t asInt() const {
     _mls_assert(isInt63());

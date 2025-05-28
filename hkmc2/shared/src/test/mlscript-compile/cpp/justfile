@@ -10,16 +10,16 @@ make-wo-rc target:
 
 bench-with-rc target: (make-with-rc target)
   hyperfine --warmup 5 \
+      ./{{target}}.rc1.nosimp.out \
       ./{{target}}.rc1.simp.out \
       ./{{target}}.rc1.opt.out \
-      ./{{target}}.rc1.nosimp.out \
       --export-csv {{target}}.rc1.csv
 
 bench-wo-rc target: (make-wo-rc target)
   hyperfine --warmup 5 \
+      ./{{target}}.rc0.nosimp.out \
       ./{{target}}.rc0.simp.out \
       ./{{target}}.rc0.opt.out \
-      ./{{target}}.rc0.nosimp.out \
       --export-csv {{target}}.rc0.csv
 
 clean:

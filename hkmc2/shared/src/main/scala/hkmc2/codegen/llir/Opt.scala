@@ -1106,6 +1106,19 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         measureTime(s"fFunc: ${func.name |> showSym}", fFunc(func)(using env))
 
   private class Simplify(info: ProgInfo):
+    def removeUnreachable(using Status[Bool]) =
+      val reachable = ProgDfs(info).dfs(true)
+      log(s"reachableFuncs: ${reachable.funcs.map(showSym).toList}")
+      log(s"unreachableFuncs: ${info.func.keys.filterNot(reachable.funcs.contains(_)).map(showSym).toList}")
+      log(s"reachableClasses: ${reachable.classes.map(showSym).toList}")
+      log(s"unreachableClasses: ${info.classes.keys.filterNot(reachable.classes.contains(_)).map(showSym).toList}")
+      if info.func.size =/= reachable.funcs.size then
+        summon[Status[Bool]].set(true)
+      info.func.filterInPlace((k, _) => reachable.funcs.contains(k))
+      if info.classes.size =/= reachable.classes.size then
+        summon[Status[Bool]].set(true)
+      info.classes.filterInPlace((k, _) => reachable.classes.contains(k))
+
     def simplify(using Status[Bool]) =
       log(info.toString())
       val newFuncs = info.func.map:
@@ -1476,6 +1489,19 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           log(s"last prog: ${prev.show()}")
           throw e
       optStat.addOne(("simp", info.getStat))
+    if flags.contains("elimUnreachable") then
+      val simpl = Simplify(info)
+      val changed = Status(true)
+      while changed.get do
+        changed.set(false)
+        val prev = info.toProgram
+        try
+          measureTime("elimUnreachable", simpl.removeUnreachable(using changed))
+        catch case e: Exception =>
+          log(s"exception: $e")
+          log(s"last prog: ${prev.show()}")
+          throw e
+      optStat.addOne(("elimUnreachable", info.getStat))
     if !flags.contains("!split") then
       val splitting = Splitting(info)
       measureTime("split", splitting.run(using summon[Status[Bool]]))

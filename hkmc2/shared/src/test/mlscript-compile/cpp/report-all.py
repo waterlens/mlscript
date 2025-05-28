@@ -31,9 +31,8 @@ def make_absolute_time():
         labels_id = {
             'simp': 0,
             'opt': 1,
-            'nosimp': 2,
         }
-        labels_order = ['nosimp', 'simp', 'opt']
+        labels_order = ['simp', 'opt']
         pos = [x[i] + (gap + width) * (n - (len(labels_order) - 1) / 2) for n in range(len(labels_order))]
 
         for j, lbl in enumerate(labels_order):
@@ -71,8 +70,8 @@ def make_relative_time():
     for i, benchmark in enumerate(benchmarks):
         
         labels_id = {
-            'simp': 1,
-            'opt': 2,
+            'simp': 0,
+            'opt': 1,
         }
         labels_order = ['simp', 'opt']
 
@@ -98,7 +97,7 @@ def make_relative_time():
 
     plt.xlabel("Benchmark")
     plt.ylabel("Relative Time (normalized to opt)")
-    plt.title("Relative Performance with Standard Deviation")
+    plt.title("Relative Performance")
     plt.legend()
 
     plt.ylim(0.39, 1.39)

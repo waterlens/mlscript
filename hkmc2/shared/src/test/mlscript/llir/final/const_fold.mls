@@ -1,0 +1,83 @@
+:llir
+
+:import prelude.mls
+//│ Imported 20 member(s)
+
+abstract class Expr
+data class Var(x: Int) extends Expr
+data class Val(n: Int) extends Expr
+data class Add(e1: Expr, e2: Expr) extends Expr
+data class Mul(e1: Expr, e2: Expr) extends Expr
+
+fun mkExpr(n, v) = 
+  if n == 0 then
+    (if v == 0 then Var(1) else Val(v))
+  else
+    Add(mkExpr(n - 1, v + 1), mkExpr(n - 1, v - 1))
+
+fun appendAdd(e1, e2) = if [e1, e2] is
+  [Add(e1, e2), e3] then Add(e1, appendAdd(e2, e3))
+  [e1, e2]          then Add(e1, e2)
+
+fun appendMul(e1, e2) = if [e1, e2] is
+  [Mul(e1, e2), e3] then Mul(e1, appendMul(e2, e3))
+  [e1, e2]          then Mul(e1, e2)
+
+fun reassoc(e) = if e is
+  Add(e1, e2) then
+    let e1_ = reassoc(e1)
+    let e2_ = reassoc(e2)
+    appendAdd(e1_, e2_)
+  Mul(e1, e2) then
+    let e1_ = reassoc(e1)
+    let e2_ = reassoc(e2)
+    appendMul(e1_, e2_)
+  e then e
+
+fun constFolding(e) = if e is
+  Add(e1, e2) then
+    let e1_ = constFolding(e1)
+    let e2_ = constFolding(e2)
+    if [e1_, e2_] is
+      [Val(a), Val(b)] then Val(a + b)
+      [Val(a), Add(e, Val(b))] then Add(Val(a + b), e)
+      [Val(a), Add(Val(b), e)] then Add(Val(a + b), e)
+      _ then Add(e1_, e2_)
+  Mul(e1, e2) then
+    let e1_ = constFolding(e1)
+    let e2_ = constFolding(e2)
+    if [e1_, e2_] is
+      [Val(a), Val(b)] then Val(a * b)
+      [Val(a), Mul(e, Val(b))] then Mul(Val(a * b), e)
+      [Val(a), Mul(Val(b), e)] then Mul(Val(a * b), e)
+      _ then Mul(e1_, e2_)
+  else e
+
+fun size(e) = if e is
+  Add(e1, e2) then size(e1) + size(e2) + 1
+  Mul(e1, e2) then size(e1) + size(e2) + 1
+  _ then 1
+
+// fun exprToString(e) = if e is
+//   Var(x) then "#" +++ x
+//   Val(n) then str_of_int(n)
+//   Add(e1, e2) then "(" +++ exprToString(e1) +++ " + " +++ exprToString(e2) +++ ")"
+//   Mul(e1, e2) then "(" +++ exprToString(e1) +++ " * " +++ exprToString(e2) +++ ")"
+
+fun eval(e) = if e is
+  Var(x) then 0
+  Val(n) then n
+  Add(e1, e2) then eval(e1) + eval(e2)
+  Mul(e1, e2) then eval(e1) * eval(e2)
+
+fun main() =
+  let n = 21
+  let e = mkExpr(n, 1)
+  let v1 = eval(e)
+  let v2 = eval(constFolding(reassoc(e)))
+  v1 == v2
+
+:wholeOptFlags simp,simp2
+:dumpBench const_fold
+:benchPrep const_fold.cxx
+main()

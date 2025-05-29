@@ -1,0 +1,83 @@
+:llir
+
+:import prelude.mls
+//│ Imported 16 member(s)
+
+abstract class Color
+object Red extends Color
+object Black extends Color
+
+abstract class Tree
+data class Leaf extends Tree
+data class Node(color: Color, left: Tree, key: Int, value: Bool, right: Tree) extends Tree
+
+object LamF
+
+// defunctionalized
+fun apply_f(f, a, b, c) = if f is
+  LamF then if b then c + 1 else c
+
+fun fold(f, t, b) = if t is
+  Leaf then b
+  Node(color, left, key, value, right) then
+    fold(f, right, apply_f(f, key, value, fold(f, left, b)))
+
+fun balance1(k, v, t1, t2) = if t2 is
+  Node(_, Node(Red, l, kx, vx, r1), ky, vy, r2) then
+    Node(Red, Node(Black, l, kx, vx, r1), ky, vy, Node(Black, r2, k, v, t1))
+  Node(_, l1, ky, vy, Node(Red, l2, kx, vx, r)) then
+    Node(Red, Node(Black, l1, ky, vy, l2), kx, vx, Node(Black, r, k, v, t1))
+  Node(_, l, ky, vy, r) then
+    Node(Black, Node(Red, l, ky, vy, r), k, v, t1)
+  _ then Leaf
+
+fun balance2(t1, k, v, t2) = if t2 is
+  Node(_, Node(Red, l, kx1, vx1, r1), ky, vy, r2) then
+    Node(Red, Node(Black, t1, k, v, l), kx1, vx1, Node(Black, r1, ky, vy, r2))
+  Node(_, l1, ky, vy, Node(Red, l2, kx2, vx2, r)) then
+    Node(Red, Node(Black, t1, k, v, l1), ky, vy, Node(Black, l2, kx2, vx2, r))
+  Node(_, l, ky, vy, r) then
+    Node(Black, t1, k, v, Node(Red, l, ky, vy, r))
+  _ then Leaf
+
+fun isRed(t) = if t is
+  Node(Red, _, _, _, _) then true
+  _ then false
+
+fun ins(kx, vx, t) = if t is
+  Leaf then Node(Red, Leaf, kx, vx, Leaf)
+  Node(Red, a, ky, vy, b) then
+    if kx < ky then Node(Red, ins(kx, vx, a), ky, vy, b)
+    else if kx == ky then Node(Red, a, kx, vx, b)
+    else Node(Red, a, ky, vy, ins(kx, vx, b))
+  Node(Black, a, ky, vy, b) then
+    if kx < ky then
+      if isRed(a) then balance1(ky, vy, ins(kx, vx, b), a)
+      else Node(Black, ins(kx, vx, a), ky, vy, b)
+    else if kx == ky then Node(Black, a, kx, vx, b)
+    else if isRed(b) then balance2(a, ky, vy, ins(kx, vx, b))
+    else Node(Black, a, ky, vy, ins(kx, vx, b))
+
+fun setBlack(t) = if t is
+  Node(_, l, k, v, r) then Node(Black, l, k, v, r)
+  _ then t
+
+fun insert(k, v, t) =
+  if isRed(t) then
+    setBlack(ins(k, v, t))
+  else ins(k, v, t)
+
+fun mkMapAux(n, t) = if n == 0 then t
+  else mkMapAux(n - 1, insert(n, n % 10 == 0, t))
+
+fun mkMap(n) = mkMapAux(n, Leaf)
+
+fun main() =
+  let m = mkMap(6000)
+  let v = fold(LamF, m, 0)
+  v
+
+:wholeOptFlags simp,simp2
+:dumpBench rbmap
+:benchPrep rbmap.cxx
+main()

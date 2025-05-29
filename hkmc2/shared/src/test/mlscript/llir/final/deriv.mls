@@ -1,7 +1,7 @@
 :llir
 
 :import prelude.mls
-//│ Imported 16 member(s)
+//│ Imported 20 member(s)
 
 abstract class Expr
 data class Var(x: String) extends Expr
@@ -67,14 +67,6 @@ fun count(e) = if e is
   Pow(f, g) then count(f) + count(g)
   Ln(f) then count(f)
 
-// fun exprToString(e) = if e is
-//   Val(n) then str_of_int(n)
-//   Var(x) then x
-//   Add(f, g) then "(" +++ exprToString(f) +++ " + " +++ exprToString(g) +++ ")"
-//   Mul(f, g) then "(" +++ exprToString(f) +++ " * " +++ exprToString(g) +++ ")"
-//   Pow(f, g) then "(" +++ exprToString(f) +++ " ^ " +++ exprToString(g) +++ ")"
-//   Ln(f) then "ln(" +++ exprToString(f) +++ ")"
-
 fun nestAux(s, f, n, e) = if [n, e] is
   [0, x] then x
   [m, x] then
@@ -94,4 +86,6 @@ fun main(n) =
   count(nest(deriv, n, f))
 
 :wholeOptFlags simp,simp2
+:dumpBench deriv
+:benchPrep deriv.cxx
 main(10)

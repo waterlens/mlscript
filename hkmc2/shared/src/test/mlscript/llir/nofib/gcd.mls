@@ -1,7 +1,17 @@
 :llir
 
-:import NofibPrelude.mls
-//│ Imported 105 member(s)
+abstract class List[out T]: Cons[T] | Nil
+data class (::) Cons[out T](head: T, tail: List[T]) extends List[T]
+object Nil extends List
+
+object LamF1
+object LamF2
+
+fun intQuot(a, b) = globalThis.builtin("trunc_div", a, b)
+fun intRem(a, b) = globalThis.builtin("trunc_mod", a, b)
+fun quotRem(a, b) = [intQuot(a, b), intRem(a, b)]
+
+fun enumFromTo(a, b) = if a <= b then a :: enumFromTo(a + 1, b) else Nil
 
 fun g(u1u2u3, v1v2v3) = if u1u2u3 is [u1, u2, u3] and v1v2v3 is [v1, v2, v3] then
   if
@@ -14,51 +24,41 @@ fun gcdE(x, y) = if
   x == 0 then [y, 0, 1]
   else g([1, 0, x], [0, 1, y])
 
+fun abs(x) = globalThis.Math.abs(x)
+
 fun max_(ls) = if ls is
   x :: Nil then x
   x :: y :: xs then if x < y then max_(y :: xs) else max_(x :: xs)
 
-
 fun lscomp1(p1, ms) = if p1 is
   Nil then Nil
   h1 :: t1 then
-    fun lscomp2(p2) = if p2 is
-      Nil then lscomp1(t1, ms)
-      h2 :: t2 then [h1, h2] :: lscomp2(t2)
-    lscomp2(ms)
+    lscomp2(h1, t1, ms, ms)
+fun lscomp2(h1, t1, p2, initMs) = if p2 is
+  Nil then lscomp1(t1, initMs)
+  h2 :: t2 then [h1, h2] :: lscomp2(h1, t1, t2, initMs)
+
+fun apply(f, xs) = if f is
+  LamF1 then
+    if xs is [x, y] then [x, y, gcdE(x, y)]
+  LamF2 then
+    if xs is[d1, d2, [gg, u, v]] then abs(gg + u + v)
+
+fun map(f, xs) = if xs is
+  x :: xs then apply(f, x) :: map(f, xs)
+  Nil then Nil
 
 fun test(d) =
   let ns = enumFromTo(5000, 5000 + d)
   let ms = enumFromTo(10000, 10000 + d)
-  let tripls = map(case { [x, y] then [x, y, gcdE(x, y)] }, lscomp1(ns, ms))
-  let rs = map(case { [d1, d2, [gg, u, v]] then abs(gg + u + v) }, tripls)
+  let tripls = map(LamF1, lscomp1(ns, ms))
+  let rs = map(LamF2, tripls)
   max_(rs)
 
 fun testGcd_nofib(x) = test(x)
 
 :wholeOpt
 :wholeOptFlags simp,simp2
-:wholeOptStat
+:dumpBench gcd
 :benchPrep gcd.cxx
 testGcd_nofib(1000)
-//│ 
-//│ WholeProgramOpt stats:
-//│ 
-//│ (orig,class size: 415 func size: 1483)
-//│ (simp,class size: 53 func size: 178)
-//│ (split,class size: 53 func size: 257)
-//│ (simp2,class size: 53 func size: 220)
-//│ 
-//│ WholeProgramOpt stats:
-//│ 
-//│ (orig,class size: 53 func size: 220)
-//│ (simp,class size: 53 func size: 220)
-//│ (split,class size: 53 func size: 319)
-//│ (simp2,class size: 53 func size: 236)
-//│ 
-//│ WholeProgramOpt stats:
-//│ 
-//│ (orig,class size: 53 func size: 236)
-//│ (simp,class size: 53 func size: 236)
-//│ (split,class size: 53 func size: 335)
-//│ (simp2,class size: 53 func size: 250)

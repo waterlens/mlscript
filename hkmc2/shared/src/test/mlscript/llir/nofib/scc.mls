@@ -11,22 +11,22 @@ fun dfs(r, vsns, xs) = if vsns is [vs, ns] and
       inList(x, vs) then dfs(r, [vs, ns], xs)
       dfs(r, [x :: vs, Nil], r(x)) is [vs', ns'] then dfs(r, [vs', (x :: ns') +: ns], xs)
 
+fun swap(a) = if a is [f, s] then [s, f]
+
+fun new_range(xys, w) = if xys is
+  Nil then Nil
+  [x, y] :: xys and
+    x == w then y :: new_range(xys, w)
+    else new_range(xys, w)
+
+fun span_tree(r, vsns, xs) = if vsns is [vs, ns] and
+  xs is
+    Nil then [vs, ns]
+    x :: xs and
+      inList(x, vs) then span_tree(r, [vs, ns], xs)
+      dfs(r, [x :: vs, Nil], r(x)) is [vs', ns'] then span_tree(r, [vs', (x :: ns') :: ns], xs)
+
 fun stronglyConnComp(es, vs) =
-  fun swap(a) = if a is [f, s] then [s, f]
-  
-  fun new_range(xys, w) = if xys is
-    Nil then Nil
-    [x, y] :: xys and
-      x == w then y :: new_range(xys, w)
-      else new_range(xys, w)
-  
-  fun span_tree(r, vsns, xs) = if vsns is [vs, ns] and
-    xs is
-      Nil then [vs, ns]
-      x :: xs and
-        inList(x, vs) then span_tree(r, [vs, ns], xs)
-        dfs(r, [x :: vs, Nil], r(x)) is [vs', ns'] then span_tree(r, [vs', (x :: ns') :: ns], xs)
-  
   snd of span_tree of
     x => new_range(map(swap, es), x)
     [Nil, Nil]
@@ -34,7 +34,6 @@ fun stronglyConnComp(es, vs) =
       x => new_range(es, x)
       [Nil, Nil]
       vs
-
 
 fun testScc_nofib() =
   let a = 1
@@ -53,25 +52,25 @@ fun testScc_nofib() =
 :wholeOptFlags simp,simp2
 :wholeOptStat
 :benchPrep scc.cxx
-print(testScc_nofib())
+testScc_nofib()
 //│ 
 //│ WholeProgramOpt stats:
 //│ 
-//│ (orig,class size: 464 func size: 1550)
-//│ (simp,class size: 102 func size: 242)
-//│ (split,class size: 102 func size: 296)
-//│ (simp2,class size: 102 func size: 259)
+//│ (orig,class size: 376 func size: 1636)
+//│ (simp,class size: 14 func size: 325)
+//│ (split,class size: 14 func size: 392)
+//│ (simp2,class size: 14 func size: 348)
 //│ 
 //│ WholeProgramOpt stats:
 //│ 
-//│ (orig,class size: 102 func size: 259)
-//│ (simp,class size: 102 func size: 259)
-//│ (split,class size: 102 func size: 298)
-//│ (simp2,class size: 102 func size: 272)
+//│ (orig,class size: 14 func size: 348)
+//│ (simp,class size: 14 func size: 348)
+//│ (split,class size: 14 func size: 437)
+//│ (simp2,class size: 14 func size: 379)
 //│ 
 //│ WholeProgramOpt stats:
 //│ 
-//│ (orig,class size: 102 func size: 272)
-//│ (simp,class size: 102 func size: 272)
-//│ (split,class size: 102 func size: 335)
-//│ (simp2,class size: 102 func size: 294)
+//│ (orig,class size: 14 func size: 379)
+//│ (simp,class size: 14 func size: 379)
+//│ (split,class size: 14 func size: 477)
+//│ (simp2,class size: 14 func size: 390)

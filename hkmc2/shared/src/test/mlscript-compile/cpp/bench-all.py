@@ -5,7 +5,4 @@ import os
 benchmarks = open("benchmarks.txt").read().splitlines()
 
 for benchmark in benchmarks:
-    os.system(f"just bench-wo-rc {benchmark}")
-
-# for benchmark in benchmarks:
-#     os.system(f"just bench-with-rc {benchmark}")
+    os.system(f"just bench {benchmark}")

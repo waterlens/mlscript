@@ -7,14 +7,14 @@ import numpy as np
 
 benchmarks = open("benchmarks.txt").read().splitlines()
 
-
-
 results = {}
+size_results = {}
 
 for benchmark in benchmarks:
-    df = pd.read_csv(f"{benchmark}.rc0.csv")
+    df = pd.read_csv(f"{benchmark}.csv")
     results[benchmark] = df
-
+    df = pd.read_csv(f"{benchmark}.size.csv")
+    size_results[benchmark] = df
 
 def make_absolute_time():
     plt.figure(figsize=(12, 8), dpi=600)  # 增加图表宽度
@@ -46,9 +46,8 @@ def make_absolute_time():
     # 设置 x 轴标签
     plt.xticks(x, benchmarks, rotation=45)
 
-    plt.xlabel("Benchmark")
-    plt.ylabel("Time (s)")
-    plt.title("Benchmark Performance with Standard Deviation")
+    plt.xlabel("Benchmarks")
+    plt.ylabel("Running Time (s)")
     
     plt.legend()
 
@@ -95,9 +94,8 @@ def make_relative_time():
     # 设置 x 轴标签
     plt.xticks(x, benchmarks, rotation=45)
 
-    plt.xlabel("Benchmark")
-    plt.ylabel("Relative Time (normalized to opt)")
-    plt.title("Relative Performance (Log Scale)")
+    plt.xlabel("Benchmarks")
+    plt.ylabel("Relative Running Time (normalized to opt, log scale)")
     plt.legend()
 
     # 设置对数坐标轴
@@ -120,5 +118,51 @@ def make_relative_time():
     plt.savefig("benchmark-relative-results.png", bbox_inches='tight')
     plt.close()
 
+def make_size():
+    plt.figure(figsize=(12, 8), dpi=600)  # 增加图表宽度
+
+    x = np.arange(len(results))
+    width = 0.11  # 减小柱子宽度
+    gap = 0.03
+
+    # 定义两种颜色
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c']  # simp, opt, nosimp
+
+    for i, benchmark in enumerate(benchmarks):
+        labels_id = {
+            'simp': 0,
+            'opt': 1,
+        }
+        labels_order = ['simp', 'opt']
+        pos = [x[i] + (gap + width) * (n - (len(labels_order) - 1) / 2) for n in range(len(labels_order))]
+
+        for j, lbl in enumerate(labels_order):
+            id = labels_id[lbl]
+            size_kb = size_results[benchmark]["size"].iloc[id] / 1024
+            plt.bar(pos[j], size_kb, width, 
+                    color=colors[j], edgecolor='black', 
+                    label=lbl if i == 0 else "")
+            
+            # 添加数值标签
+            plt.text(pos[j], size_kb * 1.05, 
+                    f'{size_kb:.1f}', 
+                    ha='center', va='bottom', 
+                    rotation=0, fontsize=8)
+
+    # 设置 x 轴标签
+    plt.xticks(x, benchmarks, rotation=45)
+
+    plt.xlabel("Benchmarks")
+    plt.ylabel("Code Size (kB)")
+    plt.legend()
+
+    plt.ylim(0, 100)  # 调整 y 轴范围到 kB 单位
+
+    plt.tight_layout()
+
+    plt.savefig("benchmark-size-results.png", bbox_inches='tight')
+    plt.close()
+
 make_absolute_time()
 make_relative_time()
+make_size()

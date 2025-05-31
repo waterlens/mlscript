@@ -3,7 +3,7 @@ USE_RC := 0
 ifeq ($(USE_RC),1)
   CFLAGS += -DMLS_ENABLE_RC
 endif
-CFLAGS += -O3 -Wall -Wextra -std=c++20 -I. -Wno-inconsistent-missing-override -I/opt/homebrew/include -g
+CFLAGS += -O3 -Wall -Wextra -std=c++20 -I. -Wno-inconsistent-missing-override -I/opt/homebrew/include -g -fsanitize=address
 LDFLAGS += -L/opt/homebrew/lib
 LDLIBS := -lmimalloc -lgmp
 SRC :=
@@ -30,6 +30,6 @@ clean:
 auto: $(TARGET)
 
 $(TARGET): $(SRC) $(INCLUDES)
-	$(CXX) -c $(CFLAGS) $(SRC) -o $(TARGET).o
-	$(CXX) -c $(CFLAGS) mlsaux.cxx -o $(TARGET).aux.o
-	$(CXX) $(CFLAGS) $(LDFLAGS) $(TARGET).aux.o $(TARGET).o $(LDLIBS) -o $(TARGET)
+	$(CXX) -c $(CFLAGS) -o $(TARGET).o $(SRC)
+	$(CXX) -c $(CFLAGS) -o $(TARGET).aux.o mlsaux.cxx
+	$(CXX) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $(TARGET) $(TARGET).aux.o $(TARGET).o

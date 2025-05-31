@@ -19,6 +19,7 @@ essential_files = [
     "mlsaux.cxx",
     "bench-all.py",
     "report-all.py",
+    "collect-all-size.py",
     "pack.py",
     "benchmarks.txt",
     "pyproject.toml",

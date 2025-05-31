@@ -164,6 +164,58 @@ def make_size():
     plt.savefig("benchmark-size-results.png", bbox_inches='tight')
     plt.close()
 
+def make_relative_size():
+    plt.figure(figsize=(12, 8), dpi=600)  # 增加图表宽度
+
+    x = np.arange(len(size_results))
+    width = 0.11  # 减小柱子宽度
+    gap = 0.03
+
+    # 定义两种颜色
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c']  # simp, opt, nosimp
+
+    for i, benchmark in enumerate(benchmarks):
+        labels_id = {
+            'simp': 0,
+            'opt': 1,
+        }
+        labels_order = ['simp', 'opt']
+
+        baseline = size_results[benchmark]["size"].iloc[labels_id['simp']]
+        pos = [x[i] + (gap + width) * (n - (len(labels_order) - 1) / 2) for n in range(len(labels_order))]
+
+        for j, lbl in enumerate(labels_order):
+            id = labels_id[lbl]
+            relative_size = size_results[benchmark]["size"].iloc[id] / baseline
+            
+            plt.bar(pos[j], relative_size, width, 
+                    color=colors[j], edgecolor='black', 
+                    label=lbl if i == 0 else "")
+            
+            # 添加数值标签
+            plt.text(pos[j], relative_size * 1.05, 
+                    f'{relative_size:.2f}', 
+                    ha='center', va='bottom', 
+                    rotation=0, fontsize=8)
+
+    # 设置 x 轴标签
+    plt.xticks(x, benchmarks, rotation=45)
+
+    plt.xlabel("Benchmarks")
+    plt.ylabel("Relative Code Size (normalized to simp)")
+    plt.legend()
+
+    plt.ylim(0, 1.6)
+
+    # 添加水平参考线
+    plt.axhline(y=1.0, color='gray', linestyle='--', alpha=0.5)
+
+    plt.tight_layout()
+
+    plt.savefig("benchmark-relative-size-results.png", bbox_inches='tight')
+    plt.close()
+
 make_absolute_time()
 make_relative_time()
 make_size()
+make_relative_size()

@@ -10,11 +10,11 @@ def get_file_size(file_path):
     return int(result.stdout.strip())
 
 def strip_file(file_path):
-    subprocess.run(['strip', file_path])
+    subprocess.run(['strip', '-S', '-x', file_path])
 
 def main(target):
-    simp_file = f'{target}.simp.out'
-    opt_file = f'{target}.opt.out'
+    simp_file = f'{target}.simp.out.o'
+    opt_file = f'{target}.opt.out.o'
     results = []
     
     for file in [simp_file, opt_file]:

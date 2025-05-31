@@ -1,6 +1,10 @@
+make-with-debuginfo target:
+  make SRC={{target}}.simp.cxx DST={{target}}.simp.out USE_RC=0 DEBUGINFO=1
+  make SRC={{target}}.opt.cxx DST={{target}}.opt.out USE_RC=0 DEBUGINFO=1
+
 make target:
-  make SRC={{target}}.simp.cxx DST={{target}}.simp.out USE_RC=0
-  make SRC={{target}}.opt.cxx DST={{target}}.opt.out USE_RC=0
+  make SRC={{target}}.simp.cxx DST={{target}}.simp.out USE_RC=0 DEBUGINFO=0
+  make SRC={{target}}.opt.cxx DST={{target}}.opt.out USE_RC=0 DEBUGINFO=0
 
 bench target: (make target)
   hyperfine --warmup 5 --runs 20 \

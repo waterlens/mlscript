@@ -3,7 +3,10 @@ USE_RC := 0
 ifeq ($(USE_RC),1)
   CFLAGS += -DMLS_ENABLE_RC
 endif
-CFLAGS += -O3 -Wall -Wextra -std=c++20 -I. -Wno-inconsistent-missing-override -I/opt/homebrew/include -g -fsanitize=address
+ifeq ($(DEBUGINFO),1)
+  CFLAGS += -g
+endif
+CFLAGS += -O3 -Wall -Wextra -std=c++20 -I. -Wno-inconsistent-missing-override -I/opt/homebrew/include
 LDFLAGS += -L/opt/homebrew/lib
 LDLIBS := -lmimalloc -lgmp
 SRC :=

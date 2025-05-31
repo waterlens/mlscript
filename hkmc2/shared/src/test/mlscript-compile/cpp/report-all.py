@@ -11,6 +11,7 @@ results = {}
 size_results = {}
 
 for benchmark in benchmarks:
+    print(benchmark)
     df = pd.read_csv(f"{benchmark}.csv")
     results[benchmark] = df
     df = pd.read_csv(f"{benchmark}.size.csv")
@@ -121,7 +122,7 @@ def make_relative_time():
 def make_size():
     plt.figure(figsize=(12, 8), dpi=600)  # 增加图表宽度
 
-    x = np.arange(len(results))
+    x = np.arange(len(size_results))
     width = 0.11  # 减小柱子宽度
     gap = 0.03
 
@@ -138,7 +139,7 @@ def make_size():
 
         for j, lbl in enumerate(labels_order):
             id = labels_id[lbl]
-            size_kb = size_results[benchmark]["size"].iloc[id] / 1024
+            size_kb = size_results[benchmark]["size"].iloc[id] / 1000
             plt.bar(pos[j], size_kb, width, 
                     color=colors[j], edgecolor='black', 
                     label=lbl if i == 0 else "")
@@ -156,7 +157,7 @@ def make_size():
     plt.ylabel("Code Size (kB)")
     plt.legend()
 
-    plt.ylim(0, 100)  # 调整 y 轴范围到 kB 单位
+    plt.ylim(0, 89)  # 调整 y 轴范围到 kB 单位
 
     plt.tight_layout()
 

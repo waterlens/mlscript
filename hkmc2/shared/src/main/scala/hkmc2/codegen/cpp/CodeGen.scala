@@ -319,9 +319,11 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
 
   def codegen(prog: Program)(using Raise, Scope): CompilationUnit =
     val sortedClasses = sortClasses(prog)
+    val sortedDefs = prog.defs.toArray
+    sortedDefs.sortInPlaceBy(_.name |> directName)
     val fieldCtx = Set.empty[Local]
     given Ctx = Ctx(fieldCtx)
     val (defs, decls, methodsDef) = sortedClasses.map(codegenClassInfo).unzip3
-    val (defs2, decls2) = prog.defs.map(codegenDefn).unzip
+    val (defs2, decls2) = sortedDefs.map(codegenDefn).unzip
     CompilationUnit(Ls(mlsPrelude), decls ++ decls2, defs.flatten ++ defs2 ++ methodsDef.flatten :+ Def.RawDef(mlsCallEntry(prog.entry |> allocIfNew)) :+ Def.RawDef(mlsEntryPoint))
 

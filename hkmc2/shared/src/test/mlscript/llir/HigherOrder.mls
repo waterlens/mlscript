@@ -443,14 +443,14 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│ struct _mls_Lambda_lambda4;
 //│ struct _mls_Lambda_lambda3;
 //│ _mlsValue _mls_entry5();
+//│ _mlsValue _mls_filter(_mlsValue, _mlsValue);
+//│ _mlsValue _mls_j2();
+//│ _mlsValue _mls_j1();
+//│ _mlsValue _mls_j3();
 //│ _mlsValue _mls_j4();
 //│ _mlsValue _mls_lambda(_mlsValue, _mlsValue);
-//│ _mlsValue _mls_filter(_mlsValue, _mlsValue);
-//│ _mlsValue _mls_nubBy(_mlsValue, _mlsValue);
-//│ _mlsValue _mls_j2();
-//│ _mlsValue _mls_j3();
 //│ _mlsValue _mls_not(_mlsValue);
-//│ _mlsValue _mls_j1();
+//│ _mlsValue _mls_nubBy(_mlsValue, _mlsValue);
 //│ struct _mls_List1: public _mlsObject {
 //│   
 //│   constexpr static inline const char *typeName = "List";
@@ -503,50 +503,35 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│   static _mlsValue create(_mlsValue _mls_lam_arg0, _mlsValue _mls_lam_arg1) { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_lambda3; _mlsVal->refCount = 1; _mlsVal->tag = typeTag; _mlsVal->_mls_lam_arg0 = _mls_lam_arg0; _mlsVal->_mls_lam_arg1 = _mls_lam_arg1;  return _mlsValue(_mlsVal); }
 //│   virtual _mlsValue _mls_apply1(_mlsValue);
 //│ };
-//│ _mlsValue _mls_not(_mlsValue _mls_c2) {
-//│   _mlsValue _mls_retval;
-//│   if (_mlsValue::isIntLit(_mls_c2, 1)) {
-//│     _mls_retval = _mlsValue::fromIntLit(0);
-//│   } else {
-//│     _mls_retval = _mlsValue::fromIntLit(1);
-//│   }
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_j3() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
 //│ _mlsValue _mls_entry5() {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x64 = _mlsValue::create<_mls_Nil1>();
-//│   auto _mls_x65 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(3), _mls_x64);
-//│   auto _mls_x66 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(3), _mls_x65);
-//│   auto _mls_x67 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(2), _mls_x66);
-//│   auto _mls_x68 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(1), _mls_x67);
-//│   auto _mls_x69 = _mlsValue::create<_mls_Lambda_lambda4>();
-//│   auto _mls_x70 = _mls_nubBy(_mls_x69, _mls_x68);
-//│   _mls_retval = _mls_x70;
+//│   auto _mls_x48 = _mlsValue::create<_mls_Nil1>();
+//│   auto _mls_x49 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(3), _mls_x48);
+//│   auto _mls_x50 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(3), _mls_x49);
+//│   auto _mls_x51 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(2), _mls_x50);
+//│   auto _mls_x52 = _mlsValue::create<_mls_Cons1>(_mlsValue::fromIntLit(1), _mls_x51);
+//│   auto _mls_x53 = _mlsValue::create<_mls_Lambda_lambda4>();
+//│   auto _mls_x54 = _mls_nubBy(_mls_x53, _mls_x52);
+//│   _mls_retval = _mls_x54;
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_j1() {
+//│ _mlsValue _mls_filter(_mlsValue _mls_f1, _mlsValue _mls_ls) {
 //│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_nubBy(_mlsValue _mls_eq, _mlsValue _mls_ls1) {
-//│   _mlsValue _mls_retval;
-//│   if (_mlsValue::isValueOf<_mls_Nil1>(_mls_ls1)) {
-//│     auto _mls_x63 = _mlsValue::create<_mls_Nil1>();
-//│     _mls_retval = _mls_x63;
-//│   } else if (_mlsValue::isValueOf<_mls_Cons1>(_mls_ls1)) {
-//│     auto _mls_x57 = _mlsValue::cast<_mls_Cons1>(_mls_ls1)->_mls_head;
-//│     auto _mls_x58 = _mlsValue::cast<_mls_Cons1>(_mls_ls1)->_mls_tail;
-//│     auto _mls_x59 = _mlsValue::create<_mls_Lambda_lambda3>(_mls_eq, _mls_x57);
-//│     auto _mls_x60 = _mls_filter(_mls_x59, _mls_x58);
-//│     auto _mls_x61 = _mls_nubBy(_mls_eq, _mls_x60);
-//│     auto _mls_x62 = _mlsValue::create<_mls_Cons1>(_mls_x57, _mls_x61);
-//│     _mls_retval = _mls_x62;
+//│   if (_mlsValue::isValueOf<_mls_Nil1>(_mls_ls)) {
+//│     auto _mls_x61 = _mlsValue::create<_mls_Nil1>();
+//│     _mls_retval = _mls_x61;
+//│   } else if (_mlsValue::isValueOf<_mls_Cons1>(_mls_ls)) {
+//│     auto _mls_x55 = _mlsValue::cast<_mls_Cons1>(_mls_ls)->_mls_head;
+//│     auto _mls_x56 = _mlsValue::cast<_mls_Cons1>(_mls_ls)->_mls_tail;
+//│     auto _mls_x57 = _mlsMethodCall<_mls_Callable>(_mls_f1)->_mls_apply1(_mls_x55);
+//│     if (_mlsValue::isIntLit(_mls_x57, 1)) {
+//│       auto _mls_x59 = _mls_filter(_mls_f1, _mls_x56);
+//│       auto _mls_x60 = _mlsValue::create<_mls_Cons1>(_mls_x55, _mls_x59);
+//│       _mls_retval = _mls_x60;
+//│     } else {
+//│       auto _mls_x58 = _mls_filter(_mls_f1, _mls_x56);
+//│       _mls_retval = _mls_x58;
+//│     }
 //│   } else {
 //│     throw std::runtime_error("match error" LINE_STRING);
 //│   }
@@ -557,37 +542,52 @@ nubBy((x, y) => x == y, 1 :: 2 :: 3 :: 3 :: Nil)
 //│   _mls_retval = _mls_j1();
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_filter(_mlsValue _mls_f1, _mlsValue _mls_ls) {
+//│ _mlsValue _mls_j1() {
 //│   _mlsValue _mls_retval;
-//│   if (_mlsValue::isValueOf<_mls_Nil1>(_mls_ls)) {
-//│     auto _mls_x54 = _mlsValue::create<_mls_Nil1>();
-//│     _mls_retval = _mls_x54;
-//│   } else if (_mlsValue::isValueOf<_mls_Cons1>(_mls_ls)) {
-//│     auto _mls_x48 = _mlsValue::cast<_mls_Cons1>(_mls_ls)->_mls_head;
-//│     auto _mls_x49 = _mlsValue::cast<_mls_Cons1>(_mls_ls)->_mls_tail;
-//│     auto _mls_x50 = _mlsMethodCall<_mls_Callable>(_mls_f1)->_mls_apply1(_mls_x48);
-//│     if (_mlsValue::isIntLit(_mls_x50, 1)) {
-//│       auto _mls_x52 = _mls_filter(_mls_f1, _mls_x49);
-//│       auto _mls_x53 = _mlsValue::create<_mls_Cons1>(_mls_x48, _mls_x52);
-//│       _mls_retval = _mls_x53;
-//│     } else {
-//│       auto _mls_x51 = _mls_filter(_mls_f1, _mls_x49);
-//│       _mls_retval = _mls_x51;
-//│     }
-//│   } else {
-//│     throw std::runtime_error("match error" LINE_STRING);
-//│   }
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_lambda(_mlsValue _mls_x56, _mlsValue _mls_y3) {
+//│ _mlsValue _mls_j3() {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x55 = (_mls_x56 == _mls_y3);
-//│   _mls_retval = _mls_x55;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_j4() {
 //│   _mlsValue _mls_retval;
 //│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_lambda(_mlsValue _mls_x63, _mlsValue _mls_y3) {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x62 = (_mls_x63 == _mls_y3);
+//│   _mls_retval = _mls_x62;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_not(_mlsValue _mls_c2) {
+//│   _mlsValue _mls_retval;
+//│   if (_mlsValue::isIntLit(_mls_c2, 1)) {
+//│     _mls_retval = _mlsValue::fromIntLit(0);
+//│   } else {
+//│     _mls_retval = _mlsValue::fromIntLit(1);
+//│   }
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_nubBy(_mlsValue _mls_eq, _mlsValue _mls_ls1) {
+//│   _mlsValue _mls_retval;
+//│   if (_mlsValue::isValueOf<_mls_Nil1>(_mls_ls1)) {
+//│     auto _mls_x70 = _mlsValue::create<_mls_Nil1>();
+//│     _mls_retval = _mls_x70;
+//│   } else if (_mlsValue::isValueOf<_mls_Cons1>(_mls_ls1)) {
+//│     auto _mls_x64 = _mlsValue::cast<_mls_Cons1>(_mls_ls1)->_mls_head;
+//│     auto _mls_x65 = _mlsValue::cast<_mls_Cons1>(_mls_ls1)->_mls_tail;
+//│     auto _mls_x66 = _mlsValue::create<_mls_Lambda_lambda3>(_mls_eq, _mls_x64);
+//│     auto _mls_x67 = _mls_filter(_mls_x66, _mls_x65);
+//│     auto _mls_x68 = _mls_nubBy(_mls_eq, _mls_x67);
+//│     auto _mls_x69 = _mlsValue::create<_mls_Cons1>(_mls_x64, _mls_x68);
+//│     _mls_retval = _mls_x69;
+//│   } else {
+//│     throw std::runtime_error("match error" LINE_STRING);
+//│   }
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_Lambda_lambda4::_mls_apply2(_mlsValue _mls_arg3, _mlsValue _mls_arg4) {
@@ -646,9 +646,9 @@ f(3)
 //│ Cpp:
 //│ #include "mlsprelude.h"
 //│ struct _mls_Lambda_self_rec;
-//│ _mlsValue _mls_j5();
-//│ _mlsValue _mls_f2(_mlsValue);
 //│ _mlsValue _mls_entry6();
+//│ _mlsValue _mls_f2(_mlsValue);
+//│ _mlsValue _mls_j5();
 //│ struct _mls_Lambda_self_rec: public _mls_Callable {
 //│   
 //│   constexpr static inline const char *typeName = "Lambda_self_rec";
@@ -659,22 +659,22 @@ f(3)
 //│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_self_rec; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
 //│   virtual _mlsValue _mls_apply1(_mlsValue);
 //│ };
+//│ _mlsValue _mls_entry6() {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x76 = _mls_f2(_mlsValue::fromIntLit(3));
+//│   _mls_retval = _mls_x76;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_f2(_mlsValue _mls_x78) {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x77 = _mlsValue::create<_mls_Lambda_self_rec>();
+//│   auto _mls_x79 = _mlsMethodCall<_mls_Callable>(_mls_x77)->_mls_apply1(_mls_x78);
+//│   _mls_retval = _mls_x79;
+//│   return _mls_retval;
+//│ }
 //│ _mlsValue _mls_j5() {
 //│   _mlsValue _mls_retval;
 //│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_f2(_mlsValue _mls_x77) {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x76 = _mlsValue::create<_mls_Lambda_self_rec>();
-//│   auto _mls_x78 = _mlsMethodCall<_mls_Callable>(_mls_x76)->_mls_apply1(_mls_x77);
-//│   _mls_retval = _mls_x78;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_entry6() {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x79 = _mls_f2(_mlsValue::fromIntLit(3));
-//│   _mls_retval = _mls_x79;
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_Lambda_self_rec::_mls_apply1(_mlsValue _mls_x72) {
@@ -766,11 +766,11 @@ f(3)
 //│ struct _mls_Lambda_odd;
 //│ struct _mls_Lambda_even;
 //│ _mlsValue _mls_entry7();
-//│ _mlsValue _mls_j6();
 //│ _mlsValue _mls_f3(_mlsValue);
 //│ _mlsValue _mls_j7();
-//│ _mlsValue _mls_j9();
+//│ _mlsValue _mls_j6();
 //│ _mlsValue _mls_j8();
+//│ _mlsValue _mls_j9();
 //│ struct _mls_Lambda_odd: public _mls_Callable {
 //│   _mlsValue _mls_lam_arg0;
 //│   constexpr static inline const char *typeName = "Lambda_odd";
@@ -793,25 +793,15 @@ f(3)
 //│ };
 //│ _mlsValue _mls_entry7() {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x94 = _mls_f3(_mlsValue::fromIntLit(3));
+//│   auto _mls_x91 = _mls_f3(_mlsValue::fromIntLit(3));
+//│   _mls_retval = _mls_x91;
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_f3(_mlsValue _mls_x93) {
+//│   _mlsValue _mls_retval;
+//│   auto _mls_x92 = _mlsValue::create<_mls_Lambda_even>();
+//│   auto _mls_x94 = _mlsMethodCall<_mls_Callable>(_mls_x92)->_mls_apply1(_mls_x93);
 //│   _mls_retval = _mls_x94;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_j6() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mlsValue::create<_mls_Unit>();
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_f3(_mlsValue _mls_x92) {
-//│   _mlsValue _mls_retval;
-//│   auto _mls_x91 = _mlsValue::create<_mls_Lambda_even>();
-//│   auto _mls_x93 = _mlsMethodCall<_mls_Callable>(_mls_x91)->_mls_apply1(_mls_x92);
-//│   _mls_retval = _mls_x93;
-//│   return _mls_retval;
-//│ }
-//│ _mlsValue _mls_j9() {
-//│   _mlsValue _mls_retval;
-//│   _mls_retval = _mls_j8();
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_j7() {
@@ -819,9 +809,19 @@ f(3)
 //│   _mls_retval = _mls_j6();
 //│   return _mls_retval;
 //│ }
+//│ _mlsValue _mls_j6() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
 //│ _mlsValue _mls_j8() {
 //│   _mlsValue _mls_retval;
 //│   _mls_retval = _mlsValue::create<_mls_Unit>();
+//│   return _mls_retval;
+//│ }
+//│ _mlsValue _mls_j9() {
+//│   _mlsValue _mls_retval;
+//│   _mls_retval = _mls_j8();
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_Lambda_odd::_mls_apply1(_mlsValue _mls_x81) {

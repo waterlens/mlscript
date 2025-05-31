@@ -3,6 +3,8 @@
 :import prelude.mls
 //│ Imported 20 member(s)
 
+object LamDeriv
+
 abstract class Expr
 data class Var(x: String) extends Expr
 data class Val(n: Int) extends Expr
@@ -70,11 +72,11 @@ fun count(e) = if e is
 fun nestAux(s, f, n, e) = if [n, e] is
   [0, x] then x
   [m, x] then
-    let r = f((s - m), x)
+    let r = apply2(f, (s - m), x)
     nestAux(s, f, n - 1, r)
-
 fun nest(f, n, e) = nestAux(n, f, n, e)
-
+fun apply2(f, a, b) = if f is
+  LamDeriv then deriv(a, b)
 fun deriv(i, f) =
   let r = d("x", f)
   // print(str_of_int(i + 1) +++ " count: " +++ str_of_int(count(r)))
@@ -83,7 +85,7 @@ fun deriv(i, f) =
 fun main(n) =
   let x = Var("x")
   let f = pow(x, x)
-  count(nest(deriv, n, f))
+  count(nest(LamDeriv, n, f))
 
 :wholeOptFlags simp,simp2
 :dumpBench deriv

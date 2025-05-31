@@ -43,9 +43,9 @@ main()
 //│ Cpp:
 //│ #include "mlsprelude.h"
 //│ struct _mls_Lambda_lambda;
-//│ _mlsValue _mls_side_effect();
-//│ _mlsValue _mls_main();
 //│ _mlsValue _mls_entry();
+//│ _mlsValue _mls_main();
+//│ _mlsValue _mls_side_effect();
 //│ struct _mls_Lambda_lambda: public _mls_Callable {
 //│   
 //│   constexpr static inline const char *typeName = "Lambda_lambda";
@@ -56,10 +56,10 @@ main()
 //│   static _mlsValue create() { auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Lambda_lambda; _mlsVal->refCount = 1; _mlsVal->tag = typeTag;  return _mlsValue(_mlsVal); }
 //│   virtual _mlsValue _mls_apply0();
 //│ };
-//│ _mlsValue _mls_side_effect() {
+//│ _mlsValue _mls_entry() {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x1 = _mls_builtin_println(_mlsValue::create<_mls_Str>("executed"));
-//│   _mls_retval = _mlsValue::fromIntLit(1);
+//│   auto _mls_x1 = _mls_main();
+//│   _mls_retval = _mls_x1;
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_main() {
@@ -71,10 +71,10 @@ main()
 //│   _mls_retval = _mlsValue::create<_mls_Unit>();
 //│   return _mls_retval;
 //│ }
-//│ _mlsValue _mls_entry() {
+//│ _mlsValue _mls_side_effect() {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x6 = _mls_main();
-//│   _mls_retval = _mls_x6;
+//│   auto _mls_x6 = _mls_builtin_println(_mlsValue::create<_mls_Str>("executed"));
+//│   _mls_retval = _mlsValue::fromIntLit(1);
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mls_Lambda_lambda::_mls_apply0() {

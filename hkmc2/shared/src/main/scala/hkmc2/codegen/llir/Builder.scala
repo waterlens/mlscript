@@ -530,7 +530,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
       b.subBlocks.foldLeft(ctx)((ctx, rest) => registerClasses(rest)(using ctx))
 
   def registerInternalClasses(using ctx: Ctx)(using Raise, Scope): Ctx =
-    ctx.builtin_sym.tupleSym.foldLeft(ctx):
+    ctx.builtin_sym.tupleSym.toList.sortBy(_._1).foldLeft(ctx):
       case (ctx, (len, sym)) =>
         val c = ClassInfo(uid.make, sym, (0 until len).map(x => builtinField(x)).toList, Set.empty, Map.empty)
         ctx.class_acc += c

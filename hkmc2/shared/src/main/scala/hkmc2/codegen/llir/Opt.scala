@@ -178,9 +178,37 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   case class I(loc: Loc, info: IInfo)
 
   implicit object EOrdering extends Ordering[E]:
-    override def compare(a: E, b: E) = a.info.toString.compare(b.info.toString)
+    private def locKey(l: Loc): String = l match
+      case Loc.CallSite(func, _args, n) => s"CallSite:${func.nme}:$n"
+      case Loc.CaseSite(scr) => s"CaseSite:${scr.toString}"
+      case Loc.ExprBinder(a) => s"ExprBinder:${a.nme}"
+      case Loc.Other => s"Other"
+    private def infoKey(ei: EInfo): (Int, String, String) = ei match
+      case EInfo.Des => (1, "", "")
+      case EInfo.IndDes => (2, "", "")
+      case EInfo.Pass => (3, "", "")
+      case EInfo.Sel(cls, fld) => (4, cls.nme, fld)
+    override def compare(a: E, b: E) =
+      val ka = infoKey(a.info)
+      val kb = infoKey(b.info)
+      Ordering.Tuple4[Int, String, String, String]
+        .compare((ka._1, ka._2, ka._3, locKey(a.loc)), (kb._1, kb._2, kb._3, locKey(b.loc)))
   implicit object IOrdering extends Ordering[I]:
-    override def compare(a: I, b: I) = a.info.toString.compare(b.info.toString)
+    private def iinfoKey(ii: IInfo): (Int, String) =
+      ii match
+        case IInfo.BoolCtor(b) => (1, if b then "1" else "0")
+        case IInfo.Ctor(c) => (2, c.nme)
+        case IInfo.Tuple(n) => (3, n.toString)
+        case IInfo.Mixed(is) =>
+          // Build a deterministic key from inner set
+          val inner = is.toList.map(i => iinfoKey(i.info)).sortBy(x => (x._1, x._2)).map{ case (a, b) => s"$a:$b" }.mkString("|")
+          (4, inner)
+        case IInfo.Top => (5, "")
+        case IInfo.Bot => (6, "")
+    override def compare(a: I, b: I) =
+      val ka = iinfoKey(a.info)
+      val kb = iinfoKey(b.info)
+      Ordering.Tuple2[Int, String].compare(ka, kb)
 
   object ProgInfo:
     def fromProgram(prog: LlirProgram) =
@@ -206,8 +234,14 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     entry: Local,
   ):
     override def toString(): String =
-      s"activeParams: ${activeParams.map(_.toString()).mkString(",")}, \n" +
-      s"activeResults: ${activeResults.map(_.toString()).mkString(",")}, "
+      val aps = activeParams.toList.sortBy(_._1.nme).map: (k, v) =>
+        s"${showSym(k)} -> ${v.toString}"
+      .mkString(",")
+      val ars = activeResults.toList.sortBy(_._1.nme).map: (k, v) =>
+        s"${showSym(k)} -> ${v.toString}"
+      .mkString(",")
+      s"activeParams: ${aps}, \n" +
+      s"activeResults: ${ars}, "
 
     def toProgram =
       LlirProgram(classes.values.toSet, func.values.toSet, entry = entry)
@@ -332,7 +366,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       while changed do
         changed = false
         env = Env(defn = placeHolderSym)
-        info.func.values.foreach: func =>
+        info.func.values.toList.sortBy(_.name.nme).foreach: func =>
           val old = info.getActiveParams(func.name)
           func.params.foreach(addDef(_)(using env))
           fNode(func.body)(using env)
@@ -460,7 +494,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       while changed do
         changed = false
         env = Env(default_intro = Nil)
-        info.func.values.foreach: func =>
+        info.func.values.toList.sortBy(_.name.nme).foreach: func =>
           val old = info.getActiveResults(func.name)
           val nu = measureTime(s"intro analysis: ${func.name |> showSym}", fNode(func.body)(using env.copy(default_intro = List.fill(func.resultNum)(iTop))))
           assert(old.length === nu.length, s"old: $old, nu: $nu")
@@ -1098,7 +1132,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val e = EliminationAnalysis(info)
       val eEnv = measureTime("elim analysis", e.run())
       val env = Env(iEnv, eEnv)
-      env.workingList.addAll(info.func.values)
+      env.workingList.addAll(info.func.values.toList.sortBy(_.name.nme))
       log(s"workingList: ${env.workingList.iterator.map(_.name).toList}")
       while env.workingList.nonEmpty do
         val func = env.workingList.head
@@ -1108,10 +1142,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   private class Simplify(info: ProgInfo):
     def removeUnreachable(using Status[Bool]) =
       val reachable = ProgDfs(info).dfs(true)
-      log(s"reachableFuncs: ${reachable.funcs.map(showSym).toList}")
-      log(s"unreachableFuncs: ${info.func.keys.filterNot(reachable.funcs.contains(_)).map(showSym).toList}")
-      log(s"reachableClasses: ${reachable.classes.map(showSym).toList}")
-      log(s"unreachableClasses: ${info.classes.keys.filterNot(reachable.classes.contains(_)).map(showSym).toList}")
+      log(s"reachableFuncs: ${reachable.funcs.map(showSym).toList.sorted}")
+      log(s"unreachableFuncs: ${info.func.keys.filterNot(reachable.funcs.contains(_)).map(showSym).toList.sorted}")
+      log(s"reachableClasses: ${reachable.classes.map(showSym).toList.sorted}")
+      log(s"unreachableClasses: ${info.classes.keys.filterNot(reachable.classes.contains(_)).map(showSym).toList.sorted}")
       if info.func.size =/= reachable.funcs.size then
         summon[Status[Bool]].set(true)
       info.func.filterInPlace((k, _) => reachable.funcs.contains(k))
@@ -1121,7 +1155,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
     def simplify(using Status[Bool]) =
       log(info.toString())
-      val newFuncs = info.func.map:
+      val newFuncs = info.func.toList.sortBy(_._1.nme).map:
         case (name, func) =>
           val uses = UsefulnessAnalysis()
           uses.run(func)
@@ -1133,10 +1167,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       info.func.clear()
       info.func.addAll(newFuncs)
       val reachable = ProgDfs(info).dfs(true)
-      log(s"reachableFuncs: ${reachable.funcs.map(showSym).toList}")
-      log(s"unreachableFuncs: ${info.func.keys.filterNot(reachable.funcs.contains(_)).map(showSym).toList}")
-      log(s"reachableClasses: ${reachable.classes.map(showSym).toList}")
-      log(s"unreachableClasses: ${info.classes.keys.filterNot(reachable.classes.contains(_)).map(showSym).toList}")
+      log(s"reachableFuncs: ${reachable.funcs.map(showSym).toList.sorted}")
+      log(s"unreachableFuncs: ${info.func.keys.filterNot(reachable.funcs.contains(_)).map(showSym).toList.sorted}")
+      log(s"reachableClasses: ${reachable.classes.map(showSym).toList.sorted}")
+      log(s"unreachableClasses: ${info.classes.keys.filterNot(reachable.classes.contains(_)).map(showSym).toList.sorted}")
       if info.func.size =/= reachable.funcs.size then
         summon[Status[Bool]].set(true)
       info.func.filterInPlace((k, _) => reachable.funcs.contains(k))
@@ -1608,7 +1642,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
 
     def dfs(postfix: Bool): FuncAndClass =
       val visited = MutHMap[Local, Bool]()
-      val allFuncsClassesMethods = info.func.keys ++ info.classes.iterator.keys
+      val allFuncsClassesMethods =
+        info.func.keys.toList.sortBy(_.nme) ++ info.classes.iterator.keys.toList.sortBy(_.nme)
       visited.addAll(allFuncsClassesMethods.map(k => k -> false))
       val out = Buf(ListBuffer.empty, ListBuffer.empty)
       dfs(using visited, out, postfix)(info.func.get(info.entry).get)

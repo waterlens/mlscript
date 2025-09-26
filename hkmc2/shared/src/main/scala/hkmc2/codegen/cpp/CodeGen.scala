@@ -110,11 +110,11 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
     trace[(Opt[Def], Decl, Ls[Def])](s"codegenClassInfo ${cls.name} begin"):
       val fields = cls.fields.map{x => (x |> directName, mlsValType)}
       cls.fields.foreach(x => summon[Scope].allocateName(x))
-      val parents = if cls.parents.nonEmpty then cls.parents.toList.map(mapClsLikeName) else mlsObject :: Nil
+      val parents = if cls.parents.nonEmpty then cls.parents.toList.map(mapClsLikeName).sorted else mlsObject :: Nil
       val decl = Decl.StructDecl(cls.name |> mapClsLikeName)
       if mlsIsInternalClass(cls.name) then (None, decl, Ls.empty)
       else
-        val methods = cls.methods.map:
+        val methods = cls.methods.toList.sortBy(_._1.nme).map:
           case (name, defn) =>
             val (cdef, decl) = codegenDefn(using Ctx(summon[Ctx].fieldCtx ++ cls.fields))(defn)
             val cdef2 = cdef match
@@ -304,14 +304,15 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
       depgraph = depgraph.view.mapValues(_.filter(_ != node)).toMap
       degree = depgraph.view.mapValues(_.size).toMap
     val sorted = ListBuffer.empty[ClassInfo]
-    var work = degree.filter(_._2 == 0).keys.toSet
+    import scala.collection.immutable.SortedSet
+    var work: SortedSet[String] = SortedSet.empty[String] ++ degree.collect { case (k, v) if v == 0 => k }
     while work.nonEmpty do
       val node = work.head
-      work -= node
+      work = work.tail
       prog.classes.find(x => (x.name |> mapClsLikeName) == node).fold(())(sorted.addOne)
       removeNode(node)
-      val next = degree.filter(_._2 == 0).keys
-      work ++= next
+      val next = degree.collect { case (k, v) if v == 0 => k }
+      work = work ++ SortedSet.empty[String].concat(next)
     if depgraph.nonEmpty then
       val cycle = depgraph.keys.mkString(", ")
       throw new Exception(s"Cycle detected in class hierarchy: $cycle")

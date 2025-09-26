@@ -63,19 +63,21 @@ case class ClassInfo(
 ):
   override def hashCode: Int = id
   override def toString: String =
-    s"ClassInfo($id, $name, [${fields mkString ","}], parents: ${parents mkString ","}, methods:\n${methods mkString ",\n"})"
+    val parentsStr = parents.toList.sortBy(_.nme).mkString(",")
+    val methodsStr = methods.toList.sortBy(_._1.nme).mkString(",\n")
+    s"ClassInfo($id, $name, [${fields mkString ","}], parents: ${parentsStr}, methods:\n${methodsStr})"
 
   val size = methods.values.map(_.size).sum
   
   def show = toDocument.toString
   def toDocument: Document =
     given Conversion[String, Document] = raw
-    val ext = if parents.isEmpty then "" else " extends " + parents.map(_.nme).mkString(", ")
+    val ext = if parents.isEmpty then "" else " extends " + parents.toList.sortBy(_.nme).map(_.nme).mkString(", ")
     if methods.isEmpty then
       doc"class ${name.nme}(${fields.map(docSymWithUid).mkString(",")})$ext"
     else
       val docFirst = doc"class ${name.nme}(${fields.map(docSymWithUid).mkString(",")})$ext {"
-      val docMethods = methods.map { (_, func) => func.toDocument }.toList.mkDocument(doc" # ")
+      val docMethods = methods.toList.sortBy(_._1.nme).map { (_, func) => func.toDocument }.mkDocument(doc" # ")
       val docLast = doc"}"
       doc"$docFirst #{  # $docMethods #}  # $docLast"
 

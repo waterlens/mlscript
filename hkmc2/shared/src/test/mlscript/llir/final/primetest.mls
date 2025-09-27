@@ -1,0 +1,168 @@
+:llir
+
+:import prelude.mls
+//│ Imported 25 member(s)
+
+fun map(f, xs) = if xs is
+  x :: xs then f(x) :: map(f, xs)
+  Nil then Nil
+
+fun foldl(f, a, xs) = if xs is
+  Nil then a
+  h :: t then foldl(f, f(a, h), t)
+
+fun int_of_char(x) = globalThis.builtin("char2int", x)
+fun l(ls, a) = if ls is
+  Nil then a
+  h :: t then l(t, a + 1)
+fun listLen(ls) =
+  l(ls, 0)
+fun str_to_list(x) = if str_head(x) is
+  null then Nil
+  else str_head(x) :: str_to_list(str_tail(x))
+
+fun even(x) = intMod(x, 2) == 0
+
+fun int_val_of_char(x) = int_of_char(x) - 48
+
+fun int_val_of_string_f(l, a) = if l is
+  Nil then a
+  h :: t then int_val_of_string_f(t, 10 * a + int_val_of_char(h))
+
+fun int_val_of_string(s) =
+  int_val_of_string_f(s, 0)
+
+fun break_(p, ls) = if ls is
+  Nil then [Nil, Nil]
+  x :: xs and
+    p(x) then [Nil, x :: xs]
+    break_(p, xs) is [ys, zs] then [x :: ys, zs]
+
+fun lines(s) = if break_(x => x == "|", s) is [l, s_] then
+  let tt = if s_ is
+    Nil then Nil
+    _ :: s__ then lines(s__)
+  
+  l :: tt
+
+fun makeNumber(b, ls) = foldl((a, x) => a * b + x, 0, ls)
+
+fun chop_(a, n, b) = if divMod(n, b) is [q, r] and
+  n == 0 then a
+  else chop_(r :: a, q, b)
+
+fun chop(b, n) =
+  chop_(Nil, n, b)
+
+
+fun powerMod(a, b, m) =
+  fun f(a, b, c) =
+    fun g(a, b) = if even(b) then g(intMod(a * a, m), intDiv(b, 2)) else f(a, b - 1, intMod(a * c, m))
+    if b == 0 then c else g(a, b)
+  if
+    b == 0 then 1
+    let a_ = intMod(a, m)
+    else f(a_, b - 1, a_)
+
+
+fun log2(x) = listLen(chop(2, x))
+
+fun is_iter(n, acc, v, f) = 
+  if n === 0 then acc else is_iter(n - 1, v :: acc, f(v), f)
+fun iterate_square(f, x, k) =
+  is_iter(k, Nil, x, f)
+
+fun nextRand(s1, s2) =
+  let k    = intDiv(s1, 53668)
+  let s1_  = ((40014 * (s1 - (k * 53668))) - (k * 12211))
+  let s1__ = (if s1_ < 0 then s1_ + 2147483563 else s1_)
+  let k_   = intDiv(s2, 52774)
+  let s2_  = ((40692 * (s2 - (k_ * 52774))) - (k_ * 3791))
+  let s2__ = (if s2_ < 0 then s2_ + 2147483399 else s2_)
+  let z    = (s1__ - s2__)
+  
+  if z < 1 then [z + 2147483562, s1__, s2__]
+  else [z, s1__, s2__]
+
+fun findKQ_f(k, q) = if divMod(q, 2) is [d, r] and
+  r == 0 then findKQ_f(k + 1, d)
+  else [k, q]
+
+fun findKQ(n) =
+  findKQ_f(0, n - 1)
+
+fun uniform(nns, rrs) = if
+  nns is n :: Nil and rrs is r :: rs then intMod(r, n) :: Nil
+  nns is n :: ns and rrs is r :: rs and
+    let t = intMod(r, n + 1)
+    t == n then t :: uniform(ns, rs)
+    else t :: map(x => intMod(x, 65536), rs)
+
+fun generateRands(count, s1, s2, acc) = if count == 0 then [acc, s1, s2] else
+  if nextRand(s1, s2) is [r, s1_, s2_] then generateRands(count - 1, s1_, s2_, r :: acc)
+
+fun random(n, s1, s2) =
+  let ns = chop(65536, n)
+  let len = listLen(ns)
+  if generateRands(len, s1, s2, Nil) is [rs, s1_, s2_] then 
+    [makeNumber(65536, uniform(ns, rs)), s1_, s2_]
+
+fun singleTestX_square(x, n) = intMod(x * x, n)
+
+fun singleTestX_witness(ls, n) = if ls is
+  Nil then false
+  t :: ts and
+    t == (n - 1) then true
+    t == 1 then false
+    else singleTestX_witness(ts, n)
+
+fun singleTestX(n, kq, x) =
+  if kq is [k, q] then
+    let result = powerMod(x, q, n)
+    let squares = iterate_square(x => singleTestX_square(x, n), result, k)
+    if squares is t :: ts then
+      (t == 1) || (t == (n - 1)) || singleTestX_witness(ts, n)
+    else false
+
+
+fun singleTest(n, kq, s1, s2) = if random(n - 2, s1, s2) is [x, s1_, s2_] then
+  [singleTestX(n, kq, 2 + x), s1_, s2_]
+
+fun multiTest_mTest(k, s1, s2, n) = if
+  k == 0 then [true, s1, s2]
+  singleTest(n, findKQ(n), s1, s2) is [t, s1_, s2_] and
+    t then multiTest_mTest(k - 1, s1_, s2_, n)
+    else [false, s1_, s2_]
+
+fun multiTest(k, s1, s2, n) =
+  if ((n <= 1) || even(n)) then
+    [n==2, s1, s2]
+  else
+    multiTest_mTest(k, s1, s2, n)
+
+
+fun doLine(cs, cont, s1, s2) =
+  let n = int_val_of_string(cs)
+  if multiTest(100, s1, s2, n) is [t, s1_, s2_] and
+    t then "Probably prime" :: (cont(s1_, s2_))
+    else "Composite" :: (cont(s1_, s2_))
+
+fun doInput(s1, s2, lls) = if lls is
+  Nil then Nil
+  l :: ls then doLine(l, (s1_, s2_) => doInput(s1_, s2_, ls), s1, s2)
+
+fun process(process_arg1) = doInput(111, 47, process_arg1)
+
+fun repeatProcess(n, acc) = if n == 0 then acc else
+  let cts = str_to_list("17|24|48|47|1317|8901|97|101|103|107|109|113|127|131|137|139|149|151|157|163|167|173|179|181|191|193|197|199|211|223|227|229|233|239|241|251|257|263|269|271|277|281|283|293|307|311|313|317|331|337|347|349|353|359|367|373|379|383|389|397|401|409|419|421|431|433|439|443|449|457|461|463|467|479|487|491|499|503|509|521|523|541|547|557|563|569|571|577|587|593|599|601|607|613|617|619|631|641|643|647|653|659|661|673|677|683|691|701|709|719|727|733|739|743|751|757|761|769|773|787|797|809|811|821|823|827|829|839|853|857|859|863|877|881|883|887|907|911|919|929|937|941|947|953|967|971|977|983|991|997")
+  let input = lines(cts)
+  repeatProcess(n - 1, process(input) :: acc)
+
+fun testPrimetest_nofib(d) =
+  repeatProcess(150, Nil)
+
+:wholeOptFlags simp,simp2
+:dumpBench primetest
+:benchPrep primetest.cxx
+testPrimetest_nofib(0)
+

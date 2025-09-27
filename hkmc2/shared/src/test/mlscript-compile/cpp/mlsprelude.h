@@ -746,6 +746,15 @@ inline _mlsValue _mls_builtin_rand() {
   return _mlsValue::fromIntLit(_mlsRand());
 }
 
+inline _mlsValue _mls_builtin_char2int(_mlsValue a) {
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(a));
+  auto *str = _mlsValue::cast<_mls_Str>(a);
+  if (str->str.empty()) {
+    return _mlsValue::fromIntLit(-1);
+  }
+  return _mlsValue::fromIntLit(str->str[0]);
+}
+
 inline _mlsValue _mls_builtin_pow(_mlsValue a, _mlsValue b) { return a.pow(b); }
 
 inline _mlsValue _mls_builtin_abs(_mlsValue a) { return a.abs(); }

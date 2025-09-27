@@ -595,11 +595,22 @@ struct _mls_Str final : public _mlsObject {
     _mlsVal->tag = typeTag;
     return _mlsValue(_mlsVal);
   }
+  static _mlsValue create(const char c) {
+    auto _mlsVal = new (std::align_val_t(_mlsAlignment)) _mls_Str;
+    _mlsVal->str = std::string(1, c);
+    _mlsVal->refCount = 1;
+    _mlsVal->tag = typeTag;
+    return _mlsValue(_mlsVal);
+  }
+  static bool isStrLit(const _mlsValue &v, const std::string_view str) {
+    return v.asObject()->tag == strTag && v.asObject()->cast<_mls_Str>()->str == str;
+  }
   virtual void destroy() override {
     str.~basic_string();
     operator delete(this, std::align_val_t(_mlsAlignment));
   }
 };
+
 
 struct _mls_Lazy final : public _mlsObject {
   _mlsValue init;
@@ -783,6 +794,58 @@ inline _mlsValue _mls_builtin_str_concat(_mlsValue a, _mlsValue b) {
   auto *strA = _mlsValue::cast<_mls_Str>(a);
   auto *strB = _mlsValue::cast<_mls_Str>(b);
   return _mlsValue::create<_mls_Str>(strA->str.c_str(), strB->str.c_str());
+}
+
+inline _mlsValue _mls_builtin_str_lt(_mlsValue a, _mlsValue b) {
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(a));
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(b));
+  auto *strA = _mlsValue::cast<_mls_Str>(a);
+  auto *strB = _mlsValue::cast<_mls_Str>(b);
+  return _mlsValue::fromBoolLit(strA->str < strB->str);
+}
+
+inline _mlsValue _mls_builtin_str_leq(_mlsValue a, _mlsValue b) {
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(a));
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(b));
+  auto *strA = _mlsValue::cast<_mls_Str>(a);
+  auto *strB = _mlsValue::cast<_mls_Str>(b);
+  return _mlsValue::fromBoolLit(strA->str <= strB->str);
+}
+
+inline _mlsValue _mls_builtin_str_gt(_mlsValue a, _mlsValue b) {
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(a));
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(b));
+  auto *strA = _mlsValue::cast<_mls_Str>(a);
+  auto *strB = _mlsValue::cast<_mls_Str>(b);
+  return _mlsValue::fromBoolLit(strA->str > strB->str);
+}
+
+inline _mlsValue _mls_builtin_str_geq(_mlsValue a, _mlsValue b) {
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(a));
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(b));
+  auto *strA = _mlsValue::cast<_mls_Str>(a);
+  auto *strB = _mlsValue::cast<_mls_Str>(b);
+  return _mlsValue::fromBoolLit(strA->str >= strB->str);
+}
+
+inline _mlsValue _mls_builtin_str_head(_mlsValue a) {
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(a));
+  auto *str = _mlsValue::cast<_mls_Str>(a);
+  if (str->str.empty()) {
+    return _mlsValue::create<_mls_Unit>();
+  } else {
+    return _mlsValue::create<_mls_Str>(str->str.c_str()[0]);
+  }
+}
+
+inline _mlsValue _mls_builtin_str_tail(_mlsValue a) {
+  _mls_assert(_mlsValue::isValueOf<_mls_Str>(a));
+  auto *str = _mlsValue::cast<_mls_Str>(a);
+  if (str->str.empty()) {
+    return _mlsValue::create<_mls_Unit>();
+  } else {
+    return _mlsValue::create<_mls_Str>(str->str.c_str() + 1);
+  }
 }
 
 inline _mlsValue _mls_builtin_z_add(_mlsValue a, _mlsValue b) {

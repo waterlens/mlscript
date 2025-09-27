@@ -51,6 +51,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
   def mlsIsValueOf(cls: Str, scrut: Expr) = Expr.Call(Expr.Var(s"_mlsValue::isValueOf<$cls>"), Ls(scrut))
   def mlsIsBoolLit(scrut: Expr, lit: hkmc2.syntax.Tree.BoolLit) = Expr.Call(Expr.Var("_mlsValue::isIntLit"), Ls(scrut, Expr.IntLit(if lit.value then 1 else 0)))
   def mlsIsIntLit(scrut: Expr, lit: hkmc2.syntax.Tree.IntLit) = Expr.Call(Expr.Var("_mlsValue::isIntLit"), Ls(scrut, Expr.IntLit(lit.value)))
+  def mlsIsStrLit(scrut: Expr, lit: hkmc2.syntax.Tree.StrLit) = Expr.Call(Expr.Var("_mls_Str::isStrLit"), Ls(scrut, Expr.StrLit(lit.value)))
   def mlsDebugPrint(x: Expr) = Expr.Call(Expr.Var("_mlsValue::print"), Ls(x))
   def mlsTupleValue(init: Ls[Expr]) = Expr.Call(Expr.Var("std::make_tuple"), init)
   def mlsAs(name: Str, cls: Str) = Expr.Var(s"_mlsValue::as<$cls>($name)")
@@ -187,6 +188,14 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
         val (decls2, stmts2) = codegen(arm, storeInto)(using Ls.empty, Ls.empty[Stmt])
         val stmt = Stmt.If(mlsIsBoolLit(scrut2, i), Stmt.Block(decls2, stmts2), nextarm)
         S(stmt)
+      case ((Pat.Lit(i @ hkmc2.syntax.Tree.StrLit(_)), arm), nextarm) =>
+        val (decls2, stmts2) = codegen(arm, storeInto)(using Ls.empty, Ls.empty[Stmt])
+        val stmt = Stmt.If(mlsIsStrLit(scrut2, i), Stmt.Block(decls2, stmts2), nextarm)
+        S(stmt)
+      case ((Pat.Lit(i @ hkmc2.syntax.Tree.UnitLit(_)), arm), nextarm) =>
+        val (decls2, stmts2) = codegen(arm, storeInto)(using Ls.empty, Ls.empty[Stmt])
+        val stmt = Stmt.If(mlsIsValueOf("Unit" |> mapName, scrut2), Stmt.Block(decls2, stmts2), nextarm)
+        S(stmt)
       case _ => TODO("codegenCaseWithIfs don't support these patterns currently")
     }
     (decls, stmt.fold(stmts)(x => stmts :+ x))
@@ -256,7 +265,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
         (decls, stmts2)
       case Node.Jump(defn, args) =>
         codegenJumpWithCall(defn, args, S(storeInto))
-      case Node.Panic(msg) => (decls, stmts :+ Stmt.Raw(s"throw std::runtime_error(\"$msg\" LINE_STRING);"))
+      case Node.Panic(msg) => (decls, stmts :+ Stmt.Raw(s"throw std::runtime_error(\"$msg \" LINE_STRING);"))
       case Node.LetExpr(name, expr, body) =>
         val stmts2 = stmts ++ Ls(Stmt.AutoBind(Ls(name |> allocIfNew), codegen(expr)))
         codegen(body, storeInto)(using decls, stmts2)

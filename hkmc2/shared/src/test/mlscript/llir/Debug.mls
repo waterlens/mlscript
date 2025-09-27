@@ -1,0 +1,88 @@
+:llir
+
+:optf simp,simp2
+:sopt
+object Unit
+fun caseA() =
+  globalThis.builtin("A")
+fun caseB() =
+  globalThis.builtin("B")
+fun caseC() =
+  globalThis.builtin("C")
+fun f(x, y) = 
+  if x then
+    if y is
+      Unit then caseA()
+      else caseB()
+  else
+    caseC()
+fun g(x) = f(x, Unit)
+fun main() = g(globalThis.builtin("Input"))
+main()
+//│ 
+//│ Opt:
+//│   class Unit()
+//│   def g$568(x$591) =
+//│     let x$610 = Unit$572() in
+//│     case x$591 of
+//│       BoolLit(true) =>
+//│         let* (x$636) = f_case0$620(x$610) in
+//│         x$636
+//│       _ =>
+//│         let* (x$639) = <builtin>$601("C") in
+//│         x$639
+//│   def main$566() =
+//│     let* (x$611) = <builtin>$601("Input") in
+//│     let* (x$612) = g$568(x$611) in
+//│     x$612
+//│   def entry$614() =
+//│     let* (x$613) = main$566() in
+//│     x$613
+//│   def f_case0$620(x$624) =
+//│     case x$624 of
+//│       Unit$572 =>
+//│         let* (x$625) = <builtin>$601("A") in
+//│         x$625
+//│       _ =>
+//│         let* (x$626) = <builtin>$601("B") in
+//│         x$626
+//│   entry = entry$614
+//│ 
+//│ Opt:
+//│   
+//│   def g$568(x$591) =
+//│     case x$591 of
+//│       BoolLit(true) =>
+//│         let* (x$655) = <builtin>$601("A") in
+//│         x$655
+//│       _ =>
+//│         let* (x$639) = <builtin>$601("C") in
+//│         x$639
+//│   def main$566() =
+//│     let* (x$611) = <builtin>$601("Input") in
+//│     let* (x$612) = g$568(x$611) in
+//│     x$612
+//│   def entry$614() =
+//│     let* (x$613) = main$566() in
+//│     x$613
+//│   entry = entry$614
+//│ 
+//│ Opt:
+//│   
+//│   def g$568(x$591) =
+//│     case x$591 of
+//│       BoolLit(true) =>
+//│         let* (x$655) = <builtin>$601("A") in
+//│         x$655
+//│       _ =>
+//│         let* (x$639) = <builtin>$601("C") in
+//│         x$639
+//│   def main$566() =
+//│     let* (x$611) = <builtin>$601("Input") in
+//│     let* (x$612) = g$568(x$611) in
+//│     x$612
+//│   def entry$614() =
+//│     let* (x$613) = main$566() in
+//│     x$613
+//│   entry = entry$614
+

@@ -1,0 +1,195 @@
+:llir
+
+:import prelude.mls
+//│ Imported 22 member(s)
+
+type Char = String
+
+abstract class Formula: Sym | Not | Dis | Con | Imp | Eqv
+
+data
+  class
+    Sym(a: Char) extends Formula
+    Not(a: Formula) extends Formula
+    Dis(a: Formula, b: Formula) extends Formula
+    Con(a: Formula, b: Formula) extends Formula
+    Imp(a: Formula, b: Formula) extends Formula
+    Eqv(a: Formula, b: Formula) extends Formula
+
+abstract class StackFrame: Ast | Lex
+
+data
+  class
+    Ast(f: Formula) extends StackFrame
+    Lex(s: Char) extends StackFrame
+
+fun charLt(a, b) = globalThis.builtin("str_lt", a, b)
+fun charLeq(a, b) = globalThis.builtin("str_leq", a, b)
+fun charGt(a, b) = globalThis.builtin("str_gt", a, b)
+fun charGeq(a, b) = globalThis.builtin("str_geq", a, b)
+
+fun while_(p, f, x) = if p(x) then while_(p, f, f(x)) else x
+
+fun replicate(n, x) = if n == 0 then Nil else x :: replicate(n - 1, x)
+
+fun inList(x, ls) = if ls is
+  h :: t and
+    x === h then true
+    else inList(x, t)
+  Nil then false
+
+fun listNeq(xs, ys) = if
+  xs is Nil and ys is Nil then false
+  xs is hx :: tx and ys is hy :: ty and (hx == hy) then listNeq(tx, ty)
+  else true
+
+fun foldr(f, z, xs) = if xs is
+  Nil then z
+  h :: t then f(h, foldr(f, z, t))
+
+fun str_to_list(x) = if str_head(x) is
+  null then Nil
+  else str_head(x) :: str_to_list(str_tail(x))
+
+fun list_to_str(xs) = if xs is
+  Nil then ""
+  x :: xs then str_concat(x, list_to_str(xs))
+
+
+fun insert(x, ys) = if ys is
+  Nil then x :: Nil
+  y :: ys and
+    charLt(x, y) then x :: y :: ys
+    charGt(x, y) then y :: insert(x, ys)
+    else y :: ys
+
+fun clauseHelper(p, x) = if p is
+  Dis(p, q) then clauseHelper(p, clauseHelper(q, x))
+  Sym(s) and x is [c, a] then [insert(s, c), a]
+  Not(Sym(s)) and x is [c, a] then [c, insert(s, a)]
+
+fun clause(p) = clauseHelper(p, [Nil, Nil])
+
+fun conjunct(p) = if p is Con(_, _) then true else false
+
+fun disin(p) = if p is
+  Dis(p, Con(q, r)) then Con(disin(Dis(p, q)), disin(Dis(p, r)))
+  Dis(Con(p, q), r) then Con(disin(Dis(p, r)), disin(Dis(q, r)))
+  Dis(p, q) then
+    let dp = disin(p)
+    let dq = disin(q)
+    if conjunct(dp) || conjunct(dq) then disin(Dis(dp, dq)) else Dis(dp, dq)
+  Con(p, q) then Con(disin(p), disin(q))
+  else p
+
+fun elim(p) = if p is
+  Sym(s) then Sym(s)
+  Not(p) then Not(elim(p))
+  Dis(p, q) then Dis(elim(p), elim(q))
+  Con(p, q) then Con(elim(p), elim(q))
+  Imp(p, q) then Dis(Not(elim(p)), elim(q))
+  Eqv(f, f_) then Con(elim(Imp(f, f_)), elim(Imp(f_, f)))
+  
+fun interleave(xs, ys) = if xs is
+  x :: xs then x :: interleave(ys, xs)
+  Nil then Nil
+
+fun negin(p) = if p is
+  Not(Not(p)) then negin(p)
+  Not(Con(p, q)) then Dis(negin(Not(p)), negin(Not(q)))
+  Not(Dis(p, q)) then Con(negin(Not(p)), negin(Not(q)))
+  Dis(p, q) then Dis(negin(p), negin(q))
+  Con(p, q) then Con(negin(p), negin(q))
+  else p
+
+fun opri(c) = if c
+  === "(" then 0
+  === "=" then 1
+  === ">" then 2
+  === "|" then 3
+  === "&" then 4
+  === "~" then 5
+  
+fun red(s) = if s is
+  Ast(p) :: Lex("=") :: Ast(q) :: s then Ast(Eqv(q, p)) :: s
+  Ast(p) :: Lex(">") :: Ast(q) :: s then Ast(Imp(q, p)) :: s
+  Ast(p) :: Lex("|") :: Ast(q) :: s then Ast(Dis(q, p)) :: s
+  Ast(p) :: Lex("&") :: Ast(q) :: s then Ast(Con(q, p)) :: s
+  Ast(p) :: Lex("~") :: s           then Ast(Not(p)) :: s
+
+fun spri(s) = if s is
+  Ast(x) :: Lex(c) :: s then opri(c)
+  else 0
+
+fun redstar(s) = while_(s => spri(s) != 0, red, s)
+
+fun spaces(n) = replicate(n, " ")
+
+fun parseHelper(t, s) = if t is
+  Nil then redstar(s)
+  " " :: t then parseHelper(t, s)
+  "(" :: t then parseHelper(t, Lex("(") :: s)
+  ")" :: t and redstar(s) is x :: Lex("(") :: ss then parseHelper(t, x :: ss)
+  c :: t and
+    charLeq("a", c) && charLeq(c, "z") then parseHelper(t, Ast(Sym(c)) :: s)
+    spri(s) > opri(c) then parseHelper(c :: t, red(s))
+    else parseHelper(t, Lex(c) :: s)
+
+fun parse(t) = if parseHelper(t, Nil) is Ast(f) :: Nil then f
+
+fun splitHelper(p, a) = if p is
+  Con(p, q) then splitHelper(p, splitHelper(q, a))
+  else p :: a
+
+fun split(p) = splitHelper(p, Nil)
+
+fun tautclause(c_a) = if c_a is [c, a] then
+  fun lscomp(ls) = if ls is
+    Nil then Nil
+    h :: t and
+      inList(h, a) then h :: lscomp(t)
+      else lscomp(t)
+  listNeq(lscomp(c), Nil)
+
+fun uniclHelper(p, x) =
+  let cp = clause(p)
+  if tautclause(cp) then x else insert(cp, x)
+
+fun unicl(a) = foldr(uniclHelper, Nil, a)
+
+fun listLen(ls) =
+  fun l(ls, a) = if ls is
+    Nil then a
+    h :: t then l(t, a + 1)
+  l(ls, 0)
+
+fun map(f, xs) = if xs is
+  x :: xs then f(x) :: map(f, xs)
+  Nil then Nil
+
+fun (+:) append(xs, ys) = if xs is
+  Nil then ys
+  x :: xs then x :: append(xs, ys)
+
+fun concat(ls) = if ls is
+  Nil then Nil
+  x :: xs then append(x, concat(xs))
+
+fun disp(l_r) = if l_r is [l, r] then
+  interleave(l, spaces(listLen(l))) +:
+  str_to_list("<=") +:
+  interleave(spaces(listLen(r)), r) +:
+  str_to_list("\n")
+
+fun clauses(t) = concat of map of
+  disp
+  unicl of split of disin of negin of elim of parse of t
+
+fun testClausify_nofib(n) =
+  let xs = replicate(n, str_to_list("(a = a = a) = (a = a = a) = (a = a = a)"))
+  list_to_str(concat(map(clauses, xs)))
+
+:wholeOptFlags simp,simp2
+:dumpBench clausify
+:benchPrep clausify.cxx
+testClausify_nofib(300)

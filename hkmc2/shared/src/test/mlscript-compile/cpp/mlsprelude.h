@@ -334,6 +334,10 @@ public:
 
   _mlsValue abs() const;
 
+  _mlsValue sqrt() const;
+
+  _mlsValue tan() const;
+
   // Operators
 
   _mlsValue operator==(const _mlsValue &other) const;
@@ -759,6 +763,10 @@ inline _mlsValue _mls_builtin_pow(_mlsValue a, _mlsValue b) { return a.pow(b); }
 
 inline _mlsValue _mls_builtin_abs(_mlsValue a) { return a.abs(); }
 
+inline _mlsValue _mls_builtin_sqrt(_mlsValue a) { return a.sqrt(); }
+
+inline _mlsValue _mls_builtin_tan(_mlsValue a) { return a.tan(); }
+
 inline _mlsValue _mls_builtin_floor_div(_mlsValue a, _mlsValue b) {
   return a.floorDiv(b);
 }
@@ -971,6 +979,18 @@ inline _mlsValue _mlsValue::abs() const {
   if (isFloat())
     return _mlsValue::create<_mls_Float>(std::abs(as<_mls_Float>(*this)->f));
   _mlsUtil::panic_with("abs: expected int or float", __func__, __FILE__, __LINE__);
+}
+
+inline _mlsValue _mlsValue::sqrt() const {
+  if (isFloat())
+    return _mlsValue::create<_mls_Float>(std::sqrt(as<_mls_Float>(*this)->f));
+  _mlsUtil::panic_with("sqrt: expected float", __func__, __FILE__, __LINE__);
+}
+
+inline _mlsValue _mlsValue::tan() const {
+  if (isFloat())
+    return _mlsValue::create<_mls_Float>(std::tan(as<_mls_Float>(*this)->f));
+  _mlsUtil::panic_with("tan: expected float", __func__, __FILE__, __LINE__);
 }
 
 // Operators

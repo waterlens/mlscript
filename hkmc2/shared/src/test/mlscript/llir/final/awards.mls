@@ -1,0 +1,118 @@
+:llir
+
+:import prelude.mls
+//│ Imported 28 member(s)
+
+fun (+:) append(xs, ys) = if xs is
+  Nil then ys
+  x :: xs then x :: append(xs, ys)
+
+fun foldl(f, a, xs) = if xs is
+  Nil then a
+  h :: t then foldl(f, f(a, h), t)
+
+fun filter(f, ls) = if ls is
+  Nil then Nil
+  h :: t and
+    f(h) then h :: filter(f, t)
+    else filter(f, t)
+
+fun sum_go(xs, a) = if xs is
+  Nil then a
+  h :: t then sum_go(t, a + h)
+
+fun sum(xs) = sum_go(xs, 0)
+
+fun map(f, xs) = if xs is
+  x :: xs then f(x) :: map(f, xs)
+  Nil then Nil
+
+fun ltTup2(t1, t2, lt1, gt1, lt2) = if t1 is [a, b] and t2 is [c, d] and
+  lt1(a, c) then true
+  gt1(a, c) then false
+  else lt2(b, d)
+
+fun ltList(xs, ys, lt, gt) = if xs is
+  Nil and
+    ys is Nil then false
+    else true
+  x :: xs and ys is
+    Nil then false
+    y :: ys and
+      lt(x, y) then true
+      gt(x, y) then false
+      else ltList(xs, ys, lt, gt)
+
+fun enumFromTo(a, b) = if a <= b then a :: enumFromTo(a + 1, b) else Nil
+
+fun delete1(x, ys) = if ys is
+  Nil then Nil
+  y :: ys and 
+    x == y then ys
+    else y :: delete1(x, ys)
+
+fun delete_(xs, e) = delete1(e, xs)
+
+fun listDiff(a, ls) = foldl(delete_, a, ls)
+
+fun leTup2(a, b) = ltTup2(a, b, (a, b) => a < b, (a, b) => a > b, (a, b) => ltList(a, b, (a, b) => a < b, (a, b) => a > b))
+
+fun rqsort(ls, r) = if ls is
+  Nil then r
+  x :: Nil then x :: r
+  x :: xs then rqpart(x, xs, Nil, Nil, r)
+fun rqpart(x, yss, rle, rgt, r) = if yss is
+  Nil then qsort(rle, x :: qsort(rgt, r))
+  y :: ys and
+    leTup2(y, x) then rqpart(x, ys, y :: rle, rgt, r)
+    else rqpart(x, ys, rle, y :: rgt, r)
+fun qpart(x, ys, rlt, rge, r) = if ys is
+  Nil then rqsort(rlt, x :: rqsort(rge, r))
+  y :: ys and
+    leTup2(x, y) then qpart(x, ys, rlt, y :: rge, r)
+    else qpart(x, ys, y :: rlt, rge, r)
+fun qsort(ls, r) = if ls is
+  Nil then r
+  x :: Nil then x :: r
+  x :: xs then qpart(x, xs, Nil, Nil, r)
+
+fun sort(l) = qsort(l, Nil)
+
+fun perms(m, nns) = if
+  nns is Nil then Nil
+  m == 1 then map(x => x :: Nil, nns)
+  nns is n :: ns then map(x => n :: x, perms(m-1, ns)) +: perms(m, ns)
+
+fun atleast(sumscores, threshold) =
+  filter(case { [sum_, p] then sum_ >= threshold }, sumscores)
+
+fun award(sumscores, name_threshold) = if name_threshold is [name, threshold] then
+  map(ps => [name, ps], sort(atleast(sumscores, threshold)))
+
+fun awards(scores) =
+  let sumscores = map(p => [sum(p), p], perms(3, scores))
+  
+  award(sumscores, ["Gold", 70]) +: award(sumscores, ["Silver", 60]) +: award(sumscores, ["Bronze", 50])
+
+fun findawards(scores) = if awards(scores) is
+  Nil then Nil
+  head_ :: tail_ and head_ is [award, [sum_, perm]] then
+    [award, [sum_, perm]] :: findawards(listDiff(scores, perm))
+
+fun findallawards(competitors) =
+  map(case { [name, scores] then [name, findawards(scores)] }, competitors)
+
+fun competitors(i) =
+  ["Simon", 35 :: 27 :: 40 :: i :: 34 :: 21 :: Nil] ::
+  ["Hans", 23 :: 19 :: 45 :: i :: 17 :: 10 :: 5 :: 8 :: 14 :: Nil] ::
+  ["Phil", 1 :: 18 :: i :: 20 :: 21 :: 19 :: 34 :: 8 :: 16 :: 21 :: Nil] ::
+  ["Kevin", 9 :: 23 :: 17 :: 54 :: i :: 41 :: 9 :: 18 :: 14 :: Nil] ::
+  Nil
+
+fun testAwards_nofib(n) =
+  map(x => print(findallawards(competitors(intMod(x, 100)))), enumFromTo(1, n))
+
+:wholeOptFlags simp,simp2
+:dumpBench awards
+:benchPrep awards.cxx
+testAwards_nofib(3000)

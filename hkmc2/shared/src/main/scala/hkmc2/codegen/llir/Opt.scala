@@ -860,7 +860,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     def sNode(node: Node, splitPos: Loc, thisFunc: Func)(acc: Node => Node): SplittingMode = 
       trace[SplittingMode](s"sNode: ${acc(Node.Panic("placeholder"))} -> $node"): 
         node match
-        case Node.Result(res) => oErrStop(s"sNode: unexpected Result $res")
+        case Node.Result(res) => oErrStop(s"sNode: unexpected Result $res, expect at $splitPos")
         case Node.Jump(func, args) =>
           // B mode
           val sym = newFunSym(s"${thisFunc.name.nme}_pre")
@@ -962,12 +962,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         info.func.update(sym, nuFunc)
         Node.Jump(sym, fvs.map(Expr.Ref(_)))
 
-    
-
-    // sym: the symbol of the mixing producer
-    // loc: the location of the call site where the mixing producer is called
-    // argI: the name bound to the return value of the mixing producer
-    def liftOutMixingProducer(sym: Symbol, loc: Loc, argI: Symbol)(using env: Env, thisFunc: Func): Node =
+  
+    def findMixingProducer(sym: Symbol, loc: Loc, argI: Symbol)(using env: Env, thisFunc: Func) =
       val (func, args) = loc match
         case Loc.CallSite(func, args, nth) => (func, args)
         case _ => oErrStop(s"unexpected loc: $loc")
@@ -984,6 +980,16 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       val s_loc = i_mix match
         case I(loc, info) => loc
 
+      (func, s_loc, preBody, postBody, args, names)
+
+
+    // sym: the symbol of the mixing producer
+    // loc: the location of the call site where the mixing producer is called
+    // argI: the name bound to the return value of the mixing producer
+    def liftOutMixingProducer(sym: Symbol, loc: Loc, argI: Symbol)(using env: Env, thisFunc: Func): Node =
+      val (func, s_loc, preBody, postBody, args, names) = findMixingProducer(sym, loc, argI)
+      if s_loc == Loc.Other then
+        oErrStop(s"unexpected location: $s_loc")
       val old = info.getFunc(func)
       log(s"splitting mixing producer: ${old.name |> showSym}")
       val sm = sFunc(info.getFunc(func), s_loc)
@@ -1022,9 +1028,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           val sDesc = checkSTarget(info.getFunc(func), args)
           def trySplit = (sDesc.argumentsDDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
             case (_, false) => 
-              changed.set(true)
               val (sym, (loc, argI)) = sDesc.mixingProducer.head
-              liftOutMixingProducer(sym, loc, argI)
+              if findMixingProducer(sym, loc, argI)._2 != Loc.Other then
+                changed.set(true)
+                liftOutMixingProducer(sym, loc, argI)
+              else
+                k(node)
             case (true, _) => k(node)
             case (false, _) =>
               changed.set(true)
@@ -1063,9 +1072,12 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               // manual checkSTarget
               val p = findProducer(loc)
               p match
-                case Some((p, nth)) => 
-                  changed.set(true)
-                  liftOutMixingProducer(p, loc, scrutinee)
+                case Some((p, nth)) =>
+                  if findMixingProducer(p, loc, scrutinee)._2 != Loc.Other then
+                    changed.set(true)
+                    liftOutMixingProducer(p, loc, scrutinee)
+                  else
+                    fallback
                 case None => fallback
             case _ => fallback
         case Node.Panic(msg) => k(node)
@@ -1081,8 +1093,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             def trySplit = (sDesc.argumentsDDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
               case (_, false) => 
                 val (sym, (loc, argI)) = sDesc.mixingProducer.head
-                changed.set(true)
-                liftOutMixingProducer(sym, loc, argI)
+                if findMixingProducer(sym, loc, argI)._2 != Loc.Other then
+                  changed.set(true)
+                  liftOutMixingProducer(sym, loc, argI)
+                else
+                  memoCall(node)(k)
+                  fNode(body): inner =>
+                    k(Node.LetCall(names, func, args, inner))
               case (true, _) =>
                 memoCall(node)(k)
                 fNode(body): inner =>

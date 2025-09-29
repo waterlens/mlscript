@@ -668,6 +668,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           case _ => ()
         SDesc(argumentsDDesc, argumentsSDesc, firstD, mixingProducer)
 
+    // NOTE: same call site result in problems
     def memoCall(callNode: Node.LetCall)(k: Node => Env ?=> Node)(using env: Env): Unit =
       val Node.LetCall(names, func, args, body) = callNode
       env.possibleSplitting.update((func, args), (names, PreFuncBody(node => k(node)(using env)), PostFuncBody(body)))
@@ -963,7 +964,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         Node.Jump(sym, fvs.map(Expr.Ref(_)))
 
   
-    def findMixingProducer(sym: Symbol, loc: Loc, argI: Symbol)(using env: Env, thisFunc: Func) =
+    def findMixingProducer(sym: Symbol, loc: Loc, argI: Symbol, dbgMsg: Str)(using env: Env, thisFunc: Func) =
       val (func, args) = loc match
         case Loc.CallSite(func, args, nth) => (func, args)
         case _ => oErrStop(s"unexpected loc: $loc")
@@ -971,7 +972,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       
       val n = names.indexOf(argI)
       if n == -1 then
-        oErrStop(s"unexpected mixing producer: ${argI} not found in $names")
+        oErrStop(s"unexpected mixing producer ($dbgMsg): ${argI |> showSym} not found in ${names.map(showSym)} when call $sym")
       
       // get the intro info of the mixing producer
       // so we can find the correct splitting position
@@ -987,7 +988,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     // loc: the location of the call site where the mixing producer is called
     // argI: the name bound to the return value of the mixing producer
     def liftOutMixingProducer(sym: Symbol, loc: Loc, argI: Symbol)(using env: Env, thisFunc: Func): Node =
-      val (func, s_loc, preBody, postBody, args, names) = findMixingProducer(sym, loc, argI)
+      val (func, s_loc, preBody, postBody, args, names) = findMixingProducer(sym, loc, argI, "lift")
       if s_loc == Loc.Other then
         oErrStop(s"unexpected location: $s_loc")
       val old = info.getFunc(func)
@@ -1029,7 +1030,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
           def trySplit = (sDesc.argumentsDDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
             case (_, false) => 
               val (sym, (loc, argI)) = sDesc.mixingProducer.head
-              if findMixingProducer(sym, loc, argI)._2 != Loc.Other then
+              if findMixingProducer(sym, loc, argI, "case 1")._2 != Loc.Other then
                 changed.set(true)
                 liftOutMixingProducer(sym, loc, argI)
               else
@@ -1073,7 +1074,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
               val p = findProducer(loc)
               p match
                 case Some((p, nth)) =>
-                  if findMixingProducer(p, loc, scrutinee)._2 != Loc.Other then
+                  if findMixingProducer(p, loc, scrutinee, "case 3")._2 != Loc.Other then
                     changed.set(true)
                     liftOutMixingProducer(p, loc, scrutinee)
                   else
@@ -1093,11 +1094,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
             def trySplit = (sDesc.argumentsDDesc.isEmpty, sDesc.mixingProducer.isEmpty) match
               case (_, false) => 
                 val (sym, (loc, argI)) = sDesc.mixingProducer.head
-                if findMixingProducer(sym, loc, argI)._2 != Loc.Other then
+                if findMixingProducer(sym, loc, argI, "case 2")._2 != Loc.Other then
                   changed.set(true)
                   liftOutMixingProducer(sym, loc, argI)
                 else
-                  memoCall(node)(k)
                   fNode(body): inner =>
                     k(Node.LetCall(names, func, args, inner))
               case (true, _) =>

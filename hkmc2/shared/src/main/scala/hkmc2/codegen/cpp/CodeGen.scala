@@ -265,7 +265,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
         (decls, stmts2)
       case Node.Jump(defn, args) =>
         codegenJumpWithCall(defn, args, S(storeInto))
-      case Node.Panic(msg) => (decls, stmts :+ Stmt.Raw(s"throw std::runtime_error(\"$msg \" LINE_STRING);"))
+      case Node.Panic(msg) => (decls, stmts :+ Stmt.Raw(s"_mlsUtil::panic_with(\"match error\", __func__, __FILE__, __LINE__);"))
       case Node.LetExpr(name, expr, body) =>
         val stmts2 = stmts ++ Ls(Stmt.AutoBind(Ls(name |> allocIfNew), codegen(expr)))
         codegen(body, storeInto)(using decls, stmts2)

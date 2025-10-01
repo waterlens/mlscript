@@ -18,10 +18,10 @@ for benchmark in benchmarks:
     size_results[benchmark] = df
 
 def make_absolute_time():
-    plt.figure(figsize=(12, 8), dpi=600)  # 增加图表宽度
+    plt.figure(figsize=(15, 8), dpi=600)  # 增加图表宽度
 
     x = np.arange(len(results))
-    width = 0.11  # 减小柱子宽度
+    width = 0.18  # 减小柱子宽度
     gap = 0.03
 
     # 定义两种颜色
@@ -58,10 +58,10 @@ def make_absolute_time():
     plt.close()
 
 def make_relative_time():
-    plt.figure(figsize=(12, 8), dpi=600)  # 增加图表宽度
+    plt.figure(figsize=(15, 8), dpi=600)  # 增加图表宽度
 
     x = np.arange(len(results))
-    width = 0.11  # 减小柱子宽度
+    width = 0.18  # 减小柱子宽度
     gap = 0.03
 
     # 定义两种颜色
@@ -120,10 +120,10 @@ def make_relative_time():
     plt.close()
 
 def make_size():
-    plt.figure(figsize=(12, 8), dpi=600)  # 增加图表宽度
+    plt.figure(figsize=(15, 8), dpi=600)  # 增加图表宽度
 
-    x = np.arange(len(size_results))
-    width = 0.11  # 减小柱子宽度
+    x = np.arange(len(results))
+    width = 0.18  # 减小柱子宽度
     gap = 0.03
 
     # 定义两种颜色
@@ -157,7 +157,7 @@ def make_size():
     plt.ylabel("Code Size (kB)")
     plt.legend()
 
-    plt.ylim(0, 89)  # 调整 y 轴范围到 kB 单位
+    plt.ylim(0, 190)  # 调整 y 轴范围到 kB 单位
 
     plt.tight_layout()
 
@@ -165,10 +165,10 @@ def make_size():
     plt.close()
 
 def make_relative_size():
-    plt.figure(figsize=(12, 8), dpi=600)  # 增加图表宽度
+    plt.figure(figsize=(15, 8), dpi=600)  # 增加图表宽度
 
-    x = np.arange(len(size_results))
-    width = 0.11  # 减小柱子宽度
+    x = np.arange(len(results))
+    width = 0.18  # 减小柱子宽度
     gap = 0.03
 
     # 定义两种颜色

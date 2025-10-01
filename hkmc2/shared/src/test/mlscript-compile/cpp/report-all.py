@@ -145,7 +145,7 @@ def make_size():
                     label=lbl if i == 0 else "")
             
             # 添加数值标签
-            plt.text(pos[j], size_kb * 1.05, 
+            plt.text(pos[j], size_kb * 1.02, 
                     f'{size_kb:.1f}', 
                     ha='center', va='bottom', 
                     rotation=0, fontsize=8)
@@ -205,7 +205,7 @@ def make_relative_size():
     plt.ylabel("Relative Code Size (normalized to simp)")
     plt.legend()
 
-    plt.ylim(0, 1.6)
+    plt.ylim(0, 1.9)
 
     # 添加水平参考线
     plt.axhline(y=1.0, color='gray', linestyle='--', alpha=0.5)

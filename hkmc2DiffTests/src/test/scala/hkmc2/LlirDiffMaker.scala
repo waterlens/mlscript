@@ -114,18 +114,19 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             var changed = Status(true)
             var outOptProg = prog
             var count = 0
-            while changed.get && count <= 2 do 
+            while changed.get && count <= 3 do 
               changed.set(false)
+              def handleResult(optProg: Program, optStat: List[(Str, opt.ProgStat)]) =
+                if show then
+                  output(s"\n$name:")
+                  output(optProg.show())
+                if showStat then
+                  output(s"\n$name stats:\n")
+                  output(optStat.mkString("\n"))
+                outOptProg = optProg
+                count += 1
               runWithTimeout(5)(opt.run(outOptProg)(using changed)) match
-                case Some((optProg, optStat)) =>
-                  if show then
-                    output(s"\n$name:")
-                    output(optProg.show())
-                  if showStat then
-                    output(s"\n$name stats:\n")
-                    output(optStat.mkString("\n"))
-                  outOptProg = optProg
-                  count += 1
+                case Some((optProg, optStat)) => handleResult(optProg, optStat)
                 case None =>
                   count += 1
                   output("Optimization timed out")

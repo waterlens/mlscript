@@ -163,7 +163,7 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
   enum IInfo:
     case BoolCtor(b: Bool) // boolean literal as a special case
     case Ctor(c: Local)
-    case Mixed(i: Set[I])
+    case Mixed(i: Set[IInfo])
     case Tuple(n: Int)
     case Top
     case Bot
@@ -200,8 +200,8 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
         case IInfo.Ctor(c) => (2, c.nme)
         case IInfo.Tuple(n) => (3, n.toString)
         case IInfo.Mixed(is) =>
-          // Build a deterministic key from inner set
-          val inner = is.toList.map(i => iinfoKey(i.info)).sortBy(x => (x._1, x._2)).map{ case (a, b) => s"$a:$b" }.mkString("|")
+          // Build a deterministic key from inner set (infos only, loc-insensitive)
+          val inner = is.toList.map(iinfoKey).sortBy(x => (x._1, x._2)).map{ case (a, b) => s"$a:$b" }.mkString("|")
           (4, inner)
         case IInfo.Top => (5, "")
         case IInfo.Bot => (6, "")
@@ -387,11 +387,10 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
     import IntroductionAnalysis.Env
 
 
-    def mergeIntroSet(loc: Loc, is: Set[I]): I =
+    def mergeIntroSet(loc: Loc, is: Set[IInfo]): I =
       if is.nonEmpty then
-        val i = is.head
-        val iInfo = i.info
-        if is.forall(_.info === iInfo) then
+        val iInfo = is.head
+        if is.forall(_ === iInfo) then
           I(loc, iInfo)
         else
           I(loc, IInfo.Mixed(is))  
@@ -401,12 +400,13 @@ final class LlirOpt(using Elaborator.State, Raise)(tl: TraceLogger, freshInt: Fr
       traceNot[Ls[I]](s"mergeIntros: $xs"):
         val xst = xs.transpose
         xst.map: ys =>
-          val z = ys.flatMap:
-            case I(loc, IInfo.Bot) => Set.empty[I]
-            case I(loc, IInfo.Mixed(i)) => i
-            case i => Set(i)
-          .toSet
-          mergeIntroSet(loc, z)
+          val infos: Set[IInfo] =
+            ys.flatMap:
+              case I(_, IInfo.Bot) => Set.empty[IInfo]
+              case I(_, IInfo.Mixed(i)) => i
+              case I(_, ii) => Set(ii)
+            .toSet
+          mergeIntroSet(loc, infos)
 
     def addI(sym: Local, i: I)(using env: Env) =
       traceNot[Unit](s"addI: ${sym.nme}$$${sym.uid.toString()} -> $i"):

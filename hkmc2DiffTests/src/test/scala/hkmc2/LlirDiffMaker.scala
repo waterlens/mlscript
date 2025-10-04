@@ -139,10 +139,10 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
             rPath/"hkmc2"/"shared"/"src"/"test"/"mlscript-compile"/"cpp"
           else
             rPath/"src"/"test"/"mlscript-compile"/"cpp"
-        def cppGen(name: String, prog: Program, gen: Bool, show: Bool, run: Bool, write: Opt[Str]): Unit =
+        def cppGen(name: String, prog: Program, gen: Bool, show: Bool, run: Bool, useGotos: Bool, write: Opt[Str]): Unit =
           tl.log(s"Generating $name")
           if gen || show || run || write.isDefined then
-            val cpp = CppCodeGen(ctx.builtin_sym.hiddenClasses, tl).codegen(prog)
+            val cpp = CppCodeGen(ctx.builtin_sym.hiddenClasses, tl).codegen(prog, true)
             if show then
               output(s"\n$name:")
               output(cpp.toDocument.toString)
@@ -158,11 +158,11 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
                 cppHost.compileAndRun(cpp.toDocument.toString)
         cppGen("Cpp", 
           optimize("Opt", llirProg, opt.isSet, sopt.isSet, optStat.isSet, optFlags.get.getOrElse(Set.empty)), 
-          cpp.isSet, scpp.isSet, rcpp.isSet, wcpp.get)
+          cpp.isSet, scpp.isSet, rcpp.isSet, true, wcpp.get)
         val prog = mkWholeProgram
         cppGen("WholeProgramCpp",
           optimize("WholeProgramOpt", prog, wholeOpt.isSet, sWholeOpt.isSet, wholeOptStat.isSet, wholeOptFlags.get.getOrElse(Set.empty)),
-          wholeCpp.isSet, sWholeCpp.isSet, rWholeCpp.isSet, wWholeCpp.get)
+          wholeCpp.isSet, sWholeCpp.isSet, rWholeCpp.isSet, true, wWholeCpp.get)
         def baseName(last: String): String =
           val li = last.lastIndexOf('.')
           if (li == -1) last
@@ -177,8 +177,8 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
               p => p.println(onlySimp.show())
             printToFile(java.io.File((auxPath / s"${dumpName}.opt.llir").toString)):
               p => p.println(fullOpt.show())
-          cppGen("OnlySimplifyCpp", onlySimp, false, false, false, Some(baseName(benchCppName) + ".simp.cxx"))
-          cppGen("FullOptCpp", fullOpt, false, false, false, Some(baseName(benchCppName) + ".opt.cxx"))
+          cppGen("OnlySimplifyCpp", onlySimp, false, false, false, true, Some(baseName(benchCppName) + ".simp.cxx"))
+          cppGen("FullOptCpp", fullOpt, false, false, false, true, Some(baseName(benchCppName) + ".opt.cxx"))
         if intl.isSet then
           val intr = codegen.llir.Interpreter(tl)
           output("\nInterpreted:")

@@ -25,10 +25,7 @@ essential_files = [
     "benchmarks.txt",
     "pyproject.toml",
     ".python-version",
-    "uv.lock",
-    "nqueens_jp.orig.cxx",
-    "nqueens_jp.simp.cxx",
-    "nqueens_jp.opt.cxx"
+    "uv.lock"
 ]
 
 for file in essential_files:

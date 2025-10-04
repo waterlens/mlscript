@@ -6,8 +6,20 @@ make target:
   make SRC={{target}}.simp.cxx DST={{target}}.simp.out USE_RC=0 DEBUGINFO=0
   make SRC={{target}}.opt.cxx DST={{target}}.opt.out USE_RC=0 DEBUGINFO=0
 
+make3 target:
+  make SRC={{target}}.orig.cxx DST={{target}}.orig.out USE_RC=0 DEBUGINFO=0
+  make SRC={{target}}.simp.cxx DST={{target}}.simp.out USE_RC=0 DEBUGINFO=0
+  make SRC={{target}}.opt.cxx DST={{target}}.opt.out USE_RC=0 DEBUGINFO=0
+
 bench target: (make target)
   hyperfine --warmup 5 --runs 20 \
+      ./{{target}}.simp.out \
+      ./{{target}}.opt.out \
+      --export-csv {{target}}.csv
+
+bench3 target: (make3 target)
+  hyperfine --warmup 5 --runs 20 \
+      ./{{target}}.orig.out \
       ./{{target}}.simp.out \
       ./{{target}}.opt.out \
       --export-csv {{target}}.csv

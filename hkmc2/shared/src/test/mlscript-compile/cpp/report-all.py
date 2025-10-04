@@ -87,7 +87,7 @@ def make_relative_time():
                     label=lbl if i == 0 else "")
             
             # 添加数值标签
-            plt.text(pos[j], relative_time * 1.05, 
+            plt.text(pos[j], relative_time + 0.1, 
                     f'{relative_time:.2f}', 
                     ha='center', va='bottom', 
                     rotation=0, fontsize=8)
@@ -157,7 +157,7 @@ def make_size():
     plt.ylabel("Code Size (kB)")
     plt.legend()
 
-    plt.ylim(0, 190)  # 调整 y 轴范围到 kB 单位
+    plt.ylim(0, 400)  # 调整 y 轴范围到 kB 单位
 
     plt.tight_layout()
 
@@ -193,7 +193,7 @@ def make_relative_size():
                     label=lbl if i == 0 else "")
             
             # 添加数值标签
-            plt.text(pos[j], relative_size * 1.05, 
+            plt.text(pos[j], relative_size + 0.1, 
                     f'{relative_size:.2f}', 
                     ha='center', va='bottom', 
                     rotation=0, fontsize=8)
@@ -205,7 +205,7 @@ def make_relative_size():
     plt.ylabel("Relative Code Size (normalized to simp)")
     plt.legend()
 
-    plt.ylim(0, 1.9)
+    plt.ylim(0, 3.5)
 
     # 添加水平参考线
     plt.axhline(y=1.0, color='gray', linestyle='--', alpha=0.5)

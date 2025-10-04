@@ -2,7 +2,8 @@ package hkmc2.codegen.cpp
 
 import mlscript.utils._
 import mlscript.utils.shorthands._
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ListBuffer, Stack}
+import scala.collection.immutable.SortedSet
 
 import hkmc2.codegen.llir.{Expr => IExpr, _}
 import hkmc2.codegen.cpp._
@@ -89,6 +90,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
 
   case class Ctx(
     fieldCtx: Set[Local],
+    fnCtx: Map[Local, Func],
   )
 
   def getVar(l: Local)(using Raise, Scope): String = l match
@@ -117,7 +119,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
       else
         val methods = cls.methods.toList.sortBy(_._1.nme).map:
           case (name, defn) =>
-            val (cdef, decl) = codegenDefn(using Ctx(summon[Ctx].fieldCtx ++ cls.fields))(defn)
+            val (cdef, decl) = codegenDefn(using Ctx(summon[Ctx].fieldCtx ++ cls.fields, summon[Ctx].fnCtx))(calculateMethodReachable(defn.body))(defn)
             val cdef2 = cdef match
               case x: Def.FuncDef if builtinApply.contains(defn.name.nme) => x.copy(name = defn.name |> directName, scope = Some(cls.name |> mapClsLikeName))
               case x: Def.FuncDef => x.copy(scope = Some(cls.name |> mapClsLikeName))
@@ -200,6 +202,11 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
     }
     (decls, stmt.fold(stmts)(x => stmts :+ x))
 
+  def codegenJumpWithGoto(func: Local, args: Ls[TrivialExpr], storeInto: Opt[Str])(using decls: Ls[Decl], stmts: Ls[Stmt])(using Ctx, Raise, Scope): (Ls[Decl], Ls[Stmt]) =
+    val params = summon[Ctx].fnCtx(func).params
+    val stmts2 = stmts ++ args.zip(params).map((a, p) => Stmt.Assign(p |> allocIfNew, toExpr(a))) ++ Ls(Stmt.Goto(func |> allocIfNew))
+    (decls, stmts2)
+
   def codegenJumpWithCall(func: Local, args: Ls[TrivialExpr], storeInto: Opt[Str])(using decls: Ls[Decl], stmts: Ls[Stmt])(using Ctx, Raise, Scope): (Ls[Decl], Ls[Stmt]) =
     val call = Expr.Call(Expr.Var(func |> allocIfNew), args.map(toExpr))
     val stmts2 = stmts ++ Ls(storeInto.fold(Stmt.Return(call))(x => Stmt.Assign(x, call)))
@@ -264,7 +271,7 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
         val stmts2 = stmts ++ Ls(Stmt.Assign(storeInto, expr))
         (decls, stmts2)
       case Node.Jump(defn, args) =>
-        codegenJumpWithCall(defn, args, S(storeInto))
+        codegenJumpWithGoto(defn, args, S(storeInto))
       case Node.Panic(msg) => (decls, stmts :+ Stmt.Raw(s"_mlsUtil::panic_with(\"match error\", __func__, __FILE__, __LINE__);"))
       case Node.LetExpr(name, expr, body) =>
         val stmts2 = stmts ++ Ls(Stmt.AutoBind(Ls(name |> allocIfNew), codegen(expr)))
@@ -291,13 +298,20 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
       case Node.Case(scrut, cases, default) =>
         codegenCaseWithIfs(scrut, cases, default, storeInto)
     
-  def codegenDefn(using Ctx, Raise, Scope)(defn: Func): (Def, Decl) = defn match
+  def codegenDefn(using Ctx, Raise, Scope)(reachable: Ls[Local])(defn: Func): (Def, Decl) = defn match
     case Func(id, name, params, resultNum, body) =>
-      val decls = Ls(mlsRetValueDecl(resultNum))
+      val jpParamsDecls = reachable.iterator.flatMap: f =>
+        val params = summon[Ctx].fnCtx(f).params
+        if params.nonEmpty then Some(Decl.VarsDecl(params.iterator.map(allocIfNew).toList, mlsValType)) else None
+      val decls = Ls(mlsRetValueDecl(resultNum)) ++ jpParamsDecls
       val stmts = Ls.empty[Stmt]
       val (decls2, stmts2) = codegen(body, mlsRetValue)(using decls, stmts)
       val stmtsWithReturn = stmts2 :+ Stmt.Return(Expr.Var(mlsRetValue))
-      val theDef = Def.FuncDef(mlsRetValType(resultNum), name |> allocIfNew, params.map(x => (x |> allocIfNew, mlsValType)), Stmt.Block(decls2, stmtsWithReturn))
+      val others = reachable.iterator.foldLeft(decls2, stmtsWithReturn):
+        case ((decls, stmts), f) => 
+          val (decls2, stmts2) = codegen(summon[Ctx].fnCtx(f).body, mlsRetValue)(using decls, Nil)
+          (decls2, stmts ++ Ls(Stmt.Label(f |> allocIfNew), Stmt.Block(Nil, stmts2 :+ Stmt.Return(Expr.Var(mlsRetValue)))))
+      val theDef = Def.FuncDef(mlsRetValType(resultNum), name |> allocIfNew, params.map(x => (x |> allocIfNew, mlsValType)), Stmt.Block(others._1, others._2))
       val decl = Decl.FuncDecl(mlsRetValType(resultNum), name |> allocIfNew, params.map(x => mlsValType))
       (theDef, decl)
 
@@ -327,13 +341,55 @@ class CppCodeGen(builtinClassSymbols: Set[Local], tl: TraceLogger):
       throw new Exception(s"Cycle detected in class hierarchy: $cycle")
     sorted.toList
 
+  def reachableFromJump(node: Node, acc: SortedSet[Local]): SortedSet[Local] = node match
+    case Node.Jump(target, args) => acc + target
+    case Node.LetMethodCall(names, cls, method, args, body) => reachableFromJump(body, acc)
+    case Node.LetCall(names, func, args, body) => reachableFromJump(body, acc)
+    case Node.LetExpr(name, expr, body) => reachableFromJump(body, acc)
+    case Node.Case(scrut, cases, default) => cases.map(_._2).foldRight(default.map(reachableFromJump(_, acc)).getOrElse(acc))((x, acc) => reachableFromJump(x, acc))
+    case Node.Result(res) => acc
+    case Node.Panic(msg) => acc
+
+  def calculateMethodReachable(methodBody: Node)(using Ctx) =
+    given Ordering[Local] = Ordering.by(x => s"${x.nme}$$${x.uid.toString()}")
+    val worklist = Stack.empty[Local]
+    worklist.pushAll(reachableFromJump(methodBody, SortedSet.empty))
+    var visited = Set.empty[Local]
+    var reachable = Ls.empty[Local]
+    while worklist.nonEmpty do
+      val name = worklist.pop()
+      val node = summon[Ctx].fnCtx(name)
+      val targets = reachableFromJump(node.body, SortedSet.empty)
+      visited += name
+      reachable ++= targets
+      worklist.addAll(targets.filterNot(visited.contains))
+    reachable.toList
+
+  def calculateReachable(func: Local)(using Ctx) =
+    given Ordering[Local] = Ordering.by(x => s"${x.nme}$$${x.uid.toString()}")
+    val worklist = Stack.empty[Local]
+    worklist.push(func) 
+    var visited = Set.empty[Local]
+    var reachable = Ls.empty[Local]
+    while worklist.nonEmpty do
+      val name = worklist.pop()
+      val node = summon[Ctx].fnCtx(name)
+      val targets = reachableFromJump(node.body, SortedSet.empty)
+      visited += name
+      reachable ++= targets
+      worklist.addAll(targets.filterNot(visited.contains))
+    reachable.distinct
+
   def codegen(prog: Program)(using Raise, Scope): CompilationUnit =
     val sortedClasses = sortClasses(prog)
     val sortedDefs = prog.defs.toArray
     sortedDefs.sortInPlaceBy(_.name |> directName)
+    val fnCtx = Map.from(sortedDefs.iterator.map(x => (x.name, x)))
     val fieldCtx = Set.empty[Local]
-    given Ctx = Ctx(fieldCtx)
+    val fnParamsCtx = Map.from(sortedDefs.iterator.map(x => (x.name, x.params)))
+    given Ctx = Ctx(fieldCtx, fnCtx)
+    val reachableSet = sortedDefs.iterator.map(x => (x.name, calculateReachable(x.name))).toMap
     val (defs, decls, methodsDef) = sortedClasses.map(codegenClassInfo).unzip3
-    val (defs2, decls2) = sortedDefs.map(codegenDefn).unzip
+    val (defs2, decls2) = sortedDefs.map(x => codegenDefn(reachableSet(x.name))(x)).unzip
     CompilationUnit(Ls(mlsPrelude), decls ++ decls2, defs.flatten ++ defs2 ++ methodsDef.flatten :+ Def.RawDef(mlsCallEntry(prog.entry |> allocIfNew)) :+ Def.RawDef(mlsEntryPoint))
 

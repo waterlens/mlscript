@@ -93,17 +93,17 @@ f4()
 //│     let x$621 = ==(x$620,1) in
 //│     case x$621 of
 //│       BoolLit(true) =>
-//│         let x$623 = 2 in
-//│         jump j$622(x$623)
-//│       _ =>
-//│         let x$624 = 3 in
+//│         let x$624 = 2 in
 //│         jump j$622(x$624)
-//│   def j$622(tmp$619) =
-//│     tmp$619
-//│   def entry$626() =
-//│     let* (x$625) = f4$608() in
-//│     x$625
-//│   entry = entry$626
+//│       _ =>
+//│         let x$625 = 3 in
+//│         jump j$622(x$625)
+//│   def j$622(tmp$623) =
+//│     tmp$623
+//│   def entry$627() =
+//│     let* (x$626) = f4$608() in
+//│     x$626
+//│   entry = entry$627
 //│ 
 //│ Interpreted:
 //│ 3
@@ -119,31 +119,31 @@ f5()
 //│ = 5
 //│ LLIR:
 //│   
-//│   def f5$627() =
-//│     let x$644 = 0 in
-//│     let x$645 = ==(x$644,1) in
-//│     case x$645 of
+//│   def f5$628() =
+//│     let x$645 = 0 in
+//│     let x$646 = ==(x$645,1) in
+//│     case x$646 of
 //│       BoolLit(true) =>
-//│         let x$647 = 2 in
-//│         jump j$646(x$647)
+//│         let x$649 = 2 in
+//│         jump j$647(x$649)
 //│       _ =>
-//│         let x$648 = 3 in
-//│         jump j$646(x$648)
-//│   def j$646(tmp$642) =
-//│     let x$649 = ==(tmp$642,2) in
-//│     case x$649 of
+//│         let x$650 = 3 in
+//│         jump j$647(x$650)
+//│   def j$647(tmp$648) =
+//│     let x$651 = ==(tmp$648,2) in
+//│     case x$651 of
 //│       BoolLit(true) =>
-//│         let x$651 = 4 in
-//│         jump j$650(x$651)
+//│         let x$654 = 4 in
+//│         jump j$652(x$654)
 //│       _ =>
-//│         let x$652 = 5 in
-//│         jump j$650(x$652)
-//│   def j$650(tmp$643) =
-//│     tmp$643
-//│   def entry$654() =
-//│     let* (x$653) = f5$627() in
-//│     x$653
-//│   entry = entry$654
+//│         let x$655 = 5 in
+//│         jump j$652(x$655)
+//│   def j$652(tmp$653) =
+//│     tmp$653
+//│   def entry$657() =
+//│     let* (x$656) = f5$628() in
+//│     x$656
+//│   entry = entry$657
 //│ 
 //│ Interpreted:
 //│ 5
@@ -154,19 +154,19 @@ fun test() =
   if true do test()
 //│ LLIR:
 //│   
-//│   def test$655() =
-//│     let x$662 = true in
-//│     case x$662 of
+//│   def test$658() =
+//│     let x$665 = true in
+//│     case x$665 of
 //│       BoolLit(true) =>
-//│         let* (x$664) = test$655() in
-//│         x$664
+//│         let* (x$667) = test$658() in
+//│         x$667
 //│       _ =>
 //│         undefined
-//│   def j$663() =
+//│   def j$666() =
 //│     undefined
-//│   def entry$665() =
+//│   def entry$668() =
 //│     undefined
-//│   entry = entry$665
+//│   entry = entry$668
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -203,20 +203,20 @@ fun test() =
   (if true then test()) + 1
 //│ LLIR:
 //│   
-//│   def test$666() =
-//│     let x$676 = true in
-//│     case x$676 of
+//│   def test$669() =
+//│     let x$679 = true in
+//│     case x$679 of
 //│       BoolLit(true) =>
-//│         let* (x$678) = test$666() in
-//│         jump j$677(x$678)
+//│         let* (x$682) = test$669() in
+//│         jump j$680(x$682)
 //│       _ =>
 //│         panic "match error"
-//│   def j$677(tmp$675) =
-//│     let x$679 = +(tmp$675,1) in
-//│     x$679
-//│   def entry$680() =
+//│   def j$680(tmp$681) =
+//│     let x$683 = +(tmp$681,1) in
+//│     x$683
+//│   def entry$684() =
 //│     undefined
-//│   entry = entry$680
+//│   entry = entry$684
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -236,14 +236,22 @@ fun test() =
 //│ }
 //│ _mlsValue _mls_test1() {
 //│   _mlsValue _mls_retval;
+//│   _mlsValue _mls_tmp3;
 //│   auto _mls_x26 = _mlsValue::fromIntLit(1);
 //│   if (_mlsValue::isIntLit(_mls_x26, 1)) {
 //│     auto _mls_x27 = _mls_test1();
-//│     _mls_retval = _mls_j6(_mls_x27);
+//│     _mls_tmp3 = _mls_x27;
+//│     goto _mls_j6;
 //│   } else {
 //│     _mlsUtil::panic_with("match error", __func__, __FILE__, __LINE__);
 //│   }
 //│   return _mls_retval;
+//│   _mls_j6:
+//│   {
+//│     auto _mls_x25 = (_mls_tmp3 + _mlsValue::fromIntLit(1));
+//│     _mls_retval = _mls_x25;
+//│     return _mls_retval;
+//│   }
 //│ }
 //│ _mlsValue _mlsMain() { return _mls_entry7(); }
 //│ int main() { return _mlsLargeStack(_mlsMainWrapper); }
@@ -261,23 +269,23 @@ f()
 //│ = 11
 //│ LLIR:
 //│   
-//│   def f$681() =
-//│     let x$694 = 10 in
-//│     let x$695 = true in
-//│     case x$695 of
+//│   def f$685() =
+//│     let x$698 = 10 in
+//│     let x$699 = true in
+//│     case x$699 of
 //│       BoolLit(true) =>
-//│         let x$697 = +(x$694,1) in
-//│         let x$698 = undefined in
-//│         jump j$696(x$697)
+//│         let x$702 = +(x$698,1) in
+//│         let x$703 = undefined in
+//│         jump j$700(x$702)
 //│       _ =>
-//│         let x$699 = undefined in
-//│         jump j$696(x$694)
-//│   def j$696(x$683) =
-//│     x$683
-//│   def entry$701() =
-//│     let* (x$700) = f$681() in
-//│     x$700
-//│   entry = entry$701
+//│         let x$704 = undefined in
+//│         jump j$700(x$698)
+//│   def j$700(x$701) =
+//│     x$701
+//│   def entry$706() =
+//│     let* (x$705) = f$685() in
+//│     x$705
+//│   entry = entry$706
 //│ 
 //│ Cpp:
 //│ #include "mlsprelude.h"
@@ -292,21 +300,29 @@ f()
 //│ }
 //│ _mlsValue _mls_f() {
 //│   _mlsValue _mls_retval;
-//│   auto _mls_x29 = _mlsValue::fromIntLit(10);
-//│   auto _mls_x30 = _mlsValue::fromIntLit(1);
-//│   if (_mlsValue::isIntLit(_mls_x30, 1)) {
-//│     auto _mls_x32 = (_mls_x29 + _mlsValue::fromIntLit(1));
-//│     auto _mls_x33 = _mlsValue::create<_mls_Unit>();
-//│     _mls_retval = _mls_j7(_mls_x32);
+//│   _mlsValue _mls_x29;
+//│   auto _mls_x30 = _mlsValue::fromIntLit(10);
+//│   auto _mls_x31 = _mlsValue::fromIntLit(1);
+//│   if (_mlsValue::isIntLit(_mls_x31, 1)) {
+//│     auto _mls_x33 = (_mls_x30 + _mlsValue::fromIntLit(1));
+//│     auto _mls_x34 = _mlsValue::create<_mls_Unit>();
+//│     _mls_x29 = _mls_x33;
+//│     goto _mls_j7;
 //│   } else {
-//│     auto _mls_x31 = _mlsValue::create<_mls_Unit>();
-//│     _mls_retval = _mls_j7(_mls_x29);
+//│     auto _mls_x32 = _mlsValue::create<_mls_Unit>();
+//│     _mls_x29 = _mls_x30;
+//│     goto _mls_j7;
 //│   }
 //│   return _mls_retval;
+//│   _mls_j7:
+//│   {
+//│     _mls_retval = _mls_x29;
+//│     return _mls_retval;
+//│   }
 //│ }
-//│ _mlsValue _mls_j7(_mlsValue _mls_x34) {
+//│ _mlsValue _mls_j7(_mlsValue _mls_x29) {
 //│   _mlsValue _mls_retval;
-//│   _mls_retval = _mls_x34;
+//│   _mls_retval = _mls_x29;
 //│   return _mls_retval;
 //│ }
 //│ _mlsValue _mlsMain() { return _mls_entry8(); }
@@ -327,27 +343,27 @@ fun f(a) =
 f(A(1))
 //│ = 1
 //│ LLIR:
-//│   class A(x$707)
-//│   class B(y$712)
-//│   def f$704(a$716) =
-//│     case a$716 of
-//│       A$705 =>
-//│         let x$732 = a$716.<A$705:x> in
-//│         let x$733 = 1 in
-//│         jump j$731(x$733)
-//│       B$710 =>
-//│         let x$734 = a$716.<B$710:y> in
-//│         let x$735 = 2 in
-//│         jump j$731(x$735)
+//│   class A(x$712)
+//│   class B(y$717)
+//│   def f$709(a$721) =
+//│     case a$721 of
+//│       A$710 =>
+//│         let x$738 = a$721.<A$710:x> in
+//│         let x$739 = 1 in
+//│         jump j$736(x$739)
+//│       B$715 =>
+//│         let x$740 = a$721.<B$715:y> in
+//│         let x$741 = 2 in
+//│         jump j$736(x$741)
 //│       _ =>
 //│         panic "match error"
-//│   def j$731(tmp$729) =
-//│     tmp$729
-//│   def entry$738() =
-//│     let x$736 = A$705(1) in
-//│     let* (x$737) = f$704(x$736) in
-//│     x$737
-//│   entry = entry$738
+//│   def j$736(tmp$737) =
+//│     tmp$737
+//│   def entry$744() =
+//│     let x$742 = A$710(1) in
+//│     let* (x$743) = f$709(x$742) in
+//│     x$743
+//│   entry = entry$744
 //│ 
 //│ Interpreted:
 //│ 1
@@ -366,44 +382,44 @@ fun f(a) =
 f(A(1))
 //│ = 1
 //│ LLIR:
-//│   class A(x$744)
-//│   class B(y$749)
-//│   def f$741(a$753) =
-//│     case a$753 of
-//│       A$742 =>
-//│         let x$773 = a$753.<A$742:x> in
-//│         case a$753 of
-//│           A$742 =>
-//│             let x$775 = a$753.<A$742:x> in
-//│             case x$775 of
+//│   class A(x$750)
+//│   class B(y$755)
+//│   def f$747(a$759) =
+//│     case a$759 of
+//│       A$748 =>
+//│         let x$780 = a$759.<A$748:x> in
+//│         case a$759 of
+//│           A$748 =>
+//│             let x$783 = a$759.<A$748:x> in
+//│             case x$783 of
 //│               IntLit(1) =>
-//│                 let x$777 = 1 in
-//│                 jump j$776(x$777)
+//│                 let x$786 = 1 in
+//│                 jump j$784(x$786)
 //│               _ =>
 //│                 panic "match error"
-//│           B$747 =>
-//│             let x$778 = a$753.<B$747:y> in
-//│             let x$779 = 2 in
-//│             jump j$774(x$779)
+//│           B$753 =>
+//│             let x$787 = a$759.<B$753:y> in
+//│             let x$788 = 2 in
+//│             jump j$781(x$788)
 //│           _ =>
 //│             panic "match error"
-//│       B$747 =>
-//│         let x$780 = a$753.<B$747:y> in
-//│         let x$781 = 3 in
-//│         jump j$772(x$781)
+//│       B$753 =>
+//│         let x$789 = a$759.<B$753:y> in
+//│         let x$790 = 3 in
+//│         jump j$778(x$790)
 //│       _ =>
 //│         panic "match error"
-//│   def j$776(tmp$769) =
-//│     jump j$774(tmp$769)
-//│   def j$774(tmp$769) =
-//│     jump j$772(tmp$769)
-//│   def j$772(tmp$770) =
-//│     tmp$770
-//│   def entry$784() =
-//│     let x$782 = A$742(1) in
-//│     let* (x$783) = f$741(x$782) in
-//│     x$783
-//│   entry = entry$784
+//│   def j$784(tmp$785) =
+//│     jump j$781(tmp$785)
+//│   def j$781(tmp$782) =
+//│     jump j$778(tmp$782)
+//│   def j$778(tmp$779) =
+//│     tmp$779
+//│   def entry$793() =
+//│     let x$791 = A$748(1) in
+//│     let* (x$792) = f$747(x$791) in
+//│     x$792
+//│   entry = entry$793
 //│ 
 //│ Interpreted:
 //│ 1

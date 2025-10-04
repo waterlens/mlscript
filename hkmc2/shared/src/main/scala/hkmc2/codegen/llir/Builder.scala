@@ -450,7 +450,7 @@ final class LlirBuilder(using Elaborator.State)(tl: TraceLogger, uid: FreshInt):
             val fvset = freeVarsFilter(nextCont.freeVarsLLIR -- nextCont.definedVars -- ctx.fn_ctx.keySet)
             val fvs1 = fvset.toList
             log(s"Match free vars: $fvset ${nextCont.freeVarsLLIR -- nextCont.definedVars} $fvs1")
-            val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, x))
+            val new_ctx = fvs1.foldLeft(ctx)((acc, x) => acc.addName(x, newNamedTemp(x.nme)))
             val fvs = fvs1.map(new_ctx.findName(_))
             def cont(x: TrivialExpr)(using ctx: Ctx) = Node.Jump(
               jp,

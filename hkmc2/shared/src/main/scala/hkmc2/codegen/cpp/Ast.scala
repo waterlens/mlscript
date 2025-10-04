@@ -81,6 +81,8 @@ enum Stmt:
   case Block(decl: Ls[Decl], stmts: Ls[Stmt])
   case Switch(expr: Expr, cases: Ls[(Expr, Stmt)])
   case Raw(stmt: Str)
+  case Goto(label: Str)
+  case Label(label: Str)
 
   def toDocument: Document =
     def aux(x: Stmt): Document = x match
@@ -113,6 +115,8 @@ enum Stmt:
         }.mkDocument(doc" # ")
         doc"switch (${expr.toDocument}) { #{  # ${docCases} #}  # }"
       case Raw(stmt) => stmt
+      case Goto(label) => doc"goto $label;"
+      case Label(label) => doc"$label:"
     aux(this)
 
 object Expr:
@@ -171,6 +175,7 @@ enum Decl:
   case EnumDecl(name: Str)
   case FuncDecl(ret: Type, name: Str, args: Ls[Type], or: Bool = false, virt: Bool = false)
   case VarDecl(name: Str, typ: Type)
+  case VarsDecl(names: Ls[Str], typ: Type)
 
   def toDocument: Document =
     def aux(x: Decl): Document = x match
@@ -184,6 +189,8 @@ enum Decl:
         doc"$docVirt$docSpecRet $name($docArgs)$docOverride;"
       case VarDecl(name, typ) => 
         doc"${typ.toDocument()} $name;"
+      case VarsDecl(names, typ) =>
+        doc"${typ.toDocument()} ${names.mkDocument(doc", ")};"
     aux(this)
 
 enum Def:

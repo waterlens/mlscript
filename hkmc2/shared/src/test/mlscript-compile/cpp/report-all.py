@@ -96,11 +96,8 @@ def make_relative_time():
     plt.xticks(x, benchmarks, rotation=45)
 
     plt.xlabel("Benchmarks")
-    plt.ylabel("Relative Running Time (normalized to opt, log scale)")
+    plt.ylabel("Relative Running Time (normalized to opt)")
     plt.legend()
-
-    # 设置对数坐标轴
-    plt.yscale('log')
     
     # 自定义 y 轴标签格式
     from matplotlib.ticker import ScalarFormatter
@@ -109,7 +106,7 @@ def make_relative_time():
     plt.gca().yaxis.set_major_formatter(formatter)
     
     # 设置 y 轴范围，确保 1.0 在中间位置
-    plt.ylim(0.2, 5)
+    plt.ylim(0.2, 2.2)
 
     # 添加水平参考线
     plt.axhline(y=1.0, color='gray', linestyle='--', alpha=0.5)

@@ -75,7 +75,7 @@ def make_relative_time():
         }
         labels_order = ['simp', 'opt']
 
-        baseline = results[benchmark]["mean"].iloc[labels_id['opt']]
+        baseline = results[benchmark]["mean"].iloc[labels_id['simp']]
         pos = [x[i] + (gap + width) * (n - (len(labels_order) - 1) / 2) for n in range(len(labels_order))]
 
         for j, lbl in enumerate(labels_order):
@@ -87,7 +87,7 @@ def make_relative_time():
                     label=lbl if i == 0 else "")
             
             # 添加数值标签
-            plt.text(pos[j], relative_time + 0.1, 
+            plt.text(pos[j], relative_time + 0.05, 
                     f'{relative_time:.2f}', 
                     ha='center', va='bottom', 
                     rotation=0, fontsize=8)
@@ -96,7 +96,7 @@ def make_relative_time():
     plt.xticks(x, benchmarks, rotation=45)
 
     plt.xlabel("Benchmarks")
-    plt.ylabel("Relative Running Time (normalized to opt)")
+    plt.ylabel("Relative Running Time (normalized to simp)")
     plt.legend()
     
     # 自定义 y 轴标签格式
@@ -105,8 +105,7 @@ def make_relative_time():
     formatter.set_scientific(False)
     plt.gca().yaxis.set_major_formatter(formatter)
     
-    # 设置 y 轴范围，确保 1.0 在中间位置
-    plt.ylim(0.2, 2.2)
+    plt.ylim(0, 1.2)
 
     # 添加水平参考线
     plt.axhline(y=1.0, color='gray', linestyle='--', alpha=0.5)
